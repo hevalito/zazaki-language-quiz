@@ -1,0 +1,11 @@
+PLACEHOLDER FOR GAME SCREENSHOT
+
+This file is a placeholder for the screenshot.png file referenced in the README.md.
+
+To create a proper screenshot:
+1. Run the game locally using `npm run dev`
+2. Take a screenshot of the game in action
+3. Save it as "screenshot.png" in the root directory of the project
+4. Replace this placeholder file with the actual screenshot
+
+The screenshot should show the game interface with a question and multiple choice options to give users a preview of what the game looks like.

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Zazaki - Language Learning Game</title>
+    <link rel="stylesheet" href="./style.css">
+    <meta name="description" content="Learn Zazaki language through an interactive quiz game">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen">
+            <h1>Learn Zazaki</h1>
+            <p>Welcome to the Zazaki language learning game!</p>
+            
+            <div class="player-form">
+                <label for="player-name">Enter your name:</label>
+                <input type="text" id="player-name" placeholder="Your name">
+                <button id="start-game">Start New Game</button>
+            </div>
+            
+            <div class="saved-games" id="saved-games-container">
+                <h3>Saved Games</h3>
+                <div id="saved-games-list">
+                    <!-- Saved games will be listed here -->
+                    <p id="no-saved-games">No saved games found.</p>
+                </div>
+            </div>
+            
+            <div class="highscores">
+                <h3>Top Scores</h3>
+                <div id="highscores-list">
+                    <!-- Highscores will be listed here -->
+                </div>
+            </div>
+            
+            <div class="admin-link">
+                <a href="admin.html">Admin Panel</a>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="player-info">
+                    <span id="player-name-display">Player: </span>
+                    <span id="level-display">Level: 1</span>
+                </div>
+                <div class="score-info">
+                    <span id="score-display">Score: 0</span>
+                    <span id="question-counter">Question: 1/10</span>
+                </div>
+            </div>
+            
+            <div class="question-container">
+                <h2 id="question-text">Question goes here</h2>
+                
+                <!-- Image container (shown only for image questions) -->
+                <div id="image-container" class="media-container hidden">
+                    <img id="question-image" src="" alt="Question Image">
+                </div>
+                
+                <!-- Audio container (shown only for audio questions) -->
+                <div id="audio-container" class="media-container hidden">
+                    <audio id="question-audio" controls>
+                        <source id="audio-source" src="" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                
+                <div class="options-container" id="options-container">
+                    <!-- Options will be generated here -->
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="save-game">Save Game</button>
+                <button id="quit-game">Quit Game</button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen hidden">
+            <h1>Game Over!</h1>
+            
+            <div class="results-summary">
+                <h2 id="final-score">Your Score: 0</h2>
+                <p id="final-level">Your Level: 1</p>
+                <p id="correct-answers">Correct Answers: 0/10</p>
+            </div>
+            
+            <div class="highscore-entry" id="highscore-entry">
+                <p>Congratulations! You made it to the highscores!</p>
+                <button id="save-score">Save Score</button>
+            </div>
+            
+            <div class="game-over-options">
+                <button id="play-again">Play Again</button>
+                <button id="return-home">Return to Home</button>
+            </div>
+        </div>
+        
+        <!-- Feedback Modal -->
+        <div id="feedback-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 id="feedback-title">Correct!</h3>
+                <p id="feedback-message">Well done!</p>
+                <button id="next-question">Next Question</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="./main.js"></script>
+</body>
+</html>

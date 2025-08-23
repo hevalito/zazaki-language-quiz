@@ -1,0 +1,2 @@
+This is a placeholder for the cat.jpg image file.
+Please replace this with an actual image of a cat for the question "What is this animal called in Zazaki?"

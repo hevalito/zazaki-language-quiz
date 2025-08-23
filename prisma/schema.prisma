@@ -1,0 +1,355 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Core User model
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Language learning specific fields
+  preferredScript ScriptType @default(LATIN)
+  dailyGoal       Int        @default(10)
+  streak          Int        @default(0)
+  lastActiveDate  DateTime?
+  totalXP         Int        @default(0)
+  currentLevel    Level      @default(A0)
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  attempts      Attempt[]
+  progress      Progress[]
+  badges        UserBadge[]
+  spacedItems   SpacedItem[]
+}
+
+// Course structure
+model Course {
+  id          String    @id @default(cuid())
+  title       Json      // Multi-language support: {"en": "Zazaki Basics", "de": "Zazaki Grundlagen", "ku": "..."}
+  description Json?
+  dialectCode String    // zazaki-xx, sorani-xx, etc.
+  level       Level     @default(A0)
+  isPublished Boolean   @default(false)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  chapters Chapter[]
+  progress Progress[]
+
+  @@index([dialectCode, level])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       Json     // Multi-language
+  description Json?
+  courseId    String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([courseId, order])
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       Json     // Multi-language
+  description Json?
+  chapterId   String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  targetSkills String[] // ["vocabulary", "grammar", "pronunciation"]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  quizzes   Quiz[]
+  progress  Progress[]
+
+  @@index([chapterId, order])
+}
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       Json     // Multi-language
+  description Json?
+  lessonId    String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  config      Json     // Quiz-specific configuration
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lesson    Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  Attempt[]
+
+  @@index([lessonId, order])
+}
+
+// Question types and content
+model Question {
+  id          String       @id @default(cuid())
+  type        QuestionType
+  prompt      Json         // Multi-language question text
+  dialectCode String       // zazaki-xx
+  script      ScriptType   @default(LATIN)
+  difficulty  Int          @default(1) // 1-5 scale
+  points      Int          @default(10)
+  quizId      String
+
+  // Media support
+  audioUrl    String?
+  videoUrl    String?
+  imageUrl    String?
+  
+  // Question-specific configuration
+  settings    Json         // Flexible settings per question type
+  explanation Json?        // Multi-language explanations
+  hints       Json?        // Multi-language hints
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  choices     Choice[]
+  answers     Answer[]
+  spacedItems SpacedItem[]
+  tags        QuestionTag[]
+
+  @@index([quizId, type])
+  @@index([dialectCode, script])
+}
+
+model Choice {
+  id         String  @id @default(cuid())
+  questionId String
+  label      Json    // Multi-language choice text
+  isCorrect  Boolean @default(false)
+  order      Int     @default(0)
+  mediaUrl   String? // For image/audio choices
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, order])
+}
+
+// User progress and attempts
+model Attempt {
+  id          String    @id @default(cuid())
+  userId      String
+  quizId      String
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  score       Int       @default(0)
+  maxScore    Int       @default(0)
+  timeSpent   Int       @default(0) // in seconds
+  metadata    Json?     // Additional attempt data
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@index([userId, completedAt])
+  @@index([quizId, completedAt])
+}
+
+model Answer {
+  id           String      @id @default(cuid())
+  attemptId    String
+  questionId   String
+  result       AnswerResult
+  responseData Json        // Flexible response storage
+  isCorrect    Boolean     @default(false)
+  pointsEarned Int         @default(0)
+  timeSpent    Int         @default(0) // in milliseconds
+  confidence   Float?      // For STT/pronunciation scoring
+  createdAt    DateTime    @default(now())
+
+  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId, questionId])
+}
+
+// Spaced repetition system
+model SpacedItem {
+  id         String   @id @default(cuid())
+  userId     String
+  questionId String
+  easiness   Float    @default(2.5) // SM-2 algorithm
+  interval   Int      @default(1)   // days
+  repetition Int      @default(0)
+  dueDate    DateTime @default(now())
+  lastReview DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@index([userId, dueDate])
+}
+
+// Progress tracking
+model Progress {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String?
+  lessonId   String?
+  xpEarned   Int      @default(0)
+  completed  Boolean  @default(false)
+  completedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  lesson Lesson? @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, courseId])
+  @@unique([userId, lessonId])
+  @@index([userId, completed])
+}
+
+// Gamification
+model Badge {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  title       Json     // Multi-language
+  description Json     // Multi-language
+  iconUrl     String?
+  criteria    Json     // Badge earning criteria
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId, earnedAt])
+}
+
+// Tags and categorization
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String?  @default("#3B82F6")
+  createdAt   DateTime @default(now())
+
+  questions QuestionTag[]
+}
+
+model QuestionTag {
+  questionId String
+  tagId      String
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+}
+
+// Enums
+enum ScriptType {
+  LATIN
+  ARABIC
+}
+
+enum Level {
+  A0
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  MULTIPLE_SELECT
+  AUDIO_COMPREHENSION
+  VIDEO_COMPREHENSION
+  DICTATION
+  FILL_BLANK
+  DRAG_DROP
+  PRONUNCIATION
+  MATCHING
+  SEQUENCE_ORDER
+  TRUE_FALSE
+}
+
+enum AnswerResult {
+  CORRECT
+  PARTIAL
+  INCORRECT
+  SKIPPED
+}

@@ -1,0 +1,11 @@
+This is a placeholder for the favicon.svg file.
+
+For a proper favicon, create an SVG file with the following content:
+
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="12" fill="#3498db"/>
+  <path d="M14 20H50M14 32H50M14 44H50" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="26" cy="20" r="4" fill="white"/>
+  <circle cx="38" cy="32" r="4" fill="white"/>
+  <circle cx="32" cy="44" r="4" fill="white"/>
+</svg>

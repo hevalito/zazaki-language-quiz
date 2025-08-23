@@ -1,0 +1,27 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+  functions = "netlify/functions"
+
+# Redirects for specific files
+[[redirects]]
+  from = "/admin.html"
+  to = "/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/function-tester.html"
+  to = "/function-tester.html"
+  status = 200
+
+# Fallback redirect for SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = "src"
+  functions = "netlify/functions"
