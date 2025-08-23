@@ -113,7 +113,6 @@ const withPWA = require('next-pwa')({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   experimental: {
     optimizePackageImports: ['@tanstack/react-query']
   },
@@ -124,7 +123,7 @@ const nextConfig = {
   i18n: {
     locales: ['en', 'de', 'ku'],
     defaultLocale: 'en',
-    localeDetection: true
+    localeDetection: false
   },
   async headers() {
     return [

@@ -185,7 +185,11 @@ export function downloadAudio(blob: Blob, filename: string = 'recording.webm'): 
  * Check if browser supports audio recording
  */
 export function supportsAudioRecording(): boolean {
-  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder)
+  return !!(typeof navigator !== 'undefined' && 
+           navigator.mediaDevices && 
+           typeof navigator.mediaDevices.getUserMedia === 'function' && 
+           typeof window !== 'undefined' && 
+           typeof window.MediaRecorder !== 'undefined')
 }
 
 /**
@@ -252,14 +256,16 @@ export class AudioVisualizer {
   getVolume(): number {
     if (!this.analyser || !this.dataArray) return 0
     
-    this.analyser.getByteFrequencyData(this.dataArray)
+    // Create a new Uint8Array to avoid type issues
+    const frequencyData = new Uint8Array(this.analyser.frequencyBinCount)
+    this.analyser.getByteFrequencyData(frequencyData)
     
     let sum = 0
-    for (let i = 0; i < this.dataArray.length; i++) {
-      sum += this.dataArray[i]
+    for (let i = 0; i < frequencyData.length; i++) {
+      sum += frequencyData[i]
     }
     
-    return sum / this.dataArray.length / 255 // Normalize to 0-1
+    return sum / frequencyData.length / 255 // Normalize to 0-1
   }
 
   cleanup(): void {
