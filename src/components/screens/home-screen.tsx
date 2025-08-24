@@ -198,7 +198,10 @@ export function HomeScreen() {
               <ArrowRightIcon className="w-5 h-5 text-gray-400" />
             </div>
             
-            <button className="btn-primary w-full">
+            <button 
+              onClick={() => alert('Lesson functionality coming soon! This would navigate to the next lesson.')}
+              className="btn-primary w-full"
+            >
               Continue Lesson
             </button>
           </div>
@@ -206,7 +209,10 @@ export function HomeScreen() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
-          <button className="card-interactive text-center">
+          <button 
+            onClick={() => alert('Practice mode coming soon! This would start a quick review session with spaced repetition.')}
+            className="card-interactive text-center"
+          >
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <PlayIcon className="w-6 h-6 text-blue-600" />
             </div>
@@ -214,7 +220,10 @@ export function HomeScreen() {
             <p className="text-sm text-gray-600">Quick review session</p>
           </button>
           
-          <button className="card-interactive text-center">
+          <button 
+            onClick={() => alert('Achievements coming soon! This would show your badges, streaks, and milestones.')}
+            className="card-interactive text-center"
+          >
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
               <TrophyIcon className="w-6 h-6 text-purple-600" />
             </div>
