@@ -63,6 +63,9 @@ model User {
   lastActiveDate  DateTime?
   totalXP         Int        @default(0)
   currentLevel    Level      @default(A0)
+  
+  // Admin role
+  isAdmin         Boolean    @default(false)
 
   // Relations
   accounts      Account[]

@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma"
 import type { NextAuthConfig } from "next-auth"
 
 export const config = {
+  trustHost: true, // Required for production deployments
   adapter: PrismaAdapter(prisma),
   providers: [
     Email({
@@ -60,21 +61,18 @@ export const config = {
     async signIn({ user, account, profile }) {
       // Auto-create user profile on first sign in
       if (account?.provider && user.email) {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        })
-        
-        if (!existingUser) {
-          // Set default values for new users
-          await prisma.user.update({
+        try {
+          const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
-            data: {
-              dailyGoal: 50, // Default daily XP goal
-              preferredScript: "LATIN", // Default to Latin script
-              streak: 0,
-              totalXP: 0,
-            },
           })
+          
+          if (!existingUser) {
+            // User will be created by the adapter, we don't need to do anything here
+            // The default values are already set in the schema
+          }
+        } catch (error) {
+          console.error('Error in signIn callback:', error)
+          // Continue with sign in even if there's an error
         }
       }
       return true

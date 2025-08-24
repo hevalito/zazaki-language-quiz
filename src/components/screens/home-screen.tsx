@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession, signOut } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   FireIcon, 
   TrophyIcon, 
@@ -12,17 +12,65 @@ import {
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
 
+interface UserProgress {
+  id: string
+  name: string | null
+  email: string | null
+  streak: number
+  totalXP: number
+  dailyGoal: number
+  todayXP: number
+  isAdmin: boolean
+}
+
 export function HomeScreen() {
   const { data: session } = useSession()
   const [selectedScript, setSelectedScript] = useState<'LATIN' | 'ARABIC'>('LATIN')
+  const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [showSettings, setShowSettings] = useState(false)
 
-  const user = session?.user
-  const streak = user?.streak || 0
-  const totalXP = user?.totalXP || 0
-  const dailyGoal = user?.dailyGoal || 50
-  const todayXP = 25 // This would come from today's progress
+  // Fetch user progress data
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      try {
+        const response = await fetch('/api/user/progress')
+        if (response.ok) {
+          const data = await response.json()
+          setUserProgress(data.user)
+        } else {
+          console.error('Failed to fetch user progress')
+        }
+      } catch (error) {
+        console.error('Error fetching user progress:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (session) {
+      fetchUserProgress()
+    }
+  }, [session])
+
+  const user = userProgress || session?.user
+  const streak = userProgress?.streak || 0
+  const totalXP = userProgress?.totalXP || 0
+  const dailyGoal = userProgress?.dailyGoal || 50
+  const todayXP = userProgress?.todayXP || 0
 
   const progressPercentage = Math.min((todayXP / dailyGoal) * 100, 100)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading your progress...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -52,7 +100,10 @@ export function HomeScreen() {
               </div>
               
               {/* Settings */}
-              <button className="p-2 hover:bg-gray-100 rounded-full">
+              <button 
+                onClick={() => setShowSettings(!showSettings)}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
                 <Cog6ToothIcon className="w-5 h-5 text-gray-600" />
               </button>
             </div>
@@ -204,8 +255,67 @@ export function HomeScreen() {
           </div>
         </div>
 
-        {/* Sign Out (temporary for development) */}
-        <div className="card">
+        {/* Settings Modal */}
+        {showSettings && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 m-4 max-w-md w-full">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Settings</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Daily Goal (XP)
+                  </label>
+                  <input
+                    type="number"
+                    value={dailyGoal}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    min="10"
+                    max="200"
+                    step="10"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Preferred Script
+                  </label>
+                  <select 
+                    value={selectedScript}
+                    onChange={(e) => setSelectedScript(e.target.value as 'LATIN' | 'ARABIC')}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="LATIN">Latin Script</option>
+                    <option value="ARABIC">Arabic Script</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex space-x-3 mt-6">
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin Panel Access & Sign Out */}
+        <div className="card space-y-3">
+          {userProgress?.isAdmin && (
+            <a
+              href="/admin"
+              className="btn-primary w-full text-center block"
+            >
+              Admin Panel
+            </a>
+          )}
           <button
             onClick={() => signOut()}
             className="btn-secondary w-full"
