@@ -68,6 +68,8 @@ export default function QuizPage() {
   const [submitting, setSubmitting] = useState(false)
   const [questionStartTime, setQuestionStartTime] = useState(Date.now())
 
+  const [isChecked, setIsChecked] = useState(false)
+
   useEffect(() => {
     if (params.id) {
       fetchQuiz(params.id as string)
@@ -76,7 +78,13 @@ export default function QuizPage() {
 
   useEffect(() => {
     setQuestionStartTime(Date.now())
+    setIsChecked(false) // Reset checked state when question changes
   }, [currentQuestionIndex])
+
+  const checkAnswer = () => {
+    setIsChecked(true)
+    // Optional: play sound
+  }
 
   const fetchQuiz = async (quizId: string) => {
     try {
@@ -265,6 +273,7 @@ export default function QuizPage() {
 
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100
+  const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -341,40 +350,65 @@ export default function QuizPage() {
             choices={currentQuestion.choices.map(choice => ({
               ...choice,
               questionId: currentQuestion.id,
-              isCorrect: false // This will be handled by the API
+              isCorrect: (choice as any).isCorrect // Use value from API
             }))}
             onAnswer={handleAnswer}
             selectedChoiceId={getCurrentAnswer()?.choiceId}
+            showResult={isChecked}
           />
 
           {/* Navigation */}
           <div className="flex justify-between mt-8">
             <button
               onClick={previousQuestion}
-              disabled={currentQuestionIndex === 0}
+              disabled={currentQuestionIndex === 0 || submitting}
               className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowLeftIcon className="w-4 h-4" />
               <span>Zurück</span>
             </button>
 
-            <button
-              onClick={nextQuestion}
-              disabled={!isAnswered() || submitting}
-              className="flex items-center space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span>
-                {currentQuestionIndex === quiz.questions.length - 1
-                  ? (submitting ? 'Wird gesendet...' : 'Quiz abgeben')
-                  : 'Weiter'
-                }
-              </span>
-              {currentQuestionIndex < quiz.questions.length - 1 && (
+            {!isChecked ? (
+              <button
+                onClick={checkAnswer}
+                disabled={!getCurrentAnswer() || submitting}
+                className="flex items-center space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Prüfen</span>
+                <CheckIcon className="w-4 h-4" />
+              </button>
+            ) : (
+              <button
+                onClick={nextQuestion}
+                disabled={submitting}
+                className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-medium text-white transition-colors ${isLastQuestion ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
+              >
+                <span>
+                  {isLastQuestion
+                    ? (submitting ? 'Wird gesendet...' : 'Quiz beenden')
+                    : 'Weiter'
+                  }
+                </span>
                 <ArrowRightIcon className="w-4 h-4" />
-              )}
-            </button>
+              </button>
+            )}
           </div>
         </div>
+
+        {isChecked && currentQuestion.explanation && (
+          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h3 className="font-semibold text-blue-900 mb-1">Erklärung</h3>
+            <p className="text-blue-800">
+              {(() => {
+                const exp = currentQuestion.explanation;
+                if (typeof exp === 'string') return exp;
+                return (exp as any)?.de || (exp as any)?.en || '';
+              })()}
+            </p>
+          </div>
+        )}
+
       </main>
     </div>
   )

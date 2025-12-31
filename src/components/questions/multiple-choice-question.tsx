@@ -23,7 +23,7 @@ export function MultipleChoiceQuestion({
 
   const handleChoiceSelect = (choiceId: string) => {
     if (showResult) return // Don't allow selection after showing result
-    
+
     setSelectedChoice(choiceId)
     const choice = choices.find(c => c.id === choiceId)
     if (choice) {
@@ -33,36 +33,39 @@ export function MultipleChoiceQuestion({
 
   const getChoiceClassName = (choice: Choice) => {
     const baseClass = "quiz-option"
-    
+
     if (!showResult) {
-      return selectedChoice === choice.id 
+      return selectedChoice === choice.id
         ? `${baseClass} quiz-option-selected`
         : baseClass
     }
-    
+
     // Show results
     if (choice.isCorrect) {
+      if (selectedChoice === choice.id) {
+        return `${baseClass} quiz-option-correct animate-bounce-subtle`
+      }
       return `${baseClass} quiz-option-correct`
     }
-    
+
     if (selectedChoice === choice.id && !choice.isCorrect) {
-      return `${baseClass} quiz-option-incorrect`
+      return `${baseClass} quiz-option-incorrect animate-shake`
     }
-    
+
     return baseClass
   }
 
   const getChoiceIcon = (choice: Choice) => {
     if (!showResult) return null
-    
+
     if (choice.isCorrect) {
       return <CheckIcon className="w-5 h-5 text-green-600" />
     }
-    
+
     if (selectedChoice === choice.id && !choice.isCorrect) {
       return <XMarkIcon className="w-5 h-5 text-red-600" />
     }
-    
+
     return null
   }
 
@@ -93,7 +96,7 @@ export function MultipleChoiceQuestion({
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
           {getPromptText()}
         </h2>
-        
+
         {/* Audio/Video/Image would go here */}
         {question.audioUrl && (
           <div className="mb-4">
@@ -103,7 +106,7 @@ export function MultipleChoiceQuestion({
             </audio>
           </div>
         )}
-        
+
         {question.videoUrl && (
           <div className="mb-4">
             <video controls className="mx-auto max-w-full h-auto rounded-lg">
@@ -112,12 +115,12 @@ export function MultipleChoiceQuestion({
             </video>
           </div>
         )}
-        
+
         {question.imageUrl && (
           <div className="mb-4">
-            <img 
-              src={question.imageUrl} 
-              alt="Question image" 
+            <img
+              src={question.imageUrl}
+              alt="Question image"
               className="mx-auto max-w-full h-auto rounded-lg"
             />
           </div>
@@ -150,8 +153,8 @@ export function MultipleChoiceQuestion({
         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
           <h3 className="font-medium text-blue-900 mb-2">Explanation</h3>
           <p className="text-blue-800 text-sm">
-            {typeof question.explanation === 'string' 
-              ? question.explanation 
+            {typeof question.explanation === 'string'
+              ? question.explanation
               : (question.explanation as any)?.en || (question.explanation as any)?.de || ''}
           </p>
         </div>
@@ -166,8 +169,8 @@ export function MultipleChoiceQuestion({
             </summary>
             <div className="mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
               <p className="text-yellow-800 text-sm">
-                {typeof question.hints === 'string' 
-                  ? question.hints 
+                {typeof question.hints === 'string'
+                  ? question.hints
                   : (question.hints as any)?.en || (question.hints as any)?.de || ''}
               </p>
             </div>

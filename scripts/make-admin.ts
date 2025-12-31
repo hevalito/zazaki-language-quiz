@@ -1,20 +1,35 @@
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, ScriptType, Level } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+const email = process.argv[2] || 'heval@me.com'
+
 async function main() {
-    const email = 'heval@me.com'
-    const user = await prisma.user.update({
+    if (!email) {
+        console.error('Please provide an email address')
+        process.exit(1)
+    }
+
+    console.log(`Promoting ${email} to admin...`)
+
+    const user = await prisma.user.upsert({
         where: { email },
-        data: { isAdmin: true }
+        update: { isAdmin: true },
+        create: {
+            email,
+            name: 'Heval', // Default name
+            isAdmin: true,
+            preferredScript: ScriptType.LATIN,
+            currentLevel: Level.A1
+        }
     })
 
-    console.log(`Updated user ${user.email} to Admin: ${user.isAdmin}`)
+    console.log(`✅ Successfully promoted ${user.email} to Admin!`)
 }
 
 main()
-    .catch((e) => {
+    .catch(e => {
         console.error(e)
         process.exit(1)
     })

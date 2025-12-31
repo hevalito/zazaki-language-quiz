@@ -60,7 +60,7 @@ export async function POST() {
           ku: 'Bingehên zimanê Zazakî fêr bibe'
         },
         dialectCode: 'zazaki-tr',
-        level: Level.A0,
+        level: Level.A1,
         isPublished: true,
         order: 1,
       },
@@ -186,7 +186,7 @@ export async function POST() {
     // Create questions with choices
     for (const questionData of questions) {
       const { choices, ...questionWithoutChoices } = questionData
-      
+
       const question = await prisma.question.create({
         data: questionWithoutChoices,
       })
@@ -248,7 +248,7 @@ export async function POST() {
 
   } catch (error) {
     console.error('❌ Database setup failed:', error)
-    
+
     return NextResponse.json({
       status: 'error',
       message: 'Database setup failed',

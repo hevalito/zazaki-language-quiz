@@ -49,8 +49,8 @@ export async function GET(
           id: choice.id,
           label: choice.label,
           order: choice.order,
-          mediaUrl: choice.mediaUrl
-          // isCorrect is intentionally omitted
+          mediaUrl: choice.mediaUrl,
+          isCorrect: choice.isCorrect
         }))
       }))
     }

@@ -1,9 +1,196 @@
+"use client"
 
-export default function CoursesAdmin() {
+import { useState, useEffect } from 'react'
+import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+export default function AdminCoursesPage() {
+    const router = useRouter()
+    const [courses, setCourses] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+    const [isCreating, setIsCreating] = useState(false)
+    const [newCourse, setNewCourse] = useState({
+        title: { en: '', de: '' },
+        level: 'A1',
+        description: { en: '', de: '' }
+    })
+
+    useEffect(() => {
+        fetchCourses()
+    }, [])
+
+    const fetchCourses = async () => {
+        try {
+            const res = await fetch('/api/admin/courses')
+            if (res.ok) {
+                const data = await res.json()
+                setCourses(data)
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleCreate = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            const res = await fetch('/api/admin/courses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCourse)
+            })
+
+            if (res.ok) {
+                const created = await res.json()
+                setIsCreating(false)
+                router.push(`/admin/courses/${created.id}`)
+            }
+        } catch (error) {
+            console.error('Error creating course:', error)
+            alert('Failed to create course')
+        }
+    }
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure? This will delete all chapters and lessons in this course.')) return
+
+        try {
+            const res = await fetch(`/api/admin/courses/${id}`, {
+                method: 'DELETE'
+            })
+
+            if (res.ok) {
+                setCourses(courses.filter(c => c.id !== id))
+            }
+        } catch (error) {
+            console.error('Error deleting course:', error)
+            alert('Failed to delete course')
+        }
+    }
+
+    if (loading) return <div className="p-8">Loading...</div>
+
     return (
-        <div className="p-8 text-center text-gray-500">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Course Management</h1>
-            <p>Coming soon...</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Courses</h1>
+                    <p className="mt-1 text-sm text-gray-500">Manage learning paths and content hierarchy</p>
+                </div>
+                <button
+                    onClick={() => setIsCreating(true)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                >
+                    <PlusIcon className="h-5 w-5 mr-2" />
+                    New Course
+                </button>
+            </div>
+
+            {isCreating && (
+                <div className="mb-8 bg-white p-6 rounded-lg shadow border border-gray-200">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
+                    <form onSubmit={handleCreate} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Title (EN)</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={newCourse.title.en}
+                                    onChange={e => setNewCourse({ ...newCourse, title: { ...newCourse.title, en: e.target.value } })}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Title (DE)</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={newCourse.title.de}
+                                    onChange={e => setNewCourse({ ...newCourse, title: { ...newCourse.title, de: e.target.value } })}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Level</label>
+                            <select
+                                value={newCourse.level}
+                                onChange={e => setNewCourse({ ...newCourse, level: e.target.value })}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                            >
+                                {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                                    <option key={level} value={level}>{level}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsCreating(false)}
+                                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                            >
+                                Create Course
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul role="list" className="divide-y divide-gray-200">
+                    {courses.map((course) => (
+                        <li key={course.id}>
+                            <div className="px-4 py-4 flex items-center justify-between sm:px-6 hover:bg-gray-50">
+                                <Link href={`/admin/courses/${course.id}`} className="flex-1 flex items-center justify-between cursor-pointer">
+                                    <div className="flex items-center">
+                                        <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                                            {course.level}
+                                        </div>
+                                        <div className="ml-4">
+                                            <h3 className="text-lg font-medium text-blue-600 truncate">{course.title?.en} / {course.title?.de}</h3>
+                                            <p className="text-sm text-gray-500">{course._count?.chapters || 0} Chapters</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${course.isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                            {course.isPublished ? 'Published' : 'Draft'}
+                                        </span>
+                                    </div>
+                                </Link>
+                                <div className="ml-4 flex items-center gap-2">
+                                    <Link
+                                        href={`/admin/courses/${course.id}`}
+                                        className="p-2 text-gray-400 hover:text-gray-500"
+                                    >
+                                        <PencilSquareIcon className="h-5 w-5" />
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(course.id)}
+                                        className="p-2 text-gray-400 hover:text-red-500"
+                                    >
+                                        <TrashIcon className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    ))}
+                    {courses.length === 0 && !loading && (
+                        <li className="px-4 py-8 text-center text-gray-500">
+                            No courses found. Create one to get started.
+                        </li>
+                    )}
+                </ul>
+            </div>
         </div>
     )
 }

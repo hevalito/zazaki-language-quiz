@@ -10,18 +10,15 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url)
-    const level = searchParams.get('level') // A0, A1, etc.
+    const courseId = searchParams.get('courseId')
     const status = searchParams.get('status') // 'completed', 'in_progress', 'not_started'
-    // const topic = searchParams.get('topic') // TODO: Implement topic filtering when standardized
 
     const quizzes = await prisma.quiz.findMany({
       where: {
         isPublished: true,
         lesson: {
           chapter: {
-            course: {
-              level: level ? (level as any) : undefined
-            }
+            courseId: courseId || undefined
           }
         }
       },

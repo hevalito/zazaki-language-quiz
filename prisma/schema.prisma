@@ -62,7 +62,7 @@ model User {
   streak          Int        @default(0)
   lastActiveDate  DateTime?
   totalXP         Int        @default(0)
-  currentLevel    Level      @default(A0)
+  currentLevel    Level      @default(A1)
   
   // Admin role
   isAdmin         Boolean    @default(false)
@@ -82,7 +82,7 @@ model Course {
   title       Json      // Multi-language support: {"en": "Zazaki Basics", "de": "Zazaki Grundlagen", "ku": "..."}
   description Json?
   dialectCode String    // zazaki-xx, sorani-xx, etc.
-  level       Level     @default(A0)
+  level       Level     @default(A1)
   isPublished Boolean   @default(false)
   order       Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -328,7 +328,6 @@ enum ScriptType {
 }
 
 enum Level {
-  A0
   A1
   A2
   B1

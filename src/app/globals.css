@@ -2,159 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    font-family: Inter, system-ui, sans-serif;
+@layer utilities {
+  .animate-shake {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
   }
-  
-  body {
-    @apply text-gray-900 antialiased;
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 0.5s ease-in-out both;
+  }
+
+  @keyframes shake {
+
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+
+  @keyframes bounce-subtle {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
   }
 }
 
 @layer components {
-  /* Button variants */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
   }
-  
-  .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-  
-  .btn-success {
-    @apply bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
-  }
-  
-  .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
-  }
-  
-  /* Card components */
-  .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
-  }
-  
-  .card-interactive {
-    @apply card hover:shadow-md transition-shadow duration-200 cursor-pointer;
-  }
-  
-  /* Progress components */
-  .progress-bar {
-    @apply w-full bg-gray-200 rounded-full h-2 overflow-hidden;
-  }
-  
-  .progress-fill {
-    @apply h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 ease-out;
-  }
-  
-  /* Quiz specific styles */
-  .quiz-option {
-    @apply w-full p-4 text-left border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-  }
-  
-  .quiz-option-selected {
-    @apply border-blue-500 bg-blue-50;
-  }
-  
-  .quiz-option-correct {
-    @apply border-green-500 bg-green-50 text-green-800;
-  }
-  
-  .quiz-option-incorrect {
-    @apply border-red-500 bg-red-50 text-red-800;
-  }
-  
-  /* Audio/Video controls */
-  .media-control {
-    @apply bg-white border border-gray-300 rounded-full p-3 shadow-sm hover:shadow-md transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500;
-  }
-  
-  /* Kurdish script styles */
-  .script-latin {
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .script-arabic {
-    font-family: 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
-    direction: rtl;
-    text-align: right;
-  }
-  
-  /* Animations */
-  .fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  .slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
-  
-  .bounce-in {
-    animation: bounceIn 0.5s ease-out;
-  }
-}
 
-@layer utilities {
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-200;
+  }
+
+  .card-interactive {
+    @apply card hover:shadow-md hover:-translate-y-0.5 cursor-pointer;
+  }
+
+  .progress-bar {
+    @apply w-full bg-gray-100 rounded-full h-2 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply bg-blue-600 h-full rounded-full transition-all duration-500 ease-out;
+  }
+
   .safe-area-top {
     padding-top: env(safe-area-inset-top);
   }
-  
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  
-  .touch-manipulation {
-    touch-action: manipulation;
-  }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* Custom Quiz Styles */
+.quiz-option {
+  @apply w-full p-4 text-left border-2 rounded-xl transition-all duration-200 bg-white hover:bg-gray-50 border-gray-200 mt-3;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.quiz-option-selected {
+  @apply border-blue-500 bg-blue-50 ring-2 ring-blue-200;
 }
 
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+.quiz-option-correct {
+  @apply border-green-500 bg-green-50 ring-2 ring-green-200 text-green-700 font-medium;
 }
 
-/* PWA specific styles */
-@media (display-mode: standalone) {
-  body {
-    user-select: none;
-    -webkit-user-select: none;
-  }
-}
-
-/* Dark mode support (future enhancement) */
-@media (prefers-color-scheme: dark) {
-  /* Dark mode styles can be added here later */
+.quiz-option-incorrect {
+  @apply border-red-500 bg-red-50 ring-2 ring-red-200 text-red-700;
 }

@@ -10,18 +10,18 @@ export function QuizLibrary() {
     const router = useRouter()
     const [quizzes, setQuizzes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
-    const [currentLevel, setCurrentLevel] = useState('')
+    const [currentCourseId, setCurrentCourseId] = useState('')
     const [currentStatus, setCurrentStatus] = useState('')
 
     useEffect(() => {
         fetchQuizzes()
-    }, [currentLevel, currentStatus])
+    }, [currentCourseId, currentStatus])
 
     const fetchQuizzes = async () => {
         setLoading(true)
         try {
             const params = new URLSearchParams()
-            if (currentLevel) params.append('level', currentLevel)
+            if (currentCourseId) params.append('courseId', currentCourseId)
             if (currentStatus) params.append('status', currentStatus)
 
             const response = await fetch(`/api/quizzes?${params.toString()}`)
@@ -69,9 +69,9 @@ export function QuizLibrary() {
             <div className="container mx-auto px-4 py-6">
                 {/* Filters */}
                 <FilterBar
-                    currentLevel={currentLevel}
+                    currentCourseId={currentCourseId}
                     currentStatus={currentStatus}
-                    onLevelChange={setCurrentLevel}
+                    onCourseChange={setCurrentCourseId}
                     onStatusChange={setCurrentStatus}
                 />
 
