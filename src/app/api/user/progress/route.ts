@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
-    
+
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -29,10 +29,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Calculate today's XP (this would normally come from user sessions/progress)
-    const today = new Date().toISOString().split('T')[0]
-    const lastActive = user.lastActiveDate?.toISOString().split('T')[0]
-    const todayXP = lastActive === today ? 0 : 0 // Reset daily progress
+    // Calculate today's XP from attempts
+    const startOfDay = new Date()
+    startOfDay.setHours(0, 0, 0, 0)
+
+    const todayAttempts = await prisma.attempt.findMany({
+      where: {
+        userId: user.id,
+        completedAt: {
+          gte: startOfDay
+        }
+      },
+      select: {
+        score: true
+      }
+    })
+
+    const todayXP = todayAttempts.reduce((sum, attempt) => sum + attempt.score, 0)
 
     return NextResponse.json({
       user: {

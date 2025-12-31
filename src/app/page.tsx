@@ -3,10 +3,16 @@ import { redirect } from 'next/navigation'
 import { HomeScreen } from '@/components/screens/home-screen'
 import { WelcomeScreen } from '@/components/screens/welcome-screen'
 
-export default async function HomePage() {
-  const session = await auth()
+interface PageProps {
+  searchParams: Promise<{ guest?: string }>
+}
 
-  if (!session) {
+export default async function HomePage({ searchParams }: PageProps) {
+  const session = await auth()
+  const params = await searchParams
+  const isGuest = params.guest === 'true'
+
+  if (!session && !isGuest) {
     return <WelcomeScreen />
   }
 

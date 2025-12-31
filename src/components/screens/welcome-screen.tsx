@@ -149,6 +149,27 @@ export function WelcomeScreen() {
               </button>
             </div>
 
+            {/* Guest Access for Local Development */}
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">For local development</span>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <a
+                  href="/?guest=true"
+                  className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                >
+                  Continue as Guest
+                </a>
+              </div>
+            </div>
+
             <p className="text-xs text-gray-500 text-center mt-6">
               By continuing, you agree to our Terms of Service and Privacy Policy
             </p>

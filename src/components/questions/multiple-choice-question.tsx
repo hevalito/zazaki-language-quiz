@@ -10,7 +10,6 @@ interface MultipleChoiceQuestionProps {
   onAnswer: (choiceId: string, isCorrect: boolean) => void
   showResult?: boolean
   selectedChoiceId?: string
-  script?: 'LATIN' | 'ARABIC'
 }
 
 export function MultipleChoiceQuestion({
@@ -18,8 +17,7 @@ export function MultipleChoiceQuestion({
   choices,
   onAnswer,
   showResult = false,
-  selectedChoiceId,
-  script = 'LATIN'
+  selectedChoiceId
 }: MultipleChoiceQuestionProps) {
   const [selectedChoice, setSelectedChoice] = useState<string | null>(selectedChoiceId || null)
 
@@ -91,7 +89,7 @@ export function MultipleChoiceQuestion({
   return (
     <div className="space-y-6">
       {/* Question Prompt */}
-      <div className={`text-center ${script === 'ARABIC' ? 'script-arabic' : 'script-latin'}`}>
+      <div className="text-center">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
           {getPromptText()}
         </h2>
@@ -135,7 +133,7 @@ export function MultipleChoiceQuestion({
               key={choice.id}
               onClick={() => handleChoiceSelect(choice.id)}
               disabled={showResult}
-              className={`${getChoiceClassName(choice)} ${script === 'ARABIC' ? 'script-arabic' : 'script-latin'}`}
+              className={getChoiceClassName(choice)}
             >
               <div className="flex items-center justify-between">
                 <span className="flex-1 text-left">

@@ -10,25 +10,48 @@ export const config = {
   trustHost: true, // Required for production deployments
   adapter: PrismaAdapter(prisma),
   providers: [
+    // Email provider disabled for local development due to missing SMTP configuration
     Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
+      // Custom implementation to log to console in dev if no server is configured
+      ...(process.env.EMAIL_SERVER_HOST ? {
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: Number(process.env.EMAIL_SERVER_PORT),
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
         },
-      },
-      from: process.env.EMAIL_FROM,
+        from: process.env.EMAIL_FROM,
+      } : {
+        // When no server is configured, use a custom sendVerificationRequest to log to console
+        // We provide a dummy server config to bypass the provider's validation check
+        server: {
+          host: "localhost",
+          port: 25,
+          auth: { user: "", pass: "" }
+        },
+        from: "onboarding@resend.dev",
+        sendVerificationRequest: async ({ identifier, url, provider }) => {
+          console.log("----------------------------------------------")
+          console.log(`LOGIN LINK FOR ${identifier}`)
+          console.log(url)
+          console.log("----------------------------------------------")
+        },
+      }),
     }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    Apple({
-      clientId: process.env.APPLE_ID!,
-      clientSecret: process.env.APPLE_SECRET!,
-    }),
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
+      Google({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      })
+    ] : []),
+    ...(process.env.APPLE_ID && process.env.APPLE_SECRET ? [
+      Apple({
+        clientId: process.env.APPLE_ID,
+        clientSecret: process.env.APPLE_SECRET,
+      })
+    ] : []),
   ],
   pages: {
     signIn: "/auth/signin",
@@ -65,7 +88,7 @@ export const config = {
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           })
-          
+
           if (!existingUser) {
             // User will be created by the adapter, we don't need to do anything here
             // The default values are already set in the schema

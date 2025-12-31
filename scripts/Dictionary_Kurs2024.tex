@@ -1,0 +1,4301 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dictionary
+% LaTeX Template
+% Version 1.0 (20/12/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Vel (vel@latextemplates.com) inspired by a template by Marc Lavaud
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt,a4paper,twoside]{article} % font size, A4 paper and two-sided margins
+
+\usepackage[top=3.5cm,bottom=3.5cm,left=3.7cm,right=4.7cm,columnsep=30pt]{geometry} % Document margins and spacings
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{textcomp} % Provides additional symbols
+\usepackage{tipa} % Provides additional symbols for phonetic characters
+
+\usepackage{palatino} % Font
+
+\usepackage{microtype} % Improves spacing
+
+\usepackage{graphicx}
+
+\usepackage{multicol} % Required for splitting text into multiple columns
+
+\usepackage[bf,center]{titlesec} % Required for modifying section titles - bold, sans-serif, centered
+
+\usepackage{fancyhdr} % Required for modifying headers and footers
+\fancyhead[L]{\rightmark} % Top left header
+\fancyhead[R]{\leftmark} % Top right header
+\renewcommand{\headrulewidth}{1.4pt} % Rule under the header
+\fancyfoot[L]{\footnotesize{© Mahîr Dogan 2025}} % Bottom left footer
+\fancyfoot[C]{\textbf{\textsf{\thepage}}} % Bottom center footer
+\renewcommand{\footrulewidth}{1.4pt} % Rule under the footer
+\pagestyle{fancy} % Use the custom headers and footers throughout the document
+
+\usepackage{ifthen} % Required for conditional statements
+\usepackage{xifthen} % Needed for the \isempty command
+
+\newcommand{\entry}[6]{
+  \markboth{#1}{#1} % Print the first word on the page in the top left header and the last word in the top right header
+  \textbf{#1} % Kurdish entry in bold
+    \ifthenelse{\isempty{#4}}{}{ (\textit{#4})} % Gender, if provided, in italics and parentheses
+  \ifthenelse{\isempty{#2}}{}{({\textasciitilde} #2)} % Variants, if provided, in (~ variant) format
+  \ \textsc{#3} % Part of speech in smallcaps
+    $\bullet$ % Bullet point after the entry
+  {#6} % German translation
+  \ifthenelse{\isempty{#5}}{}{\par\noindent --- {Std.:} #5} % Standard, if provided, starts on a new line
+}
+
+\newcommand{\gentry}[5]{%
+  \markboth{#1}{#1} % Header markers
+  \textbf{#1} % German entry in bold
+  \ \textsc{#2} % Part of speech in smallcaps
+  $\bullet$ % Bullet point
+  #3 % Kurdish translation
+  \ifthenelse{\isempty{#4}}{}{ (\textit{#4})} % Gender, if provided
+  \ifthenelse{\isempty{#5}}{}{\par\noindent --- Std.: #5} % Standard, if provided
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	Title
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+   \begin{center}
+    \vspace*{1cm}
+
+       
+        {\Huge\textbf{Kirmanckî (Zazakî) Mini-Wörterbuch}}
+
+        \vspace{0.5cm}
+        {\Large Dêrsimer Dialekt}
+
+        \vspace{0.8cm}
+           
+        \textbf{\copyright{} Mahîr Dogan}\\
+        2025
+            
+        \vspace{1.5cm}
+
+        \vfill
+            
+       Begleitmaterial für den Anfängerkurs\\
+       in Kirmanckî (Zazakî)\\
+       \vspace{0.8cm}
+       Version 1.0     
+       
+
+   \end{center}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	INTRO
+%----------------------------------------------------------------------------------------
+
+\section*{Vokabeln zum Kirmanckî-Kurs}
+
+Dieses Mini-Wörterbuch dient als Nachschlagewerk und beinhaltet zum einen alle Vokabeln, die im Anfängerkurs gebraucht werden, sowie zusätzliche Wörter, die im Alltag nützlich sein werden. Die Einträge sind alphabetisch gemäß dem Dêrsimer Dialekt des Kirmanckî (Zazakî) aufgelistet. Das Wörterbuch beinhaltet darüber hinaus Einträge aus dem Standardkirmanckî, welche in der Schriftsprache und in diesem Kurs genutzt werden.\\
+\\
+Ein Eintrag ist wie folgt aufgebaut:
+\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Wörterbuch.png}
+\end{figure}
+\\
+Viele Wortklassen des Kirmanckî können wechseln, so kann ein Adjektiv oder Verb auch als Nomen genutzt oder ein Nomen in ein Adjektiv umgewandelt werden. Diese Variation wird hier nicht berücksichtigt. Sollte ein Wort beispielsweise als Nomen (\textsc{nom}) aufgelistet sein, so heißt das nicht zwangsläufig, dass die Nutzung darauf beschränkt ist.
+\subsection*{\textbf{Abkürzungen}}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l l}
+        \textsc{adj} & Adjektiv \\ 
+        \textsc{adv} & Adverb \\
+        \textsc{dem} & Demonstrativpronomen \\
+        \textsc{frg} & Fragewort \\
+        \textsc{intrj} & Interjektion \\
+        \textsc{konj} & Konjunktion \\
+        \textsc{nom} & Nomen \\
+        \textsc{post} & Postposition \\
+        \textsc{präp} & Präposition \\
+        \textsc{pron} & Pronomen \\
+        \textsc{ptkl} & Partikel \\
+        \textsc{verb} & Verb \\
+        \textsc{vok} & Vokativ \\
+        \textsc{zahl} & Zahl\\
+        \textsc{zirk} & Zirkumposition \\
+         & \\
+        \textit{-e, -îye} & \textit{Femininendung}\\
+        \textit{n} & nêrî (maskulin)\\
+        \textit{m} & makî (feminin)\\
+        \textit{zh} & zafhûmar (Plural)\\
+    \end{tabular}
+\end{table}
+\clearpage
+
+%----------------------------------------------------------------------------------------
+%	Kirmanckî - Deutsch
+%----------------------------------------------------------------------------------------
+\begin{titlepage}
+    \begin{center}
+        \vspace*{\stretch{1}}
+        {\Huge\textbf{Kirmanckî - Deutsch}} 
+        \vspace*{\stretch{1}}
+    \end{center}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	SECTION A
+%----------------------------------------------------------------------------------------
+
+\section*{A}
+
+\begin{multicols}{2}
+
+\entry{a\textsuperscript{1}}{}{pron}{m}{}{sie (Singular)}
+
+\entry{a\textsuperscript{2}}{}{dem}{m}{}{jene; die/das dort (Singular)}
+
+\entry{a\textsuperscript{3}}{ya}{post}{}{}{mit; anhand}
+
+\entry{acêba}{}{}{}{}{$\rightarrow$ \textbf{ecêba}}
+
+\entry{adare}{}{nom}{m}{}{März $\rightarrow$ \textbf{marte}}
+
+\entry{adir}{}{nom}{n}{}{Feuer}
+
+\entry{adirge}{}{nom}{n}{}{Feuerzeug}
+
+\entry{aferîn}{}{intrj}{}{}{gut gemacht}
+
+\entry{Afrîka}{}{nom}{m}{}{Afrika}
+
+\entry{afrîkayiz}{afrîkayic}{nom}{-e}{afrîkayij}{Afrikaner/in}
+
+\entry{aha}{}{intrj}{}{}{\textit{Ausruf für Vorsicht, Verwunderung oder Erleichterung}}
+
+\entry{Akrê}{}{nom}{m}{}{\textit{Stadt in Kurdistan}}
+
+\entry{alaqe}{}{nom}{m}{}{$\rightarrow$ \textbf{eleqe}}
+
+\entry{alaqedar}{}{adj}{}{}{$\rightarrow$ \textbf{eleqedar}}
+
+\entry{alawî}{}{nom}{-ye}{}{$\rightarrow$ \textbf{elewî}}
+
+\entry{albaz}{alboz}{nom}{-e}{embaz}{\textsuperscript{1}Freund/in, Kumpel/in $\rightarrow$ \textbf{heval} \textsuperscript{2}Gefährte/in, Begleiter/in \par\noindent\textit{Xizir albazê to bo} - Möge Xizir dein Begleiter sein / an deiner Seite stehen}
+
+\entry{album}{}{nom}{n}{}{Album}
+
+\entry{alfabe}{}{nom}{m}{}{Alphabet}
+
+\entry{Alî}{Elî}{nom}{n}{}{\textit{männl. Vorname}}
+
+\entry{Alîşêr}{Elîşêr}{nom}{n}{}{\textit{männl. Vorname}}
+
+\entry{alman}{}{nom}{-e}{}{Deutsche/r}
+
+\entry{almankî}{}{nom}{m}{}{Deutsch, die deutsche Sprache}
+
+\entry{Almanya}{}{nom}{m}{}{Deutschland}
+
+\entry{alo}{}{}{}{}{Hallo \textit{(Am Telefon)}}
+
+\entry{alunça}{}{nom}{m}{}{Mirabelle, Braunelle, Pflaume $\rightarrow$ \textbf{hêrige}}
+
+\entry{ama}{}{konj}{}{}{$\rightarrow$ \textbf{hama}}
+
+\entry{Amed}{}{nom}{n}{}{$\rightarrow$ \textbf{Dîyarbekir}}
+
+\entry{Amerîka}{Hemilka}{nom}{m}{}{Amerika}
+
+\entry{ameyene}{amayene}{verb}{}{}{kommen, ankommen \par\noindent\textit{Bê!} - Komm!}
+
+\entry{amike}{ame}{nom}{-e}{emike, eme}{Tante väterlicherseits}
+
+\entry{amiza}{lazê amike, lacê amike}{nom}{n}{emiza, lajê emike}{Cousin, Sohn der Tante väterlicherseits}
+
+\entry{amnan}{amnon, amlon}{nom}{n}{hamnan}{Sommer}
+
+\entry{amnanî}{amnonî, amlonî}{adv}{}{hamnanî}{im Sommer, in der Sommerzeit}
+
+\entry{amnano peyên}{amnono peyên, amlono peyên}{nom}{n}{}{August $\rightarrow$ \textbf{a\"{x}ustose}}
+
+\entry{amnano virên}{amnono virên, amlono virên}{nom}{n}{}{Juni $\rightarrow$ \textbf{hazîrane}}
+
+\entry{amnano wertên}{amnono wertên, amlono wertên}{nom}{n}{}{Juli $\rightarrow$ \textbf{temmuze}}
+
+\entry{antene}{ontene}{verb}{}{}{ziehen}
+
+\entry{ap}{}{nom}{n}{}{Onkel väterlicherseits $\rightarrow$ \textbf{ded}}
+
+\entry{Apil}{}{nom}{n}{}{\textit{männl. Vorname}}
+
+\entry{ara}{}{nom}{m}{arayî}{Frühstück}
+
+\entry{arab}{areb}{nom}{-e}{ereb}{Araber/in}
+
+\entry{arabkî}{arebkî}{nom}{m}{erebkî}{Arabisch}
+
+\entry{ardene}{}{verb}{}{}{(her)bringen, (her)holen, herbeiholen, heranbringen, einbringen}
+
+\entry{ardim}{}{nom}{n}{}{Hilfe, Mithilfe, Aushilfe}
+
+\entry{ardî}{}{nom}{zh}{}{Mehl}
+
+\entry{arebe}{araba, \textasciitilde \textit{m}}{nom}{n}{erebe}{Auto; Wagen}
+
+\entry{armanc}{amaç}{nom}{n}{}{Zweck, Ziel, Absicht}
+
+\entry{asayene}{osayene}{verb}{}{}{(er)scheinen, aussehen, sichtbar werden, in Erscheinung treten}
+
+\entry{asin}{osin}{nom}{n}{}{Eisen}
+
+\entry{asme}{}{nom}{m}{aşme}{\textsuperscript{1}Mond \textsuperscript{2}Monat}
+
+\entry{asmên}{}{nom}{n}{}{Himmel}
+
+\entry{aspar}{aspor, ospor}{nom}{-e}{espar}{Reiter/in}
+
+\entry{astare}{}{nom}{n}{estare}{Stern}
+
+\entry{astor}{ostor}{nom}{-e}{estor}{Pferd}
+
+\entry{aşt}{haşt}{adj}{-e}{}{versöhnt, vertragen}
+
+\entry{aştîye}{haştîye}{nom}{m}{}{Frieden, Harmonie}
+
+\entry{astronot}{}{nom}{-e}{}{Astronaut/in, Raumfahrer/in}
+
+\entry{aşîre}{eşîre}{nom}{m}{eşîre}{Stamm, Clan, Sippe}
+
+\entry{aver}{}{adv}{}{}{$\rightarrow$ \textbf{raver}}
+
+\entry{avê}{}{adv}{}{}{$\rightarrow$ \textbf{raver}}
+
+\entry{avûkat}{}{nom}{-e}{}{Anwalt/Anwältin, Rechts\-anwalt / Rechts\-anwältin}
+
+\entry{awe}{awke, aw\"{x}e}{nom}{m}{}{Wasser; Gewässer}
+
+\entry{awe û werd}{}{nom}{n}{}{Essen und Getränke, Speis und Trank; Speisen $\rightarrow$ \textbf{nan û awe}}
+
+\entry{awrês}{arwes, awreş}{nom}{-e}{hargûş}{Hase}
+
+\entry{axirî}{}{adv}{}{}{endlich, schließlich, zu guter Letzt}
+
+\entry{axure}{}{nom}{m}{}{Stall}
+
+\entry{a\"{x}ustose}{}{nom}{m}{tebaxe}{August}
+
+\entry{a\"{x}û}{}{nom}{n}{}{Gift, Giftstoff}
+
+\entry{aye}{}{pron}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{a\textsuperscript{1}}}
+
+\entry{Azad}{}{nom}{n}{}{\textit{männl. Vorname}}
+
+\entry{azad}{}{adj}{-e}{}{frei, unabhängig, eigenständig}
+
+\entry{azadênî}{}{nom}{m}{}{$\rightarrow$ \textbf{azadîye}}
+
+\entry{azadîye}{}{nom}{m}{}{Freiheit, Unabhängigkeit, Eigenständigkeit}
+
+\entry{azeb}{}{adj}{-e}{}{\textsuperscript{1}ledig, unverheiratet \textsuperscript{2}Jungfrau}
+
+\entry{azne}{}{nom}{n}{ajne}{Schwimmen; Schwimmsport}
+
+\entry{azne kerdene}{}{verb}{n}{ajne kerdene}{schwimmen}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION B
+%----------------------------------------------------------------------------------------
+
+\section*{B}
+
+\begin{multicols}{2}
+
+\entry{babete}{}{nom}{m}{}{\textsuperscript{1}Thema, Betreff \textsuperscript{2}Angelegenheit, Sachverhalt}
+
+\entry{bacenax}{}{nom}{n}{}{Schwippschwager, Mann der der Schwester der Ehefrau $\rightarrow$ \textbf{hevalzava}}
+
+\entry{bacike}{}{nom}{m}{}{Schwägerin \textit{(Schwester des Ehemanns)} $\rightarrow$ \textbf{zeyîye}}
+
+\entry{badê}{}{adv}{}{}{danach, später, nachher}
+
+\entry{badêna}{}{adv}{}{}{danach, später, nachher $\rightarrow$ \textbf{badê}}
+
+\entry{balduze}{}{nom}{m}{}{Schwägerin, Schwester der Ehefrau}
+
+\entry{balîsna}{}{nom}{m}{balîşna}{Kissen, Kopfkissen; Polster}
+
+\entry{balkêş}{}{adj}{-e}{}{interessant, achtungswert, beeindruckend, erstaunlich $\rightarrow$ \textbf{enteresan}}
+
+\entry{balon}{}{nom}{n}{}{Luftballon, Ballon}
+
+\entry{ban}{bon}{nom}{n}{}{Haus, Gebäude}
+
+\entry{banyo}{}{nom}{n}{}{\textsuperscript{1}Bad \textsuperscript{2}Badezimmer}
+
+\entry{baqil}{}{adj}{-e}{}{$\rightarrow$ \textbf{biaqil}}
+
+\entry{bar}{}{nom}{n}{}{\textsuperscript{1}Last, Ladung, Beladung; Ballast \textsuperscript{2}Bürde, Belastung, Beschwernis \textsuperscript{3}Bar}
+
+\entry{Baran}{}{nom}{n}{}{\textit{männl. Vorname}}
+
+\entry{barber}{}{nom}{-e}{}{Lieferant/in; Kurier/in; Lastenträger $\rightarrow$ \textbf{hemal}}
+
+\entry{bardaxe}{}{nom}{m}{}{Becher, Trinkglas, Glas}
+
+\entry{barî}{}{adj}{-ye}{}{dünn}
+
+\entry{barzingan}{}{nom}{-e}{}{$\rightarrow$ \textbf{bazirgan}}
+
+\entry{bav û \.{k}al}{}{nom}{n}{}{Vorfahren, Ahnen}
+
+\entry{bawo}{}{vok}{}{}{\textsuperscript{1}\textit{Anredefall von} $\rightarrow$ \textbf{pî} \textsuperscript{2}\textsc{intrj} \textit{Ausdruf der Wehklage}}
+
+\entry{baxçe}{}{nom}{n}{}{Garten; Gärtnerei}
+
+\entry{baxçewan}{}{nom}{-e}{}{Gärtner/in}
+
+\entry{ba\"{x}}{}{nom}{n}{bax}{\textsuperscript{1}Gemüsegarten \textsuperscript{2}Weinberg}
+
+\entry{bayram}{}{nom}{n}{roşan}{\textsuperscript{1}Feiertag, Festtag \textsuperscript{2}Feier, Fest}
+
+\entry{bazar}{}{nom}{n}{}{\textsuperscript{1}Sonntag \textsuperscript{2}Basar, Markt, Marktplatz; Wochenmarkt \textsuperscript{3}Handel, Markt}
+
+\entry{bazirgan}{barzingan}{nom}{-e}{}{Händler/in, Kaufmann/Kauffrau}
+
+\entry{be}{bi, ebe, ebi}{präp}{}{bi}{mit; via, mittels}
+
+\entry{be ... ra}{(e)ve ... ra, (e)bi ... (y)a}{zirk}{}{bi ... ra}{\textsuperscript{1}mit \textsuperscript{2}und}
+
+\entry{bekmez}{}{nom}{n}{}{Maulbeersirup}
+
+\entry{beledîya}{beledîye}{nom}{m}{beledîya, şaredarîye}{\textsuperscript{1}Stadtverwaltung, Gemeindeverwaltung, Stadtrat \textsuperscript{2}Gemeinde, Kommune}
+
+\entry{belê}{}{ptkl}{}{}{ja, jawohl $\rightarrow$ \textbf{heya}}
+
+\entry{belkî}{}{adv}{}{}{$\rightarrow$ \textbf{beno ke}}
+
+\entry{beno ke}{}{adv}{}{}{vielleicht, möglicherweise \par\noindent\textit{Beno ke ewro derse çîn a} - Vielleicht findet heute kein Unterricht statt}
+
+\entry{beran}{}{nom}{n}{}{Widder, Schafbock}
+
+\entry{berber}{}{nom}{-e}{}{Friseur/in}
+
+\entry{berdene}{}{verb}{}{}{\textsuperscript{1}(weg)bringen, fortführen, fortbringen \textsuperscript{2}transportieren, tragen}
+
+\entry{bereqîyayene}{}{verb}{}{beriqîyayene}{scheinen, glänzen, funkeln}
+
+\entry{Berfîne}{}{nom}{m}{}{\textit{weibl. Vorname}}
+
+\entry{berxûdar}{}{adj}{-e}{}{glücklich, gesegnet} \par\noindent\textit{Berxûdar be! - Gesegnet sei's du!}
+
+\entry{berz}{}{adj}{-e}{}{hoch}
+
+\entry{berzîye}{berjîye}{nom}{m}{}{Höhe, Anhöhe; Hoheit}
+
+\entry{bes}{}{adj}{-e}{}{genug, genügend, ausreichend, hinlänglich}
+
+\entry{bes bîyene}{}{verb}{}{}{reichen, ausreichen, hinreichen, langen, genügen \par\noindent\textit{Bes o.} - Es reicht.}
+
+\entry{besekerdene}{}{verb}{}{}{können, fähig sein, zu tun vermögen $\rightarrow$ \textbf{şîkîyayene\textsuperscript{1}} \par\noindent\textit{Mi besenêkerd bikerî.} - Ich konnte es nicht machen.}
+
+\entry{bexêr}{bixêr, bexeyr}{adj}{-e}{bixeyr}{segensreich, Segen bringend, Heil bringend; $\rightarrow$ \textbf{xêr} \par\noindent\textit{Ma bexêr dî!} - Hallo!}
+
+\entry{bext}{}{nom}{n}{}{\textsuperscript{1}Schicksal, Los, Bestimmung \textsuperscript{2}Glück}
+
+\entry{bê}{}{präp}{}{}{ohne, -los \par\noindent\textit{Bê mi meso} - Geh nicht ohne mich}
+
+\entry{bêbext}{}{adj}{-e}{}{\textsuperscript{1}unglücklich, Pechvogel \textsuperscript{2}hinterlistig, hinterhältig, verräterisch, heimtückisch $\rightarrow$ \textbf{xayîn}}
+
+\entry{bêçike}{}{nom}{m}{}{Finger}
+
+\entry{bêkar}{}{adj}{-e}{}{arbeitslos, erwerbslos}
+
+\entry{bêpere}{}{adj}{-e}{}{umsonst, gratis, kostenlos}
+
+\entry{bicêk}{bijêk}{nom}{-e}{bizêk}{Zicklein}
+
+\entry{bijêk}{bicêk}{nom}{-e}{bizêk}{Zicklein}
+
+\entry{biko}{}{vok}{}{}{\textit{Anredfall für junge Männer oder Buben}}
+
+\entry{bilusk}{}{nom}{n}{}{Blitz}
+
+\entry{biaqil}{baqil}{adj}{-e}{}{\textsuperscript{1}klug, clever, intelligent \textsuperscript{2}artig, gehorsam. gescheit}
+
+\entry{bimbarek}{}{adj}{-e}{}{\textsuperscript{1}heilig, gesegnet \textsuperscript{2}froh \par\noindent\textit{Roşanê sima bimbarek bo!} - (Euch einen) Frohen Feiertag!}
+
+\entry{bin}{}{nom}{n}{}{Unten; Unter-}
+
+\entry{bin de}{}{adv, post}{}{}{darunter, drunter, unterhalb, unter $\rightarrow$ \textbf{binê ... de}}
+
+\entry{bin kotene}{}{verb}{}{}{unterliegen, verlieren}
+
+\entry{binê ... de}{}{zirk}{}{}{darunter, drunter, unterhalb, unter $\rightarrow$ \textbf{bin de}}
+
+\entry{binge}{}{nom}{n}{}{Grund, Grundlage, Basis, Fundament}
+
+\entry{bira}{}{nom}{n}{}{Bruder}
+
+\entry{birak}{}{nom}{,-e}{}{Liebhaber/in; Affäre}
+
+\entry{birayênî}{}{nom}{m}{}{$\rightarrow$ \textbf{birayîye}}
+
+\entry{birayîye}{}{nom}{m}{}{Brüderlichkeit, Brüderschaft}
+
+\entry{biraza}{birarza}{nom}{n}{}{Neffe \textit{(Sohn des Bruders)}}
+
+\entry{birazaye}{birarzaye}{nom}{m}{}{Nichte \textit{(Tochter des Bruders)}}
+
+\entry{birinc}{}{nom}{n}{}{Reis}
+
+\entry{birrak}{}{nom}{n}{}{$\rightarrow$ \textbf{birrek}}
+
+\entry{birrek}{birrak}{nom}{n}{}{Säge}
+
+\entry{bişî}{}{nom}{m}{}{\textit{trad. Pfannkuchengebäck}}
+
+\entry{bitaybetî}{}{adv}{}{}{insbesondere, im Besonderen, vorzugsweise}
+
+\entry{bitir pêrar}{}{adv}{}{}{vorvorletztes Jahr, vor drei Jahren}
+
+\entry{biza \.{k}irre}{}{nom}{m}{}{Bergziege $\rightarrow$ \textbf{pezkovî}}
+
+\entry{bize}{}{nom}{m}{}{Ziege}
+
+\entry{bîn}{}{adj}{-e}{}{andere/r/s; sonstige/r/s}
+
+\entry{bîna}{}{nom}{m}{}{Bauwerk, Baulichkeit; Gebäude $\rightarrow$ \textbf{ban}}
+
+\entry{bîra}{}{nom}{m}{}{Bier}
+
+\entry{bîsîklete}{}{nom}{m}{}{Fahrrad}
+
+\entry{bîyene\textsuperscript{1}}{}{verb}{}{}{sein; existieren}
+
+\entry{bîyene\textsuperscript{2}}{}{verb}{}{}{\textsuperscript{1}werden \textsuperscript{2}geschehen \par\noindent\textit{Beno nêbeno} - Es war einmal}
+
+\entry{burî}{}{nom}{zh}{birûyî}{Augenbraue(n)}
+
+\entry{buro}{}{nom}{n}{}{\textsuperscript{1}Büro, Dienststelle \textsuperscript{2}Kanzlei, Praxis $\rightarrow$ \textbf{ofîs}}
+
+\entry{bom}{}{adj}{-e}{}{\textsuperscript{1}dumm, blöd \textsuperscript{2}närrisch, verrückt, irre}
+
+\entry{bon}{}{nom}{n}{}{$\rightarrow$ \textbf{ban}}
+
+\entry{bot}{}{nom}{n}{}{Stiefel}
+
+\entry{bote}{}{nom}{m}{}{Boot}
+
+\entry{bostan}{}{nom}{n}{}{Gemüsegarten, Kräutergarten}
+
+\entry{bover}{}{nom}{n}{}{Gegenseite, gegenüberliegende Seite, Gegenufer}
+
+\entry{boye}{}{nom}{m}{}{Geruch, Duft}
+
+\entry{bravo}{}{intrj}{}{}{Bravo}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION C
+%----------------------------------------------------------------------------------------
+
+\section*{C}
+
+\begin{multicols}{2}
+
+\entry{ca}{}{nom}{n}{}{\textsuperscript{1}Platz, Ort, Stelle, Position \textsuperscript{2}Raum, (freier) Platz \textsuperscript{3}Gegend}
+
+\entry{camord}{}{nom}{n}{camêrd}{\textsuperscript{1}Herr, Mann \textsuperscript{2}Edelmann, Recke, Gentlemann \textsuperscript{3}Held}
+
+\entry{camusqirane}{}{nom}{m}{}{$\rightarrow$ \textbf{payîze\textsuperscript{1}}}
+
+\entry{can}{}{nom}{n}{}{\textsuperscript{1}Seele, Geist \textsuperscript{2}Leben}
+
+\entry{candar}{}{adj}{-e}{}{\textsuperscript{1}beseelt, belebt \textsuperscript{2}lebendig, animiert}
+
+\entry{cayê}{}{adv}{}{}{\textsuperscript{1}irgendwo; irgendein Ort \textsuperscript{2}\textit{(verneint)} nirgendwo, gar kein Ort}
+
+\entry{cem}{}{nom}{n}{}{Cem \textit{(alevitische Zeremonie)}}
+
+\entry{cem girêdayene}{}{verb}{}{}{$\rightarrow$ \textbf{Cem} abhalten}
+
+\entry{cemat}{}{nom}{n}{}{Gemeinde, Gesellschaft, Community}
+
+\entry{cemed}{}{nom}{n}{}{Eis}
+
+\entry{cenet}{}{nom}{n}{}{Paradies}
+
+\entry{ceng}{}{nom}{n}{}{Krieg, Gefecht \par\noindent\textit{Cengê Cîhanî yo I.} - der 1. Weltkrieg}
+
+\entry{cerebnayene}{}{verb}{}{ceribnayene}{versuchen, probieren, testen}
+
+\entry{ceza}{}{nom}{m}{}{Strafe, Buße, Bestrafung}
+
+\entry{cêb}{}{nom}{n}{cêbe}{Tasche (am Kleidungsstück)}
+
+\entry{cênî}{cînî}{nom}{m}{cinî}{Ehefrau, Gattin}
+
+\entry{cênî û mêrde}{cînî û mêrde}{nom}{zh}{cinî û mêrde}{Ehepaar, Eheleute, Ehegatten; Ehemann und Ehefrau}
+
+\entry{cênîke}{cînîke}{nom}{m}{cinîke}{Frau}
+
+\entry{cêr}{}{nom}{n}{}{\textsuperscript{1}das Untere, unten \textsuperscript{2}runter, hinunter, hinab \par\noindent\textit{Cêr ro vengê yeno} - Eine Stimme kommt von unten}
+
+\entry{cêrayene}{}{verb}{}{gêrayene}{\textsuperscript{2}kreisen, umlaufen \textsuperscript{2}spazieren, umhergehen, herumgehen, herumspazieren \textsuperscript{2}bereisen, begehen, streifen \textsuperscript{3}suchen $\rightarrow$ \textbf{fetelîyayene}}
+
+\entry{cêrîye}{}{nom}{m}{}{Schwägerin \textit{(Die Frau des Schwagers/Bruders des Ehemannes)}}
+
+\entry{cêrnus}{}{nom}{n}{}{Untertitel}
+
+\entry{ci}{}{pron}{}{}{\textit{Pronomen der 3. Person im 2. Fall}}
+
+\entry{cigêrayîş}{}{nom}{n}{}{\textsuperscript{1}Studie, Untersuchung, Forschung \textsuperscript{2}Suche, Erforschung}
+
+\entry{cile}{}{nom}{m}{}{Bett}
+
+\entry{cite}{}{nom}{m}{}{Paar}
+
+\entry{citkar}{}{nom}{-e}{}{Landwirt, Bauer; Feldarbeiter}
+
+\entry{cizdan}{}{nom}{n}{}{Geldbeutel, Portemonnaie}
+
+\entry{cîgere}{}{nom}{m}{}{Leber}
+
+\entry{cîld}{}{nom}{n}{}{\textsuperscript{1}Haut \textsuperscript{2}Band, Einband}
+
+\entry{cînî}{nom}{}{}{}{$\rightarrow$ \textbf{cênî}}
+
+\entry{cînîke}{nom}{}{}{}{$\rightarrow$ \textbf{cênîke}}
+
+\entry{cîran}{}{nom}{-e}{cîran, embiryan}{Nachbar/in}
+
+\entry{cîya}{}{adv}{}{}{\textsuperscript{1}getrennt, auseinander, gesondert \textsuperscript{2}verschieden, andersartig}
+
+\entry{coka}{}{konj}{}{}{darum, deswegen, daher, deshalb}
+
+\entry{cor}{}{nom}{n}{}{\textsuperscript{1}der Obere, oben \textsuperscript{2}hoch, rauf, hinauf}
+
+\entry{cuye}{}{nom}{m}{cu}{Leben $\rightarrow$ \textbf{heyat}}
+
+\entry{cün}{}{nom}{n}{cuwen}{Dreschplatz, Tenne}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Ç
+%----------------------------------------------------------------------------------------
+
+\section*{Ç}
+
+\begin{multicols}{2}
+
+\entry{çakêt}{}{nom}{n}{}{Jacke; Sakko}
+
+\entry{çakuç}{kakuç}{nom}{n}{}{Hammer}
+
+\entry{çamure}{}{nom}{m}{}{Schlamm}
+
+\entry{çand}{}{frg}{}{}{$\rightarrow$ \textbf{çend}}
+
+\entry{çante}{}{nom}{n}{}{Tasche, Handtasche}
+
+\entry{çar}{çor}{zahl}{}{}{vier}
+
+\entry{çarnayene}{}{verb}{}{}{\textsuperscript{1}wenden, drehen \textsuperscript{2}übersetzen \textsuperscript{3}\textit{(am Telefon etc.)} eine Nummer wählen}
+
+\entry{çarseme}{çorseme}{nom}{n}{çarşeme}{Mittwoch}
+
+\entry{çawres}{}{zahl}{}{}{$\rightarrow$ \textbf{çewres}}
+
+\entry{çax}{}{nom}{n}{}{\textsuperscript{1}Zeit \textsuperscript{2}Ära, Periode}
+
+\entry{çay}{}{nom}{n}{}{Tee}
+
+\entry{çayê}{ça}{frg}{}{}{warum, weshalb, wieso}
+
+\entry{çayxane}{}{nom}{n}{}{Teehaus}
+
+\entry{çekuye}{}{nom}{m}{}{Wort}
+
+\entry{çele}{}{nom}{n}{}{Januar}
+
+\entry{çend}{çand, çond}{frg}{}{çend}{\textsuperscript{1}wie viel \textit{(zählbar)} \textsuperscript{2}mehrere, einige \par\noindent\textit{Çend teneyî est ê?} - Wie viel Stück gibt es? \par\noindent\textit{Çend serrî vêrdî ra.} - Es sind einige Jahre vergangen.}
+
+\entry{çem}{}{nom}{n}{}{Fluss}
+
+\entry{çember}{}{nom}{n}{}{Ring, Reif, Kessel}
+
+\entry{Çemîşgezek}{}{nom}{n}{}{\textit{Stadt in Dêrsim (türk. Çemişgezek)}}
+
+\entry{çep}{}{adv}{}{}{links}
+
+\entry{çep a}{}{adv}{}{}{verkehrt, verkehrtherum \par\noindent\textit{Sima çep a şîyê.} - Ich seid den falschen Weg gegangen.}
+
+\entry{çeper}{}{nom}{n}{}{Zaun, Abzäuning; Abgrenzung}
+
+\entry{çeqer}{}{adj}{-e}{}{gelb}
+
+\entry{çerdene}{}{verb}{}{}{weiden, hüten}
+
+\entry{çerme}{}{nom}{n}{}{\textsuperscript{1}Leder \textsuperscript{2}Haut $\rightarrow$ \textbf{poste}}
+
+\entry{çewres}{çawres, çores}{zahl}{}{}{vierzig}
+
+\entry{çê}{kê}{nom}{n}{keye}{\textsuperscript{1}Heim, Zuhause, Daheim \textsuperscript{2}Familie}
+
+\entry{çêber}{}{nom}{n}{keyber}{Tür, Haustür}
+
+\entry{çêf}{}{nom}{n}{}{$\rightarrow$ \textbf{kêf}}
+
+\entry{çêna}{}{nom}{m}{kêna}{Tochter}
+
+\entry{çêna amike}{}{nom}{m}{emkêna}{Cousine \textit{(Tochter der Tante väterlicherseits)}}
+
+\entry{çêna apî}{çêna dedî, derezaye}{nom}{m}{datkêna}{Cousine \textit{(Tochter des Onkels väterlicherseits)}}
+
+\entry{çêna xalî}{}{nom}{m}{xalkêna}{Cousine \textit{(Tochter des Onkels mütterlicherseits)}}
+
+\entry{çêna xalike}{}{nom}{m}{xalekêna}{Cousine \textit{(Tochter der Tante mütterlicherseits)}}
+
+\entry{çêneke}{}{nom}{m}{kêneke}{Mädchen}
+
+\entry{çêr}{}{adj}{-e}{}{mutig, tapfer, kühn, wacker, beherzt}
+
+\entry{çêvêsaye}{}{intrj}{}{keyveşaye}{\textit{Ausruf für Wut, Empörung, Bedauern}}
+
+\entry{çi}{çik}{frg}{n}{}{was \par\noindent\textit{O çik o?} - Was ist das? \par\noindent\textit{Mi rê çi.} - Mir egal.}
+
+\entry{çik}{}{frg}{}{}{$\rightarrow$ \textbf{çi}}
+
+\entry{çike}{}{konj}{}{}{weil, denn}
+
+\entry{çila}{}{nom}{m}{}{\textsuperscript{1}Fackel \textsuperscript{2}Lampe $\rightarrow$ \textbf{lamba}}
+
+\entry{çim}{}{nom}{n}{}{Auge \par\noindent\textit{Çiman ser} - Gern geschehen}
+
+\entry{çime}{}{nom}{n}{}{Quelle, Quell}
+
+\entry{çinayî}{çikî}{frg}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{çi}}
+
+\entry{çinayî ra}{}{frg}{}{}{$\rightarrow$ \textbf{çira}}
+
+\entry{çinayî rê}{}{frg}{}{}{wozu, wofür}
+
+\entry{çiqas}{çiqaşî, çiqa, çixa}{frg}{}{}{\textsuperscript{1}wie viel \textit{(unzählbar)} \textsuperscript{2}wie (sehr) \par\noindent\textit{Çiqas keno?} - Wie viel macht das? \par\noindent\textit{Çiqas rindek o!} - Wie schön das ist!}
+
+\entry{çira}{çirê}{frg}{}{}{warum, weshalb, wieso}
+
+\entry{çirê}{çira}{frg}{}{}{warum, weshalb, wieso}
+
+\entry{çita}{}{frg}{}{}{$\rightarrow$ \textbf{çi}}
+
+\entry{çitan}{çiton}{frg}{}{çitur}{wie; inwiefern $\rightarrow$ \textbf{senî} \par\noindent\textit{Ti çitan a?} - Wie geht's dir?}
+
+\entry{çiturî}{}{frg}{}{çitur}{wie; inwiefern $\rightarrow$ \textbf{senî} \par\noindent\textit{Ti çiturî ya?} - Wie geht's dir?}
+
+\entry{çî}{}{nom}{n}{}{\textsuperscript{1}etwas \textsuperscript{2}Sache, Ding, Gegenstand}
+
+\entry{çîçege}{}{nom}{m}{}{Blume $\rightarrow$ \textbf{vîlike}}
+
+\entry{çî-mî}{}{nom}{n}{}{Sachen, Gegenstände}
+
+\entry{çîn bîyene}{}{verb}{}{çin bîyene}{nicht sein, nicht existieren, nicht da sein, nicht vorhanden sein \par\noindent\textit{Kes çîn o.} - Niemand ist da. \par\noindent\textit{Perê mi çîn o.} - Ich habe kein Geld.}
+
+\entry{çînitene}{çînayene}{verb}{}{}{ernten, abernten}
+
+\entry{çîyê}{}{nom}{n}{}{\textsuperscript{1}irgendetwas, irgendeine Sache \textsuperscript{2}\textit{(verneint)} nichts, keine Sache}
+
+\entry{çok}{}{nom}{n}{}{Knie $\rightarrow$ \textbf{zanî}}
+
+\entry{çok ronayene}{}{verb}{}{}{knien, niederknien, auf die Knie gehen, auf die Knie fallen}
+
+\entry{çol}{}{nom}{n}{}{Wüste}
+
+\entry{çolîstan}{}{nom}{n}{}{Wüste, Wüstenlandschaft}
+
+\entry{çop}{}{nom}{n}{}{Müll, Abfall}
+
+\entry{çopdane}{}{nom}{m}{}{Mülleimer, Abfalleimer}
+
+\entry{çopole}{}{nom}{m}{}{Ohrfeige, Backpfeife, Klaps $\rightarrow$ \textbf{şîlpa\"{x}e}}
+
+\entry{çor}{}{zahl}{}{}{$\rightarrow$ \textbf{çar}}
+
+\entry{çorês}{}{zahl}{}{}{$\rightarrow$ \textbf{çewres}}
+
+\entry{çorr}{}{nom}{n}{}{ansteckende/virale Krankheit, Seuche $\rightarrow$ \textbf{jan}}
+
+\entry{çü}{çüye}{nom}{n}{}{Stock, Stab}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION D
+%----------------------------------------------------------------------------------------
+
+\section*{D}
+
+\begin{multicols}{2}
+
+\entry{da-}{}{ptkl}{}{}{\textit{(vor Zahlen)} circa, etwa, ungefähr, um die \par\noindent\textit{Da-vîşt mordemî ameyî} - Ca. zwanzig Männer sind gekommen}
+
+\entry{dahîna}{dayîna}{ptkl}{}{}{mehr \textit{(im Komparativ)}}
+
+\entry{daîma}{dayma}{adv}{}{}{immer, stets, allzeit; unaufhörlich}
+
+\entry{danî}{}{nom}{n}{}{Weizen-Kichererbsengrütze}
+
+\entry{dar û ber}{dar-ber}{nom}{n}{}{\textsuperscript{1}Bäume, Pflanzen \textit{(Kollektivum)} \textsuperscript{2}Natur}
+
+\entry{dare}{}{nom}{m}{}{Baum}
+
+\entry{darlox}{darlo\"{x}}{nom}{n}{}{\textit{die hölzerne Halterung für} $\rightarrow$ \textbf{lo\"{x}e}}
+
+\entry{dawa}{}{nom}{m}{}{Fall, (An)Klage, Prozess $\rightarrow$ \textbf{doze}}
+
+\entry{dawul}{}{nom}{n}{}{Trommel}
+
+\entry{daye}{}{pron}{}{}{$\rightarrow$ \textbf{aye}}
+
+\entry{dayene}{}{verb}{}{}{geben \par\noindent\textit{Bide!} - Gib!}
+
+\entry{dayê}{}{vok}{}{}{\textsuperscript{1}\textit{Anredefall von} $\rightarrow$ \textbf{maye} \textsuperscript{2}\textsc{intrj} \textit{Ausdruf der Wehklage}}
+
+\entry{dayîre}{}{nom}{n}{}{Kreis}
+
+\entry{de\textsuperscript{1}}{}{post}{}{}{\textsuperscript{1}in, im; bei \textsuperscript{2}mit}
+
+\entry{de\textsuperscript{2}}{}{intrj}{}{}{\textit{Ausruf der Anrede oder der Hervorhebung (vor allem in Liedern)}}
+
+\entry{ded}{}{nom}{n}{}{Onkel väterlicherseits $\rightarrow$ \textbf{ap}}
+
+\entry{delal}{}{adj}{-e}{}{hübsch, schön, stattlich}
+
+\entry{Delale}{}{nom}{m}{}{\textit{weibl. Vorname}}
+
+\entry{dele}{}{nom}{m}{}{Hündin}
+
+\entry{deleverge}{}{nom}{m}{}{Wölfin}
+
+\entry{dem}{}{nom}{n}{}{Zeit, Zeitraum}
+
+\entry{demokrat}{}{nom}{-e}{}{Demokrat/in}
+
+\entry{dengiz}{}{nom}{n}{}{$\rightarrow$ \textbf{derya}}
+
+\entry{deqa}{}{nom}{m}{}{Minute}
+
+\entry{der}{}{}{}{}{$\rightarrow$ \textbf{de\textsuperscript{1}}}
+
+\entry{der û cîran}{}{nom}{n}{}{Nachbarn \textit{(Kollektivum)}, Nachbarschaft}
+
+\entry{derd}{}{nom}{n}{}{Leid, Schmerz, Kummer \par\noindent\textit{Derdê to çik o?} - Was ist dein Problem?}
+
+\entry{dere}{}{nom}{n}{}{Bach, Strom, Flüsschen}
+
+\entry{dereza}{}{nom}{n}{}{Cousin (Sohn des Onkels väterlicherseits)}
+
+\entry{derê}{}{ptkl}{}{}{wohl, etwa \textit{(Fragepartikel)} $\rightarrow$ \textbf{tirêm}}
+
+\entry{derg}{}{adj}{-e}{}{lang, groß \textit{(Mensch)}}
+
+\entry{derheqa ... de}{}{zirk}{}{derheqê ... de}{bezüglich, in Bezug auf, betreffend, hinsichtlich}
+
+\entry{derse}{}{nom}{m}{}{\textsuperscript{1}Unterricht, Vorlesung \textsuperscript{2}Lektion, Lehre \par\noindent\textit{dersa xo kerdene} - (für den Unterricht) lernen}
+
+\entry{derse dayene}{}{verb}{}{}{\textsuperscript{1}unterrichten, Unterricht geben \textsuperscript{2}eine Lektion erteilen, eine Lehre erteilen}
+
+\entry{derûdor}{}{nom}{n}{}{Umgebung, Umland}
+
+\entry{derya}{}{nom}{n}{}{Meer}
+
+\entry{des}{}{zahl}{}{}{zehn}
+
+\entry{desinde}{}{adv}{}{}{sofort, eilig, alsbald, auf der Stelle}
+
+\entry{dest}{}{nom}{n}{}{Hand}
+
+\entry{dest ci kerdene}{}{verb}{}{dest pêkerdene}{anfangen, beginnen \par\noindent\textit{O dest be karê xo keno} - Er fängt mit seiner Arbeit an}
+
+\entry{dest\.{t}al}{dest\.{t}ol}{adj}{-e}{}{mit leeren Händen}
+
+\entry{destûr}{}{nom}{n}{}{Erlaubnis, Genehmigung, Berechtigung \par\noindent\textit{Destûr waştene} - Um Erlaubnis fragen/bitten}
+
+\entry{deşte}{}{nom}{m}{}{Ebene, Tiefland, Flachland}
+
+\entry{deve}{}{nom}{-îye}{}{Kamel}
+
+\entry{dewe}{}{nom}{m}{}{Dorf}
+
+\entry{dewiz}{dewic}{nom}{-e}{dewij}{\textsuperscript{1}Dorfbewohner/in, Dörfler/in \textsuperscript{2}Farmpächter/in}
+
+\entry{dewlemend}{}{adj}{-e}{}{reich, wohlhabend, vermögend}
+
+\entry{dewlete}{}{nom}{n}{}{Staat}
+
+\entry{dewletî}{}{adj}{-ye}{}{reich, wohlhabend, vermögend}
+
+\entry{dewr}{}{nom}{n}{}{Ära, Epoche, Zeit, Zyklus}
+
+\entry{dewrês}{}{adj}{-e}{}{\textsuperscript{1}Dervisch/in \textsuperscript{2}heilig}
+
+\entry{dey}{}{pron}{}{}{$\rightarrow$ \textbf{ey}}
+
+\entry{deyîrbaz}{}{nom}{-e}{}{Sänger/in $\rightarrow$ \textbf{ozan}}
+
+\entry{dez}{dec}{nom}{n}{}{Schmerz}
+
+\entry{Dêrsim}{Dêsim}{nom}{n}{}{\textit{Gebiet in Kurdistan (türk. Tunceli)}}
+
+\entry{dêrsimiz}{dêrsimic}{nom}{-e}{dêrsimij}{Dêrsimer/in; jemand, der aus Dêrsim stammt}
+
+\entry{dês}{}{nom}{n}{}{Wand, Mauer}
+
+\entry{di}{dide}{zahl}{}{}{zwei}
+
+\entry{di-hîrê}{}{adv}{}{}{ein paar}
+
+\entry{dibistane}{}{nom}{m}{}{Grundschule}
+
+\entry{didan}{dizan, dizon}{nom}{n}{}{Zahn}
+
+\entry{didansaz}{}{nom}{-e}{}{Zahnarzt/Zahnärztin}
+
+\entry{diganî}{dicanî}{adj}{m}{}{schwanger}
+
+\entry{dikan}{}{nom}{n}{}{Laden, Geschäft}
+
+\entry{dikandar}{}{nom}{-e}{}{Ladenbesitzer/in, (Gemischtwaren)Händler/in}
+
+\entry{dim}{}{nom}{n}{}{Schwanz, Schweif}
+
+\entry{dima}{}{adv}{}{}{hinterher, nach, danach}
+
+\entry{dima şîyene}{}{verb}{}{}{nachgehen, hinterhergehen, verfolgen}
+
+\entry{dime}{}{adv}{}{}{dahinter, danach \par\noindent\textit{O ra dime} - Danach, anschließend}
+
+\entry{dime ra}{}{}{}{}{$\rightarrow$ \textbf{dima}}
+
+\entry{dimilî}{}{nom}{-ye}{}{\textsuperscript{1}Dimilî, Zaza \textsuperscript{2}\textsc{nom} \textit{m} Dimilî, Zazakî $\rightarrow$ \textbf{kirmanckî}}
+
+\entry{ding}{}{nom}{n}{}{Haltestelle, Station}
+
+\entry{diqet}{diqat}{nom}{n}{}{\textsuperscript{1}Acht, Vorsicht, Umsicht \textsuperscript{2}Sorgfalt, Gründlichkeit}
+
+\entry{diqet kerdene}{}{verb}{}{}{Acht geben, achten, vorsehen, aufpassen}
+
+\entry{diseme}{}{nom}{n}{dişeme}{Montag}
+
+\entry{dismen}{}{nom}{n}{}{Feind}
+
+\entry{ditene}{}{verb}{}{}{melken}
+
+\entry{dizan}{dizon}{nom}{n}{}{$\rightarrow$ \textbf{didan}}
+
+\entry{dizd}{}{nom}{-e}{}{Dieb/in}
+
+\entry{dizdî ya}{dijdî ya}{adv}{}{}{\textsuperscript{1}heimlich, geheim \textsuperscript{2}diebisch, verstohlen}
+
+\entry{Dîcle}{}{nom}{m}{}{\textsuperscript{1}Tigris \textsuperscript{2}\textit{weibl. Vorname}}
+
+\entry{dîk}{}{nom}{n}{}{Hahn, Gockel}
+
+\entry{dîna}{dînya}{nom}{m}{dinya}{\textsuperscript{1}Welt \textsuperscript{2}(Planet) Erde}
+
+\entry{dînan}{}{pron}{}{}{$\rightarrow$ \textbf{înan}}
+
+\entry{dîploma}{}{nom}{m}{}{Diplom, Studienabschluss}
+
+\entry{Dîyarbekir}{}{nom}{n}{}{\textit{Stadt u. Gebiet in Kurdistan (türk. Diyarbakır)}}
+
+\entry{dîyarbekiriz}{dîyarbekiric}{nom}{-e}{dîyarbekirij}{Dîyarbekirer/in; jemand, der aus Dîyarbekir stammt}
+
+\entry{do}{}{nom}{n}{}{\textit{Joghurtgetränk}}
+
+\entry{doktor}{toxtor}{nom}{-e}{}{\textsuperscript{1}Arzt/Ärztin \textsuperscript{2}Doktor/in}
+
+\entry{dolabe}{}{nom}{m}{}{Schrank}
+
+\entry{doman}{}{nom}{-e}{}{Kind}
+
+\entry{dorme}{}{nom}{n}{}{Umfeld, Umgebung, Umkreis}
+
+\entry{dorûver}{}{nom}{n}{}{Umwelt, Umgebung, Umfeld}
+
+\entry{dorûvernas}{}{nom}{-e}{}{Ökologe/in, Umweltforscher/in}
+
+\entry{dorûvernasîye}{}{nom}{m}{}{Ökologie, Umweltforschung}
+
+\entry{dost}{}{nom}{-e}{}{Freund/in, Kumpan, Kumpel \par\noindent\textit{Dost û dismen} - Freund und Feind}
+
+\entry{dosya}{}{nom}{m}{}{Ordner}
+
+\entry{dot}{}{nom}{n}{}{drüben, die andere Seite; jenseits}
+
+\entry{doze}{}{nom}{m}{}{Fall, (An)Klage, Prozess $\rightarrow$ \textbf{dawa} \par\noindent\textit{doze kerdene} - (be)klagen, anklagen, verklagen}
+
+\entry{duşt}{}{nom}{n}{}{\textsuperscript{1}Lage, Stand \textsuperscript{2}Niveau, Ebene, Höhe}
+
+\entry{duştê ... de}{}{zirk}{}{}{gegen, gegenüber}
+
+\entry{Duzgin Baba}{Duzgin Bava}{nom}{n}{}{\textit{ein heiliger Berg in Dêrsim}}
+
+\entry{dû}{}{nom}{n}{}{$\rightarrow$ \textbf{dü}}
+
+\entry{dûrî}{dürî}{adv}{}{}{entfernt, fern, weit (weg), entlegen $\rightarrow$ \textbf{dürî}}
+
+\entry{dûrîvîn}{}{nom}{n}{}{Fernglas, Teleskop}
+
+\entry{dü}{}{nom}{n}{dû}{Rauch}
+
+\entry{dürî}{dûrî}{adv}{}{}{entfernt, fern, weit (weg), entlegen $\rightarrow$ \textbf{dûrî}}
+
+\entry{DYA (Dewletê Yewbîyayeyî yê Amerîka)}{}{nom}{zh}{}{USA (Vereinigte Staaten von Amerika)}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION E
+%----------------------------------------------------------------------------------------
+
+\section*{E}
+
+\begin{multicols}{2}
+
+\entry{e}{}{ptkl}{}{}{ja $\rightarrow$ \textbf{heya}}
+
+\entry{ebe}{ebi, eve}{}{}{}{$\rightarrow$ \textbf{be}}
+
+\entry{ebe ... ra}{eve ... ra}{}{}{}{$\rightarrow$ \textbf{be ... ra}}
+
+\entry{ecêba}{}{ptkl}{}{}{wohl, etwa \textit{(Fragepartikel)} $\rightarrow$ \textbf{tirêm}}
+
+\entry{ede ... de}{edi ... de}{zirk}{}{}{in, im (räumlich)}
+
+\entry{edebîyat}{}{nom}{n}{}{Literatur}
+
+\entry{efsane}{}{nom}{n}{}{Legende, Sage, Mythos}
+
+\entry{eke}{}{adv}{}{}{\textsuperscript{1}wenn, falls \textsuperscript{2}als, sobald}
+
+\entry{ekîpe}{ekîbe}{nom}{m}{}{Manschaft, Team}
+
+\entry{ekonomî}{}{nom}{m}{}{Wirtschaft, Ökonomie}
+
+\entry{ekonomîk}{}{adj}{-e}{}{\textsuperscript{1}wirtschaftlich, ökonomisch \textsuperscript{2}sparsam}
+
+\entry{ekonomîst}{}{nom}{-e}{}{Wirtschaftler/in, Ökonom/in, Wirtschaftswissenschaftler/in}
+
+\entry{ekran}{}{nom}{n}{}{Bildschirm}
+
+\entry{eleqe}{alaqe}{nom}{m}{}{\textsuperscript{1}Interesse, Anteilnahme \textsuperscript{2}Bezug, Zusammenhang}
+
+\entry{eleqedar}{alaqedar}{adj}{-e}{}{\textsuperscript{1}interessiert, teilnahmsvoll \textsuperscript{2}relevant, zuständig, betroffen}
+
+\entry{elewî}{alawî}{nom}{-ye}{}{Alevite/in}
+
+\entry{emser}{esmer}{adv}{}{}{heuer, dieses Jahr}
+
+\entry{emso}{esmo}{adv}{}{emşo}{heute Abend}
+
+\entry{endî}{êndî}{adv}{}{êdî}{\textsuperscript{1}nunmehr, mehr, forthin, fortan \textsuperscript{2}schließlich, endlich \textsuperscript{3}nicht mehr}
+
+\entry{enstruman}{}{nom}{n}{}{Instrument}
+
+\entry{enteresan}{}{adj}{-e}{}{\textsuperscript{1}interessant, achtungswert \textsuperscript{2}beeindruckend, erstaunlich $\rightarrow$ \textbf{balkêş}}
+
+\entry{ereb}{}{nom}{}{}{$\rightarrow$ \textbf{arab}}
+
+\entry{erebe}{}{}{}{}{$\rightarrow$ \textbf{arebe}}
+
+\entry{erê}{}{intrj}{}{}{\textit{Umgangssprachliche Anrede für Frauen}}
+
+\entry{ero}{}{intrj}{}{}{\textit{Umgangssprachliche Anrede für Männer}}
+
+\entry{err}{}{}{}{}{$\rightarrow$ \textbf{errik}}
+
+\entry{errik}{}{intrj}{}{}{\textit{Ausruf für Verwunderung, Bestürztheit oder Entrüstung}}
+
+\entry{Erzingan}{}{nom}{n}{}{\textit{Stadt in Kurdistan (türk. Erzincan)}}
+
+\entry{erzinganiz}{erzinganic}{nom}{-e}{}{Erzinganer/in; jemand, der aus Erzingan stammt}
+
+\entry{esker}{asker}{nom}{-e}{}{Soldat/in $\rightarrow$ \textbf{leşker}}
+
+\entry{eskerîye}{askerîye}{nom}{m}{}{\textsuperscript{1}Militär \textsuperscript{2}Soldatentum \textsuperscript{3}Wehrdienst, Militärdienst $\rightarrow$ \textbf{leşkerîye}}
+
+\entry{eskerênî}{}{nom}{m}{}{$\rightarrow$ \textbf{eskerîye}}
+
+\entry{esmer}{}{adv}{}{}{$\rightarrow$ \textbf{emser}}
+
+\entry{esmo}{}{adv}{}{}{$\rightarrow$ \textbf{emso}}
+
+\entry{est bîyene}{}{verb}{}{}{sein (im Sinne von \textit{geben}), existieren, da sein, vorhanden sein \par\noindent\textit{Çi est o?} - Was gibt's?}
+
+\entry{Estamol}{Astamol}{nom}{n}{}{$\rightarrow$ \textbf{Îstanbul}}
+
+\entry{eşqîya}{}{nom}{n, m}{}{Räuber/in, Marodeur/in, Brigant/in}
+
+\entry{eştene}{}{verb}{}{}{werfen, schmeißen}
+
+\entry{eteg}{etege}{nom}{n}{}{Rock}
+
+\entry{ewro}{öyro, ewre}{adv}{}{}{heute}
+
+\entry{Ewropa}{}{nom}{m}{}{Europa}
+
+\entry{ey}{ê}{pron}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{o\textsuperscript{1}}}
+
+\entry{ez}{az, e}{pron}{}{}{ich}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Ê
+%----------------------------------------------------------------------------------------
+
+\section*{Ê}
+
+\begin{multicols}{2}
+
+\entry{ê\textsuperscript{1}}{}{pron}{m}{}{sie (Plural)}
+
+\entry{ê\textsuperscript{2}}{}{dem}{m}{}{jene; die dort (Plural)}
+
+\entry{ê\textsuperscript{3}}{}{}{}{}{$\rightarrow$ \textbf{yê}}
+
+\entry{êlule}{}{nom}{m}{}{September}
+
+\entry{êndî}{}{}{adv}{}{$\rightarrow$ \textbf{endî}}
+
+\entry{êne}{}{nom}{n}{}{$\rightarrow$ \textbf{yene}}
+
+\entry{êzîdî}{}{nom}{-e}{}{Jeside/Jesidin}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION F
+%----------------------------------------------------------------------------------------
+
+\section*{F}
+
+\begin{multicols}{2}
+
+\entry{fam}{}{nom}{n}{}{Verständnis, das Begriffsvermögen; Verstand}
+
+\entry{fam kerdene}{}{verb}{}{fehm kerdene}{verstehen, begreifen}
+
+\entry{fanîla}{}{nom}{m}{}{\textsuperscript{1}Flanell(hemd), dünner Pollover \textsuperscript{2}Unterhemd}
+
+\entry{faqat}{}{}{}{}{$\rightarrow$ \textbf{feqet}}
+
+\entry{faris}{}{nom}{-e}{}{Perser/in}
+
+\entry{fariskî}{}{nom}{m}{}{Persisch}
+
+\entry{faşîla}{}{nom}{m}{fasulya}{Bohne}
+
+\entry{Fatike}{}{nom}{m}{}{\textit{weiblicher Vorname}}
+
+\entry{fatura}{}{nom}{m}{}{Rechnung, Abrechnung}
+
+\entry{favorî}{}{adj}{-ye}{}{Favorit, Lieblings-}
+
+\entry{fay}{}{nom}{m}{}{Mal \textbf{$\rightarrow$ rey} \par\noindent\textit{Na fay} - Diesmal}
+
+\entry{fayde}{fayda}{nom}{n}{fayde}{\textsuperscript{1}Vorteil, Nutzen, Wohl \textsuperscript{2}Gewinn, Profit}
+
+\entry{fayna}{}{adv}{}{}{nochmal, erneut, wieder \textbf{$\rightarrow$ reyna}}
+
+\entry{fecîr}{}{nom}{n}{fecir, sipêde}{Morgendämmerung, Tagesanbruch}
+
+\entry{fek}{}{nom}{n}{}{Mund}
+
+\entry{feqet}{faqat}{}{konj}{}{jedoch}
+
+\entry{feqîr}{}{adj}{-e}{}{arm, bedürftig, unvermögend}
+
+\entry{ferheng}{}{nom}{n}{}{Wörterbuch}
+
+\entry{ferq}{}{nom}{n}{}{Unterschied, Differenz}
+
+\entry{festîvale}{}{nom}{m}{}{Fest, Festival}
+
+\entry{fetelîyayene}{}{verb}{}{fetilîyayene}{spazieren, spazieren gehen, herumgehen, herumwandern}
+
+\entry{filan}{}{pron}{}{}{jene/r/s, irgendein/e/r/s}
+
+\entry{fikr}{}{nom}{n}{}{\textsuperscript{1}Idee, Gedanke, Einfall, Überlegung \textsuperscript{2}Meinung, Urteil}
+
+\entry{fikr kerdene}{}{verb}{}{}{\textsuperscript{1}denken, überlegen \textsuperscript{2}meinen, erachten \textsuperscript{3}erwägen, besinnen, in Erwägung ziehen}
+
+\entry{fikirîyayene}{}{verb}{}{}{\textsuperscript{1}denken, überlegen \textsuperscript{2}meinen, erachten \textsuperscript{3}erwägen, besinnen, in Erwägung ziehen}
+
+\entry{Firat}{}{nom}{n}{}{\textsuperscript{1}Euphrat \textsuperscript{2}\textit{männl. Vorname}}
+
+\entry{firine}{}{nom}{m}{}{\textsuperscript{1}Ofen \textsuperscript{2}Bäckerei}
+
+\entry{firne}{}{nom}{m}{}{Nasenloch}
+
+\entry{fîîl}{}{nom}{n}{}{Verb}
+
+\entry{fîl}{}{nom}{-e}{}{Elefant}
+
+\entry{fîncane}{}{nom}{m}{}{Tasse}
+
+\entry{fotograf}{}{nom}{n}{}{Foto}
+
+\entry{fotografkêş}{}{nom}{-e}{}{Fotograf/in}
+
+\entry{fransiz}{}{nom}{-e}{}{Franzose/Französin}
+
+\entry{franskî}{}{nom}{m}{}{Französisch}
+
+\entry{Fransa}{}{nom}{m}{}{Frankreich}
+
+\entry{futbol}{}{nom}{n}{}{Fußball}
+
+\entry{futbolbaz}{}{nom}{-e}{}{Fußballer/in, Fußballspieler/in}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION G
+%----------------------------------------------------------------------------------------
+
+\section*{G}
+
+\begin{multicols}{2}
+
+\entry{ga}{}{nom}{n}{}{Ochse}
+
+\entry{game}{}{nom}{m}{}{\textsuperscript{1}Schritt \textsuperscript{2}Augenblick, Moment \par\noindent\textit{Gama ke} - Als, wenn}
+
+\entry{gavare}{}{nom}{m}{}{$\rightarrow$ \textbf{payîzo peyên}}
+
+\entry{ga\"{x}an\textsuperscript{1}}{gaxan, gaxand}{nom}{n}{}{\textit{ein im Dezember und Januar stattfindendes Winterfest}}
+
+\entry{ga\"{x}an\textsuperscript{2}}{gaxan, gaxand}{nom}{n}{kanûne}{Dezember}
+
+\entry{ge... ge...}{}{konj}{}{}{mal... mal..., ab und zu, ab und an, hier und da \par\noindent\textit{Ge ti kena, ge ez keno} - Mal machst du's, mal mache ich's}
+
+\entry{ge-gane}{}{adv}{}{}{manchmal, mitunter, gelegentlich, ab und zu, ab und an}
+
+\entry{gemî}{}{nom}{m}{}{Schiff $\rightarrow$ \textbf{keştî}}
+
+\entry{genim}{}{nom}{n}{}{Weizen}
+
+\entry{germ}{}{adj}{-e}{}{warm \textit{(i.d.R. Wetter, Luft)}}
+
+\entry{germin}{}{adj}{-e}{}{warm \textit{(i.d.R. Oberflächen, Gegenstände etc.)}}
+
+\entry{germî}{}{nom}{m}{}{\textsuperscript{1}Suppe $\rightarrow$ \textbf{sorbike} \textsuperscript{2}Aschura}
+
+\entry{gerre}{}{nom}{n}{}{\textsuperscript{1}Beschwerde, Beanstandung \textsuperscript{2}Klage, Anklage}
+
+\entry{gerre kerdene}{}{verb}{}{}{\textsuperscript{1}sich beschweren, beanstanden, reklamieren, lamentieren \textsuperscript{2}klagen, Beschwerde einlegen}
+
+\entry{gewr}{}{adj}{-e}{}{grau}
+
+\entry{gilorik}{}{adj}{}{}{$\rightarrow$ \textbf{gilorin}}
+
+\entry{gilorin}{gilorik, gilorikin}{adj}{-e}{}{rund, kugelig}
+
+\entry{giran}{gira}{adj}{-e}{}{\textsuperscript{1}schwer, beschwert \textsuperscript{2}\textsc{adv} langsam, schwerfällig \textsuperscript{3}mühsam, wuchtig  \textsuperscript{4}schwerwiegend}
+
+\entry{giran-giran}{}{adv}{}{}{langsam, allmählich}
+
+\entry{girê}{}{nom}{n}{}{Knoten}
+
+\entry{girê dayene}{}{verb}{}{}{\textsuperscript{1}binden, fesseln, verschnüren \textsuperscript{2}verbinden, verknoten, verknüpfen \textsuperscript{3}befestigen, anbinden, anmachen, anheften}
+
+\entry{girmike}{}{nom}{m}{}{Faust}
+
+\entry{girs}{}{adj}{-e}{}{groß}
+
+\entry{gizgizîyayene}{}{verb}{}{}{\textsuperscript{1}(sich) schütteln, beben, erzitternn \textsuperscript{2}aufgewiegelt werden, aufgehetzt werden, provoziert werden}
+
+\entry{gîtare}{}{nom}{m}{}{Gitarre}
+
+\entry{Gola Wanî}{}{nom}{m}{}{Wan-See}
+
+\entry{gole}{gol \textit{(n)}}{nom}{m}{}{See}
+
+\entry{gonî}{}{nom}{m}{}{Blut}
+
+\entry{gore}{}{post}{}{}{gemäß, laut, nach, entsprechend \par\noindent\textit{To ra gore} - Laut dir}
+
+\entry{goristan}{}{nom}{n}{}{Friedhof}
+
+\entry{gos}{}{nom}{n}{goş}{Ohr}
+
+\entry{gos ro ci nayene}{}{verb}{}{goş re ci nayene}{\textsuperscript{1}befolgen, gehorchen \textsuperscript{2}Glauben schenken}
+
+\entry{gos û kerrik}{gos-kerrik}{nom}{n, zh}{}{Gehör, Hörvermögen}
+
+\entry{gosare}{}{nom}{n}{goşare}{Ohrring \par\noindent\textit{Qesê mi to rê gosare bo.} - Merk dir meine Worte.}
+
+\entry{gos dayene}{}{verb}{}{goş dayene}{\textsuperscript{1}hinhören, anhören, horchen, Gehör schenken \textsuperscript{2}aufpassen \textsuperscript{3}befolgen, gehorchen}
+
+\entry{gosdarî kerdene}{gosdarênî kerdene}{verb}{}{goşdarî kerdene}{zuhören, anhören}
+
+\entry{goşt}{}{nom}{n}{}{Fleisch}
+
+\entry{govende}{}{nom}{m}{}{Govend \textit{(kurd. Volkstanz)}}
+
+\entry{goynayene}{}{verb}{}{}{loben, preisen, rühmen}
+
+\entry{goze}{}{nom}{m}{}{Walnuß}
+
+\entry{gram}{}{nom}{n}{}{Gramm}
+
+\entry{gramer}{}{nom}{n}{}{Grammatik, Sprachlehre}
+
+\entry{gucige}{guzige}{nom}{m}{}{Februar}
+
+\entry{gude}{}{nom}{m}{}{Ball, Kugel}
+
+\entry{guk}{}{nom}{-e}{}{Kalb, Milchkalb}
+
+\entry{gulane}{}{nom}{m}{}{Mai}
+
+\entry{gule\textsuperscript{1}}{}{nom}{n}{}{Geschoss, Projektil}
+
+\entry{gule\textsuperscript{2}}{}{nom}{m}{}{\textsuperscript{1}Rose \textsuperscript{2}Hals \textsuperscript{3}\textit{weibl. Vorname} \par\noindent\textit{Gul û sosinî} - Blumen \textit{(Kollektivum)}}
+
+\entry{gure}{}{nom}{n}{}{(zweckgebundene oder entgeltliche) Arbeit, Betätigung, Beschäftigung}
+
+\entry{gurekar}{}{adj}{-e}{}{arbeitsam, fleißig, emsig}
+
+\entry{guretene}{gurtene}{verb}{}{girewtene}{\textsuperscript{1}nehmen, abnehmen, einholen \textsuperscript{2}bekommen, kriegen, empfangen, erhalten}
+
+\entry{gurenayene}{gurênayene}{verb}{}{}{\textsuperscript{1}betätigen, betreiben, beschäftigen, einsetzen, in Betrieb nehmen \textsuperscript{2}benutzen, nutzen, verwenden, anwenden}
+
+\entry{gureyayene}{gurîyayene}{verb}{}{}{arbeiten, schaffen, werken, beschäftigen}
+
+\entry{guvayene}{}{verb}{}{}{\textit{(Wind)} sausen, säuseln}
+
+\entry{guzayene}{}{verb}{}{}{$\rightarrow$ \textbf{guvayene}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION H
+%----------------------------------------------------------------------------------------
+
+\section*{H}
+
+\begin{multicols}{2}
+
+\entry{ha}{}{intrj}{}{} {\textit{Ausruf des Begreifens}}
+
+\entry{ha... ha...}{}{konj}{}{}{ob... oder... \par\noindent\textit{Ha ti ha ez.} - Ob du oder ich.}
+
+\entry{haca}{}{adv}{}{}{$\rightarrow$ \textbf{haza}}
+
+\entry{hafta}{}{nom}{n}{}{$\rightarrow$ \textbf{hefte}}
+
+\entry{hahû}{}{intrj}{}{}{\textit{Ausruf des Verwunderung oder Empörung}}
+
+\entry{hak}{}{nom}{n}{}{Ei}
+
+\entry{hal}{}{nom}{n}{}{\textsuperscript{1}Lage, Situation, Stand \textsuperscript{2}Zustand, Status, Sachlage \textsuperscript{3}Vorfall, Vorkommnis \textsuperscript{4}Fall, Kasus}
+
+\entry{halete}{}{nom}{m}{}{\textbf{$\rightarrow$ xelate}}
+
+\entry{hama}{hema, ama}{konj}{}{}{aber, jedoch $\rightarrow$ \textbf{labelê}}
+
+\entry{haq}{}{nom}{n}{}{$\rightarrow$ \textbf{heq}}
+
+\entry{Haq}{}{nom}{n}{}{$\rightarrow$ \textbf{Heq}}
+
+\entry{har}{}{adj}{-e}{}{\textsuperscript{1}tollwütig \textsuperscript{2}tobsüchtig, wild, rappelig}
+
+\entry{hard}{}{nom}{n}{}{$\rightarrow$ \textbf{herd}}
+
+\entry{harme}{herme}{nom}{n}{}{Arm}
+
+\entry{has kerdene}{hes kerdene}{verb}{}{hes kerdene}{\textsuperscript{1}lieben \textsuperscript{2}mögen, gern haben  \par\noindent\textit{Ez to ra has keno.} - Ich liebe dich.}
+
+\entry{haştîye}{}{nom}{m}{}{$\rightarrow$ \textbf{aştîye}}
+
+\entry{hata}{heta, hetanî, heyanî}{prep}{}{heta}{bis, bis zu $\rightarrow$ \textbf{heta}}
+
+\entry{hawt}{}{zahl}{}{}{$\rightarrow$ \textbf{hewt}}
+
+\entry{hayde}{hayderê}{intrj}{}{}{\textit{Ausruf zur Aufforderung}}
+
+\entry{haza}{haca}{}{adv}{}{dort, an jenem Ort}
+
+\entry{hazar}{}{zahl}{}{}{$\rightarrow$ \textbf{hezar}}
+
+\entry{hazir}{}{adj}{-e}{}{bereit, fertig; anwesend}
+
+\entry{hazir û nazir}{}{adj}{-e}{}{allzeit bereit, allgegenwärtig; anwesend und bereitstehend}
+
+\entry{hazîrane}{}{nom}{m}{hezîrane}{Juni}
+
+\entry{hebe}{}{nom}{m}{}{Stück}
+
+\entry{hebê}{}{adv}{}{}{ein Stück, ein bisschen, ein wenig}
+
+\entry{hebikê}{}{adv}{}{}{$\rightarrow$ \textbf{hebê}}
+
+\entry{hefte}{hafta}{nom}{n}{}{Woche $\rightarrow$ \textbf{heşte, hewte}}
+
+\entry{helwa}{hewla}{nom}{m}{}{\textit{eine Süßspeise aus Mehl, Zucker (und Nüssen)}}
+
+\entry{hem... hem kî...}{}{konj}{}{}{sowohl, als auch \par\noindent\textit{Hem mi ra hem kî to ra va.} - Er hat's sowohl dir als auch mir gesagt.}
+
+\entry{hema}{}{adv}{}{}{\textsuperscript{1}noch, immer noch $\rightarrow$ \textbf{hona} \textsuperscript{2}$\rightarrow$ \textbf{hama}}
+
+\entry{hema-hema}{}{adv}{}{}{\textsuperscript{1}fast, beinahe \textsuperscript{2}circa, etwa, mehr oder weniger}
+
+\entry{hemal}{}{nom}{-e}{}{Kurier/in, Lieferant/in}
+
+\entry{hemdem}{}{adj}{-e}{}{\textsuperscript{1}gleichzeitig, zeitgleich \textsuperscript{2}zeitgenössisch, zeitgemäß, modern}
+
+\entry{hemgên}{hengmên}{nom}{n}{hingimên}{Honig}
+
+\entry{Hemilka}{}{nom}{m}{}{$\rightarrow$ \textbf{Amerîka}}
+
+\entry{hemkar}{}{nom}{-e}{}{}{\textsuperscript{1}Mitarbeiter/in, Mitwirkende/r, Partner/in \textsuperscript{2}Kollaborateur/in}
+
+\entry{hemmana}{}{adj}{-ye}{}{gleichbedeutend, synonym}
+
+\entry{hemserr}{}{adj}{-e}{}{\textsuperscript{1}gleichaltrig \textsuperscript{2} \textsc{nom} Altersgenosse/in}
+
+\entry{hemşîra}{}{nom}{n, m}{}{Krankenschwester, Krankenpfleger/in}
+
+\entry{hemwelatî}{}{adj}{-ye}{}{Staatsbürger/in, Bürger/in}
+
+\entry{henî}{heyn}{adv}{}{winî}{so, in jener Art, in jener Form}
+
+\entry{hengmên}{}{nom}{m}{}{$\rightarrow$ \textbf{hemgên}}
+
+\entry{hengure}{}{nom}{m}{}{Traube}
+
+\entry{hente}{}{adv}{}{}{$\rightarrow$ \textbf{honde}}
+
+\entry{hepisxane}{}{nom}{n}{}{Gefängnis}
+
+\entry{heq}{heqe \textit{(m)}}{nom}{n}{}{\textsuperscript{1}Recht, Anrecht, Anspruch \textsuperscript{2}Forderung \textsuperscript{3}Gerechtigkeit 
+\par\noindent\textit{No heqê tü yo.} - Das steht dir zu.}
+
+\entry{Heq}{Haq}{nom}{n}{}{Gott $\rightarrow$ \textbf{Homa} 
+\par\noindent\textit{Heq bo} - Bei Gott
+\par\noindent\textit{Heq razî bo!} - Vergelt's Gott!}
+
+\entry{heqdar}{haqdar}{adj}{-e}{}{\textsuperscript{1}recht, gerecht, gerechtfertigt \textsuperscript{2}begründet, berechtigt}
+
+\entry{heqlî}{}{adj}{-ye}{}{$\rightarrow$ \textbf{heqdar}}
+
+\entry{her\textsuperscript{1}}{}{nom}{-e}{}{Esel}
+
+\entry{her\textsuperscript{2}}{}{ptkl}{}{}{jede/r/s
+\par\noindent\textit{Her roze} - Jeden Tag}
+
+\entry{her çî}{}{nom}{n}{}{alles; jede Sache}
+
+\entry{her kes}{}{nom}{n}{}{jeder, alle, alle Mann}
+
+\entry{herbî}{}{adv}{}{}{schnell, rasch, zügig}
+
+\entry{herçiqas}{}{ptkl}{}{}{obwohl, obgleich, obschon}
+
+\entry{herd}{hard}{nom}{n}{erd}{Boden, Erde, Erdoberfläche}
+
+\entry{heredan}{}{adj}{-e}{heridan}{erzürnt, böse, beleidigt, verbittert, grollend}
+
+\entry{heredîyayene}{}{verb}{}{heridîyayene}{beleidigt sein, schmollen, jmd. böse sein  $\rightarrow$ \textbf{miradîyayene}}
+
+\entry{herednayene}{}{verb}{}{heridnayene}{vergrämen, verärgern, verstimmen  $\rightarrow$ \textbf{miradnayene}}
+
+\entry{herre}{}{nom}{m}{}{Erde}
+
+\entry{hertim}{}{adv}{}{}{immer, stets, durchgehend, fortwährend $\rightarrow$ \textbf{tim}}
+
+\entry{hes}{}{nom}{-e}{heş}{Bär}
+
+\entry{hes kerdene}{}{verb}{}{}{$\rightarrow$ \textbf{has kerdene}}
+
+\entry{hesnayene}{}{verb}{}{}{hören}
+
+\entry{hesrete}{}{nom}{m}{}{Sehnsucht, Verlangen}
+
+\entry{hest}{}{adj}{-e}{}{dickflüssig, sämig}
+
+\entry{heşt}{}{zahl}{}{}{acht}
+
+\entry{heştay}{}{zahl}{}{}{achtzig}
+
+\entry{heşte}{}{nom}{n}{}{Woche $\rightarrow$ \textbf{hefte, hewte}}
+
+\entry{het}{}{nom}{n}{}{Seite; Neben-}
+
+\entry{het de}{}{post}{}{}{bei, an der Seite von, neben}
+
+\entry{heta}{hata, hetanî, heyanî}{prep}{}{}{bis, bis zu $\rightarrow$ \textbf{hata}}
+
+\entry{hetê ... de}{}{zirk}{}{}{bei, an der Seite von, neben}
+
+\entry{heval}{haval}{nom}{-e}{}{\textsuperscript{1}Freund/in, Kumpel/in $\rightarrow$ \textbf{albaz} {\textsuperscript{2}Weggefährte/in, Kumpane/in \par\noindent\textit{Berfîne hevala min a.} - Berfîn ist meine Freundin. \par\noindent\textit{Xizir hevalê to bo!} - Möge Xizir dich begleiten!}}
+
+\entry{heval û hogir}{}{nom}{}{}{Freunde, Freundeskreis \textit{(Kollektivum)}}
+
+\entry{hew}{}{intrj}{}{}{\textit{Ausruf für Verwunderung, Spott oder Staunen}}
+
+\entry{hewa}{hawa}{}{}{}{\textsuperscript{1}Luft, Wetter \textsuperscript{2}Atmosphäre, Stimmung, Flair \textsuperscript{3}Lied, Melodie}
+
+\entry{hewar}{hawar}{intrj}{}{}{\textit{Ausruf für Hilfe oder Wehklage}}
+
+\entry{hewl}{}{adj}{-e}{}{\textsuperscript{1}gut \textsuperscript{2}(Charakter)gutmütig, großzügig, beherzt $\rightarrow$ \textbf{xirt}}
+
+\entry{hewla}{}{nom}{m}{}{$\rightarrow$ \textbf{helwa}}
+
+\entry{Hewlêr}{}{nom}{n}{}{Erbil}
+
+\entry{hewlîye}{}{nom}{m}{}{\textsuperscript{1}Güte, Gutmütigkeit \textsuperscript{2}Gefallen, Gefälligkeit}
+
+\entry{hewn}{}{nom}{n}{}{\textsuperscript{1}Schlaf \textsuperscript{2}Traum}
+
+\entry{hewn a şîyene}{}{verb}{}{}{schlafen, einschlafen}
+
+\entry{hewr}{höyr}{nom}{n}{}{Wolke}
+
+\entry{hewrin}{höyrin}{adj}{-e}{}{bewölkt}
+
+\entry{hewt}{hawt, hot}{zahl}{}{}{sieben}
+
+\entry{hewtay}{hawtay, hotay}{zahl}{}{}{siebzig}
+
+\entry{hewte}{}{nom}{n}{}{Woche $\rightarrow$ \textbf{hefte, heşte}}
+
+\entry{hey}{}{intrj}{}{}{\textit{Ausruf für Anruf, Lob oder Tadel}}
+
+\entry{heya}{}{ptkl}{}{eya}{ja}
+
+\entry{heyanî}{}{prep}{}{}{$\rightarrow$ \textbf{heta}}
+
+\entry{heyat}{hayat}{nom}{n}{}{Leben $\rightarrow$ \textbf{cuye}}
+
+\entry{heyecan}{hêcan}{nom}{n}{}{die Spannung, die Aufregung, die Nervosität}
+
+\entry{heyf}{}{nom}{n}{}{$\rightarrow$ \textbf{hêf}}
+
+\entry{heyhat}{}{intrj}{}{}{\textit{Ausruf des Bedauerns}}
+
+\entry{heykel}{}{nom}{n}{}{Statue, Skulptur}
+
+\entry{heyn}{}{adv}{}{}{$\rightarrow$ \textbf{henî}}
+
+\entry{heywan}{haywan}{nom}{-e}{}{Tier}
+
+\entry{heywax}{}{intrj}{}{}{\textit{Ausruf für Klage, Bedauern oder Schmerz}}
+
+\entry{hezar}{hazar}{zahl}{}{}{Tausend}
+
+\entry{hêcan}{}{nom}{n}{}{$\rightarrow$ \textbf{heyecan}}
+
+\entry{hêdî}{}{adv}{}{}{langsam}
+
+\entry{hêf}{heyf}{nom}{n}{heyf}{\textsuperscript{1}Rache, Revanche \textsuperscript{2}schade \par\noindent\textit{Çi hêf!} - Wie schade! \par\noindent\textit{Çi hêf ke nêbî.} - Leider hat es nicht geklappt.}
+
+\entry{hêga}{}{nom}{n}{}{Feld, Acker, Anbaufläche}
+
+\entry{hêkate}{}{nom}{m}{hîkaye}{Geschichte, Erzählung $\rightarrow$ \textbf{hîkaye}}
+
+\entry{hênî}{}{nom}{n}{}{Brunnen, Quell}
+
+\entry{hêrdîse}{hêrîse}{nom}{m}{erdîşe}{Bart}
+
+\entry{hêrige}{}{nom}{m}{}{Mirabelle, Braunelle, Pflaume $\rightarrow$ \textbf{alunça}}
+
+\entry{hêrînayene}{}{verb}{}{}{kaufen, einkaufen}
+
+\entry{hêrs}{}{nom}{n}{}{Wut, Zorn, Ärger, Frust}
+
+\entry{hêrs bîyene}{}{verb}{}{}{wütend werden, sich ärgern}
+
+\entry{hi}{}{intrj}{}{}{\textit{Ausruf für Verwunderung, Staunen oder Vorsicht}}
+
+\entry{Hindîstan}{}{nom}{n}{}{Indien}
+
+\entry{hindkî}{}{nom}{m}{}{Hindi}
+
+\entry{hîra}{}{adj}{-ye}{}{breit, weit}
+
+\entry{hîrem}{}{nom}{n}{}{Webstuhl, Webgeschirr}
+
+\entry{hîrê}{}{zahl}{}{}{drei}
+
+\entry{hîris}{hîrîs}{zahl}{}{}{dreißig}
+
+\entry{hîkaye}{}{nom}{m}{}{Geschichte, Erzählung $\rightarrow$ \textbf{hêkate}}
+
+\entry{holike}{}{nom}{m}{}{Laube, Berghütte}
+
+\entry{Hollanda}{}{nom}{m}{}{Niederlande, Holland}
+
+\entry{Homa}{}{nom}{n}{}{$\rightarrow$ \textbf{Heq}}
+
+\entry{hona}{}{adv}{}{hîna}{\textsuperscript{1}noch, immer noch \textsuperscript{2}eben, bereits}
+
+\entry{honde}{hente}{adv}{}{hende}{so, so wie, soviel (wie)}
+
+\entry{honik}{}{adj}{-e}{}{kühl, frisch \textit{(Luft, Wetter)}}
+
+\entry{hoparlor}{}{nom}{n}{}{Lautsprecher}
+
+\entry{hope}{}{nom}{m}{}{\textsuperscript{1}Becken, Teich, Wasserbecken, Schwimmbecken \textsuperscript{2}Schwimmbad}
+
+\entry{hot}{}{zahl}{}{}{$\rightarrow$ \textbf{hewt}}
+
+\entry{hozan}{}{zahl}{}{}{$\rightarrow$ \textbf{ozan}}
+
+\entry{hukmat}{}{nom}{n}{}{Regierung}
+
+\entry{huner}{}{nom}{n}{}{\textsuperscript{1}Kunst \textsuperscript{2}Handwerk \textsuperscript{2}Talent, (Kunst)Fertigkeit, Geschick}
+
+\entry{hunermend}{}{nom}{-e}{}{Künstler/in $\rightarrow$ \textbf{senetkar}}
+
+\entry{hurdî}{}{adj}{-ye}{}{\textsuperscript{1}klein, winzig \textsuperscript{2}zerbröselt, zerstückelt}
+
+\entry{hurdî kerdene}{}{verb}{}{}{\textsuperscript{1}klein machen, zerkleinern \textsuperscript{2}zerstückeln, zerbröseln}
+
+\entry{hurendî}{}{nom}{m}{herinde}{Stelle, Platz}
+
+\entry{hurendîya ... de}{}{zirk}{}{herinda ... de}{an Stelle von..., anstatt...}
+
+\entry{huşk}{husk}{adj}{-e}{}{\textsuperscript{1}trocken \textsuperscript{2}hart}
+
+\entry{huşk kerdene}{}{verb}{}{}{\textsuperscript{1}trocknen, trockenlegen \textsuperscript{2}härten, hart machen}
+
+\entry{huşk û hol}{}{adj}{-e}{}{knochenhart, steinhart}
+
+\entry{huqûq}{}{nom}{n}{}{\textsuperscript{1}Recht, Rechtswesen \textsuperscript{2}Jura}
+
+\entry{huqûqnas}{}{nom}{-e}{}{Jurist/in; Rechtsgelehrter/in}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION I
+%----------------------------------------------------------------------------------------
+
+\section*{I}
+
+\begin{multicols}{2}
+
+\entry{ik}{ikî}{konj}{}{}{$\rightarrow$ \textbf{kî}}
+
+\entry{israr}{}{nom}{n}{}{Beharren, Beharrlichkeit, Drängen}
+
+\entry{israr kerdene}{}{verb}{}{}{beharren, bestehen, insistieren, drängen}
+
+\entry{itka}{}{adv}{}{}{$\rightarrow$ \textbf{îta}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Î
+%----------------------------------------------------------------------------------------
+
+\section*{Î}
+
+\begin{multicols}{2}
+
+\entry{îbrankî}{}{nom}{m}{}{Hebräisch}
+
+\entry{îdare}{}{nom}{n}{}{\textsuperscript{1}Führung, Leitung \textsuperscript{2}Amt, Verwaltung, Regierung \textsuperscript{3}Direktion, Geschäftsleitung $\rightarrow$ \textbf{sermîyanîye}}
+
+\entry{îdare kerdene}{}{verb}{}{}{\textsuperscript{1}leiten, anführen, lenken, weisen, managen, steuern \textsuperscript{2}managen, administrieren, verwalten, regieren \textsuperscript{3}mit etw. auskommen \par\noindent\textit{Îdare keno.} - Es geht.}
+
+\entry{îdarekar}{}{nom}{-e}{}{Leiter/in, Oberhaupt, Vorsteher/in, Manager/in $\rightarrow$ \textbf{sermîyan}}
+
+\entry{îlawe}{}{nom}{n}{}{Anhang, Beigabe, Zusatz, Ergänzung}
+
+\entry{îlawe kerdene}{}{verb}{}{}{anängen, hinzufügen, ergänzen, zugeben}
+
+\entry{îmkan}{}{nom}{n}{}{Gelegenheit, Möglichkeit}
+
+\entry{înan}{înû, îne}{pron}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{ê\textsuperscript{1}}}
+
+\entry{înkar}{}{nom}{n}{}{Leugnung, Bestreitung, Abrede}
+
+\entry{înkar kerdene}{}{verb}{}{}{leugnen, verleugnen, abstreiten, absprechen, abreden, in Abrede stellen}
+
+\entry{însan}{îso, îsû}{nom}{-e}{}{\textsuperscript{1}Mensch \textsuperscript{2}man $\rightarrow$ \textbf{mordem\textsuperscript{1}}}
+
+\entry{îngiliz}{}{nom}{-e}{}{Engländer/in}
+
+\entry{îngilizkî}{}{nom}{m}{}{Englisch}
+
+\entry{Îngilîstan}{}{nom}{n}{}{England}
+
+\entry{îqaz}{}{nom}{n}{}{(Er)Mahnung, Warnung, Appel}
+
+\entry{îqaz kerdene}{}{verb}{}{}{(er)mahnen, (ver)warnen, hinweisen}
+
+\entry{Îran}{}{nom}{n}{}{Iran}
+
+\entry{Îraq}{}{nom}{n}{}{Irak}
+
+\entry{Îrlanda}{}{nom}{m}{}{Irland}
+
+\entry{îslam}{}{nom}{n}{}{Islam}
+
+\entry{îsot}{}{nom}{n}{}{Paprika, Chilli}
+
+\entry{Îstanbul}{Estamol, Astamol}{nom}{n}{}{Istanbul}
+
+\entry{îstasyon}{}{nom}{n}{}{Station, Haltestelle}
+
+\entry{îsû}{}{nom}{}{}{$\rightarrow$ \textbf{însan}}
+
+\entry{îşlig}{}{nom}{n}{}{Hemd}
+
+\entry{îta}{îtya, îtîka, atika}{nom}{n}{tîya}{hier \par\noindent\textit{Bê îta!} - Komm her!}
+
+\entry{Îtalya}{}{nom}{m}{}{Italien}
+
+\entry{îtalyan}{}{nom}{-e}{}{Italienier/in}
+
+\entry{îzah}{}{nom}{n}{}{Erklärung, Erläuterung}
+
+\entry{îzah kerdene}{}{verb}{}{}{erklären, erläutern, darlegen, klarstellen}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION J
+%----------------------------------------------------------------------------------------
+
+\section*{J}
+
+\begin{multicols}{2}
+
+\entry{jan\textsuperscript{1}}{}{nom}{}{}{\textbf{$\rightarrow$ zon}}
+
+\entry{jan\textsuperscript{2}}{zan}{nom}{n}{}{\textsuperscript{1}Schmerz, Leid \textsuperscript{2}ansteckende/virale Krankheit, Seuche $\rightarrow$ \textbf{çorr}}
+
+\entry{japon}{}{nom}{-e}{}{Japaner/in}
+
+\entry{japonkî}{}{nom}{m}{}{Japanisch}
+
+\entry{Japonya}{}{nom}{m}{}{Japan}
+
+\entry{jê}{zê}{präp}{}{sey}{\textsuperscript{1}wie, so wie \textsuperscript{2}als \textbf{$\rightarrow$ zê}}
+
+\entry{jêde}{zêde}{adv}{}{zêde, zîyade}{sehr viel, zu viel; überschüssig \textbf{$\rightarrow$ zêde}}
+
+\entry{jîl}{}{nom}{n}{}{\textbf{$\rightarrow$ zîl}}
+
+\entry{jîyare}{jare}{nom}{}{}{\textbf{$\rightarrow$ zîyare}}
+
+\entry{ju}{jü, zu}{zahl}{}{yew}{eins \textbf{$\rightarrow$ zu}}
+
+\entry{jubînî}{jübînî, jumînî}{pron}{}{yewbînî}{einander, gegenseitig \textbf{$\rightarrow$ zubînî}}
+
+\entry{juna}{jüna, zuna}{adv}{}{yewna}{noch ein/e/er/s, ein weiterer/s, ein andere/s \textbf{$\rightarrow$ zuna}}
+
+\entry{jü}{}{zahl}{}{}{\textbf{$\rightarrow$ ju}}
+
+\entry{ju kî}{zu kî}{adv}{}{}{außerdem, zudem}
+
+\entry{jüya}{zuwa}{adj}{-ye}{ziwa}{trocken}
+
+\entry{jüyê}{}{pron}{}{}{eine/r/s, (irgend)jemand \textbf{$\rightarrow$ zuye}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION K
+%----------------------------------------------------------------------------------------
+
+\section*{K}
+
+\begin{multicols}{2}
+
+\entry{kablo}{}{nom}{n}{}{Kabel}
+
+\entry{kakuç}{}{nom}{n}{}{\textbf{$\rightarrow$ çakuç}}
+
+\entry{kal}{}{adj}{-e}{}{roh}
+
+\entry{\.{k}al}{}{nom}{-e}{kal}{\textsuperscript{1}Greis \textsuperscript{2}Großvater; Vorfahr \textsuperscript{3}\textsc{adj} alt \textit{(Person)}, betagt}
+
+\entry{kaleke}{}{nom}{m}{}{Seite, Flanke \textbf{$\rightarrow$ kîşte}}
+
+\entry{\.{k}alik}{}{nom}{n}{kalik, bapîr}{Großvater, Opa}
+
+\entry{kalîte}{}{nom}{m}{}{Qualität}
+
+\entry{kam}{}{frg}{-e}{}{wer \par\noindent\textit{Kam o?} - Wer ist da?}
+
+\entry{kamcîn}{kamjî}{frg}{}{}{welche/r/s}
+
+\entry{kamera}{}{nom}{m}{}{Kamera}
+
+\entry{kamîye}{}{nom}{m}{}{Identität}
+
+\entry{\.{k}an}{}{adj}{-e}{kan, kehen}{alt \textit{(Gegenstück zu $\rightarrow$ \textbf{newe}})}
+
+\entry{kanûne}{}{nom}{m}{}{$\rightarrow$ \textbf{ga\"{x}an\textsuperscript{2}}}
+
+\entry{kar}{}{nom}{n}{}{\textsuperscript{1}Arbeit, Beschäftigung \textsuperscript{2}Beruf, Job, (Erwerbs)Tätigkeit, Gewerbe \textsuperscript{3}Sache, Aufgabe \textsuperscript{4}Nutzen, Gewinn, Ertrag, Profit \textsuperscript{4}Verb $\rightarrow$ \textbf{fîîl}}
+
+\entry{kar kerdene}{}{Verb}{}{}{arbeiten, einer Arbeit/Beschäftigung nachgehen  \par\noindent\textit{Ti çi kar kena?} - (Als) Was arbeitest du?}
+
+\entry{kardî}{}{nom}{m}{}{Messer}
+
+\entry{karker}{}{nom}{-e}{}{Arbeiter/in}
+
+\entry{karmend}{}{nom}{-e}{}{Beamte/r $\rightarrow$ \textbf{memur}}
+
+\entry{karsaz}{}{nom}{-e}{}{Unternehmer/in; Geschäftsmann/-frau}
+
+\entry{kartole}{}{nom}{m}{}{Kartoffel}
+
+\entry{kas kerdene}{}{verb}{}{}{schleifen, (am Boden entlang) ziehen}
+
+\entry{kata}{kamta}{adv}{}{}{wohin $\rightarrow$ \textbf{kotî}}
+
+\entry{ka\"{x}ite}{}{nom}{m}{}{Papier}
+
+\entry{kay}{}{nom}{n}{}{\textsuperscript{1}Spiel; Partie \textsuperscript{2}\textit{(Aufführung)} Vorstellung, Theaterstück \textsuperscript{3}Tanz}
+
+\entry{kay kerdene}{}{Verb}{}{}{\textsuperscript{1}spielen \textsuperscript{2}tanzen}
+
+\entry{kaybaz}{}{nom}{-e}{}{Schauspieler/in, Darsteller/in}
+
+\entry{kayê komputure}{}{nom}{n}{}{Computerspiel, Videospiel}
+
+\entry{kaykerdo\"{x}}{}{nom}{-e}{}{\textsuperscript{1}Spieler/in \textsuperscript{2}Darsteller/in \textsuperscript{3}Tänzer/in}
+
+\entry{ke}{}{konj}{}{}{\textsuperscript{1}dass \textsuperscript{2}wenn, sobald $\rightarrow$ \textbf{eke}}
+
+\entry{\.{k}ek}{}{nom}{n}{}{\textsuperscript{1}älterer Bruder \textsuperscript{2}\textit{Anrede für Männer}}
+
+\entry{keleke}{}{nom}{m}{}{Floß}
+
+\entry{kelîme}{}{nom}{m}{}{\textbf{$\rightarrow$ çekuye}}
+
+\entry{kemer}{}{nom}{n}{}{Fels, Felsen}
+
+\entry{kemere}{}{nom}{m}{}{Stein}
+
+\entry{kemî}{}{adj}{}{}{\textbf{$\rightarrow$ kêmî}}
+
+\entry{kengezere}{}{nom}{m}{}{\textbf{$\rightarrow$ a\"{x}ustose}}
+
+\entry{kerdene}{}{Verb}{}{}{\textsuperscript{1}machen, tun \textsuperscript{2}tätigen, treiben  \par\noindent\textit{Se kena?} - Was machst du? \par\noindent\textit{Bike!} - Mach!}
+
+\entry{kerem}{}{nom}{n}{}{Gnade \par\noindent\textit{Keremê xo ra} - Bitte \textit{(beim Bitten)} \par\noindent\textit{Kerem ke} - Bitte sehr \textit{(beim Anbieten)}}
+
+\entry{kerge}{}{nom}{m}{}{Huhn, Hähnchen}
+
+\entry{\.{k}err}{}{adj}{-e}{}{taub}
+
+\entry{kes}{}{nom}{n}{}{\textsuperscript{1}jemand \textsuperscript{2}Person, Individuum \textsuperscript{3} \textit{(verneint)} niemand}
+
+\entry{kesegan}{}{nom}{-e}{}{Schwein}
+
+\entry{kesk}{}{adj}{-e}{}{grün}
+
+\entry{keştî}{}{nom}{m}{}{Schiff}
+
+\entry{\.{k}ewe}{}{adj}{-e}{}{\textsuperscript{1}blau \textsuperscript{2}\textit{(Pflanzen, Natur etc.)} grün}
+
+\entry{key}{}{frg}{}{}{wann \par\noindent\textit{Ti key yena?} - Wann kommst du?}
+
+\entry{keyf}{kêf, çêf}{nom}{n}{}{\textsuperscript{1}Laune, Lust, Gemüt, Stimmung \textsuperscript{2}Freude, Fröhlichkeit, Spaß}
+
+\entry{keyfê xo ameyene}{}{verb}{}{}{Lust bekommen, Freude haben, sich freuen \par\noindent\textit{Keyfê ma yeno.} - Wir freuen uns.}
+
+\entry{kê}{}{nom}{}{}{\textbf{$\rightarrow$ çê}}
+
+\entry{kêber}{}{nom}{}{}{\textbf{$\rightarrow$ çêber}}
+
+\entry{kêf}{}{nom}{n}{}{$\rightarrow$ \textbf{keyf}}
+
+\entry{kêfwes}{keyfwes}{adj}{-e}{keyfweş}{froh, fröhlich, gutgelaunt, heiter}
+
+\entry{kêmek}{}{nom}{n}{}{Subtraktion, Minus}
+
+\entry{kêmî}{kemî, kêm}{adj}{-ye}{}{\textsuperscript{1}wenig \textsuperscript{2}knapp, fehlend, nicht ausreichend}
+
+\entry{kêna}{}{nom}{}{}{\textbf{$\rightarrow$ çêna}}
+
+\entry{kêneke}{}{nom}{}{}{\textbf{$\rightarrow$ çêneke}}
+
+\entry{kilame}{}{nom}{m}{}{Lied, Song}
+
+\entry{kile}{}{nom}{m}{}{\textsuperscript{1}Flamme \textsuperscript{2}\textit{(metaphorisch)} Hitze, Erdwärme}
+
+\entry{kilê}{}{vok}{}{}{\textit{Anredefall für Frauen oder Mädchen}}
+
+\entry{kilîme}{}{nom}{m}{}{Kelim, Teppich}
+
+\entry{kilît}{}{nom}{n}{}{Schlüssel}
+
+\entry{kilît kerdene}{}{verb}{}{}{abschließen, absperren, zusperren, verschließen}
+
+\entry{kilm}{}{adj}{-e}{}{kurz}
+
+\entry{kinc}{}{nom}{n}{}{Kleidung, Kleider}
+
+\entry{kird}{}{nom}{-e}{}{Kird, Zaza}
+
+\entry{kirdaskî}{}{nom}{m}{}{Kurmancî}
+
+\entry{kirdkî}{kirdî}{nom}{m}{}{Kirdkî, Zazakî $\rightarrow$ \textbf{kirmanckî}}
+
+\entry{kirmanc}{}{nom}{-e}{}{\textsuperscript{1}Kirmanc, Zaza \textsuperscript{2}kurdischer Alevite}
+
+\entry{Kirmancîye}{}{nom}{m}{}{\textsuperscript{1}Kirmanctum \textsuperscript{2}Gebiet, in dem $\rightarrow$ \textbf{Kirmanc} leben}
+
+\entry{kirmanckî}{}{nom}{m}{}{Kirmanckî, Zazakî}
+
+\entry{kitab}{}{nom}{n}{}{Buch}
+
+\entry{kitabxane}{}{nom}{n}{}{Bücherei, Bibliothek}
+
+\entry{kî}{ik, iç}{konj}{}{}{auch, ebenfalls, gleichfalls}
+
+\entry{kîlo}{}{nom}{n}{}{Kilo}
+
+\entry{kîlogram}{}{nom}{n}{}{Kilogramm}
+
+\entry{kîlometre}{}{nom}{n}{}{Kilometer}
+
+\entry{kîmyon}{}{nom}{n}{}{Kümmel}
+
+\entry{kîraze}{}{nom}{m}{}{Kirsche}
+
+\entry{kîşte}{}{nom}{m}{}{Seite, Flanke \textbf{$\rightarrow$ kaleke}}
+
+\entry{ko}{}{nom}{n}{}{Berg}
+
+\entry{koçike}{}{nom}{m}{}{Löffel}
+
+\entry{\.{k}okim}{}{adj}{-e}{kokim}{alt \textit{(Alter)}}
+
+\entry{kol}{}{adj}{-e}{}{hornlos, unbehornt \textit{(Tiere)}}
+
+\entry{kolî}{}{nom}{m}{}{\textsuperscript{1}Brennholz \textsuperscript{2}Paket}
+
+\entry{komare}{}{nom}{m}{}{Republik}
+
+\entry{komel}{}{nom}{n}{}{Gesellschaft, Community \textbf{$\rightarrow$ cemat}}
+
+\entry{komele}{}{nom}{m}{}{Verein, Gesellschaft}
+
+\entry{komputure}{}{nom}{m}{}{Computer, Rechner}
+
+\entry{konser}{}{nom}{n}{}{Konzert}
+
+\entry{kor}{}{adj}{-e}{}{blind}
+
+\entry{kortqirane}{}{nom}{m}{}{\textbf{$\rightarrow$ êlule}}
+
+\entry{\.{k}oskar}{\.{k}oşkar, goşkar}{nom}{-e}{koşkar}{Schuster/in, Schuhmacher/in}
+
+\entry{kotene}{kutene}{verb}{}{kewtene}{fallen, abfallen}
+
+\entry{kotî}{koytî}{frg}{n}{}{wo}
+
+\entry{kotî ra}{koytî ra}{frg}{}{}{woher, von wo, woraus}
+
+\entry{kovare}{}{nom}{m}{}{Zeitschrift, Magazin}
+
+\entry{koz}{}{nom}{n}{}{Kleinviehstall}
+
+\entry{kozik}{}{nom}{n}{}{Spielhaus, Kinderhütte}
+
+\entry{ku}{}{frg}{}{}{wo, wo denn \textit{(für bewegliche Objekte)} \par\noindent\textit{Ku yo?} - Wo ist es denn?}
+
+\entry{kul}{}{nom}{n}{}{Leid, Schmerz}
+
+\entry{kulfet}{}{nom}{-e}{}{Familienmitglied \par\noindent\textit{çê û kulfet (Kollektivum)} - Familie, Familienmitglieder}
+
+\entry{kultur}{}{nom}{n}{}{Kultur}
+
+\entry{kundire}{}{nom}{m}{}{Kürbis}
+
+\entry{kundure}{}{nom}{n}{}{(Halb)Schuh}
+
+\entry{kurd}{}{nom}{-e}{}{Kurde/in}
+
+\entry{Kurdîstan}{}{nom}{n}{}{Kurdistan}
+
+\entry{kurdkî}{}{nom}{m}{}{Kurdisch}
+
+\entry{kursî}{}{nom}{n}{}{Hocker, Stuhl}
+
+\entry{kutik}{}{nom}{n}{}{Hund; Rüde}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION L
+%----------------------------------------------------------------------------------------
+
+\section*{L}
+
+\begin{multicols}{2}
+
+\entry{la\textsuperscript{1}}{lak}{nom}{}{}{\textsuperscript{1}Seil, Tau \textsuperscript{2}Schnur, Strick \textsuperscript{3}Strang, Band}
+
+\entry{la\textsuperscript{2}}{}{konj}{}{}{aber, jedoch $\rightarrow$ \textbf{labelê}}
+
+\entry{lac}{}{}{}{}{$\rightarrow$ \textbf{laz}}
+
+\entry{lacek}{}{}{}{}{$\rightarrow$ \textbf{lazek}}
+
+\entry{labelê}{labirê}{konj}{}{}{aber, jedoch $\rightarrow$ \textbf{la\textsuperscript{2}}}
+
+\entry{lak}{}{nom}{n}{}{$\rightarrow$ \textbf{la\textsuperscript{1}}}
+
+\entry{lal}{}{adj}{-e}{}{stumm (sprachlos)}
+
+\entry{lamba}{}{nom}{m}{}{Lampe $\rightarrow$ \textbf{çila}}
+
+\entry{lane}{lone}{nom}{m}{}{Loch}
+
+\entry{laşêr}{laser}{n}{}{}{\textsuperscript{1}Sturzbach \textsuperscript{2}Flut}
+
+\entry{lawike}{}{nom}{m}{}{Lied, Song $\rightarrow$ \textbf{kilame}}
+
+\entry{lawo}{}{intrj}{}{}{\textsuperscript{1}\textit{Anredefall von}  $\rightarrow$ \textbf{lazek} \textsuperscript{2}\textit{Ausruf der Verwunderung}}
+
+\entry{layek}{}{}{}{}{$\rightarrow$ \textbf{lazek}}
+
+\entry{laz}{lac}{nom}{n}{laj}{Sohn}
+
+\entry{lazek}{lacek, layek}{n}{}{lajek}{Junge, Bub}
+
+\entry{lazê amike}{lacê amike}{nom}{n}{}{\textbf{$\rightarrow$ amiza}}
+
+\entry{lazê apî}{lacê dedî}{nom}{n}{}{\textbf{$\rightarrow$ dereza}}
+
+\entry{lazim}{lozim}{adj}{-e}{}{nötig, notwendig, vonnöten, erforderlich, benötigt}
+
+\entry{lazim bîyene}{lozim bîyene}{verb}{}{}{brauchen, benötigen, bedürfen \par\noindent\textit{To rê çi lazim o?} - Was brauchst du?}
+
+\entry{leçege}{}{nom}{m}{}{Kopftuch}
+
+\entry{legane}{}{nom}{m}{}{Wanne, Becken}
+
+\entry{lerze}{}{nom}{m}{lez}{Eile, Dringlichkeit  \par\noindent\textit{Lerza to çik a?} - Warum die Eile?}
+
+\entry{lerze kerdene}{}{verb}{n}{lez kerdene}{eilen, beeilen, hetzen}
+
+\entry{leşker}{}{nom}{-e}{}{Soldat/in $\rightarrow$ \textbf{esker}}
+
+\entry{leşkerîye}{}{nom}{m}{}{\textsuperscript{1}Militär \textsuperscript{2}Soldatentum \textsuperscript{3}Wehrdienst, Militärdienst $\rightarrow$ \textbf{eskerîye}}
+
+\entry{lete}{}{nom}{n}{}{Teil, Anteil}
+
+\entry{lew}{}{nom}{n}{}{Lippe}
+
+\entry{lew pira nayene}{}{verb}{}{}{küssen, einen Kuss geben}
+
+\entry{lewe}{ley}{nom}{n}{}{Seite, Neben-}
+
+\entry{lewê ... de}{leyê ... de}{zirk}{}{leweyê ... de}{neben, an der Seite von, bei}
+
+\entry{leyê ... de}{}{zirk}{}{}{$\rightarrow$ \textbf{lewê ... de}}
+
+\entry{leyîr}{}{nom}{-e}{}{Junges, Brut \textit{(Tier)}}
+
+\entry{lêmin}{lêminê}{intrj}{}{}{\textit{Ausruf für Schmerz und Wehklage}}
+
+\entry{lên}{}{nom}{n}{}{Kessel, Topf}
+
+\entry{Licê}{}{nom}{m}{}{\textit{Stadt in Kurdistan}}
+
+\entry{linge}{ninge}{nom}{m}{}{Fuß  $\rightarrow$ \textbf{pa}}
+
+\entry{lîmone}{lêmune}{nom}{m}{}{Zitrone}
+
+\entry{lître}{}{nom}{n}{}{Liter}
+
+\entry{lobike}{lobaze, lebaze}{nom}{m}{lobî}{grüne Bohne}
+
+\entry{lolike}{}{nom}{m}{}{Tomate $\rightarrow$ \textbf{tomatêse}}
+
+\entry{lone}{}{nom}{m}{}{$\rightarrow$ \textbf{lane}}
+
+\entry{loqme}{}{nom}{n}{}{\textsuperscript{1}Weihgabe\textit{ (zu religiösen Zwecken zubereitete Speise)} \textsuperscript{2}Happen \textsuperscript{3}Lokum (Süßspeise}
+
+\entry{lovaze}{}{nom}{m}{}{$\rightarrow$ \textbf{lobike}}
+
+\entry{lo\"{x}e}{}{nom}{m}{}{Walze \textit{(i.d.R. genutzt für Dächer oder Äcker)}}
+
+\entry{lozim}{}{adj}{-e}{}{$\rightarrow$ \textbf{lazim}}
+
+\entry{lüye}{}{nom}{m}{luye}{Fuchs}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION M
+%----------------------------------------------------------------------------------------
+
+\section*{M}
+
+\begin{multicols}{2}
+
+\entry{ma\textsuperscript{1}}{}{pron}{}{}{wir}
+
+\entry{ma\textsuperscript{2}}{}{pron}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{ma\textsuperscript{1}}}
+
+\entry{ma\textsuperscript{3}}{}{intrj}{}{}{\textit{Fragepartikel} \par\noindent\textit{Ma se bî?} - Was ist denn passiert?}
+
+\entry{mabên}{}{nom}{n}{}{\textsuperscript{1}Mittelpunkt, Zwischenraum \textsuperscript{2}Pause, Zwischenzeit}
+
+\entry{mabên de}{}{adv}{}{}{\textsuperscript{1}dazwischen \textsuperscript{2}zwischendurch}
+
+\entry{maç}{}{nom}{n}{}{Match, Spiel, Partie}
+
+\entry{maçî kerdene}{}{verb}{}{}{einen Kuss geben, ein Küsschen verteilen \textbf{$\rightarrow$ \.{p}açî kerdene}}
+
+\entry{makeke}{maykeke}{adj}{m}{makî}{feminin, weiblich}
+
+\entry{mal}{}{nom}{n}{}{\textsuperscript{1}Besitz, Eigentum \textsuperscript{2}Ware, Gut \textsuperscript{3}Vieh, Rindvieh}
+
+\entry{mal û milk}{}{nom}{n}{}{Hab und Gut, Besitztum \textit{(Kollektivum)}}
+
+\entry{malim}{}{nom}{-e}{}{Lehrer/in, Lehrkraft, Lehrpersonal \textbf{$\rightarrow$ mamosta}}
+
+\entry{malimîye}{malimênî}{nom}{m}{}{Lehrwesen, Lehrertum, Lehrerschaft}
+
+\entry{Mamekîye}{Kalan}{nom}{n}{}{\textit{Stadt in Dêrsim (Tunceli-Stadt)}}
+
+\entry{mamosta}{}{nom}{n, m}{}{Lehrer/in, Lehrkraft, Lehrpersonal \textbf{$\rightarrow$ malim}}
+
+\entry{mana}{}{nom}{m}{}{Bedeutung, Sinn, Relevanz}
+
+\entry{manga}{}{nom}{m}{}{Kuh}
+
+\entry{manî}{}{nom}{n}{}{Hindernis, Blockade}
+
+\entry{mar}{mor}{nom}{-e}{}{Schlange}
+
+\entry{markete}{}{nom}{m}{}{Supermarkt}
+
+\entry{marte}{}{nom}{m}{adare}{März}
+
+\entry{masa}{}{nom}{m}{}{Tisch}
+
+\entry{mase}{masi, mose}{nom}{n}{}{Fisch}
+
+\entry{mast}{most}{nom}{n}{}{Joghurt}
+
+\entry{matematîk}{}{nom}{n}{}{Mathematik}
+
+\entry{Mazgêrd}{}{nom}{n}{}{\textit{Stadt in Dêrsim (türk. Mazgirt)}}
+
+\entry{may û pî}{}{nom}{zh}{}{Eltern}
+
+\entry{maye}{moye}{nom}{m}{}{Mutter}
+
+\entry{maydanoz}{}{nom}{n}{}{Petersilie}
+
+\entry{mayîne}{}{nom}{m}{}{Stute}
+
+\entry{mecbur}{}{adj}{-e}{}{zwingend, zwangsläufig, gezwungen}
+
+\entry{mekteb}{}{nom}{n}{}{Schule $\rightarrow$ \textbf{wendegeh}}
+
+\entry{mektube}{}{nom}{m}{}{Brief}
+
+\entry{memur}{}{nom}{-e}{mamur}{Beamte/r $\rightarrow$ \textbf{karmend}}
+
+\entry{menajer}{}{nom}{-e}{}{Manager/in}
+
+\entry{mendene}{}{verb}{}{}{bleiben}
+
+\entry{merde}{}{nom}{-îye}{}{Tote/r; tot}
+
+\entry{merdene\textsuperscript{1}}{}{verb}{}{}{sterben}
+
+\entry{merdene\textsuperscript{2}}{}{nom}{m}{merg}{Tod; Sterben}
+
+\entry{mereke}{}{nom}{m}{}{Scheune, Heuboden}
+
+\entry{merge}{}{nom}{m}{}{Weideland, Aue, Prärie}
+
+\entry{merre}{merri}{nom}{n}{}{Maus}
+
+\entry{mesele}{}{nom}{m}{}{\textsuperscript{1}Ereignis, Vorfall \textsuperscript{2}Geschichte, Erzählung \textsuperscript{3}Angelegenheit, Sache}
+
+\entry{meslek}{}{nom}{n}{}{Beruf, Berufsstand, Gewerbe}
+
+\entry{meşte}{}{adv}{}{}{morgen $\rightarrow$ \textbf{sora}}
+
+\entry{metre}{}{nom}{n}{}{Meter}
+
+\entry{metro}{}{nom}{m}{}{U-Bahn}
+
+\entry{mewsîm}{}{nom}{n}{}{Jahreszeit}
+
+\entry{meyman}{}{nom}{-e}{mêman}{Gast, Besucher/in}
+
+\entry{meymanperwer}{}{adj}{-e}{mêmanperwer}{gastfreundlich}
+
+\entry{meywe}{}{nom}{m}{}{\textsuperscript{1}Obst, Früchte \textsuperscript{2}Frucht}
+
+\entry{meyxane}{}{nom}{n}{}{Kneipe, Schenke, Wirtshaus}
+
+\entry{mezele}{}{nom}{m}{}{Grab}
+
+\entry{mêrde}{mêrdi}{nom}{n}{}{Ehemann, Gatte}
+
+\entry{mêrik}{}{nom}{n}{}{Mann, Kerl}
+
+\entry{mêse}{}{nom}{m}{}{\textsuperscript{1}Fliege \textsuperscript{2}Biene}
+
+\entry{mi}{}{pron}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{ez}}
+
+\entry{milet}{}{nom}{m}{}{\textsuperscript{1}Volk \textsuperscript{2}Leute}
+
+\entry{min}{}{pron}{}{}{$\rightarrow$ \textbf{mi}}
+
+\entry{minetdar}{}{adj}{-e}{}{$\rightarrow$ \textbf{minetkar}}
+
+\entry{minete}{}{nom}{m}{}{\textsuperscript{1}Dank, Dankbarkeit \textsuperscript{2}Gebet, Bittgebet}
+
+\entry{minetkar}{}{adj}{-e}{}{dankbar, verbunden $\rightarrow$ \textbf{sipasdar}}
+
+\entry{miradin}{}{adj}{-e}{mirûzin}{beleidigt, schmollend, grämig, mürrisch $\rightarrow$ \textbf{mirozin}}
+
+\entry{miradîyayene}{}{verb}{}{}{beleidigt sein, schmollen, jmd. böse sein  $\rightarrow$ \textbf{heredîyayene}}
+
+\entry{miradnayene}{}{verb}{}{}{vergrämen, verärgern, verstimmen  $\rightarrow$ \textbf{herednayene}}
+
+\entry{mird}{}{adj}{-e}{}{satt}
+
+\entry{mirozin}{}{adj}{-e}{mirûzin}{beleidigt, schmollend, grämig, mürrisch $\rightarrow$ \textbf{miradin}}
+
+\entry{mix}{}{nom}{n}{}{Nagel}
+
+\entry{miz}{mic}{nom}{n}{mij}{Nebel}
+
+\entry{mizin}{micin}{adj}{-e}{}{neblig}
+
+\entry{mîlçik}{}{nom}{-e}{}{Vogel}
+
+\entry{mîr}{}{nom}{n}{}{Teig}
+
+\entry{mîre}{}{nom}{n}{}{Fürst}
+
+\entry{mîyan}{mîya}{nom}{n}{}{Mitte, Mittelpunkt $\rightarrow$ \textbf{werte}}
+
+\entry{mîyan de}{mîya de}{adv}{}{}{\textsuperscript{1}(in)mitten, mittendrin, dazwischen, zwischendrin \textsuperscript{2}gelegentlich $\rightarrow$ \textbf{werte de}}
+
+\entry{mîyane}{}{nom}{n}{}{Lende, Taille, Kreuz}
+
+\entry{mîyanneteweyî}{}{adj}{-ye}{}{international, zwischenstaatlich}
+
+\entry{mîyaz}{}{nom}{n}{}{$\rightarrow$ \textbf{nîyaz}}
+
+\entry{mîye}{}{nom}{m}{}{Schaf}
+
+\entry{mobîlîte}{}{nom}{m}{}{Mobilität}
+
+\entry{mor}{}{nom}{-e}{}{$\rightarrow$ \textbf{mar}}
+
+\entry{mordem\textsuperscript{1}}{}{nom}{n}{merdim}{\textsuperscript{1}Mann \textsuperscript{2}Mensch \textsuperscript{3}man}
+
+\entry{mordem\textsuperscript{2}}{}{nom}{-e}{merdim}{Verwandte/r}
+
+\entry{mordemek}{mormek}{nom}{n}{}{$\rightarrow$ \textbf{mêrik}}
+
+\entry{mormek}{}{nom}{n}{}{$\rightarrow$ \textbf{mordemek}}
+
+\entry{mose}{}{nom}{n}{}{$\rightarrow$ \textbf{mase}}
+
+\entry{most}{}{nom}{n}{}{$\rightarrow$ \textbf{mast}}
+
+\entry{mozik}{}{nom}{-e}{}{Kalb}
+
+\entry{muhendis}{}{nom}{-e}{}{Ingenieur/in}
+
+\entry{muhîm}{}{adj}{-e}{}{wichtig, bedeutsam}
+
+\entry{mume}{}{nom}{m}{}{Kerze}
+
+\entry{Munzur}{}{nom}{n}{}{$\rightarrow$ \textbf{Muzir}}
+
+\entry{murîye}{}{nom}{m}{}{Birne}
+
+\entry{muşterî}{müşterî}{nom}{-ye}{}{Kunde/in, Kundschaft}
+
+\entry{muxtar}{}{nom}{-e}{}{Dorfvorsitzende/r, Dorfvorsteher/in, Gemeindevorsteher/in}
+
+\entry{muze}{}{nom}{m}{}{Banane}
+
+\entry{Muzir}{Munzur, Munzir}{nom}{n}{Mizur}{\textsuperscript{1}\textit{Fluss in Dêrsim} \textsuperscript{2}\textit{männl. Vorname}}
+
+\entry{muzîk}{}{nom}{n}{}{Musik}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION N
+%----------------------------------------------------------------------------------------
+
+\section*{N}
+
+\begin{multicols}{2}
+
+\entry{na}{}{dem}{m}{}{diese, die/das da}
+
+\entry{naca}{}{adv}{}{}{\textbf{$\rightarrow$ naza}}
+
+\entry{nacnîye}{naçike, najnîye}{nom}{m}{}{Frau des Onkels väterlicherseits}
+
+\entry{naçike}{}{nom}{m}{}{$\rightarrow$ \textbf{nacnîye}}
+
+\entry{name}{nami}{nom}{n}{}{name \par\noindent\textit{Namê to çik o?} - Wie heißt du?}
+
+\entry{nan}{non, nû}{nom}{n}{}{\textsuperscript{1}Brot \textsuperscript{2}Essen}
+
+\entry{nan û awe}{non û awe}{nom}{m}{}{Essen und Getränke, Speis und Trank, Speisen $\rightarrow$ \textbf{nan û sole}}
+
+\entry{nan û sole}{non û sole}{nom}{m}{}{\textsuperscript{1}Essen, Nahrung \textsuperscript{2}Grundbedürfnis}
+
+\entry{nane}{none}{nom}{m}{}{Laib Brot, Brotlaib}
+
+\entry{nara}{}{adv}{}{}{diesmal, dieses Mal \textbf{$\rightarrow$ na rey}}
+
+\entry{nas}{}{nom}{-e}{}{Bekannte/r \par\noindent\textit{Nas û dost} - Freunde und Bekannte \textit{(Kollektivum)}}
+
+\entry{nas kerdene}{}{verb}{}{}{\textsuperscript{1}kennen \textsuperscript{2}kennenlernen}
+
+\entry{nasname}{}{nom}{n}{}{\textsuperscript{1}Ausweis \textsuperscript{2}Identität}
+
+\entry{nat}{}{adv}{}{}{hierher, bis hierhin}
+
+\entry{naxilqirane}{}{nom}{m}{}{\textbf{$\rightarrow$ payîzo peyên}}
+
+\entry{naxir}{}{nom}{n}{}{Rinderherde}
+
+\entry{naye}{}{dem}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{na}}
+
+\entry{naza}{naca}{adv}{}{noca}{hier, an diesem Ort}
+
+\entry{Nazmîya}{}{nom}{m}{}{\textbf{$\rightarrow$ Qisle}}
+
+\entry{nebat}{}{nom}{n}{}{Pflanze}
+
+\entry{neheq}{neq}{adj}{-e}{}{\textsuperscript{1}unrecht, ungerecht, ungerechtfertigt \textsuperscript{2}unbegründet, unberechtigt}
+
+\entry{nergîze}{}{nom}{m}{}{Narzisse}
+
+\entry{nerm}{}{adj}{-e}{}{weich, sanft}
+
+\entry{netewe}{}{nom}{m}{}{National}
+
+\entry{neteweperest}{}{nom}{-e}{}{Nationalist/in}
+
+\entry{new}{}{zahl}{}{}{neun}
+
+\entry{neway}{}{zahl}{}{}{neunzig}
+
+\entry{newe}{}{adj}{-îye}{}{neu}
+
+\entry{newroze}{}{nom}{m}{}{Newroz}
+
+\entry{ney}{}{dem}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{no}}
+
+\entry{nê\textsuperscript{1}}{}{ptkl}{}{ney}{\textsuperscript{1}nein \textsuperscript{2}nicht}
+
+\entry{nê\textsuperscript{2}}{}{dem}{}{}{2. Fall von $\rightarrow$ \textbf{no}}
+
+\entry{nê\textsuperscript{3}}{}{dem}{zh}{}{diese, die da}
+
+\entry{nêjdî}{}{adv}{}{}{$\rightarrow$ \textbf{nêzdî}}
+
+\entry{nêke}{}{konj}{}{}{ansonsten, sonst, andernfalls}
+
+\entry{nêm}{}{adj}{-e}{}{halb}
+
+\entry{nême}{}{nom}{n}{}{Hälfte}
+
+\entry{nêrî}{}{adj}{-ye}{}{maskulin, männlich}
+
+\entry{nêwes}{}{adj}{-e}{nêweş}{\textsuperscript{1}krank \textsuperscript{2}\textsc{nom} Patient/in}
+
+\entry{nêwesxane}{xestexane}{nom}{n}{nêweşxane}{Krankenhaus, Hospital, Klinik}
+
+\entry{nêzdî}{nêjdî}{adv}{}{}{\textsuperscript{1}nah \textsuperscript{2}\textsc{nom} Nähe}
+
+\entry{nika}{}{adv}{}{}{jetzt, nun, derzeit, gerade (eben)}
+
+\entry{nîjad}{}{nom}{n}{}{Rasse}
+
+\entry{nîjadperest}{}{nom}{-e}{}{Rassist/in}
+
+\entry{nînan}{nînû, nînê}{dem}{}{}{\textit{2. Fall von}$\rightarrow$ \textbf{nê}\textsuperscript{3}}
+
+\entry{nîsane}{}{nom}{m}{}{April}
+
+\entry{nîske}{}{nom}{m}{}{Linse}
+
+\entry{nîya}{}{adv}{}{}{so, in dieser Art, auf diese Art, in dieser Art und Weise}
+
+\entry{nîyadayene}{}{verb}{}{}{gucken, schauen \par\noindent\textit{Nîyade!} - Schau!}
+
+\entry{nîyaz}{mîyaz}{nom}{n}{}{\textsuperscript{1}Weihegabe \textsuperscript{2}\textit{Teigspeise, die an religiösen Feiertagen zubereitet wird}}
+
+\entry{no}{}{dem}{n}{}{dieser, der/das da}
+
+\entry{nobedar}{}{nom}{-e}{}{Wächter/in, Wache}
+
+\entry{non}{}{nom}{}{}{$\rightarrow$ \textbf{nan}}
+
+\entry{none}{}{nom}{}{}{$\rightarrow$ \textbf{nane}}
+
+\entry{normal}{}{adj}{-e}{}{normal, üblich, gewöhnlich}
+
+\entry{normal de}{}{adv}{}{}{normalerweise, üblicherweise, für gewöhnlich}
+
+\entry{Norweç}{}{nom}{n}{}{Norwegen}
+
+\entry{not}{}{nom}{n}{}{Notiz, Anmerkung}
+
+\entry{nover}{}{nom}{n}{}{diese Seite, dieses Ufer, diesseits}
+
+\entry{nuke}{}{nom}{m}{}{Kichererbse}
+
+\entry{numre}{numara}{nom}{n}{}{Nummer}
+
+\entry{nusnayene}{}{verb}{}{}{$\rightarrow$ \textbf{nuştene}}
+
+\entry{nuşte}{yazî}{nom}{n}{}{\textsuperscript{1}Schreiben, Schriftstrück \textsuperscript{2}Schrift \textsuperscript{3}Artikel, Aufsatz, Essay}
+
+\entry{nuştene}{nusnayene}{verb}{}{}{schreiben, ein Schriftstück verfassen, beschriften}
+
+\entry{nuşto\"{x}}{}{nom}{-e}{}{\textsuperscript{1}Schriftsteller/in, Schreiber/in \textsuperscript{2}Autor/in, Verfasser/in}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION O
+%----------------------------------------------------------------------------------------
+
+\section*{O}
+
+\begin{multicols}{2}
+
+\entry{o\textsuperscript{1}}{}{pron}{m}{}{er}
+
+\entry{o\textsuperscript{2}}{}{dem}{m}{}{jener; der/das dort}
+
+\entry{od}{}{nom}{n}{}{$\rightarrow$ \textbf{wad}}
+
+\entry{oda}{weda}{nom}{m}{}{Zimmer, Raum}
+
+\entry{ofîs}{}{nom}{n}{}{\textsuperscript{1}Büro, Dienststelle \textsuperscript{2}Kanzlei, Praxis $\rightarrow$ \textbf{buro}}
+
+\entry{olvoz}{}{nom}{-e}{}{$\rightarrow$ \textbf{albaz}}
+
+\entry{onca}{wenca}{adv}{}{}{\textsuperscript{1}allerdings, jedoch \textsuperscript{2}erneut, wieder, abermals}
+
+\entry{ondêr}{}{adj}{-e}{}{verdammt, verflucht, verflixt}
+
+\entry{ontene}{}{verb}{}{antene}{ziehen}
+
+\entry{organîk}{}{adj}{-e}{}{\textsuperscript{1}organisch \textsuperscript{2}bio, Bio-}
+
+\entry{orte}{werte}{nom}{n}{}{Mitte, Mittelpunkt $\rightarrow$ \textbf{mîyan}}
+
+\entry{orte de}{werte de}{adv}{}{}{\textsuperscript{1}(in)mitten, mittendrin, dazwischen, zwischendrin \textsuperscript{2}gelegentlich $\rightarrow$ \textbf{mîyan de}}
+
+\entry{osin}{}{nom}{n}{}{$\rightarrow$ \textbf{asin}}
+
+\entry{ospor}{}{nom}{-e}{}{$\rightarrow$ \textbf{aspar}}
+
+\entry{osta}{westa}{nom}{-ye}{}{Meister}
+
+\entry{ostor}{}{nom}{-e}{}{$\rightarrow$ \textbf{astor}}
+
+\entry{otobuse}{}{nom}{m}{}{Bus, Autobus}
+
+\entry{owe}{}{nom}{n}{}{$\rightarrow$ \textbf{awe}}
+
+\entry{ox}{}{intrj}{}{} {\textit{Ausruf der Freude oder des Genusses}}
+
+\entry{o\"xir}{}{nom}{n}{}{\textsuperscript{1}Reise, Aufbruch \par\noindent\textit{O\"xir bo!} - Tschüss! \par\noindent\textsuperscript{2}Glück, Glücksbringer}
+
+\entry{ozan}{hozan}{nom}{-e}{}{\textsuperscript{1}Dichter/in, Poet/in $\rightarrow$ \textbf{saîr} \textsuperscript{2}Barde, Sänger/in $\rightarrow$ \textbf{deyîrbaz}}
+
+\entry{ozr}{}{nom}{n}{}{Entschuldigung, Abbitte}
+
+\entry{ozr waştene}{}{verb}{}{}{entschuldigen, um Entschuldigung bitten \par\noindent \textit{Ez ozrê to wazeno.} - Ich bitte (dich) um Entschuldigung.}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION P
+%----------------------------------------------------------------------------------------
+
+\section*{P}
+
+\begin{multicols}{2}
+
+\entry{pa}{}{nom}{n}{}{Fuß  $\rightarrow$ \textbf{linge}}
+
+\entry{\.{p}açî kerdene}{}{verb}{}{}{einen Kuss geben, ein Küsschen verteilen $\rightarrow$ \textbf{maçî kerdene}}
+
+\entry{pak}{}{adj}{-e}{}{rein, sauber, reinlich, blank}
+
+\entry{paka}{}{adv}{}{}{unbewölkt, klar (Himmel)}
+
+\entry{pakête}{}{nom}{m}{}{Paket}
+
+\entry{\.{p}anc}{\.{p}onc}{zahl}{}{panc}{fünf}
+
+\entry{\.{p}ancas}{\.{p}oncas}{zahl}{}{pancas}{fünfzig}
+
+\entry{panel}{}{nom}{n}{}{Podiumsdiskussion, Panel}
+
+\entry{pano}{}{nom}{n}{}{\textsuperscript{1}Notizbrett, Pinnwand \textsuperscript{2}Tafel}
+
+\entry{pantolî}{pantorî}{nom}{zh}{}{Hose}
+
+\entry{par}{}{adv}{}{}{letztes Jahr}
+
+\entry{pardon}{}{intrj}{}{}{Pardon, Entschuldigung}
+
+\entry{\.{p}are}{}{nom}{a}{}{\textsuperscript{1}Teil, Anteil \textsuperscript{2}Beteiligung}
+
+\entry{\.{p}arek}{}{nom}{n}{}{Division, Teilung}
+
+\entry{parke}{}{nom}{m}{}{Park}
+
+\entry{parse kerdene}{}{verb}{}{}{betteln}
+
+\entry{parsek}{}{nom}{-e}{}{Bettler/in}
+
+\entry{partîye}{}{nom}{m}{}{Partei}
+
+\entry{parzun}{}{nom}{n}{}{Sieb}
+
+\entry{pasa}{}{nom}{n}{paşa}{Pascha}
+
+\entry{\.{p}aseme}{\.{p}oseme}{nom}{n}{panşeme}{Donnerstag}
+
+\entry{paskule}{paskul, paskil}{nom}{m}{}{Tritt, Fußtritt}
+
+\entry{paştî}{poştî}{nom}{m}{piştî}{Rücken}
+
+\entry{patron}{}{nom}{-e}{}{Vorgesetzte/r, Chef, Boss $\rightarrow$ \textbf{serkar}}
+
+\entry{pay kerdene}{}{verb}{}{}{anziehen \textit{(mit den Füßen)}}
+
+\entry{pay ra}{}{adv}{}{}{\textsuperscript{1}im Stehen, stehend, aufrecht \textsuperscript{2}zu Fuß}
+
+\entry{payîz}{}{nom}{n}{}{Herbst}
+
+\entry{payîze\textsuperscript{1}}{}{nom}{m}{teşrîna verêne}{Oktober}
+
+\entry{payîze\textsuperscript{2}}{}{nom}{n}{}{\textit{eine im Herbst gesäte Getreideart}}
+
+\entry{payîzî}{}{adv}{}{}{im Herbst, in der Herbstzeit}
+
+\entry{payîzo peyên}{}{nom}{n}{teşrîna peyêne}{November}
+
+\entry{payîzo virên}{}{nom}{n}{}{September $\rightarrow$ \textbf{êlule}}
+
+\entry{payîzo wertên}{}{nom}{n}{teşrîna verêne}{Oktober $\rightarrow$ \textbf{payîze\textsuperscript{1}}}
+
+\entry{peh}{}{intrj}{}{}{\textit{Ausruf für Spott oder Ekel}}
+
+\entry{pelge}{}{nom}{m}{}{Blatt}
+
+\entry{pencere}{}{nom}{n}{}{Fenster}
+
+\entry{pendîr}{penîr}{nom}{n}{}{Käse}
+
+\entry{.{p}e\.{p}o}{}{intrj}{}{}{\textit{Ausruf für Verwunderung oder Staunen}}
+
+\entry{perde}{}{nom}{n}{}{Vorhang}
+
+\entry{pere}{}{nom}{n}{}{Geld}
+
+\entry{perey}{}{adv}{}{}{vorgestern, vor zwei Tagen}
+
+\entry{perocîye}{}{nom}{m}{}{$\rightarrow$ \textbf{perozîye}}
+
+\entry{perojîye}{}{nom}{m}{}{$\rightarrow$ \textbf{perozîye}}
+
+\entry{peroz\textsuperscript{1}}{peroc}{nom}{n}{peroj}{Mittag}
+
+\entry{peroz\textsuperscript{2}}{peroc}{adv}{}{peroj}{tagsüber \par\noindent\textit{Peroz û pesewe} - Tag und Nacht}
+
+\entry{perozîye}{perojîye, perocîye}{nom}{m}{perojîye}{Mittagessen}
+
+\entry{perr}{}{nom}{n}{}{Flügel}
+
+\entry{pers}{}{nom}{n}{}{Frage \par\noindent\textit{Persê mi est o.} - Ich habe eine Frage.}
+
+\entry{pers kerdene}{}{verb}{}{}{fragen, Fragen stellen}
+
+\entry{persayene}{}{verb}{}{}{fragen, erfragen, nachfragen}
+
+\entry{perwerde}{}{nom}{n}{}{\textsuperscript{1}Bildung, Ausbildung, Fortbildung \textsuperscript{2}Erziehung, Lehre}
+
+\entry{pes}{}{nom}{n}{}{Kleinviehherde}
+
+\entry{pesewe}{}{adv}{}{peşewe}{nachts, in der Nacht}
+
+\entry{pey}{}{nom}{n}{}{hinten, Hinter-}
+
+\entry{pey de}{}{adv, post}{}{}{\textsuperscript{1}dahinter, hinendrauf \textsuperscript{2}danach}
+
+\entry{peyê cû}{peyê coy}{adv}{}{}{später, danach, im Nachhinein}
+
+\entry{peyê ... de}{}{zirk}{}{}{hinter, dahinter}
+
+\entry{peynîye}{}{nom}{m}{}{Ende, Schluss}
+
+\entry{peyser}{}{adv}{}{}{zurück, rückwärts}
+
+\entry{pezkovî}{}{nom}{m}{}{Bergziege $\rightarrow$ \textbf{biza \.{k}irre}}
+
+\entry{pê}{}{präp}{}{}{mit, mit Hilfe, anhand, durch}
+
+\entry{pêleke}{}{nom}{m}{}{Stoffbeutel, Schatzbeutel}
+
+\entry{pêrar}{}{nom}{n}{}{vorletztes Jahr, vor zwei Jahren}
+
+\entry{Pêrtage}{}{nom}{m}{}{\textit{Stadt in Dêrsim (türk. Pertek)}}
+
+\entry{pêro}{}{pron}{}{}{alle, alles $\rightarrow$ \textbf{têde}}
+
+\entry{pêro pîya}{}{adv}{}{}{insgesamt, alle(s) zusammen}
+
+\entry{pêrune}{}{pron}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{pêro}}
+
+\entry{pêsare}{}{nom}{n}{}{\textit{Ein zu religiösen Feiertagen zubereitetes Brot}}
+
+\entry{pêsayene}{}{verb}{}{}{garen, kochen, gekocht werden}
+
+\entry{pêt}{}{adj}{-e}{}{\textsuperscript{1}stark, kräftig, stramm \textsuperscript{2}stabil, robust, fest \textsuperscript{3}fleißig, tüchtig \textsuperscript{4}schnell, rasch \textsuperscript{5}wohlhabend, reich}
+
+\entry{pêtage}{}{nom}{m}{}{\textsuperscript{1}Scheune \textsuperscript{2}Bienenstock \textsuperscript{3}Honigwabe}
+
+\entry{Pilemurîye}{}{nom}{m}{}{\textit{Stadt in Dêrsim (türk. Pülümür)}}
+
+\entry{pird}{}{nom}{n}{}{Brücke}
+
+\entry{pirnike}{}{nom}{m}{}{Nase}
+
+\entry{pirr}{}{adj}{-e}{}{voll}
+
+\entry{pirr kerdene}{}{verb}{}{}{füllen, befüllen, voll machen}
+
+\entry{pisînge}{}{nom}{m}{}{Katze}
+
+\entry{pî}{}{nom}{n}{}{Vater}
+
+\entry{pîl}{}{adj}{-e}{}{alt, groß \textit{(vom Alter her oder figurativ)}}
+
+\entry{pînayene}{}{verb}{}{}{$\rightarrow$ \textbf{pîtene}}
+
+\entry{pîr}{}{nom}{n}{}{Pîr \textit{(Religionsführer bei Aleviten)} \par\noindent\textit{Pîr bo!} - Wirklich!}
+
+\entry{pîrike}{}{nom}{m}{pîrike, dapîre}{\textsuperscript{1}Großmutter, Oma \textsuperscript{2}Spinne}
+
+\entry{pîroz}{}{adj}{-e}{}{$\rightarrow$ \textbf{bimbarek}}
+
+\entry{pîtene}{pînayene}{verb}{}{}{warten \par\noindent\textit{Bipîye!} - Warte!}
+
+\entry{pîya}{}{adv}{}{}{gemeinsam, zusammen, beisammen, gemeinschaftlich}
+
+\entry{pîyaz}{}{nom}{n}{}{Zwiebel}
+
+\entry{pîyo}{}{vok}{}{}{\textit{Anredefall von} $\rightarrow$ \textbf{pî}}
+
+\entry{pîze}{}{nom}{n}{}{Bauch}
+
+\entry{pîzza}{}{nom}{m}{}{Pizza}
+
+\entry{polîs}{}{nom}{n}{}{\textsuperscript{1}Polizei \textsuperscript{2}Polizist/in}
+
+\entry{polîtîka}{}{nom}{m}{}{Politik {$\rightarrow$ \textbf{sîyaset}}}
+
+\entry{\.{p}onc}{}{zahl}{}{$\rightarrow$ \textbf{\.{p}anc}}
+
+\entry{\.{p}oncas}{}{zahl}{}{$\rightarrow$ \textbf{\.{p}ancas}}
+
+\entry{postal}{}{nom}{n}{}{Schuh}
+
+\entry{poste}{postik}{nom}{n}{}{\textsuperscript{1}Haut \textsuperscript{2}Leder $\rightarrow$ \textbf{çerme}}
+
+\entry{poştî}{}{nom}{m}{}{$\rightarrow$ \textbf{paştî}}
+
+\entry{problem}{}{nom}{n}{}{Problem}
+
+\entry{profesor}{}{nom}{-e}{}{Professor/in}
+
+\entry{program}{}{nom}{n}{}{Programm}
+
+\entry{programviraşto\"{x}}{}{nom}{-e}{}{Programmierer/in, Coder/in}
+
+\entry{puk}{}{nom}{n}{}{Sturm, Gestöber}
+
+\entry{pukeleke}{}{nom}{m}{}{Schneesturm, Gestöber, Blizzard}
+
+\entry{Pulur}{Vacu\"{xe}}{nom}{n}{}{\textit{Stadt in Dêrsim (türk. Ovacık)}}
+
+\entry{pungal}{}{nom}{n}{}{Hühnerstall}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Q
+%----------------------------------------------------------------------------------------
+
+\section*{Q}
+
+\begin{multicols}{2}
+
+\entry{qal}{}{nom}{n}{qale}{Gerede, Ausdruck, Ausspruch}
+
+\entry{qal kerdene}{}{verb}{}{}{erzählen, (be)sprechen}
+
+\entry{qalind}{}{adj}{-e}{}{\textsuperscript{1}dick, prall \textsuperscript{2}\textit{(Haare)} dicht, buschig}
+
+\entry{qapax}{}{nom}{n}{}{Deckel, Verschluss, Klappe}
+
+\entry{qat}{}{nom}{n}{}{\textsuperscript{1}Stock, Stockwerk, Etage, Geschoss \textsuperscript{2}Schicht, Stufe}
+
+\entry{qatir}{}{nom}{n}{qantir}{Maultier}
+
+\entry{qatix}{}{nom}{n}{}{Milchprodukte}
+
+\entry{qawune}{}{nom}{m}{}{Honigmelone}
+
+\entry{qayît kerdene}{}{Verb}{}{}{\textsuperscript{1}ansehen, anschauen, betrachten, zuschauen, zusehen \textsuperscript{2}beobachten, beaufsichtigen \textsuperscript{3}aufpassen, betreuen, kümmern \par\noindent\textit{Qayîtê xo bike!} - Pass auf dich auf!}
+
+\entry{qe}{}{adv}{}{}{$\rightarrow$ \textbf{qet}}
+
+\entry{qedênayene}{}{verb}{}{}{beenden, fertig machen, fertig stellen, zu Ende bringen, ausmachen}
+
+\entry{qedîyayene}{}{verb}{}{}{enden, fertig werden aus sein, ausgehen, auslaufen}
+
+\entry{qelb}{}{nom}{n}{}{$\rightarrow$ \textbf{zerrî}}
+
+\entry{qeleme}{}{nom}{m}{}{Stift}
+
+\entry{qesab}{}{nom}{-e}{}{Metzger/in, Fleischer/in}
+
+\entry{qese}{}{nom}{n}{qisa}{\textsuperscript{1}Spruch, Wort \textsuperscript{2}Rede}
+
+\entry{qesey kerdene}{qeşî kerdene}{verb}{}{qisey kerdene}{reden, sprechen \par\noindent\textit{Ma kirmanckî qesey kenîme} - Wir sprechen Kirmanckî}
+
+\entry{qet}{qe}{adv}{}{}{\textsuperscript{1}nie, niemals; je, jemals \textsuperscript{2}gar nicht}
+
+\entry{qet çî}{}{pron}{n}{}{nichts, gar nichts}
+
+\entry{qet kes}{}{pron}{n}{}{niemand, gar niemand}
+
+\entry{qewe}{}{nom}{n}{}{Kaffee}
+
+\entry{qewet}{}{nom}{n}{}{Kraft, Stärke \par\noindent\textit{Qewet bo!} - Frohes Schaffen!}
+
+\entry{qewexane}{}{nom}{n}{}{\textsuperscript{1}Café, Kaffeehaus \textsuperscript{2}Spielkneipe, Wirtshaus}
+
+\entry{qey}{}{frg}{}{}{wozu, weshalb, weswegen}
+
+\entry{qeysî}{}{nom}{m}{}{Aprikose}
+
+\entry{qijkek}{qişkek, qickek}{adj}{-e}{}{klein}
+
+\entry{qilêr}{}{nom}{n}{}{Schmutz, Dreck}
+
+\entry{qilêrin}{}{adj}{-e}{}{schmutzig, dreckig, verschmutzt, verdreckt}
+
+\entry{qisim}{}{nom}{n}{}{\textsuperscript{1}Teil, Part, Abschnitt \textsuperscript{2}Sektion, Abteilung \textsuperscript{3}Kapitel, Folge}
+
+\entry{Qisle}{Nazmîya}{nom}{n}{}{\textit{Stadt in Dêrsim (türk. Nazımiye)}}
+
+\entry{qiz}{qic}{adj}{-e}{}{jünger, klein \textit{(Alter)}}
+
+\entry{qîymet}{}{nom}{n}{}{\textsuperscript{1}Wert, Stellenwert \textsuperscript{2}Würde, Dignität, Achtung}
+
+\entry{qîymetin}{}{adj}{-e}{}{\textsuperscript{1} wertvoll, werthaltig \textsuperscript{2}ehrbar, kostbar, edel \textsuperscript{3}verdienstlich, tüchtig}
+
+\entry{qom}{}{nom}{n}{qewm}{Volk $\rightarrow$ \textbf{sar}}
+
+\entry{qonax}{}{nom}{n}{}{Residenz, Herberge}
+
+\entry{qoltuxe}{}{nom}{m}{}{Sofa; Sessel}
+
+\entry{qorre}{}{nom}{m}{}{\textsuperscript{1}Oberschenkel \textsuperscript{2}Bein}
+
+\entry{qurban}{}{nom}{-e}{}{\textsuperscript{1}Opfer \textsuperscript{2}Opfergabe \textsuperscript{3}\textsc{intrj}\textit{Ausdruck der Zuneigung}}
+
+\entry{qusur}{}{nom}{n}{}{\textsuperscript{1}Fehler, Fauxpas \textsuperscript{2}Mangel, Makel, Missstand \par\noindent\textit{Qusurî de nîyamede} - Entschuldige}
+
+\entry{qutîye}{qutî}{nom}{m}{}{\textsuperscript{1}Box, Schachtel, Büchse \textsuperscript{2}Kiste, Kasten, Truhe}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION R
+%----------------------------------------------------------------------------------------
+
+\section*{R}
+
+\begin{multicols}{2}
+
+\entry{ra\textsuperscript{1}}{}{post}{}{}{von, aus}
+
+\entry{ra\textsuperscript{2}}{}{präp}{}{}{hin, gen, nach}
+
+\entry{ra\textsuperscript{3}}{}{post}{}{}{\textbf{$\rightarrow$ a\textsuperscript{3}}}
+
+\entry{rajî}{}{adj}{-ye}{}{\textbf{$\rightarrow$ razî}}
+
+\entry{rakerdene}{}{verb}{}{}{\textsuperscript{1}öffnen, aufmachen \textsuperscript{2}anmachen, anschalten \textbf{$\rightarrow$ yakerdene}}
+
+\entry{rame}{}{nom}{m}{rehme}{\textsuperscript{1} Segen, Überfluss; Bamherzigkeit \textsuperscript{2}Regen \textbf{$\rightarrow$ şîlîye}}
+
+\entry{ramitene}{}{verb}{}{}{fahren}
+
+\entry{ramito\"{x}}{}{nom}{-e}{}{Fahrer/in}
+
+\entry{raşt}{rast}{adj}{-e}{}{\textsuperscript{1}richtig, rechtens, stimmig, korrekt \textsuperscript{2}echt, real, wahr \textsuperscript{3}gerade, aufrecht \textsuperscript{4}rechts}
+
+\entry{raştikên}{}{adj}{-e}{}{wirklich, wahrhaftig, waschecht}
+
+\entry{raştîye}{rastîye}{nom}{m}{}{\textsuperscript{1}Richtigkeit, Korrektheit, Exaktheit \textsuperscript{2}Wahrheit, Realität, Echtheit, Wahrhaftigkeit \textsuperscript{3}Geradheit, Aufrichtigkeit}
+
+\entry{raver}{}{adv}{}{aver}{\textsuperscript{1}nach vorne, voran, vorwärt, voraus, vorweg \textsuperscript{2}vorher, im Voraus \textsuperscript{3}erst, zuerst, zuvor, zu Beginn}
+
+\entry{raye}{}{nom}{m}{rayîr}{\textsuperscript{1}Weg, Pfad \textsuperscript{2}Durchweg, Durchgang}
+
+\entry{rayber}{}{nom}{-e}{}{\textsuperscript{1}Wegweiser/in, Fremdenführer/in, Führer/in \textsuperscript{2} \textit{Religiöser Posten bei Aleviten} \textsuperscript{3}Handbuch, Leitfaden}
+
+\entry{raywan}{}{nom}{-e}{}{\textsuperscript{1}Reisende/r \textsuperscript{2}Passagier, Fahrgast}
+
+\entry{raywanîye}{}{nom}{m}{}{Reise}
+
+\entry{razî}{rajî}{adj}{-ye}{}{zufrieden, bereitwillig, billigend \par\noindent\textit{Heq to ra razî bo} - Vergelt's Gott}
+
+\entry{ref}{}{nom}{n}{}{\textsuperscript{1}Regal \textsuperscript{2}Vogelschwarm}
+
+\entry{rejîsor}{}{nom}{-e}{}{Regisseur/in}
+
+\entry{rehet}{}{adj}{-e}{}{\textsuperscript{1} angenehm, bequem, gemütlich \textsuperscript{2}einfach, leicht, mühelos}
+
+\entry{remayene}{}{verb}{}{}{fliehen}
+
+\entry{repvaj}{}{nom}{-e}{}{Rapper/in}
+
+\entry{resayene}{}{verb}{}{}{\textsuperscript{1}erreichen, hingelangen, angelangen, ankommen \textsuperscript{2}\textit{(Pflanzen, Früchte u. dgl.)} heranwachsen, erblühen}
+
+\entry{resim}{}{nom}{n}{}{Bild}
+
+\entry{rew}{}{adv}{}{}{früh}
+
+\entry{rew ra}{}{adv}{}{}{\textsuperscript{1}seit langem, von früher \textsuperscript{2}frühzeitig, in aller Frühe}
+
+\entry{rey}{}{nom}{m}{}{Mal \textbf{$\rightarrow$ fay} \par\noindent\textit{Reyê} - Einmal \par\noindent\textit{Di rey} - Zwei mal}
+
+\entry{reykî}{}{nom}{n}{}{Multiplikation, Mal}
+
+\entry{reyna}{}{adv}{}{}{nochmal, erneut, wieder \textbf{$\rightarrow$ fayna}}
+
+\entry{rê}{}{post}{}{}{\textsuperscript{1}hin, zu, an \textsuperscript{2}für \textit{(Benefaktiv)} \par\noindent\textit{Xidir mi rê kitab ano} - Xidir bringt mir ein Buch}
+
+\entry{rêçe}{}{nom}{m}{}{\textsuperscript{1}Spur, Abdruck \textsuperscript{2}Pfad, Fährte}
+
+\entry{rind}{}{adj}{-e}{}{gut}
+
+\entry{Rinde}{}{nom}{m}{}{\textit{weibl. Vorname}}
+
+\entry{rindek}{}{adj}{-e}{}{schön, hübsch}
+
+\entry{rindîye}{rindênî}{nom}{m}{}{Güte, Gunst, Wohltat}
+
+\entry{rî}{}{nom}{n}{}{\textsuperscript{1}Gesicht, Visage, Antlitz \textsuperscript{2}Oberfläche, Fläche}
+
+\entry{ro\textsuperscript{1}}{}{post}{}{}{\textsuperscript{1}hinab, herab \textsuperscript{2}hindurch, durch \par\noindent\textit{O gina bin ro} - Er fiel darunter hindurch}
+
+\entry{ro\textsuperscript{2}}{}{nom}{n}{ruh}{Geist, Seele}
+
+\entry{robot}{}{nom}{n}{}{\textsuperscript{1}Roboter \textsuperscript{2}Küchenmaschine}
+
+\entry{roc}{}{nom}{}{}{\textbf{$\rightarrow$ roz}}
+
+\entry{roce}{}{nom}{}{}{\textbf{$\rightarrow$ roze}}
+
+\entry{rojbîyayîş}{}{}{}{}{\textbf{$\rightarrow$ rozbîyene}}
+
+\entry{rojname}{}{nom}{n}{}{Zeitung}
+
+\entry{ron}{}{nom}{n}{}{\textbf{$\rightarrow$ rûn}}
+
+\entry{ronayene}{}{verb}{}{}{hinlegen, hinstellen, absetzen, auflegen}
+
+\entry{ronîştene}{}{verb}{}{}{\textsuperscript{1}sitzen, sich hinsetzen \textsuperscript{2}wohnen}
+
+\entry{roportaj}{}{nom}{n}{}{Reportage, Interview}
+
+\entry{roştî}{}{nom}{m}{}{\textsuperscript{1}Licht \textsuperscript{2}Helligkeit}
+
+\entry{rotene}{}{verb}{}{}{verkaufen, veräußern}
+
+\entry{roz}{roc}{nom}{n}{roj}{Sonne}
+
+\entry{rozbîyene}{rocbîyene}{nom}{m}{}{Geburtstag \par\noindent\textit{Rozbîyena to bimbarek bo!} - Alles Gute zum Geburtstag!}
+
+\entry{roze\textsuperscript{1}}{roce, roci}{nom}{n}{roje}{Fasten, Fastenzeit}
+
+\entry{roze\textsuperscript{2}}{roce}{nom}{m}{roje}{Tag}
+
+\entry{ruj}{}{nom}{n}{}{Lippenstift}
+
+\entry{rut}{}{adj}{-e}{}{nackt}
+
+\entry{rûn}{ron}{nom}{n}{}{\textsuperscript{1}Butter \textsuperscript{2}Öl}
+
+\entry{Rûsya}{}{nom}{m}{}{Russland}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION S
+%----------------------------------------------------------------------------------------
+
+\section*{S}
+
+\begin{multicols}{2}
+
+\entry{sa}{}{adj}{-ye}{şa}{fröhlich, froh, glücklich, heiter}
+
+\entry{sabun}{}{nom}{n}{}{Seife}
+
+\entry{sac}{soz}{nom}{n}{}{Fladenbäcker \textit{(Kochplatte)}}
+
+\entry{saete}{saate}{nom}{m}{}{\textsuperscript{1}Uhr \textsuperscript{2}Uhrzeit \textsuperscript{3}Stunde \par\noindent\textit{Na saete (de)} - Zu dieser Zeit, gerade}
+
+\entry{saîr}{sayîr}{nom}{-e}{şaîr}{\textsuperscript{1}Dichter/in, Poet/in  \textsuperscript{2}Barde $\rightarrow$ \textbf{ozan}}
+
+\entry{salon}{}{nom}{n}{}{Salon, Saal}
+
+\entry{samî}{}{nom}{m}{şamî}{Abendessen}
+
+\entry{san}{son, sond}{nom}{n}{şan}{Abend \par\noindent\textit{San de} - Am Abend}
+
+\entry{sandane}{sondane}{adv}{}{şandane}{abends}
+
+\entry{sandalîya}{}{nom}{m}{sandalî}{Stuhl}
+
+\entry{sandiqe}{}{nom}{m}{sindoqe}{Truhe, Kiste}
+
+\entry{sane}{}{nom}{n}{şane}{Kamm}
+
+\entry{sane kerdene}{}{verb}{}{şane kerdene}{kämmen}
+
+\entry{sanike}{}{nom}{m}{}{Märchen, Mär}
+
+\entry{sanîye}{}{nom}{m}{}{Sekunde}
+
+\entry{santîm}{}{nom}{n}{}{$\rightarrow$ \textbf{santîmetre}}
+
+\entry{santîmetre}{}{nom}{n}{}{Zentimeter}
+
+\entry{sar}{}{nom}{n}{şar}{\textsuperscript{1}Volk \textsuperscript{2}Leute}
+
+\entry{sare}{}{nom}{n}{}{$\rightarrow$ \textbf{sere}}
+
+\entry{saye}{soye}{nom}{m}{}{Apfel}
+
+\entry{se\textsuperscript{1}}{sa}{frg}{}{}{was \textit{(mit den Verben bîyene\textsuperscript{2}, kerdene, vatene)} $\rightarrow$ \textbf{çi} \par\noindent\textit{Se kena?} - Was machst du? \par\noindent\textit{Se vana?} - Was sagst du? \par\noindent\textit{Se bî?} - Was ist passiert?}
+
+\entry{se\textsuperscript{2}}{}{zahl}{}{}{hundert}
+
+\entry{sebeb}{}{nom}{n}{}{Grund, Ursache, Anlass}
+
+\entry{sebebo ke}{sebeto ke, seweta ke}{konj}{}{}{\textsuperscript{1}da, weil \textsuperscript{2}aufgrund (dessen), dass $\rightarrow$ \textbf{serba ke}}
+
+\entry{sebir}{sebr}{nom}{n}{}{Geduld, Geduldsfaden, Langmut}
+
+\entry{seke}{}{adv}{}{}{als ob, als wenn, so wie}
+
+\entry{selam}{}{nom}{n}{}{Gruß, Begrüßung \par\noindent\textit{Her kesî rê selamê mi est o} - Grüße an alle (von mir)}
+
+\entry{seme}{}{nom}{n}{şeme}{Samstag}
+
+\entry{sen}{}{frg}{}{}{$\rightarrow$ \textbf{senîn}}
+
+\entry{senetkar}{}{nom}{-e}{}{Künstler/in $\rightarrow$ \textbf{hunermend}}
+
+\entry{senî}{senê}{frg}{}{}{wie; inwiefern $\rightarrow$ \textbf{çiturî, çitan} \par\noindent\textit{No senî beno?} - Wie geht das? \par\noindent\textit{No senî kar o?} - Was ist das für eine Arbeit?}
+
+\entry{senîn}{senên, sen}{frg}{}{}{$\rightarrow$ \textbf{çiturî, çitan}}
+
+\entry{ser}{}{nom}{n}{}{Oben, Ober-, das Obere}
+
+\entry{ser de}{}{adv, post}{}{}{auf, oben}
+
+\entry{ser o}{}{adv}{}{}{auf, drauf, über, drüber; oben}
+
+\entry{ser o kî}{}{adv}{}{}{zudem, zusätzlich, außerdem}
+
+\entry{ser şîyene}{}{verb}{}{}{begreifen, auffassen, kapieren, verstehen}
+
+\entry{seranser}{}{adv}{}{}{\textsuperscript{1}durchgehend, durchweg, gänzlich \textsuperscript{2}über und über, von Anfang bis Ende}
+
+\entry{serba}{}{präp}{}{}{\textsuperscript{1}für \textit{(Benefaktiv)} \textsuperscript{2}zwecks, wegen, aufgrund}
+
+\entry{serba ke}{}{konj}{}{}{\textsuperscript{1}da, weil \textsuperscript{2}aufgrund (dessen), dass}
+
+\entry{serd}{}{adj}{-e}{}{kalt \textit{(i.d.R. Wetter, Luft)}}
+
+\entry{serdin}{}{adj}{-e}{}{kalt \textit{(i.d.R. Oberflächen, Gegenstände etc.)}}
+
+\entry{sere}{sare}{nom}{n}{}{\textsuperscript{1}Kopf \textsuperscript{2}Anfang, Beginn}
+
+\entry{serek}{}{nom}{-e}{}{Anführer/in, Führer/in, (Ober)Haupt, Vorsitzende/r}
+
+\entry{serekkomar}{}{nom}{-e}{}{Präsident, Staatsoberhaupt}
+
+\entry{serekwezîr}{}{nom}{-e}{}{Ministerpräsident, Premierminister}
+
+\entry{serê ... de}{}{zirk}{}{}{auf, oben, über}
+
+\entry{serê sodirî}{}{nom}{n}{}{Morgendämmerung, Tagesanbruch}
+
+\entry{sergarson}{}{nom}{-e}{}{Oberkellner/in, Chefkellner/in}
+
+\entry{sergovend}{}{nom}{-e}{}{Vortänzer/in im $\rightarrow$ \textbf{govende}}
+
+\entry{serkar}{}{nom}{-e}{}{\textsuperscript{1}Chef/in, Vorgesetzte/r \textsuperscript{2}Vorarbeiter/in $\rightarrow$ \textbf{şef, patron}}
+
+\entry{serkay}{}{nom}{-e}{}{Spielführer/in}
+
+\entry{serm}{}{nom}{n}{şerm}{Scham, Scheu}
+
+\entry{sermayene}{}{verb}{}{şermayene}{sich schämen, sich scheuen}
+
+\entry{sermîyan}{}{nom}{-e}{}{\textsuperscript{1}Leiter/in, Oberhaupt, Vorsteher/in, Manager/in $\rightarrow$ \textbf{îdareker} \textsuperscript{2}Administrator/in, Direktor/in}
+
+\entry{sermîyanîye}{}{nom}{m}{}{\textsuperscript{1}Führung, Leitung \textsuperscript{2}Amt, Verwaltung, Regierung \textsuperscript{3}Direktion, Geschäftsleitung $\rightarrow$ \textbf{îdare}}
+
+\entry{serre}{}{nom}{m}{}{\textsuperscript{1}Jahr \textsuperscript{2}Alter \par\noindent\textit{Ti çend serrî ya?} - Wie alt bist du?}
+
+\entry{serrna}{}{adv}{}{}{nächstes Jahr, das kommende Jahr, das Folgejahr}
+
+\entry{ses}{}{zahl}{}{şeş}{sechs}
+
+\entry{seştî}{}{zahl}{}{şeştî}{sechzig}
+
+\entry{seterna}{}{adv}{}{}{übernächstes Jahr, in zwei Jahren}
+
+\entry{sewe}{}{nom}{m}{şewe}{Nacht}
+
+\entry{sewe de}{}{adv}{}{şewe de}{in der Nacht}
+
+\entry{sewenême}{}{nom}{n}{şewenême}{Mitternacht $\rightarrow$ \textbf{sewlete}}
+
+\entry{seweta}{}{präp}{}{}{$\rightarrow$ \textbf{serba}}
+
+\entry{seweta ke}{}{konj}{}{}{$\rightarrow$ \textbf{serba ke}}
+
+\entry{sewle}{}{nom}{m}{şewle}{Licht, Schein}
+
+\entry{sewlete}{}{nom}{n}{şewlete}{Mitternacht $\rightarrow$ \textbf{sewenême}}
+
+\entry{sê kerdene}{şêr kerdene}{verb}{}{seyr kerdene}{betrachten, ansehen, anschauen}
+
+\entry{sêm}{}{nom}{m}{}{$\rightarrow$ \textbf{şêm}}
+
+\entry{sêseme}{şêseme}{nom}{n}{sêşeme}{Dienstag}
+
+\entry{sibate}{}{nom}{m}{şibate}{Februar $\rightarrow$ \textbf{gucige}}
+
+\entry{sil}{}{nom}{n}{}{\textsuperscript{1}Dung, Dünger \textsuperscript{2}Kuhfladen}
+
+\entry{silayîye}{}{nom}{m}{}{Einladung}
+
+\entry{silayî kerdene}{}{verb}{}{}{einladen}
+
+\entry{silîye}{}{nom}{m}{}{$\rightarrow$ \textbf{şîlîye}}
+
+\entry{sifir}{}{zahl}{}{}{null}
+
+\entry{siknayene}{}{verb}{}{şiknayene}{brechen, zerbrechen, kaputt machen}
+
+\entry{Silîvan}{Farqîn}{nom}{n}{}{\textit{Stadt in Dîyarbekir (türk. Silvan)}}
+
+\entry{Sine}{}{nom}{m}{}{\textit{Stadt in Kurdistan (pers. Sanandaj)}}
+
+\entry{sinife}{}{nom}{m}{}{\textsuperscript{1}Klasse, Gattung \textsuperscript{2}Klassenzimmer, Lehrzimmer}
+
+\entry{sima\textsuperscript{1}}{}{pron}{}{şima}{ihr (Plural)}
+
+\entry{sima\textsuperscript{2}}{}{pron}{}{şima}{\textit{2. Fall von} $\rightarrow$ \textbf{sima\textsuperscript{1}}}
+
+\entry{simer}{}{nom}{n}{}{Heu, Stroh}
+
+\entry{simitene}{}{verb}{}{}{trinken}
+
+\entry{sipas}{}{ptkl}{}{}{Danke $\rightarrow$ \textbf{Wes be}}
+
+\entry{sipasdar}{}{adj}{-e}{}{dankbar, verbunden $\rightarrow$ \textbf{minetkar}}
+
+\entry{sipê}{sipî}{adj}{-îye}{}{weiß}
+
+\entry{sipî}{sipê}{adj}{-ye}{}{weiß}
+
+\entry{sira}{}{nom}{m}{}{\textsuperscript{1}Reihe \textsuperscript{2}Warteschlange}
+
+\entry{sist}{}{adj}{-e}{}{locker, lasch, lose}
+
+\entry{sit}{}{nom}{n}{şit}{Milch}
+
+\entry{sivik}{}{adj}{-e}{}{\textsuperscript{1}leicht \textit{(Gewicht)} \textsuperscript{2}schwach, sanft, mild}
+
+\entry{sîyaset}{}{nom}{n}{}{Politik}
+
+\entry{sîyasetmedar}{}{nom}{-e}{}{Politiker/in}
+
+\entry{soba}{}{nom}{m}{}{(Heiz)Ofen}
+
+\entry{sodir}{}{nom}{n}{şodir, şewdir}{Morgen, Früh}
+
+\entry{sodir ra}{}{adv}{}{}{am Morgen, morgens, in der Früh}
+
+\entry{sole}{}{nom}{m}{}{Salz}
+
+\entry{solin}{}{adj}{-e}{}{\textsuperscript{1}salzig \textsuperscript{2}versalzen}
+
+\entry{son}{}{nom}{n}{}{$\rightarrow$ \textbf{san}}
+
+\entry{sondane}{}{adv}{}{}{$\rightarrow$ \textbf{sandane}}
+
+\entry{sora}{}{adv}{}{}{morgen $\rightarrow$ \textbf{meşte}}
+
+\entry{sorbike}{sorvike}{nom}{m}{şorbike}{Suppe}
+
+\entry{soye}{}{nom}{m}{}{$\rightarrow$ \textbf{saye}}
+
+\entry{soz}{}{nom}{n}{}{$\rightarrow$ \textbf{sac}}
+
+\entry{sunî}{}{nom}{-ye}{}{Sunnite/in}
+
+\entry{surprîz}{}{nom}{n}{}{Überraschung}
+
+\entry{suse}{}{nom}{n}{şuşe}{Flasche}
+
+\entry{suzike}{sujîye}{nom}{m}{}{Brise}
+
+\entry{sûke}{}{nom}{m}{}{\textsuperscript{1}Innenstadt, Bazar \textsuperscript{2}Stadt}
+
+\entry{Sûrîye}{}{nom}{m}{}{Syrien}
+
+\entry{sür}{sur}{adj}{-e}{sûr}{\textsuperscript{1}rot \textsuperscript{2}heiß}
+
+\entry{sür kerdene}{sur kerdene}{verb}{}{sûr kerdene}{anbraten, braten, frittieren}
+
+\entry{Swêd}{}{nom}{n}{}{Schweden}
+
+\entry{Swîs}{}{nom}{n}{}{Schweiz}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Ş
+%----------------------------------------------------------------------------------------
+
+\section*{Ş}
+
+\begin{multicols}{2}
+
+\entry{şa}{}{adj}{}{}{$\rightarrow$ \textbf{şîya}}
+
+\entry{şans}{}{nom}{n}{}{\textsuperscript{1}Chance, Gelegenheit \textsuperscript{2}Glück, Glücksfall}
+
+\entry{şar}{}{nom}{m}{}{$\rightarrow$ \textbf{sar}}
+
+\entry{şaristan}{}{nom}{n}{}{Stadt}
+
+\entry{şef}{}{nom}{-e}{}{Chef/in, Vorgesetzte/r, Boss $\rightarrow$ \textbf{serkar}}
+
+\entry{şêm}{}{nom}{n}{sêm}{Silber}
+
+\entry{şên}{}{adj}{-e}{}{freudig, heiter, fröhlich, gehoben}
+
+\entry{şêne}{}{nom}{n}{sêne}{Brust}
+
+\entry{şênîye}{}{nom}{m}{}{\textsuperscript{1}Freude, Fröhlichkeit, Frohsinn, Heiterkeit \textsuperscript{2}Fest, Festivität, Festlichkeit}
+
+\entry{şêr}{}{nom}{-e}{}{Löwe/Löwin}
+
+\entry{şêr kerdene}{sê kerdene}{verb}{}{seyr kerdene}{betrachten, ansehen, anschauen}
+
+\entry{şêseme}{}{nom}{}{}{$\rightarrow$ \textbf{sêseme}}
+
+\entry{şima}{}{pron}{}{}{$\rightarrow$ \textbf{sima}}
+
+\entry{şîfre}{}{nom}{n}{}{}
+
+\entry{şîî}{}{nom}{-ye}{}{Schiite/in}
+
+\entry{şîkîyayene\textsuperscript{1}}{}{verb}{}{eşkayene}{können, fähig sein, zu tun vermögen $\rightarrow$ \textbf{besekerdene}}
+
+\entry{şîkîyayene\textsuperscript{2}}{}{verb}{}{şikîyayene}{brechen, zerbrechen, zu Bruch gehen, kaputtgehen}
+
+\entry{şîlane}{}{nom}{m}{}{\textsuperscript{1}Hagebutte \textsuperscript{2}\textit{weibl. Vorname}}
+
+\entry{şîlîye}{silîye}{nom}{m}{şilîye}{Regen}
+
+\entry{şîlîyin}{silîyin}{adj}{-e}{}{regnerisch, verregnet}
+
+\entry{şîlpa\"{x}e}{şîlpate}{nom}{m}{}{Ohrfeige, Backpfeife, Schelle $\rightarrow$ \textbf{çapale}}
+
+\entry{şîr\textsuperscript{1}}{}{nom}{n}{sîr}{Knoblauch}
+
+\entry{şîr\textsuperscript{2}}{}{nom}{n}{}{\textit{traditionelles Gericht aus Dêrsim und Umgebung}}
+
+\entry{şîranî}{}{nom}{m}{}{Süßspeise, Nachtisch, Dessert}
+
+\entry{şîrên}{}{adj}{-e}{şîrin}{\textsuperscript{1}süß \textsuperscript{2}niedlich}
+
+\entry{şîrkete}{}{nom}{m}{}{Unternehmen, Gesellschaft, Firma}
+
+\entry{şîse}{}{nom}{m}{}{$\rightarrow$ \textbf{suse}}
+
+\entry{şîving}{}{nom}{n}{}{Vordach, Sims}
+
+\entry{şîya}{şa}{adj}{-e}{sîya}{schwarz}
+
+\entry{şîyane}{}{nom}{-îye}{}{$\rightarrow$ \textbf{şüane}}
+
+\entry{şîye}{}{nom}{m}{sîye}{Schatten}
+
+\entry{şîyene}{şîyayene}{verb}{}{}{gehen, begeben, hingehen \par\noindent\textit{Şîme!} - Gehen wir!}
+
+\entry{şüane}{şîyane, şane}{nom}{-îye}{şiwane}{Hirte/Hirtin}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION T
+%----------------------------------------------------------------------------------------
+
+\section*{T}
+
+\begin{multicols}{2}
+
+\entry{taba}{\.{t}owa}{nom}{n}{teba}{etwas \par\noindent\textit{Taba nêbeno} - Macht nichts}
+
+\entry{tabî}{}{adv}{}{}{natürlich, selbstverständlich, freilich}
+
+\entry{tajî}{}{nom}{-ye}{}{$\rightarrow$ \textbf{tazî}}
+
+\entry{\.{t}al}{\.{t}ol}{adj}{-e}{}{\textsuperscript{1}leer \textsuperscript{2}bitter}
+
+\entry{talebe}{}{nom}{-îye}{telebe}{Schüler/in; Student/in \textbf{$\rightarrow$ wendekar}}
+
+\entry{talib}{}{nom}{-e}{}{Jünger, religiöses Gefolge}
+
+\entry{\.{t}am}{\.{t}om}{nom}{n}{tehm}{Geschmack, Aroma}
+
+\entry{tanî}{}{nom}{m}{}{(Ausstrahlungs)Wärme}
+
+\entry{taqîb kerdene}{}{verb}{}{}{folgen, verfolgen}
+
+\entry{tarî}{}{adj}{-ye}{}{dunkel, düster}
+
+\entry{tarîx}{}{nom}{n}{}{Geschichte}
+
+\entry{tarrûtur}{}{nom}{n}{}{\textsuperscript{1}Gemüse \textsuperscript{2}Kräuter}
+
+\entry{tatîl}{}{nom}{n}{}{Urlaub, Ferien}
+
+\entry{tavare}{}{}{}{}{$\rightarrow$ \textbf{ga\"{x}an\textsuperscript{2}}}
+
+\entry{taybetî}{}{adj}{-ye}{}{speziell, besonders, eigen}
+
+\entry{tayê}{}{pron}{}{}{einige, ein paar}
+
+\entry{tayêna}{}{adv}{}{}{etwas mehr, noch ein paar, noch ein wenig}
+
+\entry{tayîne}{}{pron}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{tayê}}
+
+\entry{tazî}{tajî}{nom}{-ye}{}{Windhund, Jagdhund}
+
+\entry{tebaxe}{}{}{}{}{$\rightarrow$ \textbf{a\"{x}ustose}}
+
+\entry{teber}{}{nom}{n}{}{das Freie, das Äußere, Außen(bereich)}
+
+\entry{teber ra}{}{adv}{}{}{außen, draußen}
+
+\entry{tebîat}{tabîat}{nom}{n}{tebîet}{Natur $\rightarrow$ \textbf{xoza}}
+
+\entry{tede}{}{adv}{}{}{darin}
+
+\entry{telefon}{}{nom}{n}{}{Telefon}
+
+\entry{telefon kerdene}{}{verb}{}{}{telefonieren, anrufen}
+
+\entry{televîzyon}{}{nom}{n}{}{Fernseher}
+
+\entry{temam\textsuperscript{1}}{tamam}{ptkl}{}{}{\textsuperscript{1}in Ordnung, okay \textsuperscript{2}einverstanden, abgemacht}
+
+\entry{temam\textsuperscript{2}}{tamam}{adj}{-e}{}{ganz, vollständig, komplett}
+
+\entry{temam kerdene}{}{verb}{}{}{\textsuperscript{1}vervollständigen, vollenden, fertig stellen \textsuperscript{1}abschließen, beenden}
+
+\entry{tembûr}{\.{t}omir}{nom}{n}{}{Tenbur}
+
+\entry{temmuze}{}{nom}{m}{}{Juli}
+
+\entry{tene}{}{nom}{m}{}{Stück \textit{(belebt)}, Person}
+
+\entry{tenê}{}{adv}{}{}{ein wenig, ein bisschen etwas}
+
+\entry{tenêna}{}{adv}{}{}{noch ein wenig, noch ein bisschen, etwas mehr}
+
+\entry{tenik}{}{adj}{-e}{}{dünn, fein}
+
+\entry{teng}{}{adj}{-e}{}{eng}
+
+\entry{tenîye}{}{nom}{m}{}{Ruß}
+
+\entry{tenya}{}{adv}{}{}{$\rightarrow$ \textbf{teyna}}
+
+\entry{tepîya}{}{adv}{}{}{\textsuperscript{1}hinter, zurück \textsuperscript{2}danach, hinterher, nachher}
+
+\entry{tern}{}{adj}{-, e}{}{feucht, nass \textit{(Holz u.ä.)}  \par\noindent\textit{Destê to tern bê!} - Danke! \textit{(für händische Arbeiten)}}
+
+\entry{ters}{}{nom}{n}{}{Angst, Furcht}
+
+\entry{tersayene}{}{verb}{}{}{Angst haben, (sich) fürchten}
+
+\entry{terzî}{}{nom}{-îye}{}{Schneider/in}
+
+\entry{tesaduf}{}{nom}{n}{}{Zufall, Gelegenheit}
+
+\entry{tesdîq}{tasdîq}{nom}{n}{}{\textsuperscript{1}Bestätigung, Anerkennung, Annahme \textsuperscript{2}Beglaubigung, Beurkundung}
+
+\entry{tesdîq kedene}{tasdîq kerdene}{verb}{}{}{\textsuperscript{1}bestätigen, anerkenenn, annehmen \textsuperscript{2}beglaubigen, attestieren, bescheinigen, beurkunden}
+
+\entry{teselîye}{}{nom}{m}{}{\textsuperscript{1}Trost, Zuspruch \textsuperscript{2}Lichtblick, Hoffnung}
+
+\entry{tewewur}{tasawur}{nom}{n}{}{\textsuperscript{1}Vorstellung, Vorhaben \textsuperscript{2}Entwurf, Design, Konzept}
+
+\entry{tew}{}{intrj}{}{}{\textit{Ausruf für Verwunderung, Spott, Staunen}}
+
+\entry{tewir}{}{nom}{n}{}{Art, Typ, Sorte, Gattung}
+
+\entry{tewir be tewir}{}{adv}{}{}{vielfältig, verschiedenartig, vielseitig}
+
+\entry{tey}{}{adv, pron}{}{}{\textsuperscript{1}darin \textsuperscript{2}dabei, mit}
+
+\entry{teyara}{}{nom}{m}{}{Flugzeug}
+
+\entry{teyna}{tenya}{adv}{}{tena}{\textsuperscript{1}allein, alleine, einzig \textsuperscript{2}einsam, isoliert \textsuperscript{3}nur, lediglich}
+
+\entry{\.{t}eyr}{}{nom}{-e}{}{Vogel \par\noindent\textit{\.{T}eyr û tur} - Vögel \textit{(Kollektivum)}}
+
+\entry{têde}{}{pron}{}{}{alle, alles $\rightarrow$ \textbf{pêro}}
+
+\entry{têduşt}{}{adj}{-e}{}{\textsuperscript{1}gleich, gleichgestellt, gleichmäßig \textsuperscript{2}äquivalent, gleichwertig}
+
+\entry{têpey}{}{adv}{}{}{hintereinander}
+
+\entry{têsan}{}{adj}{-e}{têşan}{durstig}
+
+\entry{ti}{tu, to}{pron}{}{}{du}
+
+\entry{tim}{}{adv}{}{}{immer, stets}
+
+\entry{timûtim}{}{adv}{}{}{immer wieder, stets, durchgehend, andauernd}
+
+\entry{tiramî}{}{nom}{m}{}{Glut}
+
+\entry{tirêm}{}{ptkl}{}{}{wohl, etwa \textit{(Fragepartikel)} $\rightarrow$ \textbf{derê}}
+
+\entry{tirk}{}{nom}{-e}{}{Türke/Türkin}
+
+\entry{tirkî}{}{nom}{m}{}{Türkisch}
+
+\entry{Tirkîya}{}{nom}{m}{}{Türkei}
+
+\entry{tirs}{}{adj}{-e}{tirş}{sauer \textit{(Geschmack)}}
+
+\entry{tî}{}{pron}{}{}{$\rightarrow$ \textbf{to}}
+
+\entry{tîjî}{tîcî}{nom}{m}{tîje}{\textsuperscript{1}Sonne \textsuperscript{2}Sonnenlicht, Sonnenstrahlen \textsuperscript{3}Sonnenwärme}
+
+\entry{tîjin}{tîcin}{adj}{-e}{}{sonnig}
+
+\entry{tîşort}{}{nom}{n}{}{T-Shirt}
+
+\entry{\.{t}îtik}{}{nom}{n}{}{Spielzeug}
+
+\entry{tîyatro}{}{nom}{n}{}{Theater}
+
+\entry{to}{tu, tü, tî}{pron}{}{}{\textit{2. Fall von} $\rightarrow$ \textbf{ti}}
+
+\entry{\.{t}ol}{}{}{}{}{$\rightarrow$ \textbf{\.{t}al}}
+
+\entry{tomatêse}{tamatêse}{nom}{m}{}{Tomate $\rightarrow$ \textbf{lolike}}
+
+\entry{\.{t}omir}{}{nom}{n}{}{$\rightarrow$ \textbf{tembûr}}
+
+\entry{\.{t}oraq}{toraq}{nom}{n}{}{\textit{eine Art Magermilchkäse}}
+
+\entry{torge}{}{nom}{m}{}{Hagel}
+
+\entry{torn}{}{nom}{-e}{}{Enkel/in, Enkelkind}
+
+\entry{\.{t}owa}{taba}{nom}{n}{teba}{etwas \par\noindent\textit{\.{T}owa nêbeno} - Macht nichts}
+
+\entry{traktor}{}{nom}{n}{}{Traktor}
+
+\entry{tu}{}{pron}{}{}{$\rightarrow$ \textbf{ti} $\rightarrow$ \textbf{to}}
+
+\entry{tum}{}{nom}{n}{}{Hügel}
+
+\entry{turik}{}{nom}{n}{}{Tüte, Sack}
+
+\entry{turîst}{}{nom}{-e}{}{Tourist/in}
+
+\entry{tusk}{}{nom}{-e}{}{Geißlein, Zicklein}
+
+\entry{tü\textsuperscript{1}}{}{nom}{n}{}{Spucke, Speichel}
+
+\entry{tü\textsuperscript{2}}{}{intrj}{}{}{\textit{Ausruf für Spott, Ekel, Entrüstung oder Bedauern}}
+
+\entry{tü\textsuperscript{3}}{}{pron}{}{}{$\rightarrow$ \textbf{to}}
+
+\entry{tüye}{}{nom}{m}{}{Maulbeere}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION U
+%----------------------------------------------------------------------------------------
+
+\section*{U}
+
+\begin{multicols}{2}
+
+\entry{unîversîte}{}{nom}{m}{}{Universität}
+
+\entry{uris}{oris}{nom}{-e}{ûris}{Russe/Russin}
+
+\entry{usar}{}{nom}{}{}{$\rightarrow$ \textbf{wusar}}
+
+\entry{usta}{}{}{}{}{$\rightarrow$ \textbf{osta} $\rightarrow$ \textbf{westa}}
+
+\entry{uska}{}{adv}{}{}{$\rightarrow$ \textbf{uza}}
+
+\entry{ustine}{}{nom}{m}{}{Säule, Stütze, Stützpfeiler}
+
+\entry{uşîre}{}{nom}{m}{}{Stab, Stock, Rute}
+
+\entry{uwe}{}{nom}{m}{}{$\rightarrow$ \textbf{awe}}
+
+\entry{uza}{uca, uja}{nom}{n}{uca}{dort}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Û
+%----------------------------------------------------------------------------------------
+
+\section*{Û}
+
+\begin{multicols}{2}
+
+\entry{û}{u, o}{konj}{}{}{und}
+
+\entry{Ûganda}{}{nom}{m}{}{Uganda}
+
+\entry{ûêb. (û ê bînî)}{}{}{}{}{usw. (und so weiter)}
+
+\entry{ûsn. (û sey nînan)}{}{}{}{}{u.ä. (und ähnliche), u. dgl. (und dergleichen)}
+
+\entry{ûsul}{}{nom}{n}{}{Art, Art und Weise, Manier, Stil}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION V
+%----------------------------------------------------------------------------------------
+
+\section*{V}
+
+\begin{multicols}{2}
+
+\entry{va}{}{nom}{n}{}{Wind}
+
+\entry{Vacu\"{xe}}{}{nom}{m}{}{\textbf{$\rightarrow$ Pulur}}
+
+\entry{varan}{}{nom}{n}{}{\textbf{$\rightarrow$ şîlîye}}
+
+\entry{varason}{}{nom}{m}{}{\textbf{$\rightarrow$ verason}}
+
+\entry{vare}{}{nom}{m}{}{\textbf{$\rightarrow$ vore}}
+
+\entry{vartivare}{}{nom}{m}{}{\textbf{$\rightarrow$ hazîrane}}
+
+\entry{vas}{}{nom}{n}{vaş}{Gras, Kraut}
+
+\entry{vatene}{}{verb}{}{}{sagen}
+
+\entry{vaûvarike}{}{nom}{m}{}{Böe, Getöse, mittelstarker Wind}
+
+\entry{vayin}{}{adj}{-e}{}{windig}
+
+\entry{vejîyayene}{vecîyayene}{verb}{}{}{rauskommen, herauskommen, heraustreten, austreten, entspringen, herrühren}
+
+\entry{velg}{}{nom}{n}{}{\textsuperscript{1}Baumblätter \textsuperscript{2}getrocknete Blätter \textit{(z.B. Tierfutter)}}
+
+\entry{veng}{}{nom}{n}{}{\textsuperscript{1}Stimme \textsuperscript{2}Geräusch, Laut, Klang, Ton}
+
+\entry{ver}{}{nom}{n}{}{Vorne, vor, Vor-}
+
+\entry{ver de}{}{adv, post}{}{}{vor \textit{(räumlich)}, davor}
+
+\entry{vera}{}{präp}{}{}{\textsuperscript{1}vor \textsuperscript{2}gegenüber, gegen}
+
+\entry{verasan}{varason}{nom}{n}{veraşan}{später Nachmittag, Abenddämmerung, gegen Abend}
+
+\entry{verba}{}{}{}{ver bi}{\textsuperscript{1}gegen, entgegen, gen \textsuperscript{2}gegenüber, vor}
+
+\entry{verdayene}{}{verb}{}{}{lassen, loslassen, belassen, stehen lassen, hinterlassen}
+
+\entry{verê}{}{adv}{}{}{\textsuperscript{1}zuerst, zuvor \textsuperscript{2}davor, vorher}
+
+\entry{verê cû}{verê coy}{adv}{}{}{früher, damals}
+
+\entry{verê ...de}{}{zirk}{}{}{vor, davor \textit{(räumlich)}}
+
+\entry{verên}{}{adj}{-e}{}{$\rightarrow$ \textbf{virên}}
+
+\entry{verênîye}{}{nom}{m}{}{$\rightarrow$ \textbf{virênîye}}
+
+\entry{verg}{}{nom}{n}{}{Wolf}
+
+\entry{verroz}{verroc}{nom}{n}{verroj}{\textsuperscript{1}Sonnenplatz, Sonnenstelle \textsuperscript{2}Sonnenblume}
+
+\entry{vetene}{}{verb}{}{}{\textsuperscript{1}herausnehmen, herausziehen, entfernen \textsuperscript{2}herausbringen, veröffentlichen}
+
+\entry{veyve\textsuperscript{1}}{veyvi}{nom}{n}{}{Hochzeit}
+
+\entry{veyve\textsuperscript{2}}{}{nom}{m}{}{\textsuperscript{1}Schwiegertochter \textsuperscript{2}Schwägerin \textsuperscript{3}angeheiratete Verwandte}
+
+\entry{veyvike}{}{nom}{m}{veyveke}{Braut}
+
+\entry{vêsan}{}{adj}{-e}{vêşan}{hungrig}
+
+\entry{vêve}{}{nom}{n}{}{$\rightarrow$ veyve}
+
+\entry{vila kerdene}{}{verb}{}{}{verteilen, (ver)verstreuen, verbreiten}
+
+\entry{vildane}{}{nom}{m}{}{Blumenvase}
+
+\entry{vile}{}{nom}{n}{}{Nacken}
+
+\entry{vindarnayene}{}{verb}{}{}{anhalten, aufhalten, Einhalt gebieten, stilllegen, stoppen}
+
+\entry{vindetene}{vindertene}{verb}{}{}{\textsuperscript{1}stehen, stehen bleiben \textsuperscript{2}einhalten, stillstehen, stoppen \textsuperscript{3}verweilen, bleiben, warten \par\noindent\textit{Îta vinde!} - Warte hier! }
+
+\entry{virare}{}{nom}{m}{}{Schoß}
+
+\entry{viraşte}{}{adj}{-îye}{}{\textsuperscript{1}geschaffen, erschaffen, angefertigt, hergestellt, errichtet, gebaut \textsuperscript{2}künstlich, gemacht}
+
+\entry{viraştene}{}{verb}{}{}{schaffen, herstellen, errichten, anfertigen, bauen}
+
+\entry{viraşto\"{x}}{}{nom}{-e}{}{Erschaffer/in, Hersteller/in, Bauer/in}
+
+\entry{virên}{}{adj}{-e}{verên}{\textsuperscript{1}erste/r/s \textsuperscript{2}vordere/r/s}
+
+\entry{virênîye}{verênîye}{nom}{m}{vernî}{Vorne, Vorder-, Vor-}
+
+\entry{vistewre}{vistore, vistöre}{nom}{n}{}{\textsuperscript{1}Schwiegervater \textsuperscript{2}Schwager \textit{(Bruder des Ehemanns oder der Ehefrau)}}
+
+\entry{vistewrîye}{vistorîye, visturîye, vistörîye}{nom}{m}{}{Schwiegermutter}
+
+\entry{vistore}{nom}{n}{}{}{\textbf{$\rightarrow$ vistewre}}
+
+\entry{vistorîye}{nom}{m}{}{}{\textbf{$\rightarrow$ vistewrîye}}
+
+\entry{vîlike}{}{nom}{m}{vilike}{Blume}
+
+\entry{vîndî kerdene}{}{verb}{}{}{verlieren}
+
+\entry{vîr}{}{nom}{n}{}{Gedächtnis, Erinnerung}
+
+\entry{vîşt}{}{zahl}{}{vîst}{zwanzig}
+
+\entry{vorayene}{}{verb}{}{varayene}{regnen}
+
+\entry{vore}{vare}{nom}{m}{vewre}{Schnee}
+
+\entry{vorek}{}{nom}{-e}{verek}{Lamm, Schäfchen}
+
+\entry{vorin}{varin}{adj}{-e}{vewrin}{verschneit, schneebedeckt}
+
+\entry{vurnayene}{}{verb}{}{}{ändern, abändern, verändern, umändern}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION W
+%----------------------------------------------------------------------------------------
+
+\section*{W}
+
+\begin{multicols}{2}
+
+\entry{wa}{}{ptkl}{}{}{\textit{Konjunktivpartikel (Optativ)}}
+
+\entry{wad}{od}{nom}{n}{}{Versprechen, Wort \par\noindent\textit{Wad bo!} - Versprochen!}
+
+\entry{war\textsuperscript{1}}{}{adv}{}{}{hinab, herab, hinunter, herunter, runter}
+
+\entry{war\textsuperscript{2}}{}{nom}{n}{}{Bereich, Gebiet}
+
+\entry{ware}{}{nom}{n}{}{Alm, Alp, Hochebene}
+
+\entry{waştene}{}{verb}{}{}{\textsuperscript{1}wollen, möchten \textsuperscript{2}verlangen, fordern, (er)bitten}
+
+\entry{waştî}{}{nom}{-ye}{}{\textsuperscript{1}Verlobte/r \textsuperscript{2}Geliebte/r}
+
+\entry{wax}{}{intrj}{}{}{\textit{Ausruf für Mitleid oder Bedauern}}
+
+\entry{waxt}{}{nom}{n}{}{\textbf{$\rightarrow$ wext}}
+
+\entry{waxto ke}{}{adv}{}{}{\textbf{$\rightarrow$ wexto ke}}
+
+\entry{way}{}{intrj}{}{}{\textit{Ausruf für Bedauern oder Stolz}}
+
+\entry{waye}{}{nom}{m}{}{Schwester}
+
+\entry{wayîr}{}{nom}{-e}{}{\textsuperscript{1}Besitzer, Eigner, Inhaber \textsuperscript{2}Herr \textit{(relig.)}}
+
+\entry{wendegeh}{}{nom}{n}{}{Schule $\rightarrow$ \textbf{mekteb}}
+
+\entry{wendekar}{}{nom}{-e}{}{Schüler/in; Student/in \textbf{$\rightarrow$ talebe}}
+
+\entry{wendene}{wanitene}{verb}{}{}{\textsuperscript{1}lesen \textsuperscript{2}vorlesen \textsuperscript{3}studieren, lernen}
+
+\entry{welat}{}{nom}{n}{}{\textsuperscript{1}Land \textsuperscript{2}Heimat, Heimatland, Vaterland \textsuperscript{3}\textit{männl. Vorname}}
+
+\entry{welatperwer}{}{nom}{-e}{}{Patriot, Vaterlandsliebende/r}
+
+\entry{werdene}{}{verb}{}{}{\textsuperscript{1}essen \textsuperscript{2}fressen \textsuperscript{3}\textit{(mit manchen Flüssigkeiten)} trinken}
+
+\entry{wereza}{}{nom}{n}{wareza}{Neffe \textit{(Sohn des Bruders)}}
+
+\entry{werezaye}{}{nom}{m}{warezaye}{Nichte \textit{(Tochter der Schwester)}}
+
+\entry{werte}{orte}{nom}{n}{orte}{Mitte, Mittelpunkt $\rightarrow$ \textbf{mîyan}}
+
+\entry{werte de}{orte de}{adv}{}{orte de}{\textsuperscript{1}(in)mitten, mittendrin, dazwischen, zwischendrin \textsuperscript{2}gelegentlich $\rightarrow$ \textbf{mîyan de}}
+
+\entry{wes}{}{adj}{-e}{weş}{\textsuperscript{1}gut, wohl \textsuperscript{2}gesund \textsuperscript{3}lecker  
+\par\noindent\textit{Wes be!} - Danke (dir)! 
+\par\noindent\textit{Wes o} - Das schmeckt gut/lecker}
+
+\entry{westa}{osta}{nom}{-e}{}{Meister/in, Lehrmeister/in}
+
+\entry{weşîye}{}{nom}{m}{}{\textsuperscript{1}Güte, Wohl, Heil \textsuperscript{2}Gesundheit, Wohlergehen 
+\par\noindent\textit{Weşîya to} - Danke der Nachfrage}
+
+\entry{wext}{waxt}{nom}{n}{}{Zeit, Zeitraum \par\noindent\textit{Wextê xo de} - Zu seiner Zeit \par\noindent\textit{O wext} - Dann}
+
+\entry{wexto ke}{}{adv}{}{}{\textsuperscript{1}wenn \textsuperscript{2}sobald, als}
+
+\entry{wey}{}{intrj}{}{} {\textit{Ausruf der Verwunderung}}
+
+\entry{wezîfe}{wazîfe}{nom}{n}{}{\textsuperscript{1}Aufgabe, Dienst \textsuperscript{2}Pflicht}
+
+\entry{wezîr}{}{nom}{-e}{}{Minister/in}
+
+\entry{wîy}{}{intrj}{}{} {\textit{Ausruf des Schmerzes oder der Angst}}
+
+\entry{wusar}{usar}{nom}{n}{wisar}{Frühling, Frühjahr}
+
+\entry{wusarî}{usarî}{adv}{}{wisarî}{im Frühling, in der Frühlingszeit}
+
+\entry{wusaro peyên}{}{nom}{n}{}{Mai $\rightarrow$ \textbf{gulane}}
+
+\entry{wusaro virên}{}{nom}{n}{}{März $\rightarrow$ \textbf{marte}}
+
+\entry{wusaro wertên}{}{nom}{n}{}{April $\rightarrow$ \textbf{nîsane}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION X
+%----------------------------------------------------------------------------------------
+
+\section*{X}
+
+\begin{multicols}{2}
+
+\entry{xaç}{}{nom}{n}{}{Kreuz}
+
+\entry{xaçepers}{}{nom}{n}{}{Kreuzworträtsel}
+
+\entry{xafil de}{}{adv}{}{}{plötzlich, auf einmal, schlagartig}
+
+\entry{xafila}{}{adv}{}{}{\textbf{$\rightarrow$ xafil de}}
+
+\entry{xal}{}{nom}{n}{}{Onkel mütterlicherseits}
+
+\entry{xalcênîye}{xancilîye}{nom}{m}{}{Frau des Onkels mütterlicherseits}
+
+\entry{xale}{}{nom}{m}{}{Tante mütterlicherseits \textbf{$\rightarrow$ xalike}}
+
+\entry{xalike}{}{nom}{m}{}{Tante mütterlicherseits \textbf{$\rightarrow$ xale}}
+
+\entry{xalî}{}{nom}{m}{}{Teppich}
+
+\entry{xam}{}{adj}{-e}{}{\textsuperscript{1}roh, unreif \textsuperscript{2}unerfahren \textsuperscript{3}befremdlich, fremd, merkwürdig}
+
+\entry{xancilîye}{}{nom}{m}{}{\textbf{$\rightarrow$ xalcênîye}}
+
+\entry{xane}{}{nom}{n}{}{Haus, Gebäude}
+
+\entry{xatir}{}{nom}{n}{}{\textsuperscript{1}Abschied \par\noindent\textit{Xatir be to!} - Tschüss! \par\noindent\textsuperscript{2}Andenken, Gefälligkeit}
+
+\entry{xayîn}{}{adj}{-e}{}{hinterlistig, hinterhältig, heimtückisch, verräterisch $\rightarrow$ \textbf{bêbext}}
+
+\entry{xebere}{}{nom}{m}{}{\textsuperscript{1}Nachricht, Neuigkeit \textsuperscript{2}Botschaft, Meldung, Kunde \textsuperscript{3}Ahnung, Wissen \par\noindent\textit{Xebera mi çîn a} - Ich weiß nichts davon}
+
+\entry{xelate}{halete}{nom}{m}{}{\textsuperscript{1}Preis, Auszeichnung, Orden \textsuperscript{2}Geschenk}
+
+\entry{xem}{}{nom}{n}{}{Gram, Kummer, Leid}
+
+\entry{xestexane}{}{nom}{n}{}{\textbf{$\rightarrow$ nêwesxane}}
+
+\entry{xeyal}{}{nom}{n}{}{\textsuperscript{1}Vorstellung, Fantasie \textsuperscript{2}Vision, Idol \textsuperscript{3}Einbildung \textbf{$\rightarrow$ \"{x}eyal}}
+
+\entry{xeylê}{}{adv}{}{}{\textbf{$\rightarrow$ xêlê}}
+
+\entry{xêlê}{xeylê}{adv}{}{xeylê}{viel, reichlich, eine Menge}
+
+\entry{xêr}{xeyr}{nom}{n}{xeyr}{\textsuperscript{1}Wohltat, Guttat \textsuperscript{2}Wonne, Nutzen, Glück, Segen \par\noindent\textit{Xêr o?} - Was ist los? \par\noindent\textit{Xêrê xo} - Bitte}
+
+\entry{xêrlî}{}{adj}{-ye}{}{\textbf{$\rightarrow$ bexêr}}
+
+\entry{xê\"{x}}{}{adj}{-e}{}{verrückt, irre, irrsinnig, bekloppt}
+
+\entry{xêz kerdene}{}{verb}{}{}{\textsuperscript{1}zeichnen \textsuperscript{2}durchstreichen}
+
+\entry{xêze}{}{nom}{m}{}{Linie, Strich}
+
+\entry{xinamî}{}{adj}{-ye}{}{verschwägert}
+
+\entry{Xinûs}{}{nom}{n}{}{\textit{Stadt in Kurdistan (türk. Hınıs)}}
+
+\entry{xirîstîyan}{}{nom}{-e}{}{Christ/in}
+
+\entry{xirt}{}{adj}{-e}{}{mutig, tapfer, wacker, beherzt}
+
+\entry{xizmet}{}{nom}{n}{}{\textsuperscript{1}Dienst \textsuperscript{2}Service, Bedienung}
+
+\entry{xizmet kerdene}{}{verb}{}{}{dienen, bedienen}
+
+\entry{xîyar}{}{nom}{n}{}{Gurke}
+
+\entry{xo}{}{pron}{}{}{\textit{Reflexivpronomen}}
+
+\entry{xo vîr ra kerdene}{}{verb}{}{}{vergessen \par\noindent\textit{Xo vîr ra meke!} - Vergiss (es) nicht!}
+
+\entry{xone}{}{nom}{n}{}{Kater}
+
+\entry{xora}{}{adv}{}{}{\textsuperscript{1}eh, sowieso \textsuperscript{2}bereits, schon}
+
+\entry{xorî}{}{adj}{-e}{}{$\rightarrow$ xorîn}
+
+\entry{xorîn}{xorî}{adj}{-e}{}{tief}
+
+\entry{xoser}{}{adj}{-e}{}{\textsuperscript{1}selbstständig, eigenständig \textsuperscript{2}unabhängig, ungebunden \textsuperscript{3}autonom, autark, souverän}
+
+\entry{xoserîye}{xoserênî}{nom}{m}{}{\textsuperscript{1}Selbstständigkeit, Eigenständigkeit \textsuperscript{2}Unabhängigkeit \textsuperscript{3}Autonomie, Autarkie, Souveränität}
+
+\entry{xort}{}{nom}{n}{}{junger Mann, Knabe, Bursche}
+
+\entry{xoz}{}{nom}{-e}{}{Schwein}
+
+\entry{xoza}{}{nom}{n}{}{Natur $\rightarrow$ \textbf{tebîat}}
+
+\entry{Xozat}{}{nom}{n}{}{\textit{Stadt in Dêrsim (türk. Hozat)}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Ẍ
+%----------------------------------------------------------------------------------------
+
+\section*{\"{X}}
+
+\begin{multicols}{2}
+
+\entry{\"{x}elet}{}{adj}{-e}{}{falsch, inkorrekt}
+
+\entry{\"{x}eletîye}{}{nom}{m}{}{Fehler, Irrtum}
+
+\entry{\"{x}erîb}{}{adj}{-e}{}{\textsuperscript{1}fremd, fremdartig, andersartig \textsuperscript{2}ausländisch}
+
+\entry{\"{x}erîbîye}{}{nom}{m}{}{\textsuperscript{1}Fremde, Fremdartigkeit \textsuperscript{2}Ausland}
+
+\entry{\"{x}eyal}{xeyal}{nom}{n}{}{\textsuperscript{1}Vorstellung, Fantasie \textsuperscript{2}Vision, Idol \textsuperscript{3}Einbildung \textbf{$\rightarrow$ xeyal}}
+
+\entry{\"{x}ezale}{}{nom}{m}{}{Gazelle}
+
+\entry{\"{x}ezeb}{}{nom}{n}{}{Zorn}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Y
+%----------------------------------------------------------------------------------------
+
+\section*{Y}
+
+\begin{multicols}{2}
+
+\entry{ya\textsuperscript{1}}{}{konj}{}{yan}{oder}
+
+\entry{ya\textsuperscript{2}}{}{post}{}{}{\textbf{$\rightarrow$ a\textsuperscript{3}}}
+
+\entry{ya\textsuperscript{3}}{}{ptkl}{}{}{\textbf{$\rightarrow$ heya}}
+
+\entry{ya kî}{}{konj}{}{yan zî}{oder}
+
+\entry{yadîgar}{}{nom}{n}{}{Andenken, Souvenir}
+
+\entry{yakerdene}{}{verb}{}{}{\textbf{$\rightarrow$ rakerdene}}
+
+\entry{yanî}{}{ptkl}{}{}{\textsuperscript{1}also, das heißt \textsuperscript{2}nämlich}
+
+\entry{yar}{}{nom}{-e}{}{Geliebte/r, Liebhaber/in}
+
+\entry{yaranîye}{}{nom}{m}{yarenîye}{Scherz, Jux, Spaß}
+
+\entry{yaw}{}{intrj}{}{}{\textit{Ausruf der Verwunderung und Frage}}
+
+\entry{yazî}{}{nom}{m}{}{\textbf{$\rightarrow$ nuşte}}
+
+\entry{yazî kerdene}{yazmiş kerdene}{verb}{}{}{\textbf{$\rightarrow$ nuştene}}
+
+\entry{yene}{êne}{nom}{n}{îne}{Freitag}
+
+\entry{yew}{}{zahl}{}{}{$\rightarrow$ \textbf{ju}}
+
+\entry{yewşeme}{}{nom}{n}{}{$\rightarrow$ \textbf{bazar}}
+
+\entry{yê}{}{ptkl}{}{}{\textit{Absolute Îzafe}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	SECTION Z
+%----------------------------------------------------------------------------------------
+
+\section*{Z}
+
+\begin{multicols}{2}
+
+\entry{zaf}{zof}{adv}{}{}{viel, sehr}
+
+\entry{zafane}{}{adv}{}{}{\textsuperscript{1}meistens, meist, zumeist \textsuperscript{2}für gewöhnlich, normalerweise}
+
+\entry{zafêrî}{}{adv}{}{}{\textsuperscript{1}mehrheitlich, größtenteils \textsuperscript{2}meistenteils, meistens}
+
+\entry{zahmet}{}{nom}{n}{}{$\rightarrow$ \textbf{zehmet}}
+
+\entry{zalim}{}{nom}{-e}{}{Tyrann/in, Despot/in}
+
+\entry{zama}{}{nom}{n}{}{\textsuperscript{1}Bräutigam \textsuperscript{2}Schwager \textsuperscript{3}Schwiegersohn \textsuperscript{4}angeheirateter Onkel}
+
+\entry{zan}{}{nom}{n}{}{$\rightarrow$ \textbf{jan}}
+
+\entry{zanayene}{zonayene, zanitene}{verb}{}{}{\textsuperscript{1}wissen \textsuperscript{2}können \textsuperscript{3}kennen \par\noindent\textit{Ez nêzaneno.} - Ich weiß es nicht.}
+
+\entry{zanitene}{}{verb}{}{}{$\rightarrow$ \textbf{zanayene}}
+
+\entry{zanî}{zonî}{nom}{n}{}{Knie $\rightarrow$ \textbf{çok}}
+
+\entry{Zara}{}{nom}{m}{}{\textsuperscript{1}\textit{Stadt in Kurdistan (türk. Zara)} \textsuperscript{2}\textit{weibl. Vorname}}
+
+\entry{zarance}{}{nom}{m}{zerence}{Rebhuhn}
+
+\entry{zav û zêçî}{zav-zêçî}{nom}{zh}{zav û zêç}{Kinder \textit{(Kollektivum)}, Kind und Kegel}
+
+\entry{zayene}{}{verb}{}{}{kalben, gebären (Tiere)}
+
+\entry{zaza}{}{nom}{-ye}{}{Zaza}
+
+\entry{zazakî}{}{nom}{m}{}{Zazakî $\rightarrow$ \textbf{kirmanckî}}
+
+\entry{zehmet}{zahmet}{nom}{n}{}{\textsuperscript{1}Anstrengung, Mühe, Umstand \textsuperscript{2}Problem, Not \par\noindent\textit{Zehmetê xo ra} - Wenn es keine Umstände macht}
+
+\entry{zelal}{}{adj}{-e}{}{klar, rein}
+
+\entry{Zelale}{}{nom}{m}{}{\textit{weibl. Vorname}}
+
+\entry{zelalîye}{}{nom}{m}{}{Klarheit, Reinheit}
+
+\entry{zemperîye}{}{nom}{m}{}{$\rightarrow$ \textbf{çele}}
+
+\entry{zengil}{}{nom}{n}{}{Klingel, Glocke}
+
+\entry{zengîn}{}{adj}{-e}{}{reich, wohlhabend, vermögend}
+
+\entry{zerd}{}{adj}{-e}{}{goldgelb, eigelb}
+
+\entry{zere}{}{nom}{n}{}{das Innere, Innen(bereich)}
+
+\entry{zere de}{}{adv}{}{}{innen, drinnen}
+
+\entry{zerfet}{}{nom}{n}{}{\textit{traditionelles Gericht aus Dêrsim und Umgebung}}
+
+\entry{zerrî}{}{nom}{m}{}{Herz}
+
+\entry{zerrîserdin}{}{adj}{-e}{}{\textsuperscript{1}kaltherzig, gefühllos, hartherzig  \textsuperscript{2}unbarmherzig, mitleidlos}
+
+\entry{zerrîvêsayîye}{}{adj}{-îye}{zêrrîveşn}{\textsuperscript{1}weichherzig, weitherzig, mild \textsuperscript{2}fürsorglich, barmherzig, mitleidig}
+
+\entry{zerrîya bele}{}{nom}{m}{}{$\rightarrow$ \textbf{zerrî}}
+
+\entry{zerrn}{}{nom}{n}{}{Gold}
+
+\entry{zewbîna}{}{adv}{}{}{$\rightarrow$ \textbf{zobîna}}
+
+\entry{zeyîye}{}{nom}{m}{}{\textsuperscript{1}Schwägerin \textit{(Schwester des Ehemanns)} \textsuperscript{2}\textit{Ausgeheiratete weibliche Mitglieder der Familie}}
+
+\entry{zeytune}{}{nom}{m}{}{Olive}
+
+\entry{zê}{jê}{präp}{}{sey}{\textsuperscript{1}wie, so wie \textsuperscript{2}als \textbf{$\rightarrow$ jê}}
+
+\entry{zêde}{jêde}{adv}{}{zêde, zîyade}{sehr viel, zu viel; überschüssig \textbf{$\rightarrow$ jêde}}
+
+\entry{zêdek}{jêdek}{nom}{n}{}{Addition, Plus}
+
+\entry{zimbêlî}{zimêlî}{nom}{zh}{}{Schnurrbart, Schnauzbart}
+
+\entry{zimistan}{zimiston}{nom}{n}{}{Winter}
+
+\entry{zimistanî}{zimistonî}{adv}{}{}{im Winter, zur Winterzeit}
+
+\entry{zimiston}{}{nom}{n}{}{$\rightarrow$ \textbf{zimistan}}
+
+\entry{ziqnawute}{}{nom}{m}{}{$\rightarrow$ \textbf{çele}}
+
+\entry{zirçayene}{}{verb}{}{}{schreien, aufschreien}
+
+\entry{ziwan}{}{nom}{}{}{\textbf{$\rightarrow$ zon}}
+
+\entry{zî}{}{konj}{}{}{\textbf{$\rightarrow$ kî}}
+
+\entry{zîl}{jîl}{nom}{n}{}{Spross, Trieb}
+
+\entry{zîndan}{}{nom}{n}{}{Kerker, Gefängniszelle}
+
+\entry{zîyare}{}{nom}{m}{}{Ziyaret \textit{(heilige Stätte)} \par\noindent\textit{Zîyar û dîyarî} - Heilige Stätten \textit{(Kollektivum)}}
+
+\entry{zobîna}{zewbîna, zöbîna}{adv}{}{}{(was anderes, ein/e andere/r/s, (sonst) noch, anderweitig}
+
+\entry{zon}{zû, jan, zan}{nom}{n}{ziwan}{\textsuperscript{1}Zunge \textsuperscript{2}Sprache \par\noindent\textit{Zonê ma zanena?} - Sprichst du unsere Sprache?}
+
+\entry{zonayene}{}{verb}{}{}{$\rightarrow$ \textbf{zanayene}}
+
+\entry{zonitene}{}{verb}{}{}{$\rightarrow$ \textbf{zanayene}}
+
+\entry{zonî}{}{nom}{n}{}{$\rightarrow$ \textbf{zanî}}
+
+\entry{zor}{}{adj}{-e}{}{\textsuperscript{1}anstrengend, mühsam, beschwerlich \textsuperscript{2}schwierig, hart}
+
+\entry{zu}{ju, jü}{zahl}{}{yew}{eins \textbf{$\rightarrow$ ju}}
+
+\entry{zu kî}{}{adv}{}{}{außerdem, zudem}
+
+\entry{zulm}{}{nom}{n}{}{\textsuperscript{1}Gräuel, Grausamkeit, Drangsal \textsuperscript{2}Despotie, Unterdrückung}
+
+\entry{zuwa}{jüya}{adj}{-ye}{ziwa}{trocken}
+
+\entry{zuyê}{}{pron}{}{}{eine/r/s, (irgend)jemand \textbf{$\rightarrow$ jüye}}
+
+\entry{zubînî}{jubînî, jumînî}{pron}{}{yewbînî}{einander, gegenseitig \textbf{$\rightarrow$ jubînî}}
+
+\entry{zuna}{zewna, jüna}{adv}{}{yewna}{noch ein/e/er/s, ein weiterer/s, ein andere/s \textbf{$\rightarrow$ juna}}
+
+\end{multicols}
+
+%----------------------------------------------------------------------------------------
+%	Deutsch - Kirmanckî
+%----------------------------------------------------------------------------------------
+\newcounter{mypage}
+\setcounter{mypage}{\value{page}} % Save page number
+
+\begin{titlepage}
+    \thispagestyle{empty} % Hide number on title page
+    \begin{center}
+        \vspace*{\stretch{1}}
+        {\Huge\textbf{Deutsch - Kirmanckî}} 
+        \vspace*{\stretch{1}}
+    \end{center}
+\end{titlepage}
+
+\setcounter{page}{\numexpr\value{mypage}+2} 
+
+%----------------------------------------------------------------------------------------
+%	A
+%----------------------------------------------------------------------------------------
+
+\section*{A}
+
+\begin{multicols}{2}
+
+\gentry{Anklage}{nom}{dawa, doze}{m}{}
+
+\gentry{Ausstrahlungswärme}{nom}{tanî}{m}{}
+
+\gentry{besprechen}{verb}{qal kerdene}{}{}
+
+\gentry{ermahnen}{verb}{îqaz kerdene}{}{}
+
+\gentry{Ermahnung}{nom}{îqaz}{n}{}
+
+\gentry{(er)scheinen}{verb}{asayene}{}{}
+\gentry{(Gemischtwaren)Händler/in}{nom}{dikandar}{-e}{}
+\gentry{(Halb)Schuh}{nom}{kundure}{n}{}
+\gentry{(Heiz)Ofen}{nom}{soba}{m}{}
+\gentry{(her)bringen}{verb}{ardene}{}{}
+\gentry{(her)holen}{verb}{ardene}{}{}
+\gentry{(Ober)Haupt}{nom}{serek}{-e}{}
+\gentry{(sich) fürchten}{verb}{tersayene}{}{}
+\gentry{(sonst) noch}{adv}{zobîna}{}{}
+\gentry{(ver)verstreuen}{verb}{vila kerdene}{}{}
+\gentry{(ver)warnen}{verb}{îqaz kerdene}{}{}
+\gentry{(was anderes}{adv}{zobîna}{}{}
+\gentry{(zweckgebundene oder entgeltliche) Arbeit}{nom}{gure}{n}{}
+
+\gentry{ab und an}{adv}{ge-gane}{}{}
+\gentry{ab und zu}{adv}{ge-gane}{}{}
+\gentry{Abbitte}{nom}{ozr}{n}{}
+\gentry{Abenddämmerung}{nom}{verasan}{n}{veraşan}
+\gentry{Abendessen}{nom}{samî}{m}{şamî}
+\gentry{abends}{adv}{sandane}{}{şandane}
+\gentry{aber}{konj}{hama}{}{}
+\gentry{aber}{konj}{labelê}{}{}
+\gentry{abernten}{verb}{çînitene}{}{}
+\gentry{Abfall}{nom}{çop}{n}{}
+\gentry{Abfalleimer}{nom}{çopdane}{m}{}
+\gentry{abfallen}{verb}{kotene}{}{kewtene}
+\gentry{Abrechnung}{nom}{fatura}{m}{}
+\gentry{Abrede}{nom}{înkar}{n}{}
+\gentry{abreden}{verb}{înkar kerdene}{}{}
+\gentry{abschließen}{verb}{kilît kerdene}{}{}
+\gentry{absetzen}{verb}{ronayene}{}{}
+\gentry{Absicht}{nom}{armanc}{n}{}
+\gentry{absperren}{verb}{kilît kerdene}{}{}
+\gentry{absprechen}{verb}{înkar kerdene}{}{}
+\gentry{abstreiten}{verb}{înkar kerdene}{}{}
+\gentry{Abzäuning; Abgrenzung}{nom}{çeper}{n}{}
+\gentry{abändern}{verb}{vurnayene}{}{}
+\gentry{acht}{zahl}{heşt}{}{}
+\gentry{Acht geben}{verb}{diqet kerdene}{}{}
+\gentry{achten}{verb}{diqet kerdene}{}{}
+\gentry{achtungswert}{adj}{balkêş}{-e}{}
+\gentry{achtzig}{zahl}{heştay}{}{}
+\gentry{Acker}{nom}{hêga}{n}{}
+\gentry{Addition}{nom}{zêdek}{n}{}
+\gentry{Afrika}{nom}{Afrîka}{m}{}
+\gentry{Afrikaner/in}{nom}{afrîkayiz}{-e}{afrîkayij}
+\gentry{Album}{nom}{album}{n}{}
+\gentry{Alevite/in}{nom}{elewî}{-ye}{}
+\gentry{alle}{nom}{her kes}{n}{}
+\gentry{alle}{pron}{pêro}{}{}
+\gentry{alle}{pron}{têde}{}{}
+\gentry{alle Mann}{nom}{her kes}{n}{}
+\gentry{alle(s) zusammen}{adv}{pêro pîya}{}{}
+\gentry{alles}{pron}{}{pêro, têde}{}{}
+\gentry{alles; jede Sache}{nom}{her çî}{n}{}
+\gentry{allgegenwärtig; anwesend und bereitstehend}{adj}{hazir û nazir}{-e}{}
+\gentry{allmählich}{adv}{giran-giran}{}{}
+\gentry{allzeit bereit}{adj}{hazir û nazir}{-e}{}
+\gentry{allzeit; unaufhörlich}{adv}{daîma}{}{}
+\gentry{Alm}{nom}{ware}{n}{}
+\gentry{Alp}{nom}{ware}{n}{}
+\gentry{Alphabet}{nom}{alfabe}{m}{}
+\gentry{als ob}{adv}{seke}{}{}
+\gentry{als wenn}{adv}{seke}{}{}
+\gentry{alsbald}{adv}{desinde}{}{}
+\gentry{alt}{adj}{pîl}{-e}{}
+\gentry{am Morgen}{adv}{sodir ra}{}{}
+\gentry{Amerika}{nom}{Amerîka}{m}{}
+\gentry{an der Seite von}{post}{het de}{}{}
+\gentry{an der Seite von}{zirk}{hetê ... de}{}{}
+\gentry{an diesem Ort}{adv}{naza}{}{noca}
+\gentry{an jenem Ort}{}{haza}{adv}{}
+\gentry{an Stelle von...}{zirk}{hurendîya ... de}{}{herinda ... de}
+\gentry{Anbaufläche}{nom}{hêga}{n}{}
+\gentry{anbraten}{verb}{sür kerdene}{}{sûr kerdene}
+
+\gentry{andauernd}{adv}{timûtim}{}{}
+
+\gentry{Andenken}{nom}{yadîgar}{n}{}
+
+\gentry{ander Seite von}{zirk}{lewê ... de}{}{leweyê ... de}
+
+\gentry{andere/r/s; sonstige/r/s}{adj}{bîn}{-e}{}
+
+\gentry{andernfalls}{konj}{nêke}{}{}
+
+\gentry{anderweitig}{adv}{zobîna}{}{}
+
+\gentry{anfertigen}{verb}{viraştene}{}{}
+
+\gentry{Anführer/in}{nom}{serek}{-e}{}
+
+\gentry{Angst}{nom}{ters}{n}{}
+
+\gentry{Angst haben}{verb}{tersayene}{}{}
+
+\gentry{anhalten}{verb}{vindarnayene}{}{}
+
+\gentry{anhand}{präp}{pê}{}{}
+
+\gentry{Anhang}{nom}{îlawe}{n}{}
+
+\gentry{Anhöhe; Hoheit}{nom}{berzîye}{m}{}
+
+\gentry{anhören}{verb}{gosdarî kerdene}{}{goşdarî kerdene}
+
+\gentry{Anlass}{nom}{sebeb}{n}{}
+
+\gentry{Anmerkung}{nom}{not}{n}{}
+
+\gentry{anrufen}{verb}{telefon kerdene}{}{}
+
+\gentry{anschauen}{verb}{sê kerdene \textasciitilde{} şêr kerdene}{}{seyr kerdene}
+
+\gentry{ansehen}{verb}{sê kerdene}{}{seyr kerdene}
+\gentry{ansehen}{verb}{şêr kerdene}{}{seyr kerdene}
+\gentry{ansonsten}{konj}{nêke}{}{}
+\gentry{anstatt...}{zirk}{hurendîya ... de}{}{herinda ... de}
+\gentry{ansteckende/virale Krankheit}{nom}{çorr}{n}{}
+\gentry{Anteil}{nom}{lete}{n}{}
+\gentry{Anwalt/Anwältin}{nom}{avûkat}{-e}{}
+\gentry{anziehen \textit{(mit den Füßen)}}{verb}{pay kerdene}{}{}
+\gentry{anängen}{verb}{îlawe kerdene}{}{}
+\gentry{Apfel}{nom}{saye}{m}{}
+\gentry{Appel}{nom}{îqaz}{n}{}
+\gentry{Aprikose}{nom}{qeysî}{m}{}
+\gentry{April}{nom}{nîsane}{m}{}
+\gentry{April}{nîsane}{nom}{wusaro wertên}{n}{}
+\gentry{Araber/in}{nom}{arab}{-e}{ereb}
+\gentry{Arabisch}{nom}{arabkî}{m}{erebkî}
+\gentry{arbeiten}{verb}{gureyayene}{}{}
+\gentry{Arbeiter/in}{nom}{karker}{-e}{}
+\gentry{arbeitsam}{adj}{gurekar}{-e}{}
+\gentry{arbeitslos}{adj}{bêkar}{-e}{}
+\gentry{arm}{adj}{feqîr}{-e}{}
+\gentry{Arm}{nom}{harme}{n}{}
+\gentry{Art}{nom}{tewir}{n}{}
+\gentry{Art}{nom}{ûsul}{n}{}
+\gentry{Art und Weise}{nom}{ûsul}{n}{}
+\gentry{Astronaut/in}{nom}{astronot}{-e}{}
+\gentry{auch}{konj}{kî}{}{}
+\gentry{Aue}{nom}{merge}{m}{}
+
+\gentry{auf}{adv, post}{ser de}{}{}
+
+\gentry{auf}{adv}{ser o}{}{}
+
+\gentry{auf}{zirk}{serê ... de}{}{}
+
+\gentry{auf der Stelle}{adv}{desinde}{}{}
+
+\gentry{auf die Knie fallen}{verb}{çok ronayene}{}{}
+
+\gentry{auf die Knie gehen}{verb}{çok ronayene}{}{}
+
+\gentry{auf diese Art}{adv}{nîya}{}{}
+
+\gentry{auf einmal}{adv}{xafil de}{}{}
+
+\gentry{auffassen}{verb}{ser şîyene}{}{}
+
+\gentry{aufhalten}{verb}{vindarnayene}{}{}
+
+\gentry{auflegen}{verb}{ronayene}{}{}
+
+\gentry{aufpassen}{verb}{diqet kerdene}{}{}
+
+\gentry{aufschreien}{verb}{zirçayene}{}{}
+
+\gentry{Augenbraue(n)}{nom}{burî}{zh}{birûyî}
+
+\gentry{August}{}{nom}{amnano peyên}{n}{}
+
+\gentry{Ausdruck}{nom}{qal}{n}{qale}
+
+\gentry{ausgehen}{verb}{qedîyayene}{}{}
+
+\gentry{Aushilfe}{nom}{ardim}{n}{}
+
+\gentry{auslaufen}{verb}{qedîyayene}{}{}
+
+\gentry{ausmachen}{verb}{qedênayene}{}{}
+
+\gentry{ausreichend}{adj}{bes}{-e}{}
+
+\gentry{aussehen}{verb}{asayene}{}{}
+
+\gentry{Ausspruch}{nom}{qal}{n}{qale}
+
+\gentry{austreten}{verb}{vejîyayene}{}{}
+
+\gentry{Autobus}{nom}{otobuse}{m}{}
+
+\gentry{außen}{adv}{teber ra}{}{}
+
+\gentry{Außen(bereich)}{nom}{teber}{n}{}
+
+\gentry{außerdem}{adv}{ju kî / zu kî, ser o kî}{}{}
+
+\end{multicols}
+
+\section*{Z}
+
+\begin{multicols}{2}
+
+\gentry{Zahn}{nom}{didan}{n}{}
+
+\gentry{Zahnarzt, -ärztin}{nom}{didansaz}{-e}{}
+
+\gentry{Zaun}{nom}{çeper}{n}{}
+
+\gentry{Zaza}{nom}{zaza, kird, dimilî, kirmanc}{-e}{}
+
+\gentry{Zazakî}{nom}{zazakî, kirdkî, dimilî, kirmanckî}{m}{}
+
+\gentry{zehn}{zahl}{des}{}{}
+
+\gentry{Zeit}{nom}{\textsuperscript{1}dem, wext \textit{(n)} \textsuperscript{2}\textit{(Zeitraum, Epoche)} dewr}{n}{}
+
+\gentry{Zeitraum}{nom}{dem}{}{}{}
+
+\gentry{Zeitschrift}{nom}{kovare}{m}{}
+
+\gentry{Zeitung}{nom}{rojname}{n}{}
+
+\gentry{Zentimeter}{nom}{santîmetre, santîm}{n}{}
+
+\gentry{zerbrechen}{verb}{$\rightarrow$ brechen}{}{}
+
+\gentry{Zicklein}{nom}{bijêk, bicêk, tusk}{-e}{bizêk}
+
+\gentry{Ziege}{nom}{bize}{m}{}
+
+\gentry{ziehen}{verb}{\textsuperscript{1}antene \textasciitilde{} ontene \textsuperscript{2}(am Boden schleifend) kas kerdene}{}{}
+
+\gentry{Ziel}{nom}{armanc}{n}{}
+
+\gentry{Zimmer}{nom}{oda}{m}{}
+
+\gentry{Zitrone}{nom}{lîmone}{m}{}
+
+\gentry{Ziyaret \textit{(heilige Stätte der Aleviten)}}{nom}{zîyare \textasciitilde{} jîyare}{m}{}{}
+
+\gentry{Zorn}{nom}{hêrs}{n}{}
+
+\gentry{zu Ende bringen}{verb}{qedênayene}{}{}
+
+\gentry{zu guter Letzt}{adv}{axirî}{}{}
+
+\gentry{zu tun vermögen}{şîkîyayene}{verb}{besekerdene}{}{}
+
+\gentry{zu viel; überschüssig}{adv}{zêde}{}{zêde, zîyade}
+
+\gentry{zu viel; überschüssig}{adv}{jêde}{}{zêde, zîyade}
+
+\gentry{Zucker (und Nüssen)}{nom}{helwa}{m}{}
+
+\gentry{zudem}{adv}{ju kî \textasciitilde{} zu kî, ser o kî}{}{}
+
+\gentry{Zufall}{nom}{tesaduf}{n}{}
+
+\gentry{zugeben}{verb}{îlawe kerdene}{}{}
+
+\gentry{zuhören}{verb}{gosdarî kerdene}{}{goşdarî kerdene}
+
+\gentry{zur Winterzeit}{adv}{zimistanî}{}{}
+
+\gentry{zurück}{adv}{peyser}{}{}
+
+\gentry{zusammen}{adv}{pîya}{}{}
+
+\gentry{Zusatz}{nom}{îlawe}{n}{}
+
+\gentry{zusperren}{verb}{kilît kerdene}{}{}
+
+\gentry{zusätzlich}{adv}{ser o kî}{}{}
+
+\gentry{zwangsläufig}{adj}{mecbur}{-e}{}
+
+\gentry{zwanzig}{zahl}{vîşt}{}{vîst}
+
+\gentry{Zweck}{nom}{armanc}{n}{}
+
+\gentry{zwei}{zahl}{di}{}{}
+
+\gentry{Zwiebel}{nom}{pîyaz}{n}{}
+
+\gentry{zwingend}{adj}{mecbur}{-e}{}
+
+\gentry{zwischenstaatlich}{}{\textbf{$\rightarrow$ international}}{}{}
+
+\gentry{Zyklus}{}{\textbf{$\rightarrow$ Zeitraum}}{}{}
+
+\end{multicols}
+%------------------------------------------------
+\end{document}
+
