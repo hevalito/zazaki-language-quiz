@@ -44,9 +44,9 @@ export function FilterBar({
                 <div className="flex gap-2">
                     <button
                         onClick={() => onCourseChange('')}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${currentCourseId === ''
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === ''
+                            ? 'bg-primary-500 text-gray-900 border border-transparent'
+                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
                             }`}
                     >
                         Alle
@@ -55,9 +55,9 @@ export function FilterBar({
                         <button
                             key={course.id}
                             onClick={() => onCourseChange(course.id)}
-                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${currentCourseId === course.id
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === course.id
+                                ? 'bg-primary-500 text-gray-900 border border-transparent'
+                                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
                                 }`}
                         >
                             {course.title?.de || course.title?.en}

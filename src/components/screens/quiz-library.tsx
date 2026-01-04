@@ -55,8 +55,8 @@ export function QuizLibrary() {
                         >
                             <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </button>
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <BookOpenIcon className="w-6 h-6 text-blue-600" />
+                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <BookOpenIcon className="w-6 h-6 text-primary-600" />
                         </div>
                         <div>
                             <h1 className="text-xl font-bold text-gray-900">Bibliothek</h1>

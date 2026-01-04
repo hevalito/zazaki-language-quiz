@@ -122,7 +122,7 @@ export default function AdminCoursesPage() {
                                 onChange={e => setNewCourse({ ...newCourse, level: e.target.value })}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                             >
-                                {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                                {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
                                     <option key={level} value={level}>{level}</option>
                                 ))}
                             </select>

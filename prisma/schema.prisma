@@ -56,6 +56,12 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Extended profile
+  nickname      String?
+  firstName     String?
+  lastName      String?
+  avatarUrl     String?
+
   // Language learning specific fields
   preferredScript ScriptType @default(LATIN)
   dailyGoal       Int        @default(10)

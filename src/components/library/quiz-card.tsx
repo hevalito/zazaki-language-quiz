@@ -18,12 +18,12 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
 
     const levelColors: Record<string, string> = {
         'A0': 'bg-gray-100 text-gray-800',
-        'A1': 'bg-green-100 text-green-800',
-        'A2': 'bg-green-100 text-green-800',
-        'B1': 'bg-blue-100 text-blue-800',
-        'B2': 'bg-blue-100 text-blue-800',
-        'C1': 'bg-purple-100 text-purple-800',
-        'C2': 'bg-purple-100 text-purple-800',
+        'A1': 'bg-brand-green/10 text-brand-green border border-brand-green/20',
+        'A2': 'bg-brand-green/10 text-brand-green border border-brand-green/20',
+        'B1': 'bg-primary-100 text-primary-800 border border-primary-200',
+        'B2': 'bg-primary-100 text-primary-800 border border-primary-200',
+        'C1': 'bg-brand-purple/10 text-brand-purple border border-brand-purple/20', // Assuming brand-purple exists or defaulting
+        'C2': 'bg-brand-red/10 text-brand-red border border-brand-red/20',
     }
 
     const level = quiz.lesson.chapter.course.level
@@ -32,20 +32,20 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
     const tags = quiz.lesson.targetSkills || []
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow p-5 flex flex-col h-full">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:border-primary-200 p-5 flex flex-col h-full group">
             <div className="flex justify-between items-start mb-3">
-                <span className={`px-2 py-1 rounded text-xs font-semibold ${levelColors[level] || 'bg-gray-100'}`}>
+                <span className={`px-2 py-1 rounded text-xs font-bold ${levelColors[level] || 'bg-gray-100'}`}>
                     {level}
                 </span>
                 {isCompleted && (
-                    <div className="flex items-center text-green-600 text-sm font-medium">
+                    <div className="flex items-center text-brand-green text-sm font-bold">
                         <CheckCircleIconSolid className="w-5 h-5 mr-1" />
                         <span>{quiz.lastScore} Pkt</span>
                     </div>
                 )}
             </div>
 
-            <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+            <h3 className="text-lg font-serif font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
                 {getTitle(quiz.title)}
             </h3>
 
@@ -55,12 +55,12 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
 
             {/* Metadata tags */}
             <div className="flex flex-wrap gap-2 mb-4 mt-auto">
-                <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                <div className="flex items-center text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
                     <ClockIcon className="w-3 h-3 mr-1" />
                     <span>{questionCount} Fragen</span>
                 </div>
                 {tags.map((tag: string) => (
-                    <div key={tag} className="flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                    <div key={tag} className="flex items-center text-xs text-primary-700 bg-primary-50 px-2 py-1 rounded border border-primary-100">
                         <TagIcon className="w-3 h-3 mr-1" />
                         <span className="capitalize">{tag}</span>
                     </div>
@@ -69,9 +69,9 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
 
             <button
                 onClick={() => onStart(quiz.id)}
-                className={`w-full py-2.5 rounded-lg font-medium flex items-center justify-center transition-colors ${isCompleted
-                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                className={`w-full py-3 rounded-xl font-bold flex items-center justify-center transition-all ${isCompleted
+                    ? 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                    : 'bg-primary-500 text-gray-900 hover:bg-primary-400 shadow-sm active:scale-[0.98]'
                     }`}
             >
                 {isCompleted ? (

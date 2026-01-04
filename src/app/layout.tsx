@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import { auth } from '@/auth'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
 export const metadata: Metadata = {
-  title: 'Zazaki - Learn Kurdish Language',
+  title: 'Zazaki Quiz - Learn Kurdish Language',
   description: 'Interactive language learning app for Zazaki (Kurdish) with audio, video, and gamification',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#3B82F6',
+  themeColor: '#febd11',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -41,7 +42,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} h-full bg-gray-50`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans h-full bg-gray-50 text-gray-900`}>
         <Providers session={session}>
           <div className="min-h-full">
             {children}

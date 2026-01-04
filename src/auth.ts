@@ -1,97 +1,58 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import Google from "next-auth/providers/google"
-import Apple from "next-auth/providers/apple"
-import Email from "next-auth/providers/email"
+import ResendProvider from "next-auth/providers/resend"
 import { prisma } from "@/lib/prisma"
-import type { NextAuthConfig } from "next-auth"
+import { ZazakiMagicLinkEmail } from "@/components/emails/magic-link-email"
+import { authConfig } from "./auth.config"
+import { Resend } from "resend"
 
-export const config = {
-  trustHost: true, // Required for production deployments
+const resend = new Resend(process.env.AUTH_RESEND_KEY)
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
-  providers: [
-    // Email provider disabled for local development due to missing SMTP configuration
-    Email({
-      // Custom implementation to log to console in dev if no server is configured
-      ...(process.env.EMAIL_SERVER_HOST ? {
-        server: {
-          host: process.env.EMAIL_SERVER_HOST,
-          port: Number(process.env.EMAIL_SERVER_PORT),
-          auth: {
-            user: process.env.EMAIL_SERVER_USER,
-            pass: process.env.EMAIL_SERVER_PASSWORD,
-          },
-        },
-        from: process.env.EMAIL_FROM,
-      } : {
-        // When no server is configured, use a custom sendVerificationRequest to log to console
-        // We provide a dummy server config to bypass the provider's validation check
-        server: {
-          host: "localhost",
-          port: 25,
-          auth: { user: "", pass: "" }
-        },
-        from: "onboarding@resend.dev",
-        sendVerificationRequest: async ({ identifier, url, provider }) => {
-          console.log("----------------------------------------------")
-          console.log(`LOGIN LINK FOR ${identifier}`)
-          console.log(url)
-          console.log("----------------------------------------------")
-        },
-      }),
-    }),
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
-      Google({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      })
-    ] : []),
-    ...(process.env.APPLE_ID && process.env.APPLE_SECRET ? [
-      Apple({
-        clientId: process.env.APPLE_ID,
-        clientSecret: process.env.APPLE_SECRET,
-      })
-    ] : []),
-  ],
-  pages: {
-    signIn: "/auth/signin",
-    verifyRequest: "/auth/verify-request",
-    error: "/auth/error",
+  session: {
+    strategy: "jwt", // Required for Middleware compatibility
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
-        // Add user preferences to session
-        const userWithPrefs = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: {
-            preferredScript: true,
-            dailyGoal: true,
-            streak: true,
-            totalXP: true,
-          },
-        })
-        if (userWithPrefs) {
-          session.user.preferredScript = userWithPrefs.preferredScript
-          session.user.dailyGoal = userWithPrefs.dailyGoal
-          session.user.streak = userWithPrefs.streak
-          session.user.totalXP = userWithPrefs.totalXP
+  providers: [
+    ResendProvider({
+      apiKey: process.env.AUTH_RESEND_KEY,
+      from: "Zazaki Academy <login@zazakiacademy.com>",
+      sendVerificationRequest: async ({ identifier, url, provider }) => {
+        const { host } = new URL(url)
+        try {
+          await resend.emails.send({
+            from: provider.from!,
+            to: identifier,
+            subject: `Anmelden bei Zazaki Quiz`,
+            react: ZazakiMagicLinkEmail({ url, host }),
+          })
+        } catch (error) {
+          console.error("Error sending verification email", error)
+          throw new Error("Failed to send verification email")
         }
-      }
-      return session
-    },
+      },
+    }),
+  ],
+  callbacks: {
+    ...authConfig.callbacks,
     async signIn({ user, account, profile }) {
       // Auto-create user profile on first sign in
       if (account?.provider && user.email) {
         try {
-          const existingUser = await prisma.user.findUnique({
-            where: { email: user.email },
-          })
+          // Force Admin for specific users
+          if (user.email === 'heval@me.com' || user.email === 'mail@zazakiacademy.com') {
+            const existingUser = await prisma.user.findUnique({
+              where: { email: user.email }
+            });
 
-          if (!existingUser) {
-            // User will be created by the adapter, we don't need to do anything here
-            // The default values are already set in the schema
+            if (existingUser && !existingUser.isAdmin) {
+              await prisma.user.update({
+                where: { email: user.email },
+                data: { isAdmin: true }
+              })
+            }
           }
         } catch (error) {
           console.error('Error in signIn callback:', error)
@@ -101,11 +62,5 @@ export const config = {
       return true
     },
   },
-  session: {
-    strategy: "database",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
   debug: process.env.NODE_ENV === "development",
-} satisfies NextAuthConfig
-
-export const { handlers, auth, signIn, signOut } = NextAuth(config)
+})

@@ -72,7 +72,7 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                     onChange={e => setCourse({ ...course, level: e.target.value })}
                                     className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
                                 >
-                                    {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                                    {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
                                         <option key={level} value={level}>{level}</option>
                                     ))}
                                 </select>

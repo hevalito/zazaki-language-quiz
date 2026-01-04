@@ -42,14 +42,11 @@ export function MultipleChoiceQuestion({
 
     // Show results
     if (choice.isCorrect) {
-      if (selectedChoice === choice.id) {
-        return `${baseClass} quiz-option-correct animate-bounce-subtle`
-      }
       return `${baseClass} quiz-option-correct`
     }
 
     if (selectedChoice === choice.id && !choice.isCorrect) {
-      return `${baseClass} quiz-option-incorrect animate-shake`
+      return `${baseClass} quiz-option-incorrect`
     }
 
     return baseClass

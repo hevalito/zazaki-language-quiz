@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import {
   FireIcon,
   TrophyIcon,
@@ -104,7 +105,7 @@ export function HomeScreen() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your progress...</p>
+          <p className="mt-4 text-gray-600">Tenê vinde. Hawo bar beno...</p>
         </div>
       </div>
     )
@@ -117,32 +118,38 @@ export function HomeScreen() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Z</span>
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/images/logo-icon.png"
+                  alt="Zazaki"
+                  fill
+                  className="object-contain" // object-contain to ensure it fits well
+                />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Zazaki</h1>
-                <p className="text-sm text-gray-500">Willkommen zurück, {user?.name?.split(' ')[0] || 'Lernender'}!</p>
+                <h1 className="text-xl font-serif font-bold text-gray-900 leading-tight">Zazaki Quiz</h1>
+                <p className="text-xs text-gray-500 font-sans">Xêr ama, {user?.name?.split(' ')[0] || 'Heval'}!</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-3">
               {/* Streak */}
-              <div className="flex items-center space-x-1 bg-orange-50 px-3 py-1 rounded-full">
+              <div className="flex items-center space-x-1 bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20">
                 {streak > 0 ? (
-                  <FireIconSolid className="w-4 h-4 text-orange-500" />
+                  <FireIconSolid className="w-4 h-4 text-brand-orange" />
                 ) : (
                   <FireIcon className="w-4 h-4 text-gray-400" />
                 )}
-                <span className="text-sm font-medium text-gray-900">{streak}</span>
+                <span className="text-sm font-bold text-gray-900 font-sans">{streak}</span>
               </div>
 
               {/* Settings */}
               <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="p-2 hover:bg-gray-100 rounded-full"
+                onClick={() => window.location.href = '/settings'}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Einstellungen"
               >
-                <Cog6ToothIcon className="w-5 h-5 text-gray-600" />
+                <Cog6ToothIcon className="w-6 h-6 text-gray-600" />
               </button>
             </div>
           </div>
@@ -153,15 +160,15 @@ export function HomeScreen() {
         {/* Daily Progress */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Tagesfortschritt</h2>
-            <div className="flex items-center space-x-1 text-purple-600">
+            <h2 className="text-lg font-serif font-bold text-gray-900">Tagesfortschritt</h2>
+            <div className="flex items-center space-x-1 text-primary-600">
               <TrophyIcon className="w-5 h-5" />
-              <span className="font-medium">{totalXP} XP</span>
+              <span className="font-bold font-sans">{totalXP} XP</span>
             </div>
           </div>
 
           <div className="space-y-3">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm font-medium">
               <span className="text-gray-600">{todayXP} / {dailyGoal} XP</span>
               <span className="text-gray-600">{Math.round(progressPercentage)}%</span>
             </div>
@@ -172,8 +179,8 @@ export function HomeScreen() {
               />
             </div>
             {todayXP >= dailyGoal && (
-              <div className="text-center py-2">
-                <span className="text-green-600 font-medium text-sm">🎉 Tagesziel erreicht!</span>
+              <div className="text-center py-2 animate-bounce-subtle">
+                <span className="text-brand-green font-bold text-sm">🎉 Tagesziel erreicht!</span>
               </div>
             )}
           </div>
@@ -183,7 +190,7 @@ export function HomeScreen() {
         {/* Continue Learning */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Weiterlernen</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900">Weiterlernen</h3>
             {/* <span className="text-sm text-gray-500">Lektion 3 von 12</span> */}
           </div>
 
@@ -191,21 +198,16 @@ export function HomeScreen() {
             {availableQuizzes.length > 0 ? (
               <>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <PlayIcon className="w-6 h-6 text-green-600" />
+                  <div className="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center border border-brand-green/20">
+                    <PlayIcon className="w-6 h-6 text-brand-green" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-bold text-gray-900 font-serif text-lg">
                       {(availableQuizzes[0].title as any)?.de || (availableQuizzes[0].title as any)?.en || 'Nächstes Quiz'}
                     </h4>
                     <p className="text-sm text-gray-600">
                       {(availableQuizzes[0].lesson.chapter.course.title as any)?.de || 'Lerne Zazaki'}
                     </p>
-                    {/* <div className="mt-2">
-                      <div className="progress-bar h-1">
-                        <div className="progress-fill" style={{ width: '60%' }} />
-                      </div>
-                    </div> */}
                   </div>
                   <ArrowRightIcon className="w-5 h-5 text-gray-400" />
                 </div>
@@ -229,7 +231,7 @@ export function HomeScreen() {
               </>
             ) : (
               <div className="text-center py-6">
-                <p className="text-gray-500 mb-4">Keine offenen Quiz gefunden.</p>
+                <p className="text-gray-500 mb-4 font-normal">Keine offenen Quiz gefunden.</p>
                 <button
                   onClick={() => window.location.href = '/library'}
                   className="btn-primary w-full"
@@ -244,24 +246,24 @@ export function HomeScreen() {
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => alert('Übungsmodus kommt bald!')}
-            className="card-interactive text-center"
+            onClick={() => window.location.href = '/leaderboard'}
+            className="card-interactive text-center group"
           >
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <PlayIcon className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-200 transition-colors">
+              <TrophyIcon className="w-6 h-6 text-primary-700" />
             </div>
-            <h4 className="font-medium text-gray-900 mb-1">Üben</h4>
-            <p className="text-sm text-gray-600">Schnelle Wiederholung</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">Bestenliste</h4>
+            <p className="text-sm text-gray-600">Vergleiche dich</p>
           </button>
 
           <button
             onClick={() => window.location.href = '/achievements'}
-            className="card-interactive text-center"
+            className="card-interactive text-center group"
           >
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <TrophyIcon className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-red/20 transition-colors">
+              <FireIcon className="w-6 h-6 text-brand-red" />
             </div>
-            <h4 className="font-medium text-gray-900 mb-1">Erfolge</h4>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">Erfolge</h4>
             <p className="text-sm text-gray-600">Sieh deinen Fortschritt</p>
           </button>
         </div>
@@ -269,62 +271,24 @@ export function HomeScreen() {
         {/* Recent Activity */}
         {recentActivity.length > 0 && (
           <div className="card">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Letzte Aktivitäten</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900 mb-4">Letzte Aktivitäten</h3>
             <div className="space-y-3">
               {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-center justify-between py-2">
+                <div key={activity.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-green-600 text-xs font-bold">✓</span>
+                    <div className="w-8 h-8 bg-brand-green/10 rounded-full flex items-center justify-center">
+                      <span className="text-brand-green text-xs font-bold">✓</span>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">"{(activity.title as any)?.en || 'Quiz'}" abgeschlossen</p>
+                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.en || 'Quiz'}" abgeschlossen</p>
                       <p className="text-xs text-gray-500">
                         {new Date(activity.date).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
-                  <span className="text-sm text-green-600 font-medium">+{activity.xpEarned} XP</span>
+                  <span className="text-sm text-brand-green font-bold">+{activity.xpEarned} XP</span>
                 </div>
               ))}
-            </div>
-          </div>
-        )}
-
-        {/* Settings Modal */}
-        {showSettings && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 m-4 max-w-md w-full">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Einstellungen</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tagesziel (XP)
-                  </label>
-                  <input
-                    type="number"
-                    value={dailyGoal}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    min="10"
-                    max="200"
-                    step="10"
-                  />
-                </div>
-              </div>
-              <div className="flex space-x-3 mt-6">
-                <button
-                  onClick={() => setShowSettings(false)}
-                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                >
-                  Abbrechen
-                </button>
-                <button
-                  onClick={() => setShowSettings(false)}
-                  className="flex-1 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                >
-                  Speichern
-                </button>
-              </div>
             </div>
           </div>
         )}
