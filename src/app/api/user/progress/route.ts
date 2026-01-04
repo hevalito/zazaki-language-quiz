@@ -21,7 +21,9 @@ export async function GET(request: NextRequest) {
         totalXP: true,
         dailyGoal: true,
         lastActiveDate: true,
-        isAdmin: true
+        isAdmin: true,
+        firstName: true,
+        nickname: true
       }
     })
 
@@ -56,7 +58,9 @@ export async function GET(request: NextRequest) {
         totalXP: user.totalXP || 0,
         dailyGoal: user.dailyGoal || 50,
         todayXP,
-        isAdmin: user.isAdmin || false
+        isAdmin: user.isAdmin || false,
+        firstName: user.firstName,
+        nickname: user.nickname
       }
     })
   } catch (error) {

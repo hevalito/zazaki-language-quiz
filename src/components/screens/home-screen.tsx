@@ -24,6 +24,8 @@ interface UserProgress {
   dailyGoal: number
   todayXP: number
   isAdmin: boolean
+  firstName?: string | null
+  nickname?: string | null
 }
 
 import confetti from 'canvas-confetti'
@@ -144,8 +146,16 @@ export function HomeScreen() {
                 />
               </div>
               <div>
-                <h1 className="text-xl font-serif font-bold text-gray-900 leading-tight">Zazaki Quiz</h1>
-                <p className="text-xs text-gray-500 font-sans">Xêr ama, {user?.name?.split(' ')[0] || 'Heval'}!</p>
+                <h1 className="text-xl font-serif font-bold text-gray-900 leading-tight">Zazakî Quiz</h1>
+                <p className="text-xs text-gray-500 font-sans">
+                  {userProgress?.firstName
+                    ? `Xêr ama, ${userProgress.firstName}!`
+                    : userProgress?.nickname
+                      ? `Xêr ama, ${userProgress.nickname}!`
+                      : user?.name?.split(' ')[0]
+                        ? `Xêr ama, ${user.name.split(' ')[0]}!`
+                        : 'Xêr ama'}
+                </p>
               </div>
             </div>
 
