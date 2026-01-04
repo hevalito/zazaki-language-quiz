@@ -50,6 +50,27 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         })
     }
 
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                prompt: {
+                    en: initialData?.prompt?.en || '',
+                    de: initialData?.prompt?.de || ''
+                },
+                type: initialData?.type || 'MULTIPLE_CHOICE',
+                points: initialData?.points || 10,
+                choices: initialData?.choices?.map((c: any) => ({
+                    ...c,
+                    label: typeof c.label === 'object' ? (c.label.de || c.label.en || Object.values(c.label)[0] || '') : c.label || ''
+                })) || [
+                        { label: '', isCorrect: true },
+                        { label: '', isCorrect: false },
+                        { label: '', isCorrect: false }
+                    ]
+            })
+        }
+    }, [initialData])
+
     // Auto-setup T/F choices
     useEffect(() => {
         if (formData.type === 'TRUE_FALSE') {
