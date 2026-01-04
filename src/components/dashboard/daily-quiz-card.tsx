@@ -108,14 +108,14 @@ export function DailyQuizCard() {
                         {status.completed && (
                             <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                                 <CheckCircleIcon className="w-3 h-3 mr-1" />
-                                Completed
+                                Für heute abgeschlossen
                             </span>
                         )}
                     </div>
                     <div className="flex items-center text-gray-400">
                         <ClockIcon className="w-5 h-5 mr-2" />
-                        <span className="font-mono text-lg font-medium">{timeLeft || 'Loading...'}</span>
-                        <span className="text-xs ml-2 text-gray-400">until next quiz</span>
+                        <span className="font-mono text-lg font-medium">{timeLeft || 'Lade...'}</span>
+                        <span className="text-xs ml-2 text-gray-400">bis zum nächsten Quiz</span>
                     </div>
                 </div>
                 {/* History Link? */}
@@ -124,7 +124,7 @@ export function DailyQuizCard() {
                         onClick={(e) => { e.stopPropagation(); router.push('/library?tab=daily') }}
                         className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
                     >
-                        View Archive
+                        Archiv ansehen
                     </button>
                 </div>
             </div>
