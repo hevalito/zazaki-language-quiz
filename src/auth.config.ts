@@ -32,6 +32,7 @@ export const authConfig = {
                 token.firstName = user.firstName
                 // @ts-ignore
                 token.lastName = user.lastName
+                token.picture = user.image
             }
 
             // Handle session updates (e.g. after onboarding)
@@ -42,6 +43,7 @@ export const authConfig = {
                     token.lastName = session.user.lastName
                     token.preferredScript = session.user.preferredScript
                     token.dailyGoal = session.user.dailyGoal
+                    token.picture = session.user.image
                 }
             }
             return token
@@ -66,6 +68,7 @@ export const authConfig = {
                 session.user.firstName = token.firstName as string
                 // @ts-ignore
                 session.user.lastName = token.lastName as string
+                session.user.image = token.picture as string
             }
             return session
         },
