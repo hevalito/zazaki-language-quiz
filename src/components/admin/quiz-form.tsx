@@ -34,7 +34,8 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
         },
         lessonId: initialData?.lessonId || '',
         order: initialData?.order || 0,
-        isPublished: initialData?.isPublished ?? false
+        isPublished: initialData?.isPublished ?? false,
+        randomizeQuestions: (initialData?.config as any)?.randomize ?? false
     })
 
     useEffect(() => {
@@ -58,7 +59,10 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                 description: formData.description,
                 lessonId: formData.lessonId,
                 order: Number(formData.order),
-                isPublished: formData.isPublished
+                isPublished: formData.isPublished,
+                config: {
+                    randomize: formData.randomizeQuestions
+                }
             }
 
             const url = isEditing
@@ -181,7 +185,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                 </div>
 
                 {/* Published Status */}
-                <div className="sm:col-span-6">
+                <div className="sm:col-span-6 space-y-4">
                     <div className="flex items-start">
                         <div className="flex h-5 items-center">
                             <input
@@ -195,6 +199,22 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                         <div className="ml-3 text-sm">
                             <label htmlFor="isPublished" className="font-medium text-gray-700">Published</label>
                             <p className="text-gray-500">Visible to users in the app.</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start">
+                        <div className="flex h-5 items-center">
+                            <input
+                                id="randomizeQuestions"
+                                type="checkbox"
+                                checked={formData.randomizeQuestions}
+                                onChange={e => setFormData({ ...formData, randomizeQuestions: e.target.checked })}
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div className="ml-3 text-sm">
+                            <label htmlFor="randomizeQuestions" className="font-medium text-gray-700">Randomize Questions</label>
+                            <p className="text-gray-500">Shuffle questions every time a user plays this quiz.</p>
                         </div>
                     </div>
                 </div>

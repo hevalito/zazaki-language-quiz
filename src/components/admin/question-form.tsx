@@ -47,6 +47,25 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         })
     }
 
+    // Auto-setup T/F choices
+    useEffect(() => {
+        if (formData.type === 'TRUE_FALSE') {
+            // Check if we already have valid T/F structure
+            const isStandardTF = formData.choices.length === 2
+                && (formData.choices[0].label === 'Wahr' || formData.choices[0].label === 'True')
+
+            if (!initialData && !isStandardTF) {
+                setFormData(prev => ({
+                    ...prev,
+                    choices: [
+                        { label: 'Wahr', isCorrect: true },
+                        { label: 'Falsch', isCorrect: false }
+                    ]
+                }))
+            }
+        }
+    }, [formData.type])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
@@ -81,24 +100,9 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                         </button>
                     </div>
 
-                    {/* Prompt EN */}
+                    {/* Prompt DE (Default) */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Question Prompt (EN)</label>
-                        <textarea
-                            required
-                            rows={2}
-                            value={formData.prompt.en}
-                            onChange={e => setFormData({
-                                ...formData,
-                                prompt: { ...formData.prompt, en: e.target.value }
-                            })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                        />
-                    </div>
-
-                    {/* Prompt DE */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Question Prompt (DE)</label>
+                        <label className="block text-sm font-medium text-gray-700">Question Prompt (DE - Default)</label>
                         <textarea
                             required
                             rows={2}
@@ -108,6 +112,22 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                 prompt: { ...formData.prompt, de: e.target.value }
                             })}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                            placeholder="Frage auf Deutsch..."
+                        />
+                    </div>
+
+                    {/* Prompt EN */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Question Prompt (EN)</label>
+                        <textarea
+                            rows={2}
+                            value={formData.prompt.en}
+                            onChange={e => setFormData({
+                                ...formData,
+                                prompt: { ...formData.prompt, en: e.target.value }
+                            })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                            placeholder="Question in English (optional)..."
                         />
                     </div>
 
@@ -164,26 +184,30 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                         onChange={e => updateChoice(index, 'label', e.target.value)}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                                         placeholder={`Option ${index + 1}`}
+                                        // Lock labels for T/F
+                                        disabled={formData.type === 'TRUE_FALSE'}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeChoice(index)}
-                                        className="text-red-400 hover:text-red-500 p-1"
-                                        disabled={formData.choices.length <= 2}
+                                        className="text-red-400 hover:text-red-500 p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                                        disabled={formData.choices.length <= 2 || formData.type === 'TRUE_FALSE'}
                                     >
                                         <TrashIcon className="h-5 w-5" />
                                     </button>
                                 </div>
                             ))}
                         </div>
-                        <button
-                            type="button"
-                            onClick={addChoice}
-                            className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
-                        >
-                            <PlusIcon className="h-4 w-4 mr-1" />
-                            Add Option
-                        </button>
+                        {formData.type !== 'TRUE_FALSE' && (
+                            <button
+                                type="button"
+                                onClick={addChoice}
+                                className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
+                            >
+                                <PlusIcon className="h-4 w-4 mr-1" />
+                                Add Option
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex justify-end pt-4 border-t border-gray-200">

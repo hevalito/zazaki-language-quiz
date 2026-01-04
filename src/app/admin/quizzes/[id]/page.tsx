@@ -111,6 +111,40 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
                         setEditingQuestion(null)
                         setIsQuestionModalOpen(true)
                     }}
+                    onReorder={async (id, direction) => {
+                        const sorted = [...(quiz.questions || [])].sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+                        const currentIndex = sorted.findIndex((q: any) => q.id === id)
+                        if (currentIndex === -1) return
+
+                        const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
+                        if (targetIndex < 0 || targetIndex >= sorted.length) return
+
+                        const currentQ = sorted[currentIndex]
+                        const targetQ = sorted[targetIndex]
+
+                        // Swap orders
+                        const currentOrder = currentQ.order || currentIndex
+                        const targetOrder = targetQ.order || targetIndex
+
+                        try {
+                            // Update both
+                            await Promise.all([
+                                fetch(`/api/admin/questions/${currentQ.id}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ ...currentQ, order: targetOrder })
+                                }),
+                                fetch(`/api/admin/questions/${targetQ.id}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ ...targetQ, order: currentOrder })
+                                })
+                            ])
+                            fetchQuiz()
+                        } catch (e) {
+                            console.error('Reorder failed', e)
+                        }
+                    }}
                 />
             </div>
 

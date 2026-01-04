@@ -162,6 +162,7 @@ model Question {
   difficulty  Int          @default(1) // 1-5 scale
   points      Int          @default(10)
   quizId      String
+  order       Int          @default(0)
 
   // Media support
   audioUrl    String?
