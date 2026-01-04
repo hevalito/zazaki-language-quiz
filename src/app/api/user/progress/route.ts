@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getBerlinStartOfDay } from '@/lib/date-utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,9 +32,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Calculate today's XP from attempts
-    const startOfDay = new Date()
-    startOfDay.setHours(0, 0, 0, 0)
+    // Calculate today's XP from attempts (Berlin Time)
+    const startOfDay = getBerlinStartOfDay(new Date())
 
     const todayAttempts = await prisma.attempt.findMany({
       where: {

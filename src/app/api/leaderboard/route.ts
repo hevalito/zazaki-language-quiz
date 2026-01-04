@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { getBerlinWeekStart } from '@/lib/date-utils'
 
 export async function GET(request: Request) {
     try {
@@ -41,13 +42,8 @@ export async function GET(request: Request) {
 
         } else {
             // Weekly XP Calculation
-            // Start of current week (Monday)
-            const now = new Date()
-            const day = now.getDay() // 0 (Sun) to 6 (Sat)
-            const diff = now.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is Sunday
-
-            const startOfWeek = new Date(now.setDate(diff))
-            startOfWeek.setHours(0, 0, 0, 0)
+            // Start of current week (Monday) in Berlin Time
+            const startOfWeek = getBerlinWeekStart(new Date())
 
             // Aggregate XP from Attempts since startOfWeek
             // Group by userId, Sum xpEarned

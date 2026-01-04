@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { checkBadges } from '@/lib/gamification'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { isSameBerlinDay } from '@/lib/date-utils'
 
 export async function POST(
   request: NextRequest,
@@ -71,8 +72,8 @@ export async function POST(
       const now = new Date()
       const quizDate = new Date(quiz.date)
 
-      // Compare YYYY-MM-DD
-      const isSameDay = now.toISOString().split('T')[0] === quizDate.toISOString().split('T')[0]
+      // Compare YYYY-MM-DD in Berlin Time
+      const isSameDay = isSameBerlinDay(new Date(), quizDate)
 
       if (!isSameDay) {
         forceZeroXP = true
