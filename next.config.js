@@ -116,10 +116,18 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@tanstack/react-query']
   },
-  images: {
-    domains: ['res.cloudinary.com', 'images.unsplash.com'],
-    formats: ['image/webp', 'image/avif']
-  },
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'res.cloudinary.com',
+    },
+    {
+      protocol: 'https',
+      hostname: 'images.unsplash.com',
+    },
+  ],
+  formats: ['image/webp', 'image/avif']
+},
 
   async headers() {
     return [
