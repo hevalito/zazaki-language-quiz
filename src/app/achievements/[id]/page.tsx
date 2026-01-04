@@ -5,6 +5,7 @@ import { ArrowLeftIcon, TrophyIcon, CalendarDaysIcon, LockClosedIcon } from '@he
 import { TrophyIcon as TrophyIconSolid } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ShareBadgeButton } from '@/components/achievements/share-badge-button'
 
 interface Props {
     params: Promise<{ id: string }>
@@ -64,13 +65,17 @@ export default async function AchievementDetailPage(props: Props) {
                     <div className="px-6 pb-8 relative">
                         {/* Icon Badge */}
                         <div className={`w-28 h-28 mx-auto -mt-14 rounded-full border-4 border-white shadow-lg flex items-center justify-center ${isEarned ? 'bg-orange-50' : 'bg-gray-100'}`}>
-                            {badge.iconUrl ? (
+                            {badge.iconUrl && (badge.iconUrl.startsWith('http') || badge.iconUrl.startsWith('/')) ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
                                     src={badge.iconUrl}
                                     alt={getTitle(badge.title)}
                                     className={`w-16 h-16 object-contain ${!isEarned && 'grayscale opacity-50'}`}
                                 />
+                            ) : badge.iconUrl ? (
+                                <span className={`text-5xl ${!isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getTitle(badge.title)}>
+                                    {badge.iconUrl}
+                                </span>
                             ) : (
                                 isEarned ? (
                                     <TrophyIconSolid className="w-14 h-14 text-brand-orange" />
@@ -123,12 +128,13 @@ export default async function AchievementDetailPage(props: Props) {
                     </div>
                 </div>
 
-                {/* Share Button (Optional Future) */}
+                {/* Share Button */}
                 {isEarned && (
                     <div className="mt-6 text-center">
-                        <button className="btn-secondary w-full flex items-center justify-center">
-                            Erfolg teilen
-                        </button>
+                        <ShareBadgeButton
+                            title={getTitle(badge.title)}
+                            description={getDescription(badge.description)}
+                        />
                     </div>
                 )}
             </main>
