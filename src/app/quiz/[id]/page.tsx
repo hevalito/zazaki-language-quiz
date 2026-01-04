@@ -246,294 +246,308 @@ export default function QuizPage() {
         body: JSON.stringify({ answers })
       })
 
-      if (response.ok) {
-        const results = await response.json()
-        setQuizResults(results)
-        setShowResult(true)
-      } else {
-        console.error('Failed to submit quiz')
+      import { useUnlockStore } from '@/lib/store/unlock-store'
+
+      // ... in component ...
+      export default function QuizPage() {
+        const { addBadges } = useUnlockStore()
+        // ...
+
+        // ... inside submitQuiz ...
+        if (response.ok) {
+          const results = await response.json()
+          setQuizResults(results)
+
+          // Trigger unlocks if any
+          if (results.newBadges && results.newBadges.length > 0) {
+            addBadges(results.newBadges)
+          }
+
+          setShowResult(true)
+        } else {
+          console.error('Failed to submit quiz')
+        }
+      } catch (error) {
+        console.error('Error submitting quiz:', error)
+      } finally {
+        setSubmitting(false)
       }
-    } catch (error) {
-      console.error('Error submitting quiz:', error)
-    } finally {
-      setSubmitting(false)
     }
-  }
 
   const getTitle = (titleObj: any) => {
-    if (typeof titleObj === 'string') return titleObj
-    return titleObj?.de || titleObj?.en || Object.values(titleObj)[0] || ''
-  }
-
-  const getCurrentAnswer = () => {
-    if (!quiz) return null
-    const currentQuestion = quiz.questions[currentQuestionIndex]
-    return answers.find(a => a.questionId === currentQuestion.id)
-  }
-
-  const isAnswered = () => {
-    return getCurrentAnswer() !== undefined
-  }
-
-  // Memoize shuffled choices so they don't re-shuffle on re-renders (like selecting an answer)
-  // Only re-shuffle when the question index changes
-  const displayChoices = useMemo(() => {
-    if (!quiz || !quiz.questions[currentQuestionIndex]) return []
-
-    const currentQ = quiz.questions[currentQuestionIndex]
-    // Default to true if undefined, for backward compatibility or desired default
-    const shouldRandomize = quiz.config?.randomizeAnswers ?? true
-
-    if (!shouldRandomize) {
-      return currentQ.choices
+      if (typeof titleObj === 'string') return titleObj
+      return titleObj?.de || titleObj?.en || Object.values(titleObj)[0] || ''
     }
 
-    // Create a copy and shuffle
-    return [...currentQ.choices].sort(() => Math.random() - 0.5)
-  }, [quiz, currentQuestionIndex])
+    const getCurrentAnswer = () => {
+      if (!quiz) return null
+      const currentQuestion = quiz.questions[currentQuestionIndex]
+      return answers.find(a => a.questionId === currentQuestion.id)
+    }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Lade Quiz...</p>
+    const isAnswered = () => {
+      return getCurrentAnswer() !== undefined
+    }
+
+    // Memoize shuffled choices so they don't re-shuffle on re-renders (like selecting an answer)
+    // Only re-shuffle when the question index changes
+    const displayChoices = useMemo(() => {
+      if (!quiz || !quiz.questions[currentQuestionIndex]) return []
+
+      const currentQ = quiz.questions[currentQuestionIndex]
+      // Default to true if undefined, for backward compatibility or desired default
+      const shouldRandomize = quiz.config?.randomizeAnswers ?? true
+
+      if (!shouldRandomize) {
+        return currentQ.choices
+      }
+
+      // Create a copy and shuffle
+      return [...currentQ.choices].sort(() => Math.random() - 0.5)
+    }, [quiz, currentQuestionIndex])
+
+    if (loading) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Lade Quiz...</p>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  if (!quiz) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">Quiz nicht gefunden</p>
+    if (!quiz) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-600">Quiz nicht gefunden</p>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  if (showResult && quizResults) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrophyIcon className="w-8 h-8 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Quiz beendet!</h1>
-              <p className="text-gray-600">Gut gemacht!</p>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">{quizResults.score}</div>
-                <div className="text-sm text-blue-600">XP (Gesamt)</div>
-              </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">{quizResults.percentage}%</div>
-                <div className="text-sm text-green-600">Genauigkeit</div>
-              </div>
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                <div className="text-2xl font-bold text-yellow-600">
-                  {quizResults.xpEarned ?? 0}
+    if (showResult && quizResults) {
+      return (
+        <div className="min-h-screen bg-gray-50 py-8">
+          <div className="container mx-auto px-4 max-w-2xl">
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrophyIcon className="w-8 h-8 text-green-600" />
                 </div>
-                <div className="text-sm text-yellow-600">XP (Neu)</div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Quiz beendet!</h1>
+                <p className="text-gray-600">Gut gemacht!</p>
               </div>
-            </div>
 
-            {quizResults.score > 0 && quizResults.xpEarned === 0 && (
-              <div className="mb-6 p-4 bg-gray-50 text-gray-600 rounded-lg text-sm text-center border border-gray-200">
-                Dein Ergebnis wurde gespeichert, aber da du dieses Quiz bereits abgeschlossen hast, gibt es für diese Wiederholung keine XP.
-              </div>
-            )}
-
-            <div className="space-y-4 mb-6">
-              <h3 className="font-semibold text-gray-900">Fragenübersicht</h3>
-              {quiz.questions.map((question, index) => {
-                const result = quizResults.results.find((r: any) => r.questionId === question.id)
-                return (
-                  <div key={question.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-700">Frage {index + 1}</span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm font-medium">
-                        {result?.pointsEarned || 0} / {question.points} XP
-                      </span>
-                      {result?.isCorrect ? (
-                        <CheckIcon className="w-5 h-5 text-green-600" />
-                      ) : (
-                        <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center">
-                          <span className="text-red-600 text-xs">✗</span>
-                        </div>
-                      )}
-                    </div>
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{quizResults.score}</div>
+                  <div className="text-sm text-blue-600">XP (Gesamt)</div>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{quizResults.percentage}%</div>
+                  <div className="text-sm text-green-600">Genauigkeit</div>
+                </div>
+                <div className="text-center p-4 bg-yellow-50 rounded-lg">
+                  <div className="text-2xl font-bold text-yellow-600">
+                    {quizResults.xpEarned ?? 0}
                   </div>
-                )
-              })}
-            </div>
+                  <div className="text-sm text-yellow-600">XP (Neu)</div>
+                </div>
+              </div>
 
-            <div className="flex space-x-3">
+              {quizResults.score > 0 && quizResults.xpEarned === 0 && (
+                <div className="mb-6 p-4 bg-gray-50 text-gray-600 rounded-lg text-sm text-center border border-gray-200">
+                  Dein Ergebnis wurde gespeichert, aber da du dieses Quiz bereits abgeschlossen hast, gibt es für diese Wiederholung keine XP.
+                </div>
+              )}
+
+              <div className="space-y-4 mb-6">
+                <h3 className="font-semibold text-gray-900">Fragenübersicht</h3>
+                {quiz.questions.map((question, index) => {
+                  const result = quizResults.results.find((r: any) => r.questionId === question.id)
+                  return (
+                    <div key={question.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-gray-700">Frage {index + 1}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-medium">
+                          {result?.pointsEarned || 0} / {question.points} XP
+                        </span>
+                        {result?.isCorrect ? (
+                          <CheckIcon className="w-5 h-5 text-green-600" />
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center">
+                            <span className="text-red-600 text-xs">✗</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => router.push('/')}
+                  className="flex-1 btn-secondary"
+                >
+                  Zurück zur Startseite
+                </button>
+                <button
+                  onClick={handleRestart}
+                  className="flex-1 btn-primary"
+                >
+                  Quiz wiederholen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    const currentQuestion = quiz.questions[currentQuestionIndex]
+    const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100
+
+
+
+    interface QuizData {
+      id: string
+      type?: string
+      title: MultiLanguageContent
+      description?: MultiLanguageContent
+      questions: QuestionData[]
+      lesson: {
+        title: MultiLanguageContent
+        chapter: {
+          title: MultiLanguageContent
+          course: {
+            title: MultiLanguageContent
+          }
+        }
+      } | null
+      config?: {
+        randomize?: boolean
+        randomizeAnswers?: boolean
+      }
+      activeAttempt?: any
+    }
+
+    // ... inside component ...
+
+    const isDaily = quiz.type === 'DAILY'
+
+    return (
+      <div className={`min-h-screen ${isDaily ? 'bg-indigo-50' : 'bg-gray-50'}`}>
+        {/* Header */}
+        <header className={`shadow-sm border-b ${isDaily ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border-indigo-600' : 'bg-white border-gray-200'}`}>
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
               <button
                 onClick={() => router.push('/')}
-                className="flex-1 btn-secondary"
+                className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
               >
-                Zurück zur Startseite
+                <ArrowLeftIcon className="w-5 h-5" />
+                <span>Zurück</span>
               </button>
+
+              <div className="text-center">
+                <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900'}`}>{getTitle(quiz.title)}</h1>
+                <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500'}`}>
+                  {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
+                </p>
+              </div>
+
+              <div className={`flex items-center space-x-2 text-sm ${isDaily ? 'text-indigo-100' : 'text-gray-600'}`}>
+                <ClockIcon className="w-4 h-4" />
+                <span>{currentQuestionIndex + 1} / {quiz.questions.length}</span>
+              </div>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mt-4">
+              <div className={`w-full rounded-full h-2 ${isDaily ? 'bg-black/20' : 'bg-gray-200'}`}>
+                <div
+                  className={`h-2 rounded-full transition-all duration-300 ${isDaily ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-blue-600'}`}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Question Content */}
+        <main className="container mx-auto px-4 py-8 max-w-2xl">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-medium text-gray-500">
+                  Frage {currentQuestionIndex + 1}
+                </span>
+                <span className="text-sm text-gray-500">
+                  {currentQuestion.points} XP
+                </span>
+              </div>
+            </div>
+
+            <MultipleChoiceQuestion
+              question={{
+                id: currentQuestion.id,
+                type: 'MULTIPLE_CHOICE' as const,
+                prompt: currentQuestion.prompt,
+                dialectCode: 'zazaki-xx',
+                script: 'LATIN' as const,
+                difficulty: 1,
+                points: currentQuestion.points,
+                quizId: quiz.id,
+                audioUrl: currentQuestion.audioUrl,
+                videoUrl: currentQuestion.videoUrl,
+                imageUrl: currentQuestion.imageUrl,
+                settings: {},
+                explanation: currentQuestion.explanation,
+                hints: currentQuestion.hints,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              }}
+              choices={displayChoices.map(choice => ({
+                ...choice,
+                questionId: currentQuestion.id
+              }))}
+              onAnswer={handleAnswer}
+              selectedChoiceId={getCurrentAnswer()?.choiceId}
+              showResult={!!getCurrentAnswer()}
+            />
+
+            {/* Navigation */}
+            <div className="flex justify-between mt-8">
               <button
-                onClick={handleRestart}
-                className="flex-1 btn-primary"
+                onClick={previousQuestion}
+                disabled={currentQuestionIndex === 0}
+                className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Quiz wiederholen
+                <ArrowLeftIcon className="w-4 h-4" />
+                <span>Zurück</span>
+              </button>
+
+              <button
+                onClick={nextQuestion}
+                disabled={!isAnswered() || submitting}
+                className="flex items-center space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>
+                  {currentQuestionIndex === quiz.questions.length - 1
+                    ? (submitting ? 'Wird gesendet...' : 'Quiz abgeben')
+                    : 'Weiter'
+                  }
+                </span>
+                {currentQuestionIndex < quiz.questions.length - 1 && (
+                  <ArrowRightIcon className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     )
   }
-
-  const currentQuestion = quiz.questions[currentQuestionIndex]
-  const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100
-
-
-
-  interface QuizData {
-    id: string
-    type?: string
-    title: MultiLanguageContent
-    description?: MultiLanguageContent
-    questions: QuestionData[]
-    lesson: {
-      title: MultiLanguageContent
-      chapter: {
-        title: MultiLanguageContent
-        course: {
-          title: MultiLanguageContent
-        }
-      }
-    } | null
-    config?: {
-      randomize?: boolean
-      randomizeAnswers?: boolean
-    }
-    activeAttempt?: any
-  }
-
-  // ... inside component ...
-
-  const isDaily = quiz.type === 'DAILY'
-
-  return (
-    <div className={`min-h-screen ${isDaily ? 'bg-indigo-50' : 'bg-gray-50'}`}>
-      {/* Header */}
-      <header className={`shadow-sm border-b ${isDaily ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border-indigo-600' : 'bg-white border-gray-200'}`}>
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => router.push('/')}
-              className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              <ArrowLeftIcon className="w-5 h-5" />
-              <span>Zurück</span>
-            </button>
-
-            <div className="text-center">
-              <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900'}`}>{getTitle(quiz.title)}</h1>
-              <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500'}`}>
-                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
-              </p>
-            </div>
-
-            <div className={`flex items-center space-x-2 text-sm ${isDaily ? 'text-indigo-100' : 'text-gray-600'}`}>
-              <ClockIcon className="w-4 h-4" />
-              <span>{currentQuestionIndex + 1} / {quiz.questions.length}</span>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mt-4">
-            <div className={`w-full rounded-full h-2 ${isDaily ? 'bg-black/20' : 'bg-gray-200'}`}>
-              <div
-                className={`h-2 rounded-full transition-all duration-300 ${isDaily ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-blue-600'}`}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Question Content */}
-      <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-gray-500">
-                Frage {currentQuestionIndex + 1}
-              </span>
-              <span className="text-sm text-gray-500">
-                {currentQuestion.points} XP
-              </span>
-            </div>
-          </div>
-
-          <MultipleChoiceQuestion
-            question={{
-              id: currentQuestion.id,
-              type: 'MULTIPLE_CHOICE' as const,
-              prompt: currentQuestion.prompt,
-              dialectCode: 'zazaki-xx',
-              script: 'LATIN' as const,
-              difficulty: 1,
-              points: currentQuestion.points,
-              quizId: quiz.id,
-              audioUrl: currentQuestion.audioUrl,
-              videoUrl: currentQuestion.videoUrl,
-              imageUrl: currentQuestion.imageUrl,
-              settings: {},
-              explanation: currentQuestion.explanation,
-              hints: currentQuestion.hints,
-              createdAt: new Date(),
-              updatedAt: new Date()
-            }}
-            choices={displayChoices.map(choice => ({
-              ...choice,
-              questionId: currentQuestion.id
-            }))}
-            onAnswer={handleAnswer}
-            selectedChoiceId={getCurrentAnswer()?.choiceId}
-            showResult={!!getCurrentAnswer()}
-          />
-
-          {/* Navigation */}
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={previousQuestion}
-              disabled={currentQuestionIndex === 0}
-              className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ArrowLeftIcon className="w-4 h-4" />
-              <span>Zurück</span>
-            </button>
-
-            <button
-              onClick={nextQuestion}
-              disabled={!isAnswered() || submitting}
-              className="flex items-center space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span>
-                {currentQuestionIndex === quiz.questions.length - 1
-                  ? (submitting ? 'Wird gesendet...' : 'Quiz abgeben')
-                  : 'Weiter'
-                }
-              </span>
-              {currentQuestionIndex < quiz.questions.length - 1 && (
-                <ArrowRightIcon className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
-  )
-}

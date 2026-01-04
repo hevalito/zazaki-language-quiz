@@ -135,10 +135,10 @@ export async function POST(
     }
 
     // Check for new badges only if new XP was obtained
-    let newBadges: string[] = []
+    let newBadges: any[] = []
     if (xpEarned > 0) {
       const badgeResult = await checkBadges(session.user.id)
-      newBadges = badgeResult.unlockedBadgeTitles
+      newBadges = badgeResult.newBadges
     }
 
     return NextResponse.json({

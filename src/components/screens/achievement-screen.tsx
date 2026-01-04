@@ -74,9 +74,10 @@ export function AchievementScreen() {
             <div className="container mx-auto px-4 py-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {badges.map((badge) => (
-                        <div
+                        <Link
+                            href={`/achievements/${badge.id}`}
                             key={badge.id}
-                            className={`bg-white rounded-xl shadow-sm border-2 p-4 transition-all ${badge.isEarned
+                            className={`block bg-white rounded-xl shadow-sm border-2 p-4 transition-all hover:shadow-md hover:scale-[1.02] ${badge.isEarned
                                 ? 'border-purple-200 bg-purple-50'
                                 : 'border-gray-100 opacity-70 grayscale'
                                 }`}
@@ -94,7 +95,7 @@ export function AchievementScreen() {
                                     <h3 className={`font-bold ${badge.isEarned ? 'text-gray-900' : 'text-gray-500'}`}>
                                         {badge.title['en'] || 'Unbekanntes Abzeichen'}
                                     </h3>
-                                    <p className="text-sm text-gray-600 mt-1">
+                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                                         {badge.description['en'] || '...'}
                                     </p>
                                     {badge.isEarned && (
@@ -104,7 +105,7 @@ export function AchievementScreen() {
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

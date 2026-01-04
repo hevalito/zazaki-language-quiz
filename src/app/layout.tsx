@@ -43,6 +43,8 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
+import { UnlockManager } from '@/components/achievements/unlock-manager'
+
 export default async function RootLayout({
   children,
 }: {
@@ -54,6 +56,7 @@ export default async function RootLayout({
     <html lang="en" className="h-full">
       <body className={`${inter.variable} ${playfair.variable} font-sans h-full bg-gray-50 text-gray-900`}>
         <Providers session={session}>
+          <UnlockManager />
           <div className="min-h-full">
             {children}
           </div>

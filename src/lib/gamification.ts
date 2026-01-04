@@ -1,13 +1,11 @@
 import { prisma } from "@/lib/prisma"
 
 export interface BadgeCheckResult {
-    newBadges: string[] // IDs of newly awarded badges
-    unlockedBadgeTitles: string[] // Titles of newly awarded badges (for toast/display)
+    newBadges: any[] // Full Badge Objects
 }
 
 export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
-    const newBadges: string[] = []
-    const unlockedBadgeTitles: string[] = []
+    const newBadges: any[] = []
 
     try {
         // 1. Fetch User Stats & All Badges
@@ -19,7 +17,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
             }
         })
 
-        if (!user) return { newBadges, unlockedBadgeTitles }
+        if (!user) return { newBadges }
 
         const allBadges = await prisma.badge.findMany({
             where: { isActive: true }
@@ -103,11 +101,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                         badgeId: badge.id
                     }
                 })
-                newBadges.push(badge.id)
-
-                // Extract title safely (it's JSON)
-                const title = (badge.title as any)?.en || 'New Badge'
-                unlockedBadgeTitles.push(title)
+                newBadges.push(badge) // Push full badge object
             }
         }
 
@@ -115,5 +109,5 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
         console.error("Error checking badges:", error)
     }
 
-    return { newBadges, unlockedBadgeTitles }
+    return { newBadges }
 }
