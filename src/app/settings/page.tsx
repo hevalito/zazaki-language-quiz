@@ -259,8 +259,87 @@ export default function SettingsPage() {
                             </div>
                         )}
                     </form>
+
+                    <hr className="my-8 border-gray-200" />
+
+                    {/* Danger Zone */}
+                    <div className="pt-2">
+                        <h3 className="text-lg font-medium text-red-600 mb-2">Gefahrenzone</h3>
+                        <p className="text-sm text-gray-500 mb-4">
+                            Wenn du dein Konto löschst, werden alle deine Daten, einschließlich XP und Abzeichen, unwiderruflich entfernt.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => document.getElementById('delete-modal')?.classList.remove('hidden')}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium border border-red-200 hover:border-red-300 rounded-md px-4 py-2 hover:bg-red-50 transition-colors"
+                        >
+                            Konto löschen
+                        </button>
+                    </div>
                 </div>
             </main>
+
+            {/* Delete Modal */}
+            <div id="delete-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
+                    <h3 className="text-xl font-bold text-gray-900">Bist du sicher?</h3>
+                    <p className="text-gray-600">
+                        Wir werden dir eine Bestätigungs-E-Mail senden. Dein Konto wird erst gelöscht, wenn du den Link in der E-Mail bestätigst.
+                    </p>
+                    <div className="flex justify-end space-x-3 pt-2">
+                        <button
+                            onClick={() => document.getElementById('delete-modal')?.classList.add('hidden')}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                            Abbrechen
+                        </button>
+                        <DeleteButton />
+                    </div>
+                </div>
+            </div>
         </div>
+    )
+}
+
+function DeleteButton() {
+    const [loading, setLoading] = useState(false)
+    const [sent, setSent] = useState(false)
+
+    const handleDelete = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch('/api/user/delete-request', {
+                method: 'POST'
+            })
+            if (res.ok) {
+                setSent(true)
+            } else {
+                alert('Fehler beim Senden der Anfrage.')
+            }
+        } catch (error) {
+            console.error(error)
+            alert('Ein Fehler ist aufgetreten.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    if (sent) {
+        return (
+            <div className="text-green-600 font-medium flex items-center">
+                <CheckCircleIcon className="w-5 h-5 mr-1" />
+                E-Mail gesendet!
+            </div>
+        )
+    }
+
+    return (
+        <button
+            onClick={handleDelete}
+            disabled={loading}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium disabled:opacity-50"
+        >
+            {loading ? 'Sende...' : 'E-Mail anfordern'}
+        </button>
     )
 }
