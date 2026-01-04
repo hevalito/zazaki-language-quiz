@@ -10,7 +10,8 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
   ArrowRightIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
@@ -189,20 +190,19 @@ export function HomeScreen() {
           {/* Background Gradient & Glow */}
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-primary-100/50 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
 
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <div>
-              <h2 className="text-lg font-serif font-bold text-gray-900">Tagesziel</h2>
-              <p className="text-xs text-gray-500 font-medium">
-                {todayXP >= dailyGoal ? 'Ziel erreicht! 🔥' : 'Bleib dran!'}
-              </p>
-            </div>
-            <div className="flex items-center space-x-2 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100">
-              <TrophyIcon className="w-5 h-5 text-primary-600" />
-              <span className="font-bold font-sans text-primary-700">{todayXP} / {dailyGoal} XP</span>
+          {/* Header Row */}
+          <div className="flex items-center justify-between mb-2 relative z-10">
+            <h2 className="text-lg font-serif font-bold text-gray-900">Tagesziel</h2>
+            <div className={`text-sm font-bold px-3 py-1 rounded-full border ${todayXP >= dailyGoal
+                ? 'bg-green-100 text-green-700 border-green-200'
+                : 'bg-primary-50 text-primary-700 border-primary-100'
+              }`}>
+              {todayXP} / {dailyGoal} XP Heute
             </div>
           </div>
 
-          <div className="space-y-3 relative z-10">
+          {/* Progress Bar */}
+          <div className="space-y-4 relative z-10">
             <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
               <div
                 className={`absolute top-0 left-0 h-full transition-all duration-1000 ease-out rounded-full ${todayXP >= dailyGoal
@@ -216,16 +216,39 @@ export function HomeScreen() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center text-xs text-gray-400 font-medium">
-              <span>0 XP</span>
-              <span>{Math.round(progressPercentage)}%</span>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
+              {/* Streak */}
+              <div className="text-center group/stat">
+                <p className="text-xs text-brand-orange font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
+                  <FireIconSolid className="w-3 h-3 mr-1" />
+                  Streak
+                </p>
+                <p className="text-lg font-bold text-gray-900">{streak} <span className="text-xs font-normal text-gray-500">Tage</span></p>
+              </div>
+
+              {/* Goal % */}
+              <div className="text-center group/stat border-l border-r border-gray-100">
+                <p className="text-xs text-primary-600 font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
+                  <TrophyIcon className="w-3 h-3 mr-1" />
+                  Ziel
+                </p>
+                <p className="text-lg font-bold text-gray-900">{Math.round(progressPercentage)}<span className="text-xs">%</span></p>
+              </div>
+
+              {/* Total XP */}
+              <div className="text-center group/stat">
+                <p className="text-xs text-brand-purple font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
+                  <SparklesIcon className="w-3 h-3 mr-1" />
+                  Gesamt
+                </p>
+                <p className="text-lg font-bold text-gray-900">{totalXP.toLocaleString()}</p>
+              </div>
             </div>
 
-            {todayXP >= dailyGoal && (
-              <div className="text-center py-2 animate-bounce-subtle">
-                <span className="text-brand-green font-bold text-sm bg-green-50 px-3 py-1 rounded-full border border-green-100 shadow-sm flex items-center justify-center w-fit mx-auto">
-                  <span className="mr-1">🎉</span> Fantastisch! Tagesziel erreicht
-                </span>
+            {todayXP >= dailyGoal && !confettiFired && (
+              <div className="text-center animate-bounce-subtle mt-2">
+                <span className="text-brand-green font-bold text-xs">🎉 Ziel erreicht!</span>
               </div>
             )}
           </div>
