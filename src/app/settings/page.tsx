@@ -278,8 +278,38 @@ export default function SettingsPage() {
                             Konto löschen
                         </button>
                     </div>
+
+                    <p className="mt-8 text-xs text-gray-400 text-center">Version 2.0.1</p>
+                    <div className="mt-2 text-center">
+                        <button
+                            type="button"
+                            onClick={() => document.getElementById('reset-badges-modal')?.classList.remove('hidden')}
+                            className="text-xs text-gray-400 hover:text-gray-600 underline"
+                        >
+                            Erfolge zurücksetzen (Test)
+                        </button>
+                    </div>
                 </div>
             </main>
+
+            {/* Reset Badges Modal */}
+            <div id="reset-badges-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
+                    <h3 className="text-xl font-bold text-gray-900">Erfolge zurücksetzen?</h3>
+                    <p className="text-gray-600">
+                        Dies setzt alle deine erhaltenen Erfolge und Medaillen zurück. Du kannst sie erneut freischalten, um die Animationen zu sehen.
+                    </p>
+                    <div className="flex justify-end space-x-3 pt-2">
+                        <button
+                            onClick={() => document.getElementById('reset-badges-modal')?.classList.add('hidden')}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                            Abbrechen
+                        </button>
+                        <ResetBadgesButton />
+                    </div>
+                </div>
+            </div>
 
             {/* Delete Modal */}
             <div id="delete-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -300,6 +330,41 @@ export default function SettingsPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+function ResetBadgesButton() {
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
+    const handleReset = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch('/api/user/reset-badges', {
+                method: 'POST'
+            })
+            if (res.ok) {
+                alert('Erfolge wurden zurückgesetzt!')
+                window.location.reload()
+            } else {
+                alert('Fehler beim Zurücksetzen.')
+            }
+        } catch (error) {
+            console.error(error)
+            alert('Ein Fehler ist aufgetreten.')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+        <button
+            onClick={handleReset}
+            disabled={loading}
+            className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-medium disabled:opacity-50"
+        >
+            {loading ? 'Lade...' : 'Zurücksetzen'}
+        </button>
     )
 }
 
