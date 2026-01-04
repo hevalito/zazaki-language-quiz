@@ -235,13 +235,6 @@ export default function AdminUsersPage() {
                                 </label>
                             </div>
 
-                            <button
-                                type="submit"
-                                disabled={updateMutation.isPending}
-                                className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:text-sm"
-                            >
-                                {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-                            </button>
                     </div>
                 </form>
 
@@ -250,7 +243,6 @@ export default function AdminUsersPage() {
                 <h4 className="text-sm font-medium text-red-600 mb-4">Danger Zone</h4>
                 <ResetUserBadgesButton userId={editingUser.id} />
             </div>
-
         </div>
                 </div >
             )
@@ -258,7 +250,6 @@ export default function AdminUsersPage() {
         </div >
     )
 }
-
 function ResetUserBadgesButton({ userId }: { userId: string }) {
     const [loading, setLoading] = useState(false)
 
