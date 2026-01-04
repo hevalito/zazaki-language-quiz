@@ -18,7 +18,8 @@ async function main() {
 
             // Check pool size and alert admins if low
             const poolCount = await prisma.question.count({
-                where: { quizId: { equals: null } }
+                // @ts-ignore - Prisma supports null for nullable fields, but TS is strict here
+                where: { quizId: null }
             })
 
             console.log(`Remaining pool size: ${poolCount}`)
