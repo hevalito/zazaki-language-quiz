@@ -1,0 +1,11 @@
+question_en,question_de,correct_en,correct_de,wrong1_en,wrong1_de,wrong2_en,wrong2_de,wrong3_en,wrong3_de,difficulty,points
+"How do you say 'Hello' in Zazaki?","Wie sagt man 'Hallo' auf Zazakî?","Silam","Silam","Xêr","Xêr","Nê","Nê","Belê","Belê",EASY,10
+"What is the Zazaki word for 'Water'?","Was heißt 'Wasser' auf Zazakî?","Awe","Awe","Nan","Nan","Goşt","Goşt","Mast","Mast",EASY,10
+"Translate 'Bread' to Zazaki","Übersetze 'Brot' auf Zazakî","Nan","Nan","Awe","Awe","Sole","Sole","Ronen","Ronen",EASY,10
+"What does 'Kêye' mean?","Was bedeutet 'Kêye'?","Home","Haus","School","Schule","Car","Auto","Work","Arbeit",MEDIUM,15
+"Select the correct number for '3'","Wähle die richtige Zahl für '3'","Hîrê","Hîrê","Yew","Yew","Dû","Dû","Çar","Çar",EASY,10
+"What is 'Mother' in Zazaki?","Was heißt 'Mutter' auf Zazakî?","Dayîke","Dayîke","Pî","Pî","Bra","Bra","Waye","Waye",EASY,10
+"What does 'Ezo' mean?","Was bedeutet 'Ezo'?","I am","Ich bin","You are","Du bist","He is","Er ist","We are","Wir sind",MEDIUM,15
+"Translate 'Good Morning'","Übersetze 'Guten Morgen'","Sodiro Xêr","Sodiro Xêr","Şewe Xêr","Şewe Xêr","Rojan Xêr","Rojan Xêr","Xatire To","Xatire To",MEDIUM,10
+"Which is a color?","Welches ist eine Farbe?","Kewe","Kewe (Blau)","Kêye","Kêye","Keyne","Keyne","Kitab","Kitab",HARD,20
+"Translate 'Thank you'","Übersetze 'Danke'","Berxudar be","Berxudar be","Ti xêr ama","Ti xêr ama","Pers nêbeno","Pers nêbeno","Namey to çi yo?","Namey to çi yo?",MEDIUM,10
