@@ -57,6 +57,10 @@ export function AchievementScreen() {
         )
     }
 
+    // Helper for translations
+    const getTitle = (t: any) => t?.de || t?.en || 'Erfolg'
+    const getDescription = (t: any) => t?.de || t?.en || ''
+
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
@@ -85,18 +89,32 @@ export function AchievementScreen() {
                             <div className="flex items-start space-x-4">
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${badge.isEarned ? 'bg-purple-100' : 'bg-gray-100'
                                     }`}>
-                                    {badge.isEarned ? (
-                                        <TrophyIconSolid className="w-6 h-6 text-purple-600" />
+                                    {/* Icon Logic */}
+                                    {(badge as any).iconUrl && ((badge as any).iconUrl.startsWith('http') || (badge as any).iconUrl.startsWith('/')) ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={(badge as any).iconUrl}
+                                            alt={getTitle(badge.title)}
+                                            className={`w-8 h-8 object-contain ${!badge.isEarned && 'grayscale opacity-50'}`}
+                                        />
+                                    ) : (badge as any).iconUrl ? (
+                                        <span className={`text-2xl ${!badge.isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getTitle(badge.title)}>
+                                            {(badge as any).iconUrl}
+                                        </span>
                                     ) : (
-                                        <LockClosedIcon className="w-6 h-6 text-gray-400" />
+                                        badge.isEarned ? (
+                                            <TrophyIconSolid className="w-6 h-6 text-purple-600" />
+                                        ) : (
+                                            <LockClosedIcon className="w-6 h-6 text-gray-400" />
+                                        )
                                     )}
                                 </div>
                                 <div>
                                     <h3 className={`font-bold ${badge.isEarned ? 'text-gray-900' : 'text-gray-500'}`}>
-                                        {badge.title['en'] || 'Unbekanntes Abzeichen'}
+                                        {getTitle(badge.title)}
                                     </h3>
                                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                        {badge.description['en'] || '...'}
+                                        {getDescription(badge.description)}
                                     </p>
                                     {badge.isEarned && (
                                         <p className="text-xs text-purple-600 mt-2 font-medium">
