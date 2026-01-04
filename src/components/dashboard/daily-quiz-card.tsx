@@ -84,9 +84,9 @@ export function DailyQuizCard() {
                                 +XP Bonus
                             </span>
                         </div>
-                        <h3 className="text-xl font-bold font-serif mb-1">Ready to Play?</h3>
+                        <h3 className="text-xl font-bold font-serif mb-1">Bereit zu spielen?</h3>
                         <p className="text-indigo-100 text-sm">
-                            {status.quiz.questionCount} questions • Unique today
+                            {status.quiz.questionCount} Fragen • Nur heute
                         </p>
                     </div>
 

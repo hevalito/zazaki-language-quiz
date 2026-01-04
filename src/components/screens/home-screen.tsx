@@ -287,7 +287,7 @@ export function HomeScreen() {
                       <span className="text-brand-green text-xs font-bold">✓</span>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.en || 'Quiz'}" abgeschlossen</p>
+                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.de || (activity.title as any)?.en || 'Quiz'}" abgeschlossen</p>
                       <p className="text-xs text-gray-500">
                         {new Date(activity.date).toLocaleDateString()}
                       </p>

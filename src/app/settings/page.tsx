@@ -172,7 +172,7 @@ export default function SettingsPage() {
                                 onChange={handleFileChange}
                             />
                         </div>
-                        <p className="mt-3 text-sm text-gray-500 font-medium">Click to change avatar</p>
+                        <p className="mt-3 text-sm text-gray-500 font-medium">Klicken zum Ändern</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
