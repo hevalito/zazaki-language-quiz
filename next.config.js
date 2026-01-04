@@ -120,11 +120,7 @@ const nextConfig = {
     domains: ['res.cloudinary.com', 'images.unsplash.com'],
     formats: ['image/webp', 'image/avif']
   },
-  i18n: {
-    locales: ['en', 'de', 'ku'],
-    defaultLocale: 'en',
-    localeDetection: false
-  },
+
   async headers() {
     return [
       {
