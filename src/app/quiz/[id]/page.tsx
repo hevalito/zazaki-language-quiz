@@ -27,11 +27,10 @@ interface QuizData {
       }
     }
   }
-}
-config ?: {
-  randomize?: boolean
+  config?: {
+    randomize?: boolean
     randomizeAnswers?: boolean
-}
+  }
 }
 
 interface QuestionData {
