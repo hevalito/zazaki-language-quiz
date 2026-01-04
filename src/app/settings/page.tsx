@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import {
     UserCircleIcon,
     ArrowLeftIcon,
-    CheckCircleIcon
+    CheckCircleIcon,
+    CameraIcon
 } from '@heroicons/react/24/outline'
 
 export default function SettingsPage() {
@@ -16,6 +17,7 @@ export default function SettingsPage() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [success, setSuccess] = useState(false)
+    const [loadingAvatar, setLoadingAvatar] = useState(false)
 
     const [formData, setFormData] = useState({
         nickname: '',
@@ -24,6 +26,46 @@ export default function SettingsPage() {
         dailyGoal: 10,
         preferredScript: 'LATIN'
     })
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setLoadingAvatar(true)
+
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+
+            const res = await fetch('/api/user/avatar', {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (!res.ok) {
+                const error = await res.text()
+                throw new Error(error)
+            }
+
+            const data = await res.json()
+
+            // Force session update to get new image
+            await update({
+                ...session,
+                user: {
+                    ...session?.user,
+                    image: data.url
+                }
+            })
+
+            // Show brief success visual if needed, but the image update is the main feedback
+        } catch (error) {
+            console.error('Failed to upload avatar', error)
+            alert('Failed to upload avatar. Please try again.')
+        } finally {
+            setLoadingAvatar(false)
+        }
+    }
 
     useEffect(() => {
         fetchProfile()
@@ -98,14 +140,39 @@ export default function SettingsPage() {
 
             <main className="container mx-auto px-4 py-8 max-w-2xl">
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center justify-center mb-8">
-                        <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
-                            {session?.user?.image ? (
-                                <img src={session.user.image} alt="Profile" className="w-full h-full rounded-full object-cover" />
-                            ) : (
-                                <UserCircleIcon className="w-16 h-16" />
-                            )}
+                    <div className="flex flex-col items-center justify-center mb-8">
+                        <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>
+                            <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 overflow-hidden ring-4 ring-white shadow-sm transition-all group-hover:ring-primary-100">
+                                {loadingAvatar ? (
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+                                ) : session?.user?.image ? (
+                                    <img
+                                        src={session.user.image}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover"
+                                        // Force reload if URL hasn't changed but content has (though we use unique timestamps usually)
+                                        key={session.user.image}
+                                    />
+                                ) : (
+                                    <UserCircleIcon className="w-16 h-16" />
+                                )}
+                            </div>
+
+                            {/* Overlay */}
+                            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <CameraIcon className="w-8 h-8 text-white" />
+                            </div>
+
+                            {/* Hidden Input */}
+                            <input
+                                type="file"
+                                id="avatar-input"
+                                className="hidden"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                onChange={handleFileChange}
+                            />
                         </div>
+                        <p className="mt-3 text-sm text-gray-500 font-medium">Click to change avatar</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
