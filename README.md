@@ -1,45 +1,48 @@
-# Zazaki - Kurdish Language Learning App
+# Zazaki Quiz App
 
-A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) through interactive quizzes with audio, video, and gamification features.
+A modern, mobile-first Progressive Web App (PWA) for learning the Zazaki (Kurdish) language through interactive multiple-choice quizzes.
 
-## Features
+![Zazaki Quiz App](/images/logo-full.png)
 
-### 🎯 Core Learning Features
-- **Multiple Question Types**: Multiple choice, audio comprehension, video comprehension, dictation, pronunciation check, and more
-- **Dual Script Support**: Switch between Latin and Arabic scripts for Zazaki
-- **Audio & Video Integration**: Native speaker audio and video content
-- **Spaced Repetition**: SM-2 algorithm for optimized learning retention
-- **Gamification**: XP system, streaks, badges, and daily goals
+## Overview
 
-### 📱 Mobile-First Design
-- **Progressive Web App (PWA)**: Install on mobile devices like a native app
-- **Offline Support**: Cache lessons and media for offline learning
-- **Touch-Optimized**: Large tap targets and mobile-friendly interactions
-- **Responsive Design**: Works seamlessly on all screen sizes
+This application is designed to help users learn Zazaki vocabulary and grammar. It focuses on a streamlined, gamified quiz experience with Dual Script support (Latin/Arabic). The project is built for performance and mobile usage, featuring offline capabilities and passwordless authentication.
 
-### 🔐 Authentication & User Management
-- **Magic Link Authentication**: Passwordless login via email (Resend)
-- **Onboarding Flow**: Mandatory profile setup for new users
-- **OAuth Integration**: Sign in with Google and Apple
-- **Guest Mode**: Try the app without creating an account
-- **Progress Tracking**: Automatic progress saving and sync
+## ✨ Key Features
 
-### 🎨 Modern Tech Stack
-- **Next.js 15** with App Router and React 19
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **Prisma ORM** with PostgreSQL
-- **NextAuth.js v5** (Auth.js) with Edge-compatible Middleware
-- **Resend** for transactional emails
-- **TanStack Query v5** for server state management
+### Core Learning
+- **Multiple Choice Quizzes**: Interactive vocabulary and grammar testing.
+- **Dual Script Support**: Toggle between Latin and Arabic scripts for Zazaki text.
+- **Gamification**:
+  - **Streaks**: Track consecutive days of learning.
+  - **Leaderboard**: Compete with other learners based on XP.
+  - **XP System**: Earn points for correct answers and completed quizzes.
 
-## Getting Started
+### User Experience
+- **Progressive Web App (PWA)**: Installable on mobile devices with offline caching for assets.
+- **Onboarding Flow**: Simple profile setup (Name/Nickname) for personalized certificates and leaderboards.
+- **Responsive Design**: Mobile-first UI tailored for touch interactions.
+
+### Authentication
+- **Magic Link**: Secure, passwordless login via email (powered by Resend).
+- **Session Management**: Persistent sessions using NextAuth.js (Auth.js) v5.
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js v5 (Edge-compatible) + Resend
+- **State Management**: TanStack Query v5
+- **Deployment**: Optimized for Railway / Vercel
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - PostgreSQL database
-- Resend API Key (for magic links)
-- OAuth credentials (Google/Apple)
+- Resend API Key
 
 ### Installation
 
@@ -54,155 +57,61 @@ A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) t
    npm install
    ```
 
-3. **Set up environment variables**
+3. **Configure Environment**
+   Copy `.env.example` to `.env.local` and fill in the values:
    ```bash
    cp .env.example .env.local
    ```
    
-   Fill in the required environment variables:
-   - `DATABASE_URL`: PostgreSQL connection string
-   - `AUTH_SECRET`: Random secret for Auth.js
-   - `AUTH_RESEND_KEY`: Resend API Key for emails
-   - `NEXT_PUBLIC_APP_URL`: Your app URL
-   - OAuth provider credentials
+   **Required Variables:**
+   - `DATABASE_URL`: Your PostgreSQL connection string.
+   - `AUTH_SECRET`: Random string for session encryption.
+   - `AUTH_RESEND_KEY`: Your Resend API Key.
+   - `NEXT_PUBLIC_APP_URL`: The URL of your app (e.g., `http://localhost:3000`).
 
-4. **Set up the database**
+4. **Initialize Database**
    ```bash
    npx prisma generate
    npx prisma db push
    ```
 
-5. **Run the development server**
+5. **Run Development Server**
    ```bash
    npm run dev
    ```
 
-6. **Open the app**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+6. **Access App**
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
-├── app/                    # Next.js App Router pages
-│   ├── api/               # API routes
-│   ├── auth/              # Authentication pages
-│   ├── onboarding/        # Onboarding flow
-│   ├── leaderboard/       # Leaderboard page
-│   ├── globals.css        # Global styles
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── components/            # React components
-│   ├── questions/         # Question type components
-│   ├── screens/           # Main screen components
-│   └── providers.tsx      # App providers
-├── lib/                   # Utility libraries
-│   ├── media-utils.ts     # Audio/video utilities
-│   ├── prisma.ts          # Database client
-│   ├── query-client.ts    # TanStack Query setup
-│   └── spaced-repetition.ts # Learning algorithm
-├── types/                 # TypeScript type definitions
-├── auth.ts               # NextAuth.js Node.js config (Adapter)
-├── auth.config.ts        # NextAuth.js Edge config (Middleware)
-└── middleware.ts         # Edge Middleware for Auth & Routing
+├── app/                  # Next.js App Router (Pages & API)
+│   ├── api/              # Backend API routes
+│   ├── auth/             # Login & Verification pages
+│   ├── onboarding/       # User profile setup
+│   ├── leaderboard/      # XP Leaderboard
+│   └── ...
+├── components/           # React Components
+│   ├── questions/        # Quiz Interfaces (Multiple Choice)
+│   ├── screens/          # Main Application Views
+│   └── ...
+├── lib/                  # Utilities (Prisma, Gamification, etc.)
+├── middleware.ts         # Edge Middleware (Auth enforcement)
+├── auth.ts               # Auth.js Backend Config (Adapter)
+└── auth.config.ts        # Auth.js Edge Config
 ```
 
-## Database Schema
+## 🤝 Contributing
 
-The app uses a comprehensive database schema supporting:
+This is a public repository. We welcome contributions to expand the quiz content or add new question types (Audio/Video).
 
-- **User Management**: Users, sessions, accounts
-- **Course Structure**: Courses → Chapters → Lessons → Quizzes → Questions
-- **Progress Tracking**: Attempts, answers, progress records
-- **Spaced Repetition**: Individual item tracking with SM-2 algorithm
-- **Gamification**: Badges, user badges, XP tracking
-- **Content Management**: Multi-language support, media attachments
-
-## Key Features Implementation
-
-### Spaced Repetition Algorithm
-- Based on SM-2 algorithm
-- Adjusts review intervals based on performance
-- Tracks easiness factor, repetition count, and due dates
-- Optimizes learning retention and efficiency
-
-### Audio/Video Handling
-- Web Audio API integration
-- MediaRecorder for pronunciation exercises
-- Playback rate control (slow/fast playback)
-- Audio visualization and volume monitoring
-
-### Multi-Language Content
-- JSON fields for storing translations
-- Script-specific rendering (Latin/Arabic)
-- Flexible content localization system
-
-### PWA Features
-- Service worker for offline caching
-- Web app manifest for installation
-- Background sync capabilities
-- Push notification support (future)
-
-## Deployment
-
-### Environment Setup
-1. Set up PostgreSQL database
-2. Configure email service (SMTP or service like SendGrid)
-3. Set up OAuth applications (Google/Apple)
-4. Configure CDN for media files (optional)
-
-### Build and Deploy
-```bash
-# Build the application
-npm run build
-
-# Start production server
-npm start
-```
-
-### Recommended Hosting
-- **Vercel**: Seamless Next.js deployment
-- **Netlify**: Static site hosting with serverless functions
-- **Railway/Render**: Full-stack hosting with database
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Content Guidelines
-
-### Audio Content
-- 48 kHz, mono, AAC/Opus format
-- Normalized to -16 LUFS
-- Clear pronunciation by native speakers
-- Background noise minimized
-
-### Video Content
-- 1080p → 720p/360p transcoding
-- HLS streaming for adaptive quality
-- Subtitles in VTT format
-- Accessible design considerations
-
-### Text Content
-- Multi-language JSON structure
-- Consistent orthography profiles
-- IPA phonetic transcriptions (optional)
-- Cultural context and explanations
+1. Fork the repo.
+2. Create a feature branch (`git checkout -b feature/audio-quiz`).
+3. Commit your changes.
+4. Open a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Zazaki language community for content and feedback
-- Open source libraries and frameworks used
-- Contributors and testers
-
-## Support
-
-For support, email support@zazaki-app.com or create an issue in the repository.
+MIT License.
