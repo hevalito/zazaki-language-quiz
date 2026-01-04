@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "echo '--- DEBUG 2026-01-04-12-30 ---' && ls -R prisma && echo '--- STARTING MIGRATIONS ---' && prisma migrate deploy && next start",
+    "build": "prisma migrate deploy && next build",
+    "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "db:generate": "prisma generate",
