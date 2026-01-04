@@ -8,6 +8,7 @@ import {
     CheckCircleIcon,
     CalendarIcon
 } from '@heroicons/react/24/outline'
+import { isSameDay } from 'date-fns'
 
 export default function DailyQuizAdminPage() {
     const [generating, setGenerating] = useState(false)
@@ -94,24 +95,44 @@ export default function DailyQuizAdminPage() {
                         <BoltIcon className="w-5 h-5 mr-2 text-yellow-500" />
                         Generate Today's Quiz
                     </h2>
-                    <p className="text-sm text-gray-500 mb-6">
-                        Manually trigger the daily quiz generation. This picks 5 questions from the pool and creates a new Daily Quiz for today ({dateStr}).
-                    </p>
+                    {/* Check if today's quiz exists */}
+                    {history.some(q => isSameDay(new Date(q.date), new Date())) ? (
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                            <CheckCircleIcon className="w-12 h-12 text-green-500 mx-auto mb-2" />
+                            <h3 className="text-green-800 font-bold text-lg">Daily Quiz Ready</h3>
+                            <p className="text-green-600 text-sm mb-4">
+                                The quiz for today ({dateStr}) has already been generated.
+                            </p>
+                            <button
+                                disabled
+                                className="w-full btn-secondary opacity-50 cursor-not-allowed flex justify-center items-center"
+                            >
+                                <CheckCircleIcon className="w-5 h-5 mr-2" />
+                                Generated
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <p className="text-sm text-gray-500 mb-6">
+                                Manually trigger the daily quiz generation. This picks 5 questions from the pool and creates a new Daily Quiz for today ({dateStr}).
+                            </p>
 
-                    <button
-                        onClick={handleGenerate}
-                        disabled={generating}
-                        className="w-full btn-primary flex justify-center items-center"
-                    >
-                        {generating ? (
-                            <>Generating...</>
-                        ) : (
-                            <>
-                                <ArrowPathIcon className="w-5 h-5 mr-2" />
-                                Generate Now
-                            </>
-                        )}
-                    </button>
+                            <button
+                                onClick={handleGenerate}
+                                disabled={generating}
+                                className="w-full btn-primary flex justify-center items-center"
+                            >
+                                {generating ? (
+                                    <>Generating...</>
+                                ) : (
+                                    <>
+                                        <ArrowPathIcon className="w-5 h-5 mr-2" />
+                                        Generate Now
+                                    </>
+                                )}
+                            </button>
+                        </>
+                    )}
 
                     {result && (
                         <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-lg text-sm border border-green-100">
