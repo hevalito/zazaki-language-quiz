@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect, Suspense } from 'react'
+import { signOut } from 'next-auth/react'
 import { ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 
 function DeleteConfirmContent() {
@@ -27,10 +28,8 @@ function DeleteConfirmContent() {
 
             if (res.ok) {
                 setStatus('success')
-                // Optional: Sign out client-side if needed, but the session is invalidated DB-side
-                setTimeout(() => {
-                    window.location.href = '/'
-                }, 3000)
+                // Force client-side signout to clear cookies/session
+                await signOut({ callbackUrl: '/' })
             } else {
                 setStatus('error')
                 setErrorMessage(data.error || 'Ein Fehler ist aufgetreten.')
