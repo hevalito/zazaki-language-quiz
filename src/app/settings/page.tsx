@@ -233,6 +233,8 @@ export default function SettingsPage() {
                                 <option value={50}>50 XP - Entspannt</option>
                                 <option value={100}>100 XP - Normal</option>
                                 <option value={200}>200 XP - Ernsthaft</option>
+                                <option value={250}>250 XP - Intensiv</option>
+                                <option value={500}>500 XP - Verrückt</option>
                             </select>
                         </div>
 

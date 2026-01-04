@@ -46,6 +46,16 @@
       transform: scale(1.05);
     }
   }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%) skewX(12deg);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
 }
 
 @layer components {

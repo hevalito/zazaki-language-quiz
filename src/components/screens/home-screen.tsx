@@ -26,6 +26,8 @@ interface UserProgress {
   isAdmin: boolean
 }
 
+import confetti from 'canvas-confetti'
+
 export function HomeScreen() {
   const { data: session } = useSession()
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
@@ -33,6 +35,8 @@ export function HomeScreen() {
   const [showSettings, setShowSettings] = useState(false)
   const [availableQuizzes, setAvailableQuizzes] = useState<any[]>([])
   const [recentActivity, setRecentActivity] = useState<any[]>([])
+  const [confettiFired, setConfettiFired] = useState(false)
+
 
   // Fetch user progress data and available quizzes
   useEffect(() => {
@@ -101,6 +105,18 @@ export function HomeScreen() {
 
   const progressPercentage = Math.min((todayXP / dailyGoal) * 100, 100)
 
+  useEffect(() => {
+    if (todayXP >= dailyGoal && dailyGoal > 0 && !confettiFired && !loading) {
+      setConfettiFired(true)
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#22c55e', '#ec4899', '#eab308']
+      })
+    }
+  }, [todayXP, dailyGoal, confettiFired, loading])
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -159,29 +175,47 @@ export function HomeScreen() {
 
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Daily Progress */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-serif font-bold text-gray-900">Tagesfortschritt</h2>
-            <div className="flex items-center space-x-1 text-primary-600">
-              <TrophyIcon className="w-5 h-5" />
-              <span className="font-bold font-sans">{totalXP} XP</span>
+        <div className="card relative overflow-hidden group">
+          {/* Background Gradient & Glow */}
+          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-primary-100/50 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+
+          <div className="flex items-center justify-between mb-4 relative z-10">
+            <div>
+              <h2 className="text-lg font-serif font-bold text-gray-900">Tagesziel</h2>
+              <p className="text-xs text-gray-500 font-medium">
+                {todayXP >= dailyGoal ? 'Ziel erreicht! 🔥' : 'Bleib dran!'}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100">
+              <TrophyIcon className="w-5 h-5 text-primary-600" />
+              <span className="font-bold font-sans text-primary-700">{todayXP} / {dailyGoal} XP</span>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm font-medium">
-              <span className="text-gray-600">{todayXP} / {dailyGoal} XP</span>
-              <span className="text-gray-600">{Math.round(progressPercentage)}%</span>
-            </div>
-            <div className="progress-bar">
+          <div className="space-y-3 relative z-10">
+            <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
               <div
-                className="progress-fill"
+                className={`absolute top-0 left-0 h-full transition-all duration-1000 ease-out rounded-full ${todayXP >= dailyGoal
+                  ? 'bg-gradient-to-r from-brand-green to-emerald-400'
+                  : 'bg-gradient-to-r from-primary-500 to-primary-400'
+                  }`}
                 style={{ width: `${progressPercentage}%` }}
-              />
+              >
+                {/* Shimmer Effect */}
+                <div className="absolute inset-0 bg-white/30 skew-x-12 -translate-x-full animate-shimmer" />
+              </div>
             </div>
+
+            <div className="flex justify-between items-center text-xs text-gray-400 font-medium">
+              <span>0 XP</span>
+              <span>{Math.round(progressPercentage)}%</span>
+            </div>
+
             {todayXP >= dailyGoal && (
               <div className="text-center py-2 animate-bounce-subtle">
-                <span className="text-brand-green font-bold text-sm">🎉 Tagesziel erreicht!</span>
+                <span className="text-brand-green font-bold text-sm bg-green-50 px-3 py-1 rounded-full border border-green-100 shadow-sm flex items-center justify-center w-fit mx-auto">
+                  <span className="mr-1">🎉</span> Fantastisch! Tagesziel erreicht
+                </span>
               </div>
             )}
           </div>
