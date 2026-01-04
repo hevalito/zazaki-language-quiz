@@ -41,7 +41,7 @@ export async function GET() {
             title: attempt.quiz.title,
             date: attempt.completedAt,
             score: attempt.score,
-            xpEarned: attempt.score // Simplified: score = XP for now
+            xpEarned: attempt.xpEarned || 0
         }))
 
         return NextResponse.json(activity)

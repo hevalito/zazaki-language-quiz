@@ -43,11 +43,11 @@ export async function GET(request: NextRequest) {
         }
       },
       select: {
-        score: true
+        xpEarned: true
       }
     })
 
-    const todayXP = todayAttempts.reduce((sum, attempt) => sum + attempt.score, 0)
+    const todayXP = todayAttempts.reduce((sum, attempt) => sum + (attempt.xpEarned || 0), 0)
 
     return NextResponse.json({
       user: {
