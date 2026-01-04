@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 @layer utilities {
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
   .animate-shake {
     animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
   }
@@ -11,122 +23,88 @@
     animation: bounce-subtle 0.5s ease-in-out both;
   }
 
-  @keyframes shake {
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
 
-    10%,
-    90% {
-      transform: translate3d(-1px, 0, 0);
-    }
+@keyframes shake {
 
-    20%,
-    80% {
-      transform: translate3d(2px, 0, 0);
-    }
-
-    30%,
-    50%,
-    70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-
-    @keyframes bounce-subtle {
-
-      0%,
-      100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.05);
-      }
-    }
-
-    @keyframes shimmer {
-      100% {
-        transform: translateX(100%) skewX(12deg);
-      }
-    }
-
-    .animate-shimmer {
-      animation: shimmer 2s infinite;
-    }
-
-    .safe-area-bottom {
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .text-shadow-sm {
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    }
+  0%,
+  100% {
+    transform: rotate(0deg);
   }
 
-  @keyframes shake {
-
-    0%,
-    100% {
-      transform: rotate(0deg);
-    }
-
-    25% {
-      transform: rotate(-5deg) scale(1.1);
-    }
-
-    75% {
-      transform: rotate(5deg) scale(1.1);
-    }
+  25% {
+    transform: rotate(-5deg) scale(1.1);
   }
 
-  .animate-shake {
-    animation: shake 0.1s ease-in-out infinite;
+  75% {
+    transform: rotate(5deg) scale(1.1);
+  }
+}
+
+@keyframes bounce-subtle {
+
+  0%,
+  100% {
+    transform: scale(1);
   }
 
-  @layer components {
-    .btn-primary {
-      @apply px-4 py-3 bg-primary-500 text-gray-900 rounded-xl hover:bg-primary-400 transition-all transform active:scale-[0.98] font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-sans shadow-sm;
-    }
+  50% {
+    transform: scale(1.05);
+  }
+}
 
-    .btn-secondary {
-      @apply px-4 py-3 bg-white text-gray-700 border-2 border-gray-100 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-sans;
-    }
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%) skewX(12deg);
+  }
+}
 
-    .input-field {
-      @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white;
-    }
-
-    .card {
-      @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-200;
-    }
-
-    .card-interactive {
-      @apply card hover:shadow-md hover:-translate-y-0.5 cursor-pointer;
-    }
-
-    .progress-bar {
-      @apply w-full bg-gray-100 rounded-full h-3 overflow-hidden;
-    }
-
-    .progress-fill {
-      @apply bg-primary-500 h-full rounded-full transition-all duration-500 ease-out;
-    }
-
-    .safe-area-top {
-      padding-top: env(safe-area-inset-top);
-    }
+@layer components {
+  .btn-primary {
+    @apply px-4 py-3 bg-primary-500 text-gray-900 rounded-xl hover:bg-primary-400 transition-all transform active:scale-[0.98] font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-sans shadow-sm;
   }
 
-  /* Custom Quiz Styles */
-  .quiz-option {
-    @apply w-full p-4 text-left border-2 rounded-xl transition-all duration-200 bg-white hover:bg-gray-50 border-gray-200 mt-3;
+  .btn-secondary {
+    @apply px-4 py-3 bg-white text-gray-700 border-2 border-gray-100 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-sans;
   }
 
-  .quiz-option-selected {
-    @apply border-primary-500 bg-primary-50 ring-2 ring-primary-200;
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white;
   }
 
-  .quiz-option-correct {
-    @apply border-brand-green bg-green-50 ring-2 ring-brand-green/30 text-brand-green font-bold;
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-200;
   }
 
-  .quiz-option-incorrect {
-    @apply border-brand-red bg-red-50 ring-2 ring-brand-red/30 text-brand-red font-bold;
+  .card-interactive {
+    @apply card hover:shadow-md hover:-translate-y-0.5 cursor-pointer;
   }
+
+  .progress-bar {
+    @apply w-full bg-gray-100 rounded-full h-3 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply bg-primary-500 h-full rounded-full transition-all duration-500 ease-out;
+  }
+}
+
+/* Custom Quiz Styles */
+.quiz-option {
+  @apply w-full p-4 text-left border-2 rounded-xl transition-all duration-200 bg-white hover:bg-gray-50 border-gray-200 mt-3;
+}
+
+.quiz-option-selected {
+  @apply border-primary-500 bg-primary-50 ring-2 ring-primary-200;
+}
+
+.quiz-option-correct {
+  @apply border-brand-green bg-green-50 ring-2 ring-brand-green/30 text-brand-green font-bold;
+}
+
+.quiz-option-incorrect {
+  @apply border-brand-red bg-red-50 ring-2 ring-brand-red/30 text-brand-red font-bold;
+}
