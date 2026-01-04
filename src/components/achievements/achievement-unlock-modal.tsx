@@ -120,9 +120,13 @@ export function AchievementUnlockModal() {
 
                             <div className="w-32 h-32 mx-auto bg-gradient-to-br from-brand-orange to-red-500 rounded-full flex items-center justify-center shadow-lg mb-6 ring-4 ring-orange-100 animate-bounce-subtle">
                                 {/* Placeholder for Icon URL check */}
-                                {activeBadge.iconUrl ? (
+                                {activeBadge.iconUrl && (activeBadge.iconUrl.startsWith('http') || activeBadge.iconUrl.startsWith('/')) ? (
                                     // eslint-disable-next-line @next/next/no-img-element
                                     <img src={activeBadge.iconUrl} alt="Badge" className="w-16 h-16 object-contain invert-0 brightness-0 invert" />
+                                ) : activeBadge.iconUrl ? (
+                                    <span className="text-6xl filter brightness-0 invert" role="img" aria-label={getBadgeTitle(activeBadge.title)}>
+                                        {activeBadge.iconUrl}
+                                    </span>
                                 ) : (
                                     <SparklesIcon className="w-16 h-16 text-white" />
                                 )}
