@@ -23,7 +23,7 @@ export default function SettingsPage() {
         nickname: '',
         firstName: '',
         lastName: '',
-        dailyGoal: 10,
+        dailyGoal: 50,
         preferredScript: 'LATIN'
     })
 
@@ -80,7 +80,7 @@ export default function SettingsPage() {
                     nickname: data.nickname || '',
                     firstName: data.firstName || '',
                     lastName: data.lastName || '',
-                    dailyGoal: data.dailyGoal || 10,
+                    dailyGoal: data.dailyGoal || 50,
                     preferredScript: data.preferredScript || 'LATIN'
                 })
             }
@@ -230,10 +230,9 @@ export default function SettingsPage() {
                                 onChange={e => setFormData({ ...formData, dailyGoal: parseInt(e.target.value) })}
                                 className="input-field"
                             >
-                                <option value={10}>10 XP (Entspannt)</option>
-                                <option value={20}>20 XP (Normal)</option>
-                                <option value={50}>50 XP (Ernsthaft)</option>
-                                <option value={100}>100 XP (Intensiv)</option>
+                                <option value={50}>50 XP - Entspannt</option>
+                                <option value={100}>100 XP - Normal</option>
+                                <option value={200}>200 XP - Ernsthaft</option>
                             </select>
                         </div>
 

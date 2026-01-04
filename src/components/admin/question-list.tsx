@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 interface QuestionListProps {
-    quizId: string
+    quizId?: string
     questions: any[]
     onEdit: (question: any) => void
     onDelete: (id: string) => void
-    onAdd: () => void
-    onReorder: (id: string, direction: 'up' | 'down') => void
+    onAdd?: () => void
+    onReorder?: (id: string, direction: 'up' | 'down') => void
 }
 
 const getPrompt = (prompt: any) => {
@@ -23,17 +23,19 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
 
     return (
         <div className="mt-10">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium text-gray-900">Questions</h2>
-                <button
-                    onClick={onAdd}
-                    type="button"
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                >
-                    <PlusIcon className="h-4 w-4 mr-1" />
-                    Add Question
-                </button>
-            </div>
+            {onAdd && (
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-medium text-gray-900">Questions</h2>
+                    <button
+                        onClick={onAdd}
+                        type="button"
+                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                    >
+                        <PlusIcon className="h-4 w-4 mr-1" />
+                        Add Question
+                    </button>
+                </div>
+            )}
 
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul role="list" className="divide-y divide-gray-200">
@@ -53,22 +55,24 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <div className="flex flex-col mr-2">
-                                        <button
-                                            onClick={() => onReorder(question.id, 'up')}
-                                            disabled={index === 0}
-                                            className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
-                                        </button>
-                                        <button
-                                            onClick={() => onReorder(question.id, 'down')}
-                                            disabled={index === sortedQuestions.length - 1}
-                                            className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                                        </button>
-                                    </div>
+                                    {onReorder && (
+                                        <div className="flex flex-col mr-2">
+                                            <button
+                                                onClick={() => onReorder(question.id, 'up')}
+                                                disabled={index === 0}
+                                                className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                                            </button>
+                                            <button
+                                                onClick={() => onReorder(question.id, 'down')}
+                                                disabled={index === sortedQuestions.length - 1}
+                                                className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                            </button>
+                                        </div>
+                                    )}
                                     <button
                                         onClick={() => onEdit(question)}
                                         className="p-1 text-gray-400 hover:text-gray-500"

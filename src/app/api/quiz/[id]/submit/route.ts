@@ -3,14 +3,6 @@ import { checkBadges } from '@/lib/gamification'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 
-interface SubmitAnswerRequest {
-  answers: {
-    questionId: string
-    choiceId: string
-    timeSpent: number
-  }[]
-}
-
 export async function POST(
   request: NextRequest,
   props: { params: Promise<{ id: string }> }
@@ -22,10 +14,27 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body: SubmitAnswerRequest = await request.json()
-    const { answers } = body
+    // Find the active attempt
+    const attempt = await prisma.attempt.findFirst({
+      where: {
+        userId: session.user.id,
+        quizId: params.id,
+        completedAt: null
+      },
+      include: {
+        answers: {
+          include: { question: { include: { choices: true } } }
+        }
+      }
+    })
 
-    // Get quiz with questions and correct answers
+    if (!attempt) {
+      // Fallback: If no active attempt exists (rare), maybe create one? 
+      // Or return error.
+      return NextResponse.json({ error: 'No active quiz attempt found' }, { status: 404 })
+    }
+
+    // Load Quiz for points calculation / validation
     const quiz = await prisma.quiz.findUnique({
       where: { id: params.id },
       include: {
@@ -41,67 +50,61 @@ export async function POST(
       return NextResponse.json({ error: 'Quiz not found' }, { status: 404 })
     }
 
-    // Check for previous completed attempts to prevent farming
-    const previousAttempts = await prisma.attempt.count({
+    // Check if user has previously EARNED XP for this quiz
+    // This allows them to retry if they failed (0 XP) or restarted (0 XP),
+    // but prevents farming if they already succeeded.
+    const previousXpAttempts = await prisma.attempt.count({
       where: {
         userId: session.user.id,
         quizId: params.id,
-        completedAt: { not: null }
+        completedAt: { not: null },
+        xpEarned: { gt: 0 }
       }
     })
 
-    const isFirstAttempt = previousAttempts === 0
+    const hasEarnedXpBefore = previousXpAttempts > 0
 
-    // Create attempt record
-    const attempt = await prisma.attempt.create({
-      data: {
-        userId: session.user.id,
-        quizId: params.id,
-        startedAt: new Date(),
-        completedAt: new Date(),
-        score: 0,
-        xpEarned: 0, // Will be updated later
-        maxScore: 0,
-        timeSpent: answers.reduce((total, answer) => total + answer.timeSpent, 0)
+    // DAILY QUIZ LOGIC: Check date
+    // Only the CURRENT daily quiz awards XP.
+    let forceZeroXP = false
+    if (quiz.type === 'DAILY' && quiz.date) {
+      const now = new Date()
+      const quizDate = new Date(quiz.date)
+
+      // Compare YYYY-MM-DD
+      const isSameDay = now.toISOString().split('T')[0] === quizDate.toISOString().split('T')[0]
+
+      if (!isSameDay) {
+        forceZeroXP = true
       }
-    })
+    }
 
+    // Calculate Scores from STORED answers
     let totalScore = 0
     let maxScore = 0
     const results: any[] = []
 
-    // Process each answer
-    for (const answer of answers) {
-      const question = quiz.questions.find(q => q.id === answer.questionId)
-      if (!question) continue
+    // Map through questions to ensure we account for all, 
+    // though `attempt.answers` contains what user answered.
+    // Unanswered questions score 0.
 
-      const selectedChoice = question.choices.find(c => c.id === answer.choiceId)
-      if (!selectedChoice) continue
-
-      const isCorrect = selectedChoice.isCorrect
-      const pointsEarned = isCorrect ? question.points : 0
-
-      totalScore += pointsEarned
+    for (const question of quiz.questions) {
       maxScore += question.points
 
-      // Save answer record
-      await prisma.answer.create({
-        data: {
-          attemptId: attempt.id,
-          questionId: question.id,
-          result: isCorrect ? 'CORRECT' : 'INCORRECT',
-          responseData: {
-            choiceId: answer.choiceId,
-            selectedText: selectedChoice.label
-          },
-          isCorrect,
-          pointsEarned,
-          timeSpent: answer.timeSpent
-        }
-      })
+      const answer = attempt.answers.find(a => a.questionId === question.id)
+      let isCorrect = false
+      let pointsEarned = 0
 
-      // Update spaced repetition data
-      await updateSpacedRepetition(session.user.id, question.id, isCorrect)
+      if (answer) {
+        // Validate again or trust stored result? 
+        // Trust stored result which was validated on /answer
+        isCorrect = answer.isCorrect
+        pointsEarned = answer.pointsEarned
+        totalScore += pointsEarned
+
+        // Update spaced repetition (if not done already)
+        await updateSpacedRepetition(session.user.id, question.id, isCorrect)
+      }
 
       results.push({
         questionId: question.id,
@@ -112,12 +115,13 @@ export async function POST(
       })
     }
 
-    const xpEarned = isFirstAttempt ? totalScore : 0
+    const xpEarned = (hasEarnedXpBefore || forceZeroXP) ? 0 : totalScore
 
-    // Update attempt with final scores
+    // Update the attempt to COMPLETE it
     await prisma.attempt.update({
       where: { id: attempt.id },
       data: {
+        completedAt: new Date(),
         score: totalScore,
         xpEarned,
         maxScore
@@ -125,18 +129,26 @@ export async function POST(
     })
 
     // Update user XP and progress
-    await updateUserProgress(session.user.id, xpEarned, quiz.lessonId)
+    // Only update if xpEarned > 0 to avoid unnecessary DB writes or progress confusion
+    if (xpEarned > 0) {
+      await updateUserProgress(session.user.id, xpEarned, quiz.lessonId)
+    }
 
-    // Check for new badges
-    const { unlockedBadgeTitles } = await checkBadges(session.user.id)
+    // Check for new badges only if new XP was obtained
+    let newBadges: string[] = []
+    if (xpEarned > 0) {
+      const badgeResult = await checkBadges(session.user.id)
+      newBadges = badgeResult.unlockedBadgeTitles
+    }
 
     return NextResponse.json({
       attemptId: attempt.id,
       score: totalScore,
       maxScore,
-      percentage: Math.round((totalScore / maxScore) * 100),
+      percentage: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0,
+      xpEarned,
       results,
-      newBadges: unlockedBadgeTitles
+      newBadges
     })
 
   } catch (error) {
@@ -219,17 +231,21 @@ async function updateSpacedRepetition(userId: string, questionId: string, isCorr
 async function updateUserProgress(userId: string, xpEarned: number, lessonId: string | null) {
   try {
     // Update user's total XP
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        totalXP: {
-          increment: xpEarned
+    if (xpEarned > 0) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          totalXP: {
+            increment: xpEarned
+          }
         }
-      }
-    })
+      })
+    }
 
     // Update lesson progress if applicable
     if (lessonId) {
+      // Logic for lesson completion?
+      // For now just tracking XP.
       await prisma.progress.upsert({
         where: {
           userId_lessonId: {
@@ -240,13 +256,14 @@ async function updateUserProgress(userId: string, xpEarned: number, lessonId: st
         update: {
           xpEarned: {
             increment: xpEarned
-          }
+          },
+          completed: true // Mark lesson as involved/completed?
         },
         create: {
           userId,
           lessonId,
           xpEarned,
-          completed: false
+          completed: true
         }
       })
     }

@@ -26,7 +26,7 @@ interface QuizData {
         title: MultiLanguageContent
       }
     }
-  }
+  } | null
   config?: {
     randomize?: boolean
     randomizeAnswers?: boolean
@@ -51,12 +51,15 @@ interface ChoiceData {
   label: MultiLanguageContent
   order: number
   mediaUrl?: string
+  isCorrect: boolean
 }
 
 interface Answer {
   questionId: string
   choiceId: string
   timeSpent: number
+  isCorrect?: boolean
+  pointsEarned?: number
 }
 
 export default function QuizPage() {
@@ -82,19 +85,76 @@ export default function QuizPage() {
     setQuestionStartTime(Date.now())
   }, [currentQuestionIndex])
 
+  const handleRestart = async () => {
+    setLoading(true)
+    try {
+      if (quiz?.id) {
+        await fetch(`/api/quiz/${quiz.id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers: [] })
+        })
+      }
+    } catch (e) {
+      console.error('Error restarting:', e)
+    }
+    window.location.reload()
+  }
+
   const fetchQuiz = async (quizId: string) => {
     try {
       const response = await fetch(`/api/quiz/${quizId}`)
       if (response.ok) {
         const data = await response.json()
+
+        // Handle randomization (careful with persistence)
+        // Ideally we shouldn't re-randomize if resuming, but if we do, we match by ID
         if (data.config?.randomize) {
           data.questions = data.questions.sort(() => Math.random() - 0.5)
         }
+
         setQuiz(data)
-        // Reset state for new quiz load
-        setCurrentQuestionIndex(0)
-        setAnswers([])
-        setShowResult(false)
+
+        // Reset or Restore state
+        let restoredAnswers: Answer[] = []
+        if (data.activeAttempt?.answers) {
+          restoredAnswers = data.activeAttempt.answers.map((a: any) => ({
+            questionId: a.questionId,
+            choiceId: a.responseData?.choiceId,
+            timeSpent: a.timeSpent,
+            isCorrect: a.isCorrect,
+            pointsEarned: a.pointsEarned
+          }))
+          setAnswers(restoredAnswers)
+        } else {
+          setAnswers([])
+        }
+
+        // Find first unanswered question to resume
+        if (data.activeAttempt) {
+          const firstUnansweredIndex = data.questions.findIndex((q: any) =>
+            !restoredAnswers.find(a => a.questionId === q.id)
+          )
+          setCurrentQuestionIndex(firstUnansweredIndex >= 0 ? firstUnansweredIndex : 0)
+
+          // If all answered, show result?
+          if (firstUnansweredIndex === -1 && restoredAnswers.length > 0) {
+            setShowResult(true)
+            // Fetch full results?
+            // For now just show result screen.
+            setQuizResults({
+              score: data.activeAttempt.score,
+              percentage: Math.round((data.activeAttempt.score / (data.questions.length * 10)) * 100), // Approx
+              results: restoredAnswers // minimal data needed for list
+            })
+          } else {
+            setShowResult(false)
+          }
+        } else {
+          setCurrentQuestionIndex(0)
+          setShowResult(false)
+        }
+
       } else {
         console.error('Failed to fetch quiz')
         router.push('/')
@@ -107,22 +167,56 @@ export default function QuizPage() {
     }
   }
 
-  const handleAnswer = (choiceId: string, isCorrect: boolean) => {
-    if (!quiz) return
+  const handleAnswer = async (choiceId: string, isCorrect: boolean) => {
+    if (!quiz || submitting) return
 
     const timeSpent = Date.now() - questionStartTime
     const currentQuestion = quiz.questions[currentQuestionIndex]
 
-    const newAnswer: Answer = {
-      questionId: currentQuestion.id,
-      choiceId,
-      timeSpent
-    }
+    // Optimistically update UI? No, strict persistence requested.
+    setSubmitting(true)
+    try {
+      const res = await fetch(`/api/quiz/${quiz.id}/answer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          questionId: currentQuestion.id,
+          choiceId,
+          timeSpent
+        })
+      })
 
-    setAnswers(prev => {
-      const filtered = prev.filter(a => a.questionId !== currentQuestion.id)
-      return [...filtered, newAnswer]
-    })
+      if (!res.ok) {
+        const err = await res.json()
+        if (err.error === 'Question already answered') {
+          // Determine we are out of sync, reload?
+          // Or just ignore.
+          return
+        }
+        throw new Error('Failed to save')
+      }
+
+      const savedAnswer = await res.json()
+
+      const newAnswer: Answer = {
+        questionId: currentQuestion.id,
+        choiceId,
+        timeSpent,
+        isCorrect: savedAnswer.isCorrect // Use server result
+      }
+
+      setAnswers(prev => {
+        // Prevent duplicates just in case
+        const filtered = prev.filter(a => a.questionId !== currentQuestion.id)
+        return [...filtered, newAnswer]
+      })
+
+    } catch (error) {
+      console.error('Error saving answer:', error)
+      alert('Could not save answer. Please check connection.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const nextQuestion = () => {
@@ -235,17 +329,25 @@ export default function QuizPage() {
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{quizResults.score}</div>
-                <div className="text-sm text-blue-600">Punkte</div>
+                <div className="text-sm text-blue-600">XP (Gesamt)</div>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">{quizResults.percentage}%</div>
                 <div className="text-sm text-green-600">Genauigkeit</div>
               </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">{quiz.questions.length}</div>
-                <div className="text-sm text-purple-600">Fragen</div>
+              <div className="text-center p-4 bg-yellow-50 rounded-lg">
+                <div className="text-2xl font-bold text-yellow-600">
+                  {quizResults.xpEarned ?? 0}
+                </div>
+                <div className="text-sm text-yellow-600">XP (Neu)</div>
               </div>
             </div>
+
+            {quizResults.score > 0 && quizResults.xpEarned === 0 && (
+              <div className="mb-6 p-4 bg-gray-50 text-gray-600 rounded-lg text-sm text-center border border-gray-200">
+                Dein Ergebnis wurde gespeichert, aber da du dieses Quiz bereits abgeschlossen hast, gibt es für diese Wiederholung keine XP.
+              </div>
+            )}
 
             <div className="space-y-4 mb-6">
               <h3 className="font-semibold text-gray-900">Fragenübersicht</h3>
@@ -256,7 +358,7 @@ export default function QuizPage() {
                     <span className="text-sm text-gray-700">Frage {index + 1}</span>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">
-                        {result?.pointsEarned || 0} / {question.points} Pkt
+                        {result?.pointsEarned || 0} / {question.points} XP
                       </span>
                       {result?.isCorrect ? (
                         <CheckIcon className="w-5 h-5 text-green-600" />
@@ -279,7 +381,7 @@ export default function QuizPage() {
                 Zurück zur Startseite
               </button>
               <button
-                onClick={() => window.location.reload()}
+                onClick={handleRestart}
                 className="flex-1 btn-primary"
               >
                 Quiz wiederholen
@@ -296,28 +398,54 @@ export default function QuizPage() {
 
 
 
+  interface QuizData {
+    id: string
+    type?: string
+    title: MultiLanguageContent
+    description?: MultiLanguageContent
+    questions: QuestionData[]
+    lesson: {
+      title: MultiLanguageContent
+      chapter: {
+        title: MultiLanguageContent
+        course: {
+          title: MultiLanguageContent
+        }
+      }
+    } | null
+    config?: {
+      randomize?: boolean
+      randomizeAnswers?: boolean
+    }
+    activeAttempt?: any
+  }
+
+  // ... inside component ...
+
+  const isDaily = quiz.type === 'DAILY'
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${isDaily ? 'bg-indigo-50' : 'bg-gray-50'}`}>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className={`shadow-sm border-b ${isDaily ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border-indigo-600' : 'bg-white border-gray-200'}`}>
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={() => router.push('/')}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+              className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
             >
               <ArrowLeftIcon className="w-5 h-5" />
               <span>Zurück</span>
             </button>
 
             <div className="text-center">
-              <h1 className="font-semibold text-gray-900">{getTitle(quiz.title)}</h1>
-              <p className="text-sm text-gray-500">
-                {getTitle(quiz.lesson.chapter.course.title)}
+              <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900'}`}>{getTitle(quiz.title)}</h1>
+              <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500'}`}>
+                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
               </p>
             </div>
 
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <div className={`flex items-center space-x-2 text-sm ${isDaily ? 'text-indigo-100' : 'text-gray-600'}`}>
               <ClockIcon className="w-4 h-4" />
               <span>{currentQuestionIndex + 1} / {quiz.questions.length}</span>
             </div>
@@ -325,9 +453,9 @@ export default function QuizPage() {
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className={`w-full rounded-full h-2 ${isDaily ? 'bg-black/20' : 'bg-gray-200'}`}>
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className={`h-2 rounded-full transition-all duration-300 ${isDaily ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-blue-600'}`}
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -344,7 +472,7 @@ export default function QuizPage() {
                 Frage {currentQuestionIndex + 1}
               </span>
               <span className="text-sm text-gray-500">
-                {currentQuestion.points} Punkte
+                {currentQuestion.points} XP
               </span>
             </div>
           </div>
@@ -370,11 +498,11 @@ export default function QuizPage() {
             }}
             choices={displayChoices.map(choice => ({
               ...choice,
-              questionId: currentQuestion.id,
-              isCorrect: false // This will be handled by the API
+              questionId: currentQuestion.id
             }))}
             onAnswer={handleAnswer}
             selectedChoiceId={getCurrentAnswer()?.choiceId}
+            showResult={!!getCurrentAnswer()}
           />
 
           {/* Navigation */}

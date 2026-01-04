@@ -1,16 +1,17 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { QuizCard } from '@/components/library/quiz-card'
 import { FilterBar } from '@/components/library/filter-bar'
 import { BookOpenIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export function QuizLibrary() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [quizzes, setQuizzes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
-    const [currentCourseId, setCurrentCourseId] = useState('')
+    const [currentCourseId, setCurrentCourseId] = useState(searchParams.get('tab') === 'daily' ? 'daily' : '')
     const [currentStatus, setCurrentStatus] = useState('')
 
     useEffect(() => {
@@ -21,7 +22,11 @@ export function QuizLibrary() {
         setLoading(true)
         try {
             const params = new URLSearchParams()
-            if (currentCourseId) params.append('courseId', currentCourseId)
+            if (currentCourseId === 'daily') {
+                params.append('type', 'DAILY')
+            } else if (currentCourseId) {
+                params.append('courseId', currentCourseId)
+            }
             if (currentStatus) params.append('status', currentStatus)
 
             const response = await fetch(`/api/quizzes?${params.toString()}`)

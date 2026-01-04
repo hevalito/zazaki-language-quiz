@@ -138,14 +138,16 @@ model Quiz {
   id          String   @id @default(cuid())
   title       Json     // Multi-language
   description Json?
-  lessonId    String
+  lessonId    String?  // Optional for daily quizzes (which might not belong to a lesson)
   order       Int      @default(0)
   isPublished Boolean  @default(false)
+  type        QuizType @default(STANDARD)
+  date        DateTime? @unique
   config      Json     // Quiz-specific configuration
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  lesson    Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lesson    Lesson?    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   questions Question[]
   attempts  Attempt[]
 
@@ -161,7 +163,7 @@ model Question {
   script      ScriptType   @default(LATIN)
   difficulty  Int          @default(1) // 1-5 scale
   points      Int          @default(10)
-  quizId      String
+  quizId      String?
   order       Int          @default(0)
 
   // Media support
@@ -177,7 +179,7 @@ model Question {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz        Quiz?        @relation(fields: [quizId], references: [id], onDelete: Cascade)
   choices     Choice[]
   answers     Answer[]
   spacedItems SpacedItem[]
@@ -362,4 +364,9 @@ enum AnswerResult {
   PARTIAL
   INCORRECT
   SKIPPED
+}
+
+enum QuizType {
+  STANDARD
+  DAILY
 }

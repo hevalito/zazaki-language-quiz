@@ -42,14 +42,14 @@ export function MultipleChoiceQuestion({
 
     // Show results
     if (choice.isCorrect) {
-      return `${baseClass} quiz-option-correct`
+      return `${baseClass} quiz-option-correct transform scale-[1.02] shadow-md`
     }
 
     if (selectedChoice === choice.id && !choice.isCorrect) {
-      return `${baseClass} quiz-option-incorrect`
+      return `${baseClass} quiz-option-incorrect opacity-75`
     }
 
-    return baseClass
+    return `${baseClass} opacity-50`
   }
 
   const getChoiceIcon = (choice: Choice) => {
@@ -71,7 +71,7 @@ export function MultipleChoiceQuestion({
     if (typeof question.prompt === 'string') return question.prompt
     if (typeof question.prompt === 'object' && question.prompt !== null) {
       const promptObj = question.prompt as Record<string, string>
-      return promptObj.en || promptObj.de || Object.values(promptObj)[0] || ''
+      return promptObj.de || promptObj.en || Object.values(promptObj)[0] || ''
     }
     return ''
   }
@@ -81,7 +81,7 @@ export function MultipleChoiceQuestion({
     if (typeof choice.label === 'string') return choice.label
     if (typeof choice.label === 'object' && choice.label !== null) {
       const labelObj = choice.label as Record<string, string>
-      return labelObj.en || labelObj.de || Object.values(labelObj)[0] || ''
+      return labelObj.de || labelObj.en || Object.values(labelObj)[0] || ''
     }
     return ''
   }
@@ -151,7 +151,7 @@ export function MultipleChoiceQuestion({
           <p className="text-blue-800 text-sm">
             {typeof question.explanation === 'string'
               ? question.explanation
-              : (question.explanation as any)?.en || (question.explanation as any)?.de || ''}
+              : (question.explanation as any)?.de || (question.explanation as any)?.en || ''}
           </p>
         </div>
       )}
@@ -167,7 +167,7 @@ export function MultipleChoiceQuestion({
               <p className="text-yellow-800 text-sm">
                 {typeof question.hints === 'string'
                   ? question.hints
-                  : (question.hints as any)?.en || (question.hints as any)?.de || ''}
+                  : (question.hints as any)?.de || (question.hints as any)?.en || ''}
               </p>
             </div>
           </details>

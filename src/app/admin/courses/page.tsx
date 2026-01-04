@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { LanguageTabs } from '@/components/admin/language-tabs'
 
 export default function AdminCoursesPage() {
     const router = useRouter()
@@ -93,27 +94,27 @@ export default function AdminCoursesPage() {
                 <div className="mb-8 bg-white p-6 rounded-lg shadow border border-gray-200">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
                     <form onSubmit={handleCreate} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Title (EN)</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={newCourse.title.en}
-                                    onChange={e => setNewCourse({ ...newCourse, title: { ...newCourse.title, en: e.target.value } })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Title (DE)</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={newCourse.title.de}
-                                    onChange={e => setNewCourse({ ...newCourse, title: { ...newCourse.title, de: e.target.value } })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                />
-                            </div>
+                        <div className="col-span-2">
+                            <LanguageTabs>
+                                {(lang) => (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Title ({lang === 'de' ? 'German' : 'English'})
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required={lang === 'de'}
+                                            value={newCourse.title[lang]}
+                                            onChange={e => setNewCourse({
+                                                ...newCourse,
+                                                title: { ...newCourse.title, [lang]: e.target.value }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
+                                        />
+                                    </div>
+                                )}
+                            </LanguageTabs>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Level</label>

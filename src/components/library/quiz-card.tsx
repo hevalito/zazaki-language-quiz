@@ -22,14 +22,15 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
         'A2': 'bg-brand-green/10 text-brand-green border border-brand-green/20',
         'B1': 'bg-primary-100 text-primary-800 border border-primary-200',
         'B2': 'bg-primary-100 text-primary-800 border border-primary-200',
-        'C1': 'bg-brand-purple/10 text-brand-purple border border-brand-purple/20', // Assuming brand-purple exists or defaulting
+        'C1': 'bg-brand-purple/10 text-brand-purple border border-brand-purple/20',
         'C2': 'bg-brand-red/10 text-brand-red border border-brand-red/20',
+        'Daily': 'bg-indigo-100 text-indigo-700 border border-indigo-200',
     }
 
-    const level = quiz.lesson.chapter.course.level
+    const level = quiz.lesson?.chapter?.course?.level || (quiz.type === 'DAILY' ? 'Daily' : 'N/A')
     const isCompleted = quiz.status === 'completed'
-    const questionCount = quiz._count.questions
-    const tags = quiz.lesson.targetSkills || []
+    const questionCount = quiz._count?.questions || 0
+    const tags = quiz.lesson?.targetSkills || []
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:border-primary-200 p-5 flex flex-col h-full group">
@@ -40,7 +41,7 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
                 {isCompleted && (
                     <div className="flex items-center text-brand-green text-sm font-bold">
                         <CheckCircleIconSolid className="w-5 h-5 mr-1" />
-                        <span>{quiz.lastScore} Pkt</span>
+                        <span>{quiz.bestScore} XP</span>
                     </div>
                 )}
             </div>
@@ -50,7 +51,7 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
             </h3>
 
             <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-                {getTitle(quiz.lesson.chapter.course.title)}
+                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
             </p>
 
             {/* Metadata tags */}

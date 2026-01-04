@@ -8,13 +8,17 @@ import {
     ClipboardDocumentListIcon,
     UsersIcon,
     TrophyIcon,
-    XMarkIcon
+    XMarkIcon,
+    QuestionMarkCircleIcon,
+    CalendarIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
     { name: 'Dashboard', href: '/admin', icon: HomeIcon },
     { name: 'Courses', href: '/admin/courses', icon: AcademicCapIcon },
     { name: 'Quizzes', href: '/admin/quizzes', icon: ClipboardDocumentListIcon },
+    { name: 'Daily Quiz', href: '/admin/daily-quiz', icon: CalendarIcon },
+    { name: 'Questions', href: '/admin/questions', icon: QuestionMarkCircleIcon },
     { name: 'Users', href: '/admin/users', icon: UsersIcon },
     { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
 ]

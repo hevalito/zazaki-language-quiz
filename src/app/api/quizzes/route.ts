@@ -12,19 +12,30 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const level = searchParams.get('level') // A0, A1, etc.
     const status = searchParams.get('status') // 'completed', 'in_progress', 'not_started'
-    // const topic = searchParams.get('topic') // TODO: Implement topic filtering when standardized
+    const type = searchParams.get('type')
 
-    const quizzes = await prisma.quiz.findMany({
-      where: {
-        isPublished: true,
-        lesson: {
-          chapter: {
-            course: {
-              level: level ? (level as any) : undefined
-            }
+    const where: any = {
+      isPublished: true
+    }
+
+    let orderBy: any = { order: 'asc' }
+
+    if (type === 'DAILY') {
+      where.type = 'DAILY'
+      orderBy = { date: 'desc' }
+    } else {
+      // Standard quizzes must have a lesson/course context for now if filtering by level
+      where.lesson = {
+        chapter: {
+          course: {
+            level: level ? (level as any) : undefined
           }
         }
-      },
+      }
+    }
+
+    const quizzes = await prisma.quiz.findMany({
+      where,
       include: {
         lesson: {
           select: {
@@ -53,32 +64,33 @@ export async function GET(request: Request) {
             userId: session.user.id
           },
           orderBy: {
-            completedAt: 'desc'
+            startedAt: 'desc'
           },
-          take: 1,
           select: {
+            id: true,
             score: true,
             completedAt: true,
             maxScore: true
           }
         }
       },
-      orderBy: {
-        order: 'asc'
-      }
+      orderBy
     })
 
     // enrich and filter by status in memory since we can't easily filter by "absence of attempt" in prisma where clause efficiently without raw query or separate fetch
     const enrichedQuizzes = quizzes.map(quiz => {
-      const bestAttempt = quiz.attempts[0]
-      const isCompleted = !!bestAttempt?.completedAt
-      const inProgress = false // For now, we only track completed or not. Future: check unfinished attempts.
+      const attempts = quiz.attempts
+      const isCompleted = attempts.some(a => !!a.completedAt)
+      const lastAttempt = attempts[0] // Most recently started
+      const bestAttempt = attempts.reduce((best, current) => (current.score > (best?.score || 0) ? current : best), attempts[0])
 
       return {
         ...quiz,
         status: isCompleted ? 'completed' : 'not_started',
-        lastScore: bestAttempt?.score || 0,
-        maxScore: bestAttempt?.maxScore || 0
+        lastScore: lastAttempt?.score || 0,
+        maxScore: bestAttempt?.maxScore || lastAttempt?.maxScore || 0, // Should this be from the attempt or the quiz? The attempt stores snapshot.
+        // Actually, if I want to show "Best Score", I should use bestAttempt.score
+        bestScore: bestAttempt?.score || 0
       }
     })
 

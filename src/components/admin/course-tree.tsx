@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { PlusIcon, PencilSquareIcon, TrashIcon, ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { LanguageTabs } from './language-tabs'
 
 interface CourseTreeProps {
     courseId: string
@@ -195,27 +196,28 @@ function NodeModal({ type, parentId, initialData, onClose, onSave }: any) {
                 <h3 className="text-lg font-medium mb-4">
                     {initialData ? 'Edit' : 'New'} {type === 'CHAPTER' ? 'Chapter' : 'Lesson'}
                 </h3>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Title (EN)</label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.title.en}
-                            onChange={e => setFormData({ ...formData, title: { ...formData.title, en: e.target.value } })}
-                            className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Title (DE)</label>
-                        <input
-                            type="text"
-                            required
-                            value={formData.title.de}
-                            onChange={e => setFormData({ ...formData, title: { ...formData.title, de: e.target.value } })}
-                            className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
-                        />
-                    </div>
+                    <LanguageTabs>
+                        {(lang) => (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Title ({lang === 'de' ? 'German' : 'English'})
+                                </label>
+                                <input
+                                    type="text"
+                                    required={lang === 'de'} // Only German is strictly required as per primary lang policy
+                                    value={formData.title[lang]}
+                                    onChange={e => setFormData({
+                                        ...formData,
+                                        title: { ...formData.title, [lang]: e.target.value }
+                                    })}
+                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                    placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
+                                />
+                            </div>
+                        )}
+                    </LanguageTabs>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Order</label>
                         <input

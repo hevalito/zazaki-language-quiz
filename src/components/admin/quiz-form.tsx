@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { LanguageTabs } from './language-tabs'
 
 interface QuizFormProps {
     initialData?: any
@@ -128,62 +129,43 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                     />
                 </div>
 
-                {/* English Title */}
-                <div className="sm:col-span-3">
-                    <label className="block text-sm font-medium text-gray-700">Title (EN)</label>
-                    <input
-                        type="text"
-                        required
-                        value={formData.title.en}
-                        onChange={e => setFormData({
-                            ...formData,
-                            title: { ...formData.title, en: e.target.value }
-                        })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                    />
-                </div>
-
-                {/* German Title */}
-                <div className="sm:col-span-3">
-                    <label className="block text-sm font-medium text-gray-700">Title (DE)</label>
-                    <input
-                        type="text"
-                        required
-                        value={formData.title.de}
-                        onChange={e => setFormData({
-                            ...formData,
-                            title: { ...formData.title, de: e.target.value }
-                        })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                    />
-                </div>
-
-                {/* English Description */}
+                {/* Language Specific Content */}
                 <div className="sm:col-span-6">
-                    <label className="block text-sm font-medium text-gray-700">Description (EN)</label>
-                    <textarea
-                        rows={2}
-                        value={formData.description.en}
-                        onChange={e => setFormData({
-                            ...formData,
-                            description: { ...formData.description, en: e.target.value }
-                        })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                    />
-                </div>
-
-                {/* German Description */}
-                <div className="sm:col-span-6">
-                    <label className="block text-sm font-medium text-gray-700">Description (DE)</label>
-                    <textarea
-                        rows={2}
-                        value={formData.description.de}
-                        onChange={e => setFormData({
-                            ...formData,
-                            description: { ...formData.description, de: e.target.value }
-                        })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                    />
+                    <LanguageTabs>
+                        {(lang) => (
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Title ({lang === 'de' ? 'German' : 'English'})
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required={lang === 'de'}
+                                        value={formData.title[lang]}
+                                        onChange={e => setFormData({
+                                            ...formData,
+                                            title: { ...formData.title, [lang]: e.target.value }
+                                        })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Description ({lang === 'de' ? 'German' : 'English'})
+                                    </label>
+                                    <textarea
+                                        rows={2}
+                                        value={formData.description[lang]}
+                                        onChange={e => setFormData({
+                                            ...formData,
+                                            description: { ...formData.description, [lang]: e.target.value }
+                                        })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </LanguageTabs>
                 </div>
 
                 {/* Published Status */}

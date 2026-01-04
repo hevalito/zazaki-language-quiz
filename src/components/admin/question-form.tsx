@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { LanguageTabs } from './language-tabs'
 
 interface QuestionFormProps {
-    quizId: string
+    quizId?: string | null
     initialData?: any
     onSave: (data: any) => Promise<void>
     onCancel: () => void
@@ -21,11 +22,13 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         points: initialData?.points || 10,
         choices: initialData?.choices?.map((c: any) => ({
             ...c,
-            label: typeof c.label === 'object' ? (c.label.de || c.label.en || Object.values(c.label)[0] || '') : c.label || ''
+            label: typeof c.label === 'object'
+                ? { en: c.label.en || '', de: c.label.de || '' }
+                : { de: c.label || '', en: '' }
         })) || [
-                { label: '', isCorrect: true },
-                { label: '', isCorrect: false },
-                { label: '', isCorrect: false }
+                { label: { de: '', en: '' }, isCorrect: true },
+                { label: { de: '', en: '' }, isCorrect: false },
+                { label: { de: '', en: '' }, isCorrect: false }
             ]
     })
 
@@ -39,7 +42,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
     const addChoice = () => {
         setFormData({
             ...formData,
-            choices: [...formData.choices, { label: '', isCorrect: false }]
+            choices: [...formData.choices, { label: { de: '', en: '' }, isCorrect: false }]
         })
     }
 
@@ -61,11 +64,13 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                 points: initialData?.points || 10,
                 choices: initialData?.choices?.map((c: any) => ({
                     ...c,
-                    label: typeof c.label === 'object' ? (c.label.de || c.label.en || Object.values(c.label)[0] || '') : c.label || ''
+                    label: typeof c.label === 'object'
+                        ? { en: c.label.en || '', de: c.label.de || '' }
+                        : { de: c.label || '', en: '' }
                 })) || [
-                        { label: '', isCorrect: true },
-                        { label: '', isCorrect: false },
-                        { label: '', isCorrect: false }
+                        { label: { de: '', en: '' }, isCorrect: true },
+                        { label: { de: '', en: '' }, isCorrect: false },
+                        { label: { de: '', en: '' }, isCorrect: false }
                     ]
             })
         }
@@ -76,14 +81,14 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         if (formData.type === 'TRUE_FALSE') {
             // Check if we already have valid T/F structure
             const isStandardTF = formData.choices.length === 2
-                && (formData.choices[0].label === 'Wahr' || formData.choices[0].label === 'True')
+                && (formData.choices[0].label.de === 'Wahr' || formData.choices[0].label.en === 'True')
 
             if (!initialData && !isStandardTF) {
                 setFormData(prev => ({
                     ...prev,
                     choices: [
-                        { label: 'Wahr', isCorrect: true },
-                        { label: 'Falsch', isCorrect: false }
+                        { label: { de: 'Wahr', en: 'True' }, isCorrect: true },
+                        { label: { de: 'Falsch', en: 'False' }, isCorrect: false }
                     ]
                 }))
             }
@@ -124,37 +129,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                         </button>
                     </div>
 
-                    {/* Prompt DE (Default) */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Question Prompt (DE - Default)</label>
-                        <textarea
-                            required
-                            rows={2}
-                            value={formData.prompt.de}
-                            onChange={e => setFormData({
-                                ...formData,
-                                prompt: { ...formData.prompt, de: e.target.value }
-                            })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            placeholder="Frage auf Deutsch..."
-                        />
-                    </div>
-
-                    {/* Prompt EN */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Question Prompt (EN)</label>
-                        <textarea
-                            rows={2}
-                            value={formData.prompt.en}
-                            onChange={e => setFormData({
-                                ...formData,
-                                prompt: { ...formData.prompt, en: e.target.value }
-                            })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            placeholder="Question in English (optional)..."
-                        />
-                    </div>
-
+                    {/* Common Fields */}
                     <div className="grid grid-cols-2 gap-4">
                         {/* Type */}
                         <div>
@@ -182,57 +157,87 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                         </div>
                     </div>
 
-                    {/* Choices */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Choices</label>
-                        <div className="space-y-3">
-                            {formData.choices.map((choice: any, index: number) => (
-                                <div key={index} className="flex items-center gap-3">
-                                    <input
-                                        type="radio"
-                                        name="correct-choice"
-                                        checked={choice.isCorrect}
-                                        onChange={() => {
-                                            const newChoices = formData.choices.map((c: any, i: number) => ({
-                                                ...c,
-                                                isCorrect: i === index
-                                            }))
-                                            setFormData({ ...formData, choices: newChoices })
-                                        }}
-                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    {/* Tabbed Content (Prompt & Choices) */}
+                    <LanguageTabs>
+                        {(lang) => (
+                            <div className="space-y-6">
+                                {/* Prompt */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Question Prompt ({lang === 'de' ? 'German' : 'English'})
+                                    </label>
+                                    <textarea
+                                        required={lang === 'de'}
+                                        rows={2}
+                                        value={formData.prompt[lang]}
+                                        onChange={e => setFormData({
+                                            ...formData,
+                                            prompt: { ...formData.prompt, [lang]: e.target.value }
+                                        })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        placeholder={lang === 'de' ? 'Frage eingeben...' : 'Enter question...'}
                                     />
-                                    <input
-                                        type="text"
-                                        required
-                                        value={choice.label}
-                                        onChange={e => updateChoice(index, 'label', e.target.value)}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                        placeholder={`Option ${index + 1}`}
-                                        // Lock labels for T/F
-                                        disabled={formData.type === 'TRUE_FALSE'}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => removeChoice(index)}
-                                        className="text-red-400 hover:text-red-500 p-1 disabled:opacity-30 disabled:cursor-not-allowed"
-                                        disabled={formData.choices.length <= 2 || formData.type === 'TRUE_FALSE'}
-                                    >
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
                                 </div>
-                            ))}
-                        </div>
-                        {formData.type !== 'TRUE_FALSE' && (
-                            <button
-                                type="button"
-                                onClick={addChoice}
-                                className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
-                            >
-                                <PlusIcon className="h-4 w-4 mr-1" />
-                                Add Option
-                            </button>
+
+                                {/* Choices */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Choices ({lang === 'de' ? 'German' : 'English'})
+                                    </label>
+                                    <div className="space-y-3">
+                                        {formData.choices.map((choice: any, index: number) => (
+                                            <div key={index} className="flex items-center gap-3">
+                                                <input
+                                                    type="radio"
+                                                    name="correct-choice"
+                                                    checked={choice.isCorrect}
+                                                    onChange={() => {
+                                                        const newChoices = formData.choices.map((c: any, i: number) => ({
+                                                            ...c,
+                                                            isCorrect: i === index
+                                                        }))
+                                                        setFormData({ ...formData, choices: newChoices })
+                                                    }}
+                                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    required={lang === 'de'}
+                                                    value={choice.label[lang]}
+                                                    onChange={e => updateChoice(index, 'label', {
+                                                        ...choice.label,
+                                                        [lang]: e.target.value
+                                                    })}
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    placeholder={lang === 'de' ? `Option ${index + 1}` : `Option ${index + 1} (EN)`}
+                                                    // Lock labels for T/F
+                                                    disabled={formData.type === 'TRUE_FALSE'}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeChoice(index)}
+                                                    className="text-red-400 hover:text-red-500 p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    disabled={formData.choices.length <= 2 || formData.type === 'TRUE_FALSE'}
+                                                >
+                                                    <TrashIcon className="h-5 w-5" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {formData.type !== 'TRUE_FALSE' && (
+                                        <button
+                                            type="button"
+                                            onClick={addChoice}
+                                            className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
+                                        >
+                                            <PlusIcon className="h-4 w-4 mr-1" />
+                                            Add Option
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         )}
-                    </div>
+                    </LanguageTabs>
 
                     <div className="flex justify-end pt-4 border-t border-gray-200">
                         <button

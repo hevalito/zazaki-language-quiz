@@ -49,13 +49,40 @@ export async function GET(
           id: choice.id,
           label: choice.label,
           order: choice.order,
-          mediaUrl: choice.mediaUrl
-          // isCorrect is intentionally omitted
+          mediaUrl: choice.mediaUrl,
+          isCorrect: choice.isCorrect
         }))
       }))
     }
 
-    return NextResponse.json(sanitizedQuiz)
+    // Find or create active attempt
+    let attempt = await prisma.attempt.findFirst({
+      where: {
+        userId: session.user.id,
+        quizId: params.id,
+        completedAt: null
+      },
+      include: {
+        answers: true
+      }
+    })
+
+    if (!attempt) {
+      attempt = await prisma.attempt.create({
+        data: {
+          userId: session.user.id,
+          quizId: params.id
+        },
+        include: {
+          answers: true
+        }
+      })
+    }
+
+    return NextResponse.json({
+      ...sanitizedQuiz,
+      activeAttempt: attempt
+    })
   } catch (error) {
     console.error('Error fetching quiz:', error)
     return NextResponse.json(

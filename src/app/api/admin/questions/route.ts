@@ -2,6 +2,45 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/admin-auth'
 
+
+export async function GET(request: Request) {
+    try {
+        const isAdmin = await requireAdmin()
+        if (!isAdmin) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
+        const { searchParams } = new URL(request.url)
+        const poolOnly = searchParams.get('pool') === 'true'
+
+        const where: any = {}
+        if (poolOnly) {
+            where.quizId = null
+        }
+
+        const questions = await prisma.question.findMany({
+            where,
+            include: {
+                choices: true,
+                quiz: {
+                    select: {
+                        title: true
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        })
+
+        return NextResponse.json(questions)
+    } catch (error) {
+        console.error('Error fetching questions:', error)
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        )
+    }
+}
+
 export async function POST(request: Request) {
     try {
         const isAdmin = await requireAdmin()
@@ -12,7 +51,7 @@ export async function POST(request: Request) {
         const data = await request.json()
 
         // Basic validation
-        if (!data.quizId || !data.prompt) {
+        if (!data.prompt) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
                 { status: 400 }
@@ -21,7 +60,7 @@ export async function POST(request: Request) {
 
         const question = await prisma.question.create({
             data: {
-                quizId: data.quizId,
+                quizId: data.quizId || null,
                 type: data.type || 'MULTIPLE_CHOICE',
                 prompt: data.prompt,
                 points: data.points || 10,

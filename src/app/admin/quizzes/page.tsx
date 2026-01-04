@@ -14,8 +14,9 @@ interface Quiz {
                 title: any
             }
         }
-    }
+    } | null
     isPublished: boolean
+    type: 'STANDARD' | 'DAILY'
     _count: {
         questions: number
     }
@@ -83,7 +84,13 @@ export default function QuizzesAdmin() {
                                 <div className="flex-1 min-w-0">
                                     <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(quiz.title)}</h3>
                                     <p className="text-sm text-gray-500 truncate">
-                                        {getTitle(quiz.lesson.chapter.course.title)} / {getTitle(quiz.lesson.title)}
+                                        {quiz.lesson ? (
+                                            <>{getTitle(quiz.lesson.chapter.course.title)} / {getTitle(quiz.lesson.title)}</>
+                                        ) : (
+                                            <span className={`${quiz.type === 'DAILY' ? 'text-purple-600' : 'text-orange-500'} font-medium`}>
+                                                {quiz.type === 'DAILY' ? 'Daily Challenge' : 'Standalone / Orphaned'}
+                                            </span>
+                                        )}
                                     </p>
                                     <div className="mt-2 flex items-center gap-2">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${quiz.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'

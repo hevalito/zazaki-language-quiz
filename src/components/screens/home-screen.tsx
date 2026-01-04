@@ -13,6 +13,7 @@ import {
   BookOpenIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
+import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
 
 interface UserProgress {
   id: string
@@ -186,6 +187,12 @@ export function HomeScreen() {
           </div>
         </div>
 
+
+        {/* Daily Progress */}
+        {/* ... (previous card ends) ... */}
+
+        {/* Daily Challenge */}
+        <DailyQuizCard />
 
         {/* Continue Learning */}
         <div className="card">

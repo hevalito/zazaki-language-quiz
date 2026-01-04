@@ -51,6 +51,15 @@ export function FilterBar({
                     >
                         Alle
                     </button>
+                    <button
+                        onClick={() => onCourseChange('daily')}
+                        className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === 'daily'
+                            ? 'bg-indigo-500 text-white border border-transparent'
+                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                            }`}
+                    >
+                        Daily Challenges
+                    </button>
                     {courses.map((course) => (
                         <button
                             key={course.id}
