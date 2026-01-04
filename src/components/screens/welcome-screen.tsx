@@ -83,6 +83,12 @@ export function WelcomeScreen() {
                     placeholder="Deine E-Mail Adresse"
                     className="flex-1 px-4 py-3 rounded-xl border-none bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-400 outline-none text-gray-900 placeholder-gray-500"
                     required
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleMagicLink(e)
+                      }
+                    }}
                   />
                   <button
                     onClick={handleMagicLink}

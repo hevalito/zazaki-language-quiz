@@ -35,9 +35,16 @@ export default auth((req) => {
         }
     }
 
+    // Protect private routes
+    if (!isLoggedIn && !isAuthPage && req.nextUrl.pathname !== "/" && req.nextUrl.pathname !== "/leaderboard") {
+        return NextResponse.redirect(new URL("/auth/signin", req.nextUrl))
+    }
+
     return
 })
 
 export const config = {
     matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
+
+
