@@ -119,28 +119,29 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
                         const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
                         if (targetIndex < 0 || targetIndex >= sorted.length) return
 
-                        const currentQ = sorted[currentIndex]
-                        const targetQ = sorted[targetIndex]
+                        // Swap in local array
+                        const newQuestions = [...sorted]
+                        const [movedItem] = newQuestions.splice(currentIndex, 1)
+                        newQuestions.splice(targetIndex, 0, movedItem)
 
-                        // Swap orders
-                        const currentOrder = currentQ.order || currentIndex
-                        const targetOrder = targetQ.order || targetIndex
+                        // Assign new orders
+                        const updates = newQuestions.map((q, index) => ({
+                            id: q.id,
+                            order: index
+                        }))
 
                         try {
-                            // Update both
-                            await Promise.all([
-                                fetch(`/api/admin/questions/${currentQ.id}`, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ ...currentQ, order: targetOrder })
-                                }),
-                                fetch(`/api/admin/questions/${targetQ.id}`, {
-                                    method: 'PUT',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ ...targetQ, order: currentOrder })
-                                })
-                            ])
-                            fetchQuiz()
+                            const res = await fetch('/api/admin/questions/reorder', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ items: updates })
+                            })
+
+                            if (res.ok) {
+                                fetchQuiz()
+                            } else {
+                                console.error('Failed to save order')
+                            }
                         } catch (e) {
                             console.error('Reorder failed', e)
                         }
