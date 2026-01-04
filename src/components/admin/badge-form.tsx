@@ -23,7 +23,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
         },
         iconUrl: initialData?.iconUrl || '',
         criteriaType: initialData?.criteria?.type || 'lesson_completion',
-        criteriaValue: initialData?.criteria?.value || 1,
+        criteriaValue: initialData?.criteria?.level || initialData?.criteria?.value || initialData?.criteria?.count || 1,
         isActive: initialData?.isActive ?? true
     })
 
@@ -37,10 +37,9 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                 title: formData.title,
                 description: formData.description,
                 iconUrl: formData.iconUrl,
-                criteria: {
-                    type: formData.criteriaType,
-                    count: Number(formData.criteriaValue)
-                },
+                criteria: formData.criteriaType === 'level_reached'
+                    ? { type: 'level_reached', level: formData.criteriaValue }
+                    : { type: formData.criteriaType, count: Number(formData.criteriaValue) },
                 isActive: formData.isActive
             }
 
@@ -167,19 +166,46 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         <option value="lesson_completion">Lesson Completion</option>
                         <option value="streak">Streak</option>
                         <option value="total_xp">Total XP</option>
+                        <option value="level_reached">Level Reached</option>
+                        <option value="total_quizzes">Total Quizzes</option>
+                        <option value="perfect_score_streak">Perfect Score Streak</option>
                     </select>
                 </div>
 
                 {/* Criteria Value */}
-                <div className="sm:col-span-3">
-                    <label className="block text-sm font-medium text-gray-700">Current Value Needed</label>
-                    <input
-                        type="number"
-                        value={formData.criteriaValue}
-                        onChange={e => setFormData({ ...formData, criteriaValue: Number(e.target.value) })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                    />
-                </div>
+                {formData.criteriaType === 'level_reached' ? (
+                    <div className="sm:col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">Required Level</label>
+                        <select
+                            value={formData.criteriaValue} // We'll store string 'A1' etc here temporarily, cast safely later
+                            onChange={e => setFormData({ ...formData, criteriaValue: e.target.value as any })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                        >
+                            <option value="A1">A1 - Beginner</option>
+                            <option value="A2">A2 - Elementary</option>
+                            <option value="B1">B1 - Intermediate</option>
+                            <option value="B2">B2 - Upper Intermediate</option>
+                            <option value="C1">C1 - Advanced</option>
+                            <option value="C2">C2 - Mastery</option>
+                        </select>
+                    </div>
+                ) : (
+                    <div className="sm:col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">
+                            {formData.criteriaType === 'total_xp' ? 'XP Needed' :
+                                formData.criteriaType === 'streak' ? 'Days Streak' :
+                                    formData.criteriaType === 'total_quizzes' ? 'Quizzes Count' :
+                                        formData.criteriaType === 'perfect_score_streak' ? 'Streak Count' :
+                                            'Count'}
+                        </label>
+                        <input
+                            type="number"
+                            value={formData.criteriaValue}
+                            onChange={e => setFormData({ ...formData, criteriaValue: Number(e.target.value) })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                        />
+                    </div>
+                )}
 
                 {/* Active Status */}
                 <div className="sm:col-span-6">

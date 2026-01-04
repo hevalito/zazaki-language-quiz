@@ -41,23 +41,52 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                     }
                     break
 
-                case 'total_xp': // Hypothetical new type
+                case 'total_xp':
                     if (user.totalXP >= (criteria.count || 0)) {
                         isEarned = true
                     }
                     break
 
+                case 'level_reached':
+                    // Map levels to numbers for comparison
+                    const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                    const currentLevelIndex = levels.indexOf(user.currentLevel)
+                    const requiredLevelIndex = levels.indexOf(criteria.level)
+
+                    if (currentLevelIndex >= 0 && requiredLevelIndex >= 0 && currentLevelIndex >= requiredLevelIndex) {
+                        isEarned = true
+                    }
+                    break
+
+                case 'total_quizzes':
+                    // Check total number of attempts
+                    if (user.attempts.length >= (criteria.count || 1)) {
+                        isEarned = true
+                    }
+                    break
+
+                case 'perfect_score_streak':
+                    // Sort attempts by date descending (newest first)
+                    const sortedAttempts = [...user.attempts].sort((a, b) =>
+                        new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime()
+                    )
+
+                    let streak = 0
+                    for (const attempt of sortedAttempts) {
+                        // Check if perfect score (e.g. 100%)
+                        if (attempt.maxScore > 0 && attempt.score >= attempt.maxScore) {
+                            streak++
+                        } else {
+                            break // streak broken
+                        }
+                    }
+                    if (streak >= (criteria.count || 3)) {
+                        isEarned = true
+                    }
+                    break
+
                 case 'lesson_completion':
-                    // Simplified check: if user has any progress marked 'completed'
-                    // Ideally we'd count actual lesson completions from Progress table
-                    // specific to the criteria requirements
-                    // For "First Step" (count: 1), checking if any attempt exists might be a proxy, 
-                    // or better, fetch Progress records.
                     if (criteria.count === 1 && user.attempts.length > 0) {
-                        // "First Step" is loosely "Complete your first lesson". 
-                        // If they have a quiz attempt, they likely finished a lesson component.
-                        // A more robust check would query prisma.progress.
-                        // For now, let's assume 'attempts > 0' is enough for "First Step" if it maps to quiz completion.
                         isEarned = true
                     }
                     break
