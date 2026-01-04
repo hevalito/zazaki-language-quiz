@@ -18,7 +18,8 @@ A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) t
 - **Responsive Design**: Works seamlessly on all screen sizes
 
 ### 🔐 Authentication & User Management
-- **Magic Link Authentication**: Passwordless login via email
+- **Magic Link Authentication**: Passwordless login via email (Resend)
+- **Onboarding Flow**: Mandatory profile setup for new users
 - **OAuth Integration**: Sign in with Google and Apple
 - **Guest Mode**: Try the app without creating an account
 - **Progress Tracking**: Automatic progress saving and sync
@@ -28,7 +29,8 @@ A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) t
 - **TypeScript** for type safety
 - **Tailwind CSS** for styling
 - **Prisma ORM** with PostgreSQL
-- **NextAuth.js v5** for authentication
+- **NextAuth.js v5** (Auth.js) with Edge-compatible Middleware
+- **Resend** for transactional emails
 - **TanStack Query v5** for server state management
 
 ## Getting Started
@@ -36,7 +38,7 @@ A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) t
 ### Prerequisites
 - Node.js 18+ 
 - PostgreSQL database
-- Email service (for magic links)
+- Resend API Key (for magic links)
 - OAuth credentials (Google/Apple)
 
 ### Installation
@@ -59,9 +61,9 @@ A modern, mobile-first Progressive Web App (PWA) for learning Zazaki (Kurdish) t
    
    Fill in the required environment variables:
    - `DATABASE_URL`: PostgreSQL connection string
-   - `NEXTAUTH_SECRET`: Random secret for NextAuth.js
-   - `NEXTAUTH_URL`: Your app URL
-   - Email service credentials
+   - `AUTH_SECRET`: Random secret for Auth.js
+   - `AUTH_RESEND_KEY`: Resend API Key for emails
+   - `NEXT_PUBLIC_APP_URL`: Your app URL
    - OAuth provider credentials
 
 4. **Set up the database**
@@ -85,6 +87,8 @@ src/
 ├── app/                    # Next.js App Router pages
 │   ├── api/               # API routes
 │   ├── auth/              # Authentication pages
+│   ├── onboarding/        # Onboarding flow
+│   ├── leaderboard/       # Leaderboard page
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
@@ -98,7 +102,9 @@ src/
 │   ├── query-client.ts    # TanStack Query setup
 │   └── spaced-repetition.ts # Learning algorithm
 ├── types/                 # TypeScript type definitions
-└── auth.ts               # NextAuth.js configuration
+├── auth.ts               # NextAuth.js Node.js config (Adapter)
+├── auth.config.ts        # NextAuth.js Edge config (Middleware)
+└── middleware.ts         # Edge Middleware for Auth & Routing
 ```
 
 ## Database Schema
