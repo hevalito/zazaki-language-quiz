@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { MultipleChoiceQuestion } from '@/components/questions/multiple-choice-question'
@@ -272,7 +272,7 @@ export default function QuizPage() {
 
   // Memoize shuffled choices so they don't re-shuffle on re-renders (like selecting an answer)
   // Only re-shuffle when the question index changes
-  const displayChoices = React.useMemo(() => {
+  const displayChoices = useMemo(() => {
     // Default to true if undefined, for backward compatibility or desired default
     const shouldRandomize = quiz.config?.randomizeAnswers ?? true
 
