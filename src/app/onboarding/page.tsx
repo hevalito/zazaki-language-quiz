@@ -34,7 +34,13 @@ export default function OnboardingPage() {
             }
 
             // Update session to reflect new data
-            await update()
+            await update({
+                user: {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    nickname: formData.nickname
+                }
+            })
 
             router.push('/')
             router.refresh()
@@ -54,7 +60,7 @@ export default function OnboardingPage() {
                             src="/images/logo-full.png"
                             alt="Zazaki Quiz"
                             fill
-                            className="object-contain" // Corrected prop (removed redundant style)
+                            className="object-contain"
                             priority
                         />
                     </div>
