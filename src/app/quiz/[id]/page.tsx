@@ -87,7 +87,14 @@ export default function QuizPage() {
       const response = await fetch(`/api/quiz/${quizId}`)
       if (response.ok) {
         const data = await response.json()
+        if (data.config?.randomize) {
+          data.questions = data.questions.sort(() => Math.random() - 0.5)
+        }
         setQuiz(data)
+        // Reset state for new quiz load
+        setCurrentQuestionIndex(0)
+        setAnswers([])
+        setShowResult(false)
       } else {
         console.error('Failed to fetch quiz')
         router.push('/')

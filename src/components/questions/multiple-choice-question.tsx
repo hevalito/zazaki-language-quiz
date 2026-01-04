@@ -127,7 +127,6 @@ export function MultipleChoiceQuestion({
       {/* Answer Choices */}
       <div className="space-y-3">
         {choices
-          .sort((a, b) => a.order - b.order)
           .map((choice) => (
             <button
               key={choice.id}

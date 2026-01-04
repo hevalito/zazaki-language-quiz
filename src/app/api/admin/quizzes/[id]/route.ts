@@ -29,7 +29,14 @@ export async function GET(
                 },
                 questions: {
                     orderBy: {
-                        createdAt: 'asc'
+                        order: 'asc'
+                    },
+                    include: {
+                        choices: {
+                            orderBy: {
+                                order: 'asc'
+                            }
+                        }
                     }
                 }
             }

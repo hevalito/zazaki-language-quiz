@@ -22,7 +22,7 @@ export async function GET(
               orderBy: { order: 'asc' }
             }
           },
-          orderBy: { createdAt: 'asc' }
+          orderBy: { order: 'asc' }
         },
         lesson: {
           include: {
