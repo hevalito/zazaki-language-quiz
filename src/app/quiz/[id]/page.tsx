@@ -28,6 +28,11 @@ interface QuizData {
     }
   }
 }
+config ?: {
+  randomize?: boolean
+    randomizeAnswers?: boolean
+}
+}
 
 interface QuestionData {
   id: string
@@ -266,6 +271,20 @@ export default function QuizPage() {
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100
 
+  // Memoize shuffled choices so they don't re-shuffle on re-renders (like selecting an answer)
+  // Only re-shuffle when the question index changes
+  const displayChoices = React.useMemo(() => {
+    // Default to true if undefined, for backward compatibility or desired default
+    const shouldRandomize = quiz.config?.randomizeAnswers ?? true
+
+    if (!shouldRandomize) {
+      return currentQuestion.choices
+    }
+
+    // Create a copy and shuffle
+    return [...currentQuestion.choices].sort(() => Math.random() - 0.5)
+  }, [currentQuestion.id, quiz.config?.randomizeAnswers])
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -338,7 +357,7 @@ export default function QuizPage() {
               createdAt: new Date(),
               updatedAt: new Date()
             }}
-            choices={currentQuestion.choices.map(choice => ({
+            choices={displayChoices.map(choice => ({
               ...choice,
               questionId: currentQuestion.id,
               isCorrect: false // This will be handled by the API

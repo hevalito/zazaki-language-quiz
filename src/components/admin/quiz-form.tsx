@@ -35,7 +35,8 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
         lessonId: initialData?.lessonId || '',
         order: initialData?.order || 0,
         isPublished: initialData?.isPublished ?? false,
-        randomizeQuestions: (initialData?.config as any)?.randomize ?? false
+        randomizeQuestions: (initialData?.config as any)?.randomize ?? false,
+        randomizeAnswers: (initialData?.config as any)?.randomizeAnswers ?? true
     })
 
     useEffect(() => {
@@ -61,7 +62,8 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                 order: Number(formData.order),
                 isPublished: formData.isPublished,
                 config: {
-                    randomize: formData.randomizeQuestions
+                    randomize: formData.randomizeQuestions,
+                    randomizeAnswers: formData.randomizeAnswers
                 }
             }
 
@@ -215,6 +217,22 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                         <div className="ml-3 text-sm">
                             <label htmlFor="randomizeQuestions" className="font-medium text-gray-700">Randomize Questions</label>
                             <p className="text-gray-500">Shuffle questions every time a user plays this quiz.</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start">
+                        <div className="flex h-5 items-center">
+                            <input
+                                id="randomizeAnswers"
+                                type="checkbox"
+                                checked={formData.randomizeAnswers}
+                                onChange={e => setFormData({ ...formData, randomizeAnswers: e.target.checked })}
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div className="ml-3 text-sm">
+                            <label htmlFor="randomizeAnswers" className="font-medium text-gray-700">Randomize Answers</label>
+                            <p className="text-gray-500">Shuffle answer options for each question (Default: On).</p>
                         </div>
                     </div>
                 </div>

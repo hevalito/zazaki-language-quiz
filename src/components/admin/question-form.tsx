@@ -19,11 +19,14 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         },
         type: initialData?.type || 'MULTIPLE_CHOICE',
         points: initialData?.points || 10,
-        choices: initialData?.choices || [
-            { label: '', isCorrect: true },
-            { label: '', isCorrect: false },
-            { label: '', isCorrect: false }
-        ]
+        choices: initialData?.choices?.map((c: any) => ({
+            ...c,
+            label: typeof c.label === 'object' ? (c.label.de || c.label.en || Object.values(c.label)[0] || '') : c.label || ''
+        })) || [
+                { label: '', isCorrect: true },
+                { label: '', isCorrect: false },
+                { label: '', isCorrect: false }
+            ]
     })
 
     // Handle choice changes
