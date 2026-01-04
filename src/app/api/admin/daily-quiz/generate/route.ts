@@ -4,25 +4,21 @@ import { startOfDay, endOfDay } from 'date-fns'
 
 export const dynamic = 'force-dynamic' // Ensure this runs dynamically
 
+import { requireAdmin } from '@/lib/admin-auth'
+
 export async function POST(req: Request) {
     try {
-        // 1. Verify Authorization (Admin only or Cron Secret)
-        // For now, we'll check for a simple CRON_SECRET header or Admin session
-        // But since this is /api/admin/*, middleware might protect it.
-        // If called via Railway Cron, it needs a bypass key. User said "railway cronsjob".
-        // I'll assume we pass a header `x-cron-secret` matching env var.
-
         const authHeader = req.headers.get('authorization')
         const cronSecret = req.headers.get('x-cron-secret')
 
-        // Simple admin check bypass if cron secret matches (TODO: Add to env)
         const isCron = cronSecret === process.env.CRON_SECRET && !!process.env.CRON_SECRET
 
-        // If not cron, require admin session (omitted for brevity, handled by middleware usually?
-        // /api/admin is usually protected. If cron calls it, it might fail auth.
-        // I should probably put this in /api/cron/daily-quiz if it's public-ish?)
-        // User asked for "manual... in admin panel" AND "railway cronsjob".
-        // I'll support both here. If called from Admin UI, header won't be set but session will be valid.
+        if (!isCron) {
+            const isAdmin = await requireAdmin()
+            if (!isAdmin) {
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            }
+        }
 
         // 2. Check if quiz already exists for today
         const now = new Date()
