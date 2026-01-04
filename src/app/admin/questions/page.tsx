@@ -1,16 +1,19 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
-import { PlusIcon, FunnelIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, FunnelIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline'
 import { QuestionList } from '@/components/admin/question-list'
 import { QuestionForm } from '@/components/admin/question-form'
+import { QuestionImporter } from '@/components/admin/question-importer'
 
 export default function QuestionsAdmin() {
     const [questions, setQuestions] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [showForm, setShowForm] = useState(false)
+    const [showImport, setShowImport] = useState(false)
     const [editingQuestion, setEditingQuestion] = useState<any>(null)
-    const [filterPool, setFilterPool] = useState(true) // Default to "Pool Only" since that is the use case
+    const [filterPool, setFilterPool] = useState(true) // Default to "Pool Only"
 
     useEffect(() => {
         fetchQuestions()
@@ -19,17 +22,7 @@ export default function QuestionsAdmin() {
     const fetchQuestions = async () => {
         setLoading(true)
         try {
-            // We might need a GET /api/admin/questions endpoint that supports filtering?
-            // Or just fetch all and filter client side?
-            // Ideally server side. 
-            // For now, I'll fetch `/api/admin/questions` and assuming it returns ALL.
-            // Wait, does GET /api/admin/questions exist? 
-            // I checked `api/admin/questions` dir and it had `route.ts`.
-            // But `route.ts` usually has GET too. I only saw POST in my previous view.
-            // I need to check if GET exists.
-
             const res = await fetch(`/api/admin/questions?pool=${filterPool}`)
-            // If the API doesn't support query params yet, I might just get all.
             if (res.ok) {
                 const data = await res.json()
                 setQuestions(data)
@@ -58,8 +51,6 @@ export default function QuestionsAdmin() {
                 : '/api/admin/questions'
 
             const method = editingQuestion ? 'PUT' : 'POST'
-
-            // data includes quizId (which is null/undefined for pool)
 
             const res = await fetch(url, {
                 method,
@@ -94,13 +85,22 @@ export default function QuestionsAdmin() {
                     <h1 className="text-2xl font-bold text-gray-900">Question Bank</h1>
                     <p className="text-gray-500">Manage all questions, including the Daily Quiz Pool.</p>
                 </div>
-                <button
-                    onClick={handleCreate}
-                    className="btn-primary flex items-center"
-                >
-                    <PlusIcon className="w-5 h-5 mr-2" />
-                    Add Question to Pool
-                </button>
+                <div className="flex space-x-3">
+                    <button
+                        onClick={() => setShowImport(true)}
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                        <ArrowUpTrayIcon className="w-5 h-5 mr-2 text-gray-500" />
+                        Import CSV
+                    </button>
+                    <button
+                        onClick={handleCreate}
+                        className="btn-primary flex items-center"
+                    >
+                        <PlusIcon className="w-5 h-5 mr-2" />
+                        Add Question
+                    </button>
+                </div>
             </div>
 
             {/* Filters */}
@@ -110,8 +110,8 @@ export default function QuestionsAdmin() {
                 <button
                     onClick={() => setFilterPool(true)}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${filterPool
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:bg-gray-100'
                         }`}
                 >
                     Pool Only (No Quiz)
@@ -119,8 +119,8 @@ export default function QuestionsAdmin() {
                 <button
                     onClick={() => setFilterPool(false)}
                     className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${!filterPool
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-100'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:bg-gray-100'
                         }`}
                 >
                     All Questions
@@ -139,10 +139,19 @@ export default function QuestionsAdmin() {
 
             {showForm && (
                 <QuestionForm
-                    // No quizId means it goes to pool
                     initialData={editingQuestion}
                     onSave={handleSave}
                     onCancel={() => setShowForm(false)}
+                />
+            )}
+
+            {showImport && (
+                <QuestionImporter
+                    onCancel={() => setShowImport(false)}
+                    onSuccess={() => {
+                        setShowImport(false)
+                        fetchQuestions()
+                    }}
                 />
             )}
         </div>

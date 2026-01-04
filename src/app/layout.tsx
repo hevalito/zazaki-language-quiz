@@ -19,20 +19,11 @@ export const metadata: Metadata = {
     siteName: 'Zazaki Academy',
     locale: 'de_DE',
     type: 'website',
-    images: [
-      {
-        url: '/og_image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Zazaki Quiz App Preview',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Zazaki Quiz - Lerne Zazakî spielerisch',
     description: 'Effektives Vokabel-Lernen und Gamification.',
-    images: ['/og_image.png'],
   },
   appleWebApp: {
     capable: true,

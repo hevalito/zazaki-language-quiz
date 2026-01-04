@@ -1,11 +1,12 @@
+
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { QuizForm } from '@/components/admin/quiz-form'
 import { QuestionList } from '@/components/admin/question-list'
 import { QuestionForm } from '@/components/admin/question-form'
-import { use } from 'react'
+import { QuestionPicker } from '@/components/admin/question-picker'
 
 export default function EditQuizPage(props: { params: Promise<{ id: string }> }) {
     const params = use(props.params)
@@ -14,6 +15,7 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
     const [loading, setLoading] = useState(true)
     const [editingQuestion, setEditingQuestion] = useState<any>(null)
     const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false)
+    const [isPickerOpen, setIsPickerOpen] = useState(false)
 
     useEffect(() => {
         fetchQuiz()
@@ -87,6 +89,30 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
         }
     }
 
+    const handleLinkQuestions = async (ids: string[]) => {
+        try {
+            const res = await fetch('/api/admin/questions/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ids,
+                    action: 'assign',
+                    targetId: quiz.id
+                })
+            })
+
+            if (res.ok) {
+                fetchQuiz()
+                setIsPickerOpen(false)
+            } else {
+                alert('Failed to link questions')
+            }
+        } catch (error) {
+            console.error(error)
+            alert('Error linking questions')
+        }
+    }
+
     if (loading) return <div className="p-8">Loading...</div>
     if (!quiz) return <div className="p-8">Quiz not found</div>
 
@@ -102,6 +128,7 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
                 <QuestionList
                     quizId={quiz.id}
                     questions={quiz.questions || []}
+                    onLinkExisting={() => setIsPickerOpen(true)}
                     onEdit={(q) => {
                         setEditingQuestion(q)
                         setIsQuestionModalOpen(true)
@@ -158,6 +185,13 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
                         setIsQuestionModalOpen(false)
                         setEditingQuestion(null)
                     }}
+                />
+            )}
+
+            {isPickerOpen && (
+                <QuestionPicker
+                    onCancel={() => setIsPickerOpen(false)}
+                    onLink={handleLinkQuestions}
                 />
             )}
         </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react'
-import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, PencilSquareIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 interface QuestionListProps {
     quizId?: string
@@ -10,6 +10,7 @@ interface QuestionListProps {
     onDelete: (id: string) => void
     onAdd?: () => void
     onReorder?: (id: string, direction: 'up' | 'down') => void
+    onLinkExisting?: () => void
 }
 
 const getPrompt = (prompt: any) => {
@@ -18,7 +19,7 @@ const getPrompt = (prompt: any) => {
     return prompt?.de || prompt?.en || prompt?.ku || 'Untitled Question'
 }
 
-export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReorder }: QuestionListProps) {
+export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReorder, onLinkExisting }: QuestionListProps) {
     const sortedQuestions = [...questions].sort((a, b) => (a.order || 0) - (b.order || 0))
 
     return (
@@ -26,14 +27,26 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
             {onAdd && (
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-medium text-gray-900">Questions</h2>
-                    <button
-                        onClick={onAdd}
-                        type="button"
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                    >
-                        <PlusIcon className="h-4 w-4 mr-1" />
-                        Add Question
-                    </button>
+                    <div className="flex space-x-2">
+                        {onLinkExisting && (
+                            <button
+                                onClick={onLinkExisting}
+                                type="button"
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-50"
+                            >
+                                <MagnifyingGlassIcon className="h-4 w-4 mr-1" />
+                                Link Existing
+                            </button>
+                        )}
+                        <button
+                            onClick={onAdd}
+                            type="button"
+                            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                        >
+                            <PlusIcon className="h-4 w-4 mr-1" />
+                            Add Question
+                        </button>
+                    </div>
                 </div>
             )}
 
