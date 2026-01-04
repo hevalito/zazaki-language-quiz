@@ -1,6 +1,6 @@
 # Zazaki Quiz App
 
-A modern, mobile-first Progressive Web App (PWA) for learning the Zazaki (Kurdish) language through interactive multiple-choice quizzes.
+A modern, mobile-first Progressive Web App (PWA) for learning the Zazaki (Kurdish) language through interactive multiple-choice quizzes, daily challenges, and gamified progress tracking.
 
 ![Zazaki Quiz App](/images/logo-full.png)
 
@@ -12,20 +12,24 @@ This application is designed to help users learn Zazaki vocabulary and grammar. 
 
 ### Core Learning
 - **Multiple Choice Quizzes**: Interactive vocabulary and grammar testing.
+- **Daily Challenges**: A unique, generated quiz available every 24 hours to build habits.
 - **Dual Script Support**: Toggle between Latin and Arabic scripts for Zazaki text.
 - **Gamification**:
   - **Streaks**: Track consecutive days of learning.
   - **Leaderboard**: Compete with other learners based on XP.
-  - **XP System**: Earn points for correct answers and completed quizzes.
+  - **Badges**: Earn achievements for milestones.
+
+### Administrative Tools (Admin Panel)
+- **Question Bank**: Centralized repository of all questions.
+  - **CSV Import**: Bulk upload questions from spreadsheets (supports multilingual columns).
+  - **Question Linking**: Reuse questions across multiple quizzes.
+- **Course Management**: Organize quizzes into Lessons and Chapters.
+- **Daily Quiz Management**: Review and reset daily challenges.
 
 ### User Experience
-- **Progressive Web App (PWA)**: Installable on mobile devices with offline caching for assets.
-- **Onboarding Flow**: Simple profile setup (Name/Nickname) for personalized certificates and leaderboards.
+- **Progressive Web App (PWA)**: Installable on mobile devices with offline caching using `next-pwa`.
+- **Onboarding Flow**: Simple profile setup for personalized certificates.
 - **Responsive Design**: Mobile-first UI tailored for touch interactions.
-
-### Authentication
-- **Magic Link**: Secure, passwordless login via email (powered by Resend).
-- **Session Management**: Persistent sessions using NextAuth.js (Auth.js) v5.
 
 ## 🛠 Tech Stack
 
@@ -35,7 +39,7 @@ This application is designed to help users learn Zazaki vocabulary and grammar. 
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: NextAuth.js v5 (Edge-compatible) + Resend
 - **State Management**: TanStack Query v5
-- **Deployment**: Optimized for Railway / Vercel
+- **Deployment**: Optimized for Railway (Docker)
 
 ## 🚀 Getting Started
 
@@ -56,6 +60,7 @@ This application is designed to help users learn Zazaki vocabulary and grammar. 
    ```bash
    npm install
    ```
+   *Note: `@types/papaparse` is included in `dependencies` to ensure build stability.*
 
 3. **Configure Environment**
    Copy `.env.example` to `.env.local` and fill in the values:
@@ -88,27 +93,22 @@ This application is designed to help users learn Zazaki vocabulary and grammar. 
 ```
 src/
 ├── app/                  # Next.js App Router (Pages & API)
+│   ├── admin/            # Admin Panel (Questions, Quizzes, Users)
 │   ├── api/              # Backend API routes
-│   ├── auth/             # Login & Verification pages
-│   ├── onboarding/       # User profile setup
-│   ├── leaderboard/      # XP Leaderboard
+│   ├── auth/             # Login pages
 │   └── ...
 ├── components/           # React Components
-│   ├── questions/        # Quiz Interfaces (Multiple Choice)
-│   ├── screens/          # Main Application Views
+│   ├── admin/            # Admin UI (QuestionImporter, Pickers)
+│   ├── questions/        # Quiz Interfaces
 │   └── ...
 ├── lib/                  # Utilities (Prisma, Gamification, etc.)
-├── middleware.ts         # Edge Middleware (Auth enforcement)
-├── auth.ts               # Auth.js Backend Config (Adapter)
-└── auth.config.ts        # Auth.js Edge Config
+└── scripts/              # Maintenance scripts (make-admin.ts)
 ```
 
 ## 🤝 Contributing
 
-This is a public repository. We welcome contributions to expand the quiz content or add new question types (Audio/Video).
-
 1. Fork the repo.
-2. Create a feature branch (`git checkout -b feature/audio-quiz`).
+2. Create a feature branch (`git checkout -b feature/amazing-feature`).
 3. Commit your changes.
 4. Open a Pull Request.
 

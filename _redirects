@@ -1,6 +1,0 @@
-# Redirects for specific files
-/admin.html /admin.html 200
-/function-tester.html /function-tester.html 200
-
-# Fallback redirect for SPA
-/* /index.html 200
