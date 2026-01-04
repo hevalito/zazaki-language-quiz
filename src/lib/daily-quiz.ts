@@ -31,9 +31,7 @@ export async function generateDailyQuiz() {
         return { success: false, message: 'Daily quiz for today already exists.', quizId: lastDailyQuiz.id }
     }
 
-    if (existingQuiz) {
-        return { success: false, message: 'Daily quiz for today already exists.', quizId: existingQuiz.id }
-    }
+
 
     // Fetch pool questions
     const poolCount = await prisma.question.count({
