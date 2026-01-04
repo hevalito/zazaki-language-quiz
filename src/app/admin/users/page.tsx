@@ -258,7 +258,6 @@ export default function AdminUsersPage() {
         </div >
     )
 }
-}
 
 function ResetUserBadgesButton({ userId }: { userId: string }) {
     const [loading, setLoading] = useState(false)
