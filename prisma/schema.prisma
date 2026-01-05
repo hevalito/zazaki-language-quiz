@@ -64,7 +64,7 @@ model User {
 
   // Language learning specific fields
   preferredScript ScriptType @default(LATIN)
-  dailyGoal       Int        @default(10)
+  dailyGoal       Int        @default(100)
   streak          Int        @default(0)
   lastActiveDate  DateTime?
   totalXP         Int        @default(0)

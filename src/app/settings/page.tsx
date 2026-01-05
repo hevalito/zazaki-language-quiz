@@ -26,7 +26,7 @@ export default function SettingsPage() {
         nickname: '',
         firstName: '',
         lastName: '',
-        dailyGoal: 50,
+        dailyGoal: 100,
         preferredScript: 'LATIN'
     })
 
@@ -83,7 +83,7 @@ export default function SettingsPage() {
                     nickname: data.nickname || '',
                     firstName: data.firstName || '',
                     lastName: data.lastName || '',
-                    dailyGoal: data.dailyGoal || 50,
+                    dailyGoal: data.dailyGoal || 100,
                     preferredScript: data.preferredScript || 'LATIN'
                 })
             }
