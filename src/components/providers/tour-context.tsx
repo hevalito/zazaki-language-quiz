@@ -222,79 +222,80 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
                 }
             }
         })
+    }, [steps])
 
 
 
-        // Effect to Start/Resume Tour
-        useEffect(() => {
-            // Guard: Never run tour on onboarding or auth pages
-            if (pathname?.startsWith('/onboarding') || pathname?.startsWith('/auth')) {
-                return
-            }
+    // Effect to Start/Resume Tour
+    useEffect(() => {
+        // Guard: Never run tour on onboarding or auth pages
+        if (pathname?.startsWith('/onboarding') || pathname?.startsWith('/auth')) {
+            return
+        }
 
-            // Check if we should be running the tour
-            const savedIndex = localStorage.getItem('zazaki-tour-index')
-            const isCompleted = localStorage.getItem('zazaki-tour-completed')
+        // Check if we should be running the tour
+        const savedIndex = localStorage.getItem('zazaki-tour-index')
+        const isCompleted = localStorage.getItem('zazaki-tour-completed')
 
-            // Check API if not completed locally
-            const checkApi = async () => {
-                // Only auto-start fresh tour if we are on the HOME page
-                if (pathname !== '/') return
+        // Check API if not completed locally
+        const checkApi = async () => {
+            // Only auto-start fresh tour if we are on the HOME page
+            if (pathname !== '/') return
 
-                if (session?.user?.id && !isCompleted && !savedIndex) {
-                    const res = await fetch('/api/user/profile')
-                    const data = await res.json()
-                    if (!data.hasSeenTour) {
-                        // Start fresh
-                        startDriver(0)
-                    } else {
-                        localStorage.setItem('zazaki-tour-completed', 'true')
-                    }
-                }
-            }
-
-            if (session?.user) {
-                if (savedIndex && !isCompleted) {
-                    // Resume!
-                    // Mapped routing: Ensure we are on the right page for the step?
-                    // For now, just rely on the step index and the user being on the right page 
-                    // (which strictly happens via our onNextClick navigation).
-
-                    // Increase delay to account for API data fetching (like badges)
-                    // 1500ms is safer for cold starts / network requests
-                    setTimeout(() => {
-                        if (driverRef.current) {
-                            // Check if the current step references an element that exists
-                            // If not, maybe wait longer or abort?
-                            // Driver.js will warn if element missing.
-                            startDriver(parseInt(savedIndex))
-                        }
-                    }, 1500)
+            if (session?.user?.id && !isCompleted && !savedIndex) {
+                const res = await fetch('/api/user/profile')
+                const data = await res.json()
+                if (!data.hasSeenTour) {
+                    // Start fresh
+                    startDriver(0)
                 } else {
-                    checkApi()
+                    localStorage.setItem('zazaki-tour-completed', 'true')
                 }
-            }
-        }, [pathname, session]) // Check on every path change
-
-
-        const startDriver = (index: number) => {
-            if (driverRef.current) {
-                setTourActive(true)
-                driverRef.current.drive(index)
             }
         }
 
-        return (
-            <TourContext.Provider value={{ startTour: () => startDriver(0), tourActive }}>
-                {children}
-            </TourContext.Provider>
-        )
+        if (session?.user) {
+            if (savedIndex && !isCompleted) {
+                // Resume!
+                // Mapped routing: Ensure we are on the right page for the step?
+                // For now, just rely on the step index and the user being on the right page 
+                // (which strictly happens via our onNextClick navigation).
+
+                // Increase delay to account for API data fetching (like badges)
+                // 1500ms is safer for cold starts / network requests
+                setTimeout(() => {
+                    if (driverRef.current) {
+                        // Check if the current step references an element that exists
+                        // If not, maybe wait longer or abort?
+                        // Driver.js will warn if element missing.
+                        startDriver(parseInt(savedIndex))
+                    }
+                }, 1500)
+            } else {
+                checkApi()
+            }
+        }
+    }, [pathname, session]) // Check on every path change
+
+
+    const startDriver = (index: number) => {
+        if (driverRef.current) {
+            setTourActive(true)
+            driverRef.current.drive(index)
+        }
     }
+
+    return (
+        <TourContext.Provider value={{ startTour: () => startDriver(0), tourActive }}>
+            {children}
+        </TourContext.Provider>
+    )
+}
 
 export const useTour = () => {
-        const context = useContext(TourContext)
-        if (context === undefined) {
-            throw new Error('useTour must be used within a TourProvider')
-        }
-        return context
+    const context = useContext(TourContext)
+    if (context === undefined) {
+        throw new Error('useTour must be used within a TourProvider')
     }
+    return context
+}
