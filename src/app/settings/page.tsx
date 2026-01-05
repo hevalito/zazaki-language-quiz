@@ -362,9 +362,23 @@ function DeleteButton() {
 
 
 function PushNotificationToggle() {
-    const { isSupported, isSubscribed, subscribe, unsubscribe, loading, permissionState } = useWebPush()
+    const { isSupported, isSubscribed, subscribe, unsubscribe, loading, permissionState, isIOS, isStandalone } = useWebPush()
 
     if (!isSupported) {
+        if (isIOS && !isStandalone) {
+            return (
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <p className="text-sm text-blue-800 font-medium mb-2">Push-Benachrichtigungen auf iOS</p>
+                    <p className="text-sm text-blue-600">
+                        Um Benachrichtigungen zu aktivieren, musst du diese App zum Home-Bildschirm hinzufügen.
+                    </p>
+                    <ul className="text-sm text-blue-600 list-disc ml-5 mt-2 space-y-1">
+                        <li>Tippe unten auf den <span className="font-bold">Teilen-Knopf</span></li>
+                        <li>Wähle <span className="font-bold">"Zum Home-Bildschirm"</span></li>
+                    </ul>
+                </div>
+            )
+        }
         return <p className="text-sm text-gray-500">Push-Benachrichtigungen werden von diesem Browser nicht unterstützt.</p>
     }
 
