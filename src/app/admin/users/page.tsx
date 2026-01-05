@@ -261,8 +261,7 @@ export default function AdminUsersPage() {
                     </div>
                 </div>
             )}
-}
-        </div >
+        </div>
     )
 }
 function ResetUserBadgesButton({ userId }: { userId: string }) {
