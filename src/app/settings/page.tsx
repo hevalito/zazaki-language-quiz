@@ -225,125 +225,124 @@ export default function SettingsPage() {
                             </p>
                         </div>
 
-                    </p>
-                </div>
-
-                {/* Course Finder Result Display */}
-                {/* @ts-ignore */}
-                {formData.courseFinderData?.result && (
-                    <>
-                        <hr className="border-gray-100" />
-                        <div>
-                            <h3 className="block text-sm font-medium text-gray-700 mb-2">Dein Dialekt-Profil</h3>
-                            <div className="bg-primary-50 border border-primary-100 rounded-xl p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-bold text-primary-600 tracking-wider uppercase">Ergebnis</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => router.push('/course-finder')}
-                                        className="text-xs text-primary-700 hover:text-primary-800 underline"
-                                    >
-                                        Neu ermitteln
-                                    </button>
-                                </div>
-                                {/* @ts-ignore */}
-                                <h4 className="text-lg font-serif font-bold text-gray-900">{formData.courseFinderData.result.dialect}</h4>
-                                {/* @ts-ignore */}
-                                <p className="text-sm text-gray-600 mt-1">Empfohlener Kurs: {formData.courseFinderData.result.recommendation}</p>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                <hr className="border-gray-100" />
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Tagesziel (XP)
-                    </label>
-                    <select
-                        value={formData.dailyGoal}
-                        onChange={e => setFormData({ ...formData, dailyGoal: parseInt(e.target.value) })}
-                        className="input-field"
-                    >
-                        <option value={50}>50 XP - Entspannt</option>
-                        <option value={100}>100 XP - Normal</option>
-                        <option value={200}>200 XP - Ernsthaft</option>
-                        <option value={250}>250 XP - Intensiv</option>
-                        <option value={500}>500 XP - Verrückt</option>
-                    </select>
-                </div>
-
-                <hr className="border-gray-100" />
-
-                <div>
-                    <h3 className="block text-sm font-medium text-gray-700 mb-2">Benachrichtigungen</h3>
-                    <PushNotificationToggle />
-                </div>
 
 
-                <div className="pt-4">
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="w-full btn-primary flex items-center justify-center space-x-2"
-                    >
-                        {saving ? (
-                            <span>Speichern...</span>
-                        ) : (
+                        {/* Course Finder Result Display */}
+                        {/* @ts-ignore */}
+                        {formData.courseFinderData?.result && (
                             <>
-                                <span>Speichern</span>
-                                {success && <CheckCircleIcon className="w-5 h-5 ml-1" />}
+                                <hr className="border-gray-100" />
+                                <div>
+                                    <h3 className="block text-sm font-medium text-gray-700 mb-2">Dein Dialekt-Profil</h3>
+                                    <div className="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-xs font-bold text-primary-600 tracking-wider uppercase">Ergebnis</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => router.push('/course-finder')}
+                                                className="text-xs text-primary-700 hover:text-primary-800 underline"
+                                            >
+                                                Neu ermitteln
+                                            </button>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        <h4 className="text-lg font-serif font-bold text-gray-900">{formData.courseFinderData.result.dialect}</h4>
+                                        {/* @ts-ignore */}
+                                        <p className="text-sm text-gray-600 mt-1">Empfohlener Kurs: {formData.courseFinderData.result.recommendation}</p>
+                                    </div>
+                                </div>
                             </>
                         )}
-                    </button>
-                </div>
 
-                {success && (
-                    <div className="bg-green-50 text-green-700 p-3 rounded-lg text-center text-sm animate-in fade-in slide-in-from-bottom-2">
-                        Einstellungen erfolgreich gespeichert!
+                        <hr className="border-gray-100" />
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Tagesziel (XP)
+                            </label>
+                            <select
+                                value={formData.dailyGoal}
+                                onChange={e => setFormData({ ...formData, dailyGoal: parseInt(e.target.value) })}
+                                className="input-field"
+                            >
+                                <option value={50}>50 XP - Entspannt</option>
+                                <option value={100}>100 XP - Normal</option>
+                                <option value={200}>200 XP - Ernsthaft</option>
+                                <option value={250}>250 XP - Intensiv</option>
+                                <option value={500}>500 XP - Verrückt</option>
+                            </select>
+                        </div>
+
+                        <hr className="border-gray-100" />
+
+                        <div>
+                            <h3 className="block text-sm font-medium text-gray-700 mb-2">Benachrichtigungen</h3>
+                            <PushNotificationToggle />
+                        </div>
+
+
+                        <div className="pt-4">
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="w-full btn-primary flex items-center justify-center space-x-2"
+                            >
+                                {saving ? (
+                                    <span>Speichern...</span>
+                                ) : (
+                                    <>
+                                        <span>Speichern</span>
+                                        {success && <CheckCircleIcon className="w-5 h-5 ml-1" />}
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {success && (
+                            <div className="bg-green-50 text-green-700 p-3 rounded-lg text-center text-sm animate-in fade-in slide-in-from-bottom-2">
+                                Einstellungen erfolgreich gespeichert!
+                            </div>
+                        )}
+                    </form>
+
+                    <hr className="my-8 border-gray-200" />
+
+                    {/* Danger Zone */}
+                    <div className="pt-2">
+                        <h3 className="text-lg font-medium text-red-600 mb-2">Gefahrenzone</h3>
+                        <p className="text-sm text-gray-500 mb-4">
+                            Wenn du dein Konto löschst, werden alle deine Daten, einschließlich XP und Abzeichen, unwiderruflich entfernt.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => document.getElementById('delete-modal')?.classList.remove('hidden')}
+                            className="text-red-600 hover:text-red-700 text-sm font-medium border border-red-200 hover:border-red-300 rounded-md px-4 py-2 hover:bg-red-50 transition-colors"
+                        >
+                            Konto löschen
+                        </button>
                     </div>
-                )}
-            </form>
 
-            <hr className="my-8 border-gray-200" />
-
-            {/* Danger Zone */}
-            <div className="pt-2">
-                <h3 className="text-lg font-medium text-red-600 mb-2">Gefahrenzone</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                    Wenn du dein Konto löschst, werden alle deine Daten, einschließlich XP und Abzeichen, unwiderruflich entfernt.
-                </p>
-                <button
-                    type="button"
-                    onClick={() => document.getElementById('delete-modal')?.classList.remove('hidden')}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium border border-red-200 hover:border-red-300 rounded-md px-4 py-2 hover:bg-red-50 transition-colors"
-                >
-                    Konto löschen
-                </button>
-            </div>
-
-            <p className="mt-8 text-xs text-gray-400 text-center">Version 2.0.1</p>
-        </div>
+                    <p className="mt-8 text-xs text-gray-400 text-center">Version 2.0.1</p>
+                </div>
             </main >
 
-        {/* Delete Modal */ }
-        < div id = "delete-modal" className = "hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" >
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
-                <h3 className="text-xl font-bold text-gray-900">Bist du sicher?</h3>
-                <p className="text-gray-600">
-                    Wir werden dir eine Bestätigungs-E-Mail senden. Dein Konto wird erst gelöscht, wenn du den Link in der E-Mail bestätigst.
-                </p>
-                <div className="flex justify-end space-x-3 pt-2">
-                    <button
-                        onClick={() => document.getElementById('delete-modal')?.classList.add('hidden')}
-                        className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
-                    >
-                        Abbrechen
-                    </button>
-                    <DeleteButton />
+            {/* Delete Modal */}
+            < div id="delete-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" >
+                <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 space-y-4">
+                    <h3 className="text-xl font-bold text-gray-900">Bist du sicher?</h3>
+                    <p className="text-gray-600">
+                        Wir werden dir eine Bestätigungs-E-Mail senden. Dein Konto wird erst gelöscht, wenn du den Link in der E-Mail bestätigst.
+                    </p>
+                    <div className="flex justify-end space-x-3 pt-2">
+                        <button
+                            onClick={() => document.getElementById('delete-modal')?.classList.add('hidden')}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                            Abbrechen
+                        </button>
+                        <DeleteButton />
+                    </div>
                 </div>
-            </div>
             </div >
         </div >
     )
