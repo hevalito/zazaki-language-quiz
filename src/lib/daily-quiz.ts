@@ -27,7 +27,7 @@ export async function generateDailyQuiz() {
     })
 
     // If last quiz was today (Berlin Time), skip.
-    if (lastDailyQuiz && isSameBerlinDay(lastDailyQuiz.date, berlinToday)) {
+    if (lastDailyQuiz && lastDailyQuiz.date && isSameBerlinDay(lastDailyQuiz.date, berlinToday)) {
         return { success: false, message: 'Daily quiz for today already exists.', quizId: lastDailyQuiz.id }
     }
 
