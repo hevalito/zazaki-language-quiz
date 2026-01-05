@@ -1,6 +1,7 @@
 export type FlowNode = {
     id: string
     text: string
+    description?: string // New field
     type?: 'question' | 'result' | 'info'
     image?: string
     options?: { label: string; nextId: string }[]
@@ -99,16 +100,47 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
         ]
     },
     // EAST DERSIM GROUP
-    'n5': { id: 'n5', text: 'Mamekîye (Merkez) -> Ost-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n6' }] },
-    'n14': { id: 'n14', text: 'Mazgêrd -> Ost-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n6' }] },
-    'n16': { id: 'n16', text: 'Pilemurîye -> Ost-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n6' }] },
-    'n18': { id: 'n18', text: 'Pêrtage -> Ost-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n6' }] },
-    'n29': { id: 'n29', text: 'Qisle -> Ost-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n6' }] },
+    'n5': {
+        id: 'n5',
+        text: 'Mamekîye (Merkez) -> Ost-Dêrsim',
+        type: 'info',
+        description: 'Die in Mamekîye gesprochene Variante gehört zur Gruppe des Ost-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n6' }]
+    },
+    'n14': {
+        id: 'n14',
+        text: 'Mazgêrd -> Ost-Dêrsim',
+        type: 'info',
+        description: 'Die in Mazgêrd gesprochene Variante gehört zur Gruppe des Ost-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n6' }]
+    },
+    'n16': {
+        id: 'n16',
+        text: 'Pilemurîye -> Ost-Dêrsim',
+        type: 'info',
+        description: 'Die in Pilemurîye gesprochene Variante gehört zur Gruppe des Ost-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n6' }]
+    },
+    'n18': {
+        id: 'n18',
+        text: 'Pêrtage -> Ost-Dêrsim',
+        type: 'info',
+        description: 'Die in Pêrtage gesprochene Variante gehört zur Gruppe des Ost-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n6' }]
+    },
+    'n29': {
+        id: 'n29',
+        text: 'Qisle -> Ost-Dêrsim',
+        type: 'info',
+        description: 'Die in Qisle gesprochene Variante gehört zur Gruppe des Ost-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n6' }]
+    },
 
     'n6': {
         id: 'n6',
         text: 'Dein Dialekt ist Ost-Dêrsim',
         type: 'info',
+        image: 'https://placehold.co/600x400/png?text=Region+Map+Ost-Dersim',
         options: [{ label: 'Weiter', nextId: 'n7' }]
     },
     'n7': {
@@ -141,14 +173,33 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
     },
 
     // WEST DERSIM GROUP
-    'n20': { id: 'n20', text: 'Pulur -> West-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n21' }] },
-    'n31': { id: 'n31', text: 'Xozat -> West-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n21' }] },
-    'n33': { id: 'n33', text: 'Çemîşgezek -> West-Dêrsim', type: 'info', options: [{ label: 'Weiter', nextId: 'n21' }] },
+    'n20': {
+        id: 'n20',
+        text: 'Pulur -> West-Dêrsim',
+        type: 'info',
+        description: 'Die in Pulur gesprochene Variante gehört zur Gruppe des West-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n21' }]
+    },
+    'n31': {
+        id: 'n31',
+        text: 'Xozat -> West-Dêrsim',
+        type: 'info',
+        description: 'Die in Xozat gesprochene Variante gehört zur Gruppe des West-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n21' }]
+    },
+    'n33': {
+        id: 'n33',
+        text: 'Çemîşgezek -> West-Dêrsim',
+        type: 'info',
+        description: 'Die in Çemîşgezek gesprochene Variante gehört zur Gruppe des West-Dêrsim Dialekts.',
+        options: [{ label: 'Weiter', nextId: 'n21' }]
+    },
 
     'n21': {
         id: 'n21',
         text: 'Dein Dialekt ist West-Dêrsim',
         type: 'info',
+        image: 'https://placehold.co/600x400/png?text=Region+Map+West-Dersim',
         options: [{ label: 'Weiter', nextId: 'n22' }]
     },
     'n22': {
