@@ -9,26 +9,43 @@ import { BookOpenIcon, ArrowLeftIcon, MagnifyingGlassIcon } from '@heroicons/rea
 export function QuizLibrary() {
     const router = useRouter()
     const searchParams = useSearchParams()
+
+    // Derive state from URL - URL is the source of truth
+    const currentCourseId = searchParams.get('tab') || ''
+    const currentStatus = searchParams.get('status') || ''
+
     const [quizzes, setQuizzes] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
-    const [currentCourseId, setCurrentCourseId] = useState(searchParams.get('tab') === 'daily' ? 'daily' : '')
-    const [currentStatus, setCurrentStatus] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
         fetchQuizzes()
-    }, [currentCourseId, currentStatus])
+    }, [searchParams])
+
+    const updateFilter = (type: 'tab' | 'status', value: string) => {
+        const params = new URLSearchParams(searchParams.toString())
+        if (value) {
+            params.set(type, value)
+        } else {
+            params.delete(type)
+        }
+        router.push(`/library?${params.toString()}`)
+    }
 
     const fetchQuizzes = async () => {
         setLoading(true)
         try {
             const params = new URLSearchParams()
+            // Map tab to API params
             if (currentCourseId === 'daily') {
                 params.append('type', 'DAILY')
             } else if (currentCourseId) {
                 params.append('courseId', currentCourseId)
             }
-            if (currentStatus) params.append('status', currentStatus)
+
+            if (currentStatus) {
+                params.append('status', currentStatus)
+            }
 
             const response = await fetch(`/api/quizzes?${params.toString()}`)
             if (response.ok) {
@@ -106,8 +123,8 @@ export function QuizLibrary() {
                 <FilterBar
                     currentCourseId={currentCourseId}
                     currentStatus={currentStatus}
-                    onCourseChange={setCurrentCourseId}
-                    onStatusChange={setCurrentStatus}
+                    onCourseChange={(id) => updateFilter('tab', id)}
+                    onStatusChange={(status) => updateFilter('status', status)}
                 />
 
                 {/* Content */}
