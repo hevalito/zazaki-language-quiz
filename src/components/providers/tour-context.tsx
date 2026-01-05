@@ -220,14 +220,23 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
         })
     }, [router]) // Re-init on router change? No, keep ref.
 
+
     // Effect to Start/Resume Tour
     useEffect(() => {
+        // Guard: Never run tour on onboarding or auth pages
+        if (pathname?.startsWith('/onboarding') || pathname?.startsWith('/auth')) {
+            return
+        }
+
         // Check if we should be running the tour
         const savedIndex = localStorage.getItem('zazaki-tour-index')
         const isCompleted = localStorage.getItem('zazaki-tour-completed')
 
         // Check API if not completed locally
         const checkApi = async () => {
+            // Only auto-start fresh tour if we are on the HOME page
+            if (pathname !== '/') return
+
             if (session?.user?.id && !isCompleted && !savedIndex) {
                 const res = await fetch('/api/user/profile')
                 const data = await res.json()
@@ -243,10 +252,20 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
             if (savedIndex && !isCompleted) {
                 // Resume!
-                // Small delay to ensure DOM is ready after route change
+                // Mapped routing: Ensure we are on the right page for the step?
+                // For now, just rely on the step index and the user being on the right page 
+                // (which strictly happens via our onNextClick navigation).
+
+                // Increase delay to account for API data fetching (like badges)
+                // 1500ms is safer for cold starts / network requests
                 setTimeout(() => {
-                    startDriver(parseInt(savedIndex))
-                }, 800)
+                    if (driverRef.current) {
+                        // Check if the current step references an element that exists
+                        // If not, maybe wait longer or abort?
+                        // Driver.js will warn if element missing.
+                        startDriver(parseInt(savedIndex))
+                    }
+                }, 1500)
             } else {
                 checkApi()
             }
