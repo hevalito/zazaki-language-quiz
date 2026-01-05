@@ -26,7 +26,7 @@ export default function SettingsPage() {
         nickname: '',
         firstName: '',
         lastName: '',
-        lastName: '',
+
         dailyGoal: 100,
         preferredScript: 'LATIN',
         courseFinderData: null,
