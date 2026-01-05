@@ -12,7 +12,11 @@ export async function GET() {
 
         // 1. Fetch available badges
         const allBadges = await prisma.badge.findMany({
-            where: { isActive: true }
+            where: { isActive: true },
+            orderBy: [
+                { sortOrder: 'asc' },
+                { createdAt: 'desc' }
+            ]
         })
 
         // 2. Fetch earned badges
