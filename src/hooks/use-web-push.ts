@@ -42,9 +42,10 @@ export function useWebPush() {
         try {
             console.log('useWebPush: Waiting for SW ready...')
 
-            // Explicitly register if needed (for dev primarily)
-            if (process.env.NODE_ENV === 'development') {
-                console.log('useWebPush: Dev mode, ensuring registration...')
+            // Explicitly register service worker to ensure it's active
+            // This is idempotent and ensures we don't hang waiting for 'ready'
+            if ('serviceWorker' in navigator) {
+                console.log('useWebPush: Ensuring SW registration...')
                 await navigator.serviceWorker.register('/sw.js')
             }
 
