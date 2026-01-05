@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { startOfDay, endOfDay, addDays, setHours, setMinutes, setSeconds, setMilliseconds } from 'date-fns'
+import { getBerlinStartOfDay } from '@/lib/date-utils'
 
 export const dynamic = 'force-dynamic'
 
