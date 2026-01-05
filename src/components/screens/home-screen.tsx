@@ -13,7 +13,8 @@ import {
   ArrowRightIcon,
   BookOpenIcon,
   SparklesIcon,
-  CheckIcon
+  CheckIcon,
+  MapIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
@@ -406,6 +407,16 @@ export function HomeScreen() {
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">Erfolge</h4>
             <p className="text-sm text-gray-600">Sieh deinen Fortschritt</p>
+          </button>
+          <button
+            onClick={() => window.location.href = '/course-finder'}
+            className="card-interactive text-center group"
+          >
+            <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-200 transition-colors">
+              <MapIcon className="w-6 h-6 text-teal-700" />
+            </div>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">Kursfinder</h4>
+            <p className="text-sm text-gray-600">Dein Wegweiser</p>
           </button>
         </div>
 

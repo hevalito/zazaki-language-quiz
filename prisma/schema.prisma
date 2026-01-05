@@ -75,6 +75,8 @@ model User {
   
   // Onboarding
   hasSeenTour     Boolean    @default(false)
+  courseFinderData Json?
+
 
   // Account Deletion
   deletionToken        String?   @unique
