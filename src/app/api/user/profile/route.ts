@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { calculateUserStreak } from '@/lib/streak-calc'
 
 export async function GET() {
     try {
@@ -9,7 +10,11 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const user = await prisma.user.findUnique({
+        // Auto-Heal Streak Logic
+        // Calculate strict streak from history
+        const { streak: calculatedStreak, lastActiveDate } = await calculateUserStreak(session.user.id)
+
+        let user = await prisma.user.findUnique({
             where: { id: session.user.id },
             select: {
                 id: true,
@@ -23,8 +28,25 @@ export async function GET() {
                 dailyGoal: true,
                 preferredScript: true,
                 hasSeenTour: true,
+                streak: true, // Needed for comparison
             }
         })
+
+        if (user && user.streak !== calculatedStreak) {
+            // Heal the record
+            await prisma.user.update({
+                where: { id: session.user.id },
+                data: {
+                    streak: calculatedStreak,
+                    // Only update lastActiveDate if we found one and it's missing/different?
+                    // safer to just update streak. 
+                    // Actually, let's update lastActiveDate too if valid.
+                    ...(lastActiveDate ? { lastActiveDate } : {})
+                }
+            })
+            // Update local object to return correct data
+            user.streak = calculatedStreak
+        }
 
         return NextResponse.json(user)
     } catch (error) {
