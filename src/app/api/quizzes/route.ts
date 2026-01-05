@@ -13,6 +13,7 @@ export async function GET(request: Request) {
     const level = searchParams.get('level') // A0, A1, etc.
     const status = searchParams.get('status') // 'completed', 'in_progress', 'not_started'
     const type = searchParams.get('type')
+    const courseId = searchParams.get('courseId')
 
     const where: any = {
       isPublished: true
@@ -24,11 +25,12 @@ export async function GET(request: Request) {
       where.type = 'DAILY'
       orderBy = { date: 'desc' }
     } else {
-      // Standard quizzes must have a lesson/course context for now if filtering by level
+      // Standard quizzes must have a lesson/course context
       where.lesson = {
         chapter: {
           course: {
-            level: level ? (level as any) : undefined
+            level: level ? (level as any) : undefined,
+            id: courseId ? courseId : undefined
           }
         }
       }

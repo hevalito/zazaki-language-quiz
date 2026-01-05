@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { PlusIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, PencilSquareIcon, TrashIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 
 interface Badge {
     id: string
@@ -50,6 +50,34 @@ export default function AchievementsAdmin() {
         }
     }
 
+    const handleMove = async (index: number, direction: 'up' | 'down') => {
+        const newBadges = [...badges]
+        if (direction === 'up') {
+            if (index === 0) return
+            [newBadges[index - 1], newBadges[index]] = [newBadges[index], newBadges[index - 1]]
+        } else {
+            if (index === newBadges.length - 1) return
+            [newBadges[index + 1], newBadges[index]] = [newBadges[index], newBadges[index + 1]]
+        }
+
+        setBadges(newBadges) // Optimistic update
+        await saveOrder(newBadges)
+    }
+
+    const saveOrder = async (orderedBadges: Badge[]) => {
+        try {
+            const items = orderedBadges.map((b, index) => ({ id: b.id, sortOrder: index }))
+            await fetch('/api/admin/badges/reorder', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items })
+            })
+        } catch (error) {
+            console.error('Failed to save order', error)
+            // Ideally revert state here on error
+        }
+    }
+
     const getTitle = (title: any) => title?.en || title?.de || 'Untitled'
 
     if (loading) return <div className="p-8">Loading...</div>
@@ -69,10 +97,26 @@ export default function AchievementsAdmin() {
 
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul role="list" className="divide-y divide-gray-200">
-                    {badges.map((badge) => (
+                    {badges.map((badge, index) => (
                         <li key={badge.id}>
                             <div className="px-4 py-4 flex items-center justify-between sm:px-6">
                                 <div className="flex items-center">
+                                    <div className="flex flex-col mr-4 space-y-1">
+                                        <button
+                                            onClick={() => handleMove(index, 'up')}
+                                            disabled={index === 0}
+                                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                        >
+                                            <ChevronUpIcon className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleMove(index, 'down')}
+                                            disabled={index === badges.length - 1}
+                                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                        >
+                                            <ChevronDownIcon className="w-4 h-4" />
+                                        </button>
+                                    </div>
                                     <span className="text-2xl mr-4">{badge.iconUrl || '🏆'}</span>
                                     <div>
                                         <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(badge.title)}</h3>

@@ -314,6 +314,7 @@ model Badge {
   description Json     // Multi-language
   iconUrl     String?
   criteria    Json     // Badge earning criteria
+  sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
 

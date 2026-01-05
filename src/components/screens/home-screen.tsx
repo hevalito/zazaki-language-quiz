@@ -394,7 +394,7 @@ export function HomeScreen() {
               <TrophyIcon className="w-6 h-6 text-primary-700" />
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">Bestenliste</h4>
-            <p className="text-sm text-gray-600">Vergleiche dich</p>
+            <p className="text-sm text-gray-600">Erklimme die Spitze</p>
           </button>
 
           <button
@@ -406,7 +406,7 @@ export function HomeScreen() {
               <FireIcon className="w-6 h-6 text-brand-red" />
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">Erfolge</h4>
-            <p className="text-sm text-gray-600">Sieh deinen Fortschritt</p>
+            <p className="text-sm text-gray-600">Sammle Trophäen</p>
           </button>
           <button
             onClick={() => window.location.href = '/course-finder'}
@@ -416,7 +416,7 @@ export function HomeScreen() {
               <MapIcon className="w-6 h-6 text-teal-700" />
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">Kursfinder</h4>
-            <p className="text-sm text-gray-600">Dein Wegweiser</p>
+            <p className="text-sm text-gray-600">Finde den perfekten Sprachkurs</p>
           </button>
         </div>
 
