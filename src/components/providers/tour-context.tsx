@@ -39,7 +39,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
         {
             element: '#tour-welcome',
             popover: {
-                title: 'Hêr ama!',
+                title: 'Xêr ama!',
                 description: 'Willkommen bei Zazaki Quiz! Hier lernst du spielerisch Zazaki.',
                 side: 'bottom',
                 align: 'start'
@@ -65,7 +65,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
             element: '#tour-continue-learning',
             popover: {
                 title: 'Weiterlernen',
-                description: 'Hier geht es direkt mit deinem Sprachkurs weiter. Wir wählen immer die passende Lektion für dich aus.',
+                description: 'Hier geht es mit deiner Quiz-Journey weiter. Wir wählen immer das passende nächste Quiz für dich aus.',
                 side: 'top'
             }
         },
@@ -195,6 +195,10 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
             showProgress: true,
             allowClose: true, // Allow user to exit
             steps: steps,
+            nextBtnText: 'Weiter',
+            prevBtnText: 'Zurück',
+            doneBtnText: 'Fertig',
+            progressText: '{{current}} von {{total}}',
             onDestroyed: () => {
                 // If destroyed manually by user clicking overlay or X, we might want to mark as seen?
                 // Or just pause? Let's check if it was "finished".
