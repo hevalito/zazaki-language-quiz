@@ -36,7 +36,8 @@ export default auth((req) => {
     }
 
     // Protect private routes
-    if (!isLoggedIn && !isAuthPage && req.nextUrl.pathname !== "/" && req.nextUrl.pathname !== "/leaderboard") {
+    // Allow public access to home, leaderboard, and course-finder
+    if (!isLoggedIn && !isAuthPage && req.nextUrl.pathname !== "/" && req.nextUrl.pathname !== "/leaderboard" && !req.nextUrl.pathname.startsWith("/course-finder")) {
         return NextResponse.redirect(new URL("/auth/signin", req.nextUrl))
     }
 
