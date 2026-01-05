@@ -381,7 +381,7 @@ function PushNotificationToggle() {
     }
 
     return (
-        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div id="tour-notifications" className="flex items-center justify-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200 justify-between">
             <div className="flex items-center space-x-3">
                 {isSubscribed ? (
                     <BellIcon className="w-6 h-6 text-primary-600" />
