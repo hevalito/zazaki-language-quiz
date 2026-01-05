@@ -4,6 +4,7 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   importScripts: ['/push-worker.js'],
   disable: process.env.NODE_ENV === 'development',
+  buildExcludes: [/app-build-manifest\.json$/],
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
