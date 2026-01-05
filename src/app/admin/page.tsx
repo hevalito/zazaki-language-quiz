@@ -140,10 +140,10 @@ export default async function AdminDashboard() {
               {recentUsers.map((user) => (
                 <div key={user.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg transition-colors">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-100">
-                    {user.name?.[0]?.toUpperCase() || 'U'}
+                    {(user.nickname || user.name || user.firstName || 'U')[0]?.toUpperCase()}
                   </div>
                   <div className="ml-3 truncate flex-1">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{user.name || 'Anonymous'}</p>
+                    <p className="text-sm font-semibold text-gray-900 truncate">{user.nickname || user.name || user.firstName || 'Anonymous'}</p>
                     <p className="text-xs text-gray-400 truncate">{user.email}</p>
                   </div>
                   <span className="text-xs text-gray-300 font-mono">
@@ -197,7 +197,7 @@ function ActivityItem({ attempt }: { attempt: any }) {
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm font-semibold text-gray-900">
-            {attempt.user?.name || 'User'} <span className="font-normal text-gray-500">completed</span> {quizTitle}
+            {attempt.user?.nickname || attempt.user?.name || 'User'} <span className="font-normal text-gray-500">completed</span> {quizTitle}
           </p>
           <p className="text-xs text-gray-400 mt-1">
             {courseTitle} • {new Date(attempt.completedAt).toLocaleDateString()}
