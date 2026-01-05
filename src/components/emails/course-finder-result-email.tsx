@@ -48,7 +48,7 @@ export const CourseFinderResultEmail = ({
                     <Heading style={h1}>Dein persönlicher Lernweg</Heading>
 
                     <Text style={text}>
-                        Silam {name || 'Heval'},
+                        Ma bêxer di {name || 'Heval'},
                         <br />
                         wir freuen uns, dass du den Zazakî-Kursfinder genutzt hast. Hier ist dein Ergebnis:
                     </Text>
