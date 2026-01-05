@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation' // Add import
 import Image from 'next/image'
 import {
   FireIcon,
@@ -35,6 +36,7 @@ import confetti from 'canvas-confetti'
 
 export function HomeScreen() {
   const { data: session } = useSession()
+  const router = useRouter() // Initialize router
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
   const [loading, setLoading] = useState(true)
   const [showSettings, setShowSettings] = useState(false)
@@ -354,14 +356,11 @@ export function HomeScreen() {
                       Du hast alle verfügbaren Lektionen abgeschlossen. Sammle weitere XP mit dem täglichen Quiz!
                     </p>
                     <button
-                      onClick={() => {
-                        // Scroll to daily quiz or just highlight it?
-                        // Ideally scroll to top of page where daily quiz is
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      }}
-                      className="btn-primary w-full bg-brand-orange hover:bg-brand-orange/90 border-brand-orange"
+                      onClick={() => router.push('/library')}
+                      className="btn-primary w-full bg-brand-orange hover:bg-brand-orange/90 border-brand-orange flex items-center justify-center text-center"
                     >
-                      Zum Tagesquiz
+                      <BookOpenIcon className="w-5 h-5 mr-2" />
+                      Zur Bibliothek
                     </button>
                   </div>
                 )
@@ -371,7 +370,17 @@ export function HomeScreen() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <button
+            onClick={() => window.location.href = '/library'}
+            className="card-interactive text-center group"
+          >
+            <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-200 transition-colors">
+              <BookOpenIcon className="w-6 h-6 text-indigo-700" />
+            </div>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">Bibliothek</h4>
+            <p className="text-sm text-gray-600">Alle Quizze</p>
+          </button>
           <button
             id="tour-leaderboard-nav"
             onClick={() => window.location.href = '/leaderboard'}
