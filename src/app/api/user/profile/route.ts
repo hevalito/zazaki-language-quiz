@@ -29,6 +29,7 @@ export async function GET() {
                 preferredScript: true,
                 hasSeenTour: true,
                 streak: true, // Needed for comparison
+                courseFinderData: true // Include Course Finder Data
             }
         })
 

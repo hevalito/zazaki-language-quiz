@@ -39,6 +39,7 @@ export async function GET(req: Request) {
                 createdAt: true,
                 totalXP: true,
                 currentLevel: true,
+                courseFinderData: true, // Include Course Finder Data
                 _count: {
                     select: { pushSubscriptions: true }
                 }

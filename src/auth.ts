@@ -21,13 +21,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       from: "Zazakî Academy <login@zazakiacademy.com>",
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         const { host } = new URL(url)
+        // Check if this is a Course Finder login flow
+        const isCourseFinder = url.includes('courseFinder')
+
         try {
-          await resend.emails.send({
-            from: provider.from!,
-            to: identifier,
-            subject: `Anmelden bei Zazakî Quiz`,
-            react: ZazakiMagicLinkEmail({ url, host }),
-          })
+          if (isCourseFinder) {
+            const { CourseFinderLoginEmail } = await import("@/components/emails/course-finder-login-email")
+            // Extract dialect if possible? Or generic content.
+            // We don't have dialect info here easily without DB lookup, let's use generic "Dein Ergebnis" text.
+            await resend.emails.send({
+              from: provider.from!,
+              to: identifier,
+              subject: `Dein Zazakî-Kurs Ergebnis wartet`,
+              react: CourseFinderLoginEmail({ url, dialect: 'Dein Dialekt' }), // Dialect is generic here, or we could pass it in URL params if secure enough, but URL is signed.
+            })
+          } else {
+            await resend.emails.send({
+              from: provider.from!,
+              to: identifier,
+              subject: `Anmelden bei Zazakî Quiz`,
+              react: ZazakiMagicLinkEmail({ url, host }),
+            })
+          }
         } catch (error) {
           console.error("Error sending verification email", error)
           throw new Error("Failed to send verification email")

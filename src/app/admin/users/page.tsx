@@ -179,6 +179,15 @@ export default function AdminUsersPage() {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">Level {user.currentLevel || 'A1'}</div>
                                         <div className="text-sm text-gray-500">{user.totalXP || 0} XP</div>
+                                        {/* @ts-ignore */}
+                                        {user.courseFinderData?.result && (
+                                            <div className="mt-1">
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                    {/* @ts-ignore */}
+                                                    {user.courseFinderData.result.dialect}
+                                                </span>
+                                            </div>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {new Date(user.createdAt).toLocaleDateString()}

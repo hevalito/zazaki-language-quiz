@@ -81,7 +81,9 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
         id: 'n3',
         text: 'Dêrsim (Tunceli)',
         type: 'info',
-        image: 'https://placehold.co/600x400/png?text=Region+Dersim',
+        image: '/images/course-finder/NZ.jpg', // Dêrsim is part of Nord-Zazakî, or do we have specific Dêrsim map? Using NZ map as placeholder or specific if available. Wait, we have Ost/West Dersim.
+        // Files: CZ.jpg, Erzingan.jpg, Gimgim-Xinus.jpg, NZ.jpg, Ost-Dersim.png, SZ.jpg, West-Dersim.png.
+        // n3 is generic Dersim. Let's use NZ.jpg or skip? Or maybe one of the Dersim maps?
         options: [{ label: 'Weiter', nextId: 'n4' }]
     },
     'n4': {
@@ -140,7 +142,7 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
         id: 'n6',
         text: 'Dein Dialekt ist Ost-Dêrsim',
         type: 'info',
-        image: 'https://placehold.co/600x400/png?text=Region+Map+Ost-Dersim',
+        image: '/images/course-finder/Ost-Dersim.png',
         options: [{ label: 'Weiter', nextId: 'n7' }]
     },
     'n7': {
@@ -199,7 +201,7 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
         id: 'n21',
         text: 'Dein Dialekt ist West-Dêrsim',
         type: 'info',
-        image: 'https://placehold.co/600x400/png?text=Region+Map+West-Dersim',
+        image: '/images/course-finder/West-Dersim.png',
         options: [{ label: 'Weiter', nextId: 'n22' }]
     },
     'n22': {
@@ -236,47 +238,47 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
     // n43 -> n46
     // n49 -> n46
     // n55 (via options) -> n46
-    'n35': { id: 'n35', text: 'Çolîg -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Bingol', options: [{ label: 'Weiter', nextId: 'n46' }] },
-    'n43': { id: 'n43', text: 'Pali -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Palu', options: [{ label: 'Weiter', nextId: 'n46' }] },
-    'n49': { id: 'n49', text: 'Xarpêt -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Elazig', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n35': { id: 'n35', text: 'Çolîg -> Zentral-Zazakî', type: 'info', image: '/images/course-finder/CZ.jpg', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n43': { id: 'n43', text: 'Pali -> Zentral-Zazakî', type: 'info', image: '/images/course-finder/CZ.jpg', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n49': { id: 'n49', text: 'Xarpêt -> Zentral-Zazakî', type: 'info', image: '/images/course-finder/CZ.jpg', options: [{ label: 'Weiter', nextId: 'n46' }] },
     'n46': {
         id: 'n46',
         text: 'Dein Dialekt ist Zentral-Zazakî',
         type: 'result',
-        image: 'https://placehold.co/600x400/png?text=Zentral+Zazaki+Map',
+        image: '/images/course-finder/CZ.jpg',
         result: { dialect: 'Zentral-Zazakî', recommendation: 'Zentral-Zazakî' }
     },
 
     // SOUTH ZAZAKI GROUP
     // n37 -> n38 (South)
     // n47 -> n38 (South)
-    'n37': { id: 'n37', text: 'Çêrmûge -> Süd-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Cermik', options: [{ label: 'Weiter', nextId: 'n38' }] },
-    'n47': { id: 'n47', text: 'Sewrêgi -> Süd-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Siverek', options: [{ label: 'Weiter', nextId: 'n38' }] },
+    'n37': { id: 'n37', text: 'Çêrmûge -> Süd-Zazakî', type: 'info', image: '/images/course-finder/SZ.jpg', options: [{ label: 'Weiter', nextId: 'n38' }] },
+    'n47': { id: 'n47', text: 'Sewrêgi -> Süd-Zazakî', type: 'info', image: '/images/course-finder/SZ.jpg', options: [{ label: 'Weiter', nextId: 'n38' }] },
     'n38': {
         id: 'n38',
         text: 'Dein Dialekt ist Süd-Zazakî',
         type: 'result',
-        image: 'https://placehold.co/600x400/png?text=Sued+Zazaki+Map',
+        image: '/images/course-finder/SZ.jpg',
         result: { dialect: 'Süd-Zazakî', recommendation: 'Süd-Zazakî' }
     },
 
     // OTHER DIALECTS
-    'n39': { id: 'n39', text: 'Erzingan', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Erzincan', options: [{ label: 'Weiter', nextId: 'n40' }] },
+    'n39': { id: 'n39', text: 'Erzingan', type: 'info', image: '/images/course-finder/Erzingan.jpg', options: [{ label: 'Weiter', nextId: 'n40' }] },
     'n40': {
         id: 'n40',
         text: 'Erzingan-Dialekt',
         type: 'result',
-        image: 'https://placehold.co/600x400/png?text=Erzincan+Map',
+        image: '/images/course-finder/Erzingan.jpg',
         result: { dialect: 'Erzingan-Dialekt', recommendation: 'Erzingan-Dialekt' }
     },
 
-    'n41': { id: 'n41', text: 'Gimgim', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Varto', options: [{ label: 'Weiter', nextId: 'n42' }] },
-    'n51': { id: 'n51', text: 'Xinûs -> Gimgim-Xinûs', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Hinis', options: [{ label: 'Weiter', nextId: 'n42' }] },
+    'n41': { id: 'n41', text: 'Gimgim', type: 'info', image: '/images/course-finder/Gimgim-Xinus.jpg', options: [{ label: 'Weiter', nextId: 'n42' }] },
+    'n51': { id: 'n51', text: 'Xinûs -> Gimgim-Xinûs', type: 'info', image: '/images/course-finder/Gimgim-Xinus.jpg', options: [{ label: 'Weiter', nextId: 'n42' }] },
     'n42': {
         id: 'n42',
         text: 'Gimgim-Xinûs-Dialekt',
         type: 'result',
-        image: 'https://placehold.co/600x400/png?text=Gimgim+Xinus+Map',
+        image: '/images/course-finder/Gimgim-Xinus.jpg',
         result: { dialect: 'Gimgim-Xinûs-Dialekt', recommendation: 'Gimgim-Xinûs-Dialekt' }
     },
 

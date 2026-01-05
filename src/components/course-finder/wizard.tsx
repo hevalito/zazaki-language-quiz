@@ -17,6 +17,9 @@ export default function CourseFinderWizard() {
     const [history, setHistory] = useState<string[]>([])
     const [saving, setSaving] = useState(false)
     const [calculating, setCalculating] = useState(false)
+    const [email, setEmail] = useState('')
+    const [showEmailInput, setShowEmailInput] = useState(false)
+    const [emailSent, setEmailSent] = useState(false)
 
     const currentNode = COURSE_FINDER_FLOW[currentNodeId]
 
@@ -24,12 +27,32 @@ export default function CourseFinderWizard() {
         const nextNode = COURSE_FINDER_FLOW[nextId]
 
         if (nextNode?.type === 'result') {
-            setCalculating(true)
-            setTimeout(() => {
-                setCalculating(false)
-                setHistory(prev => [...prev, currentNodeId])
-                setCurrentNodeId(nextId)
-            }, 1500) // 1.5s "Calculation" delay
+            if (!session?.user && !showEmailInput) {
+                // If guest, show email input first (don't navigate yet)
+                // We keep the Result ID pending basically?
+                // Or better: We go to a "pre-result" state?
+                // Actually, the user wants: "one step before we show the results"
+                // So when they click the option that LEADS to result, we intercept.
+                // Show "Calculating..." -> Then Email Input -> Then Result (but Result is hidden behind Email/Login)
+
+                setCalculating(true)
+                setTimeout(() => {
+                    setCalculating(false)
+                    setShowEmailInput(true)
+                    // We DO NOT advance currentNodeId yet. We stay on the question but show overlay?
+                    // Or we advance to result but render Email Input instead of Result Card?
+                    // Let's advance to result ID, but `isResult` block handles the view mode.
+                    setHistory(prev => [...prev, currentNodeId])
+                    setCurrentNodeId(nextId)
+                }, 1500)
+            } else {
+                setCalculating(true)
+                setTimeout(() => {
+                    setCalculating(false)
+                    setHistory(prev => [...prev, currentNodeId])
+                    setCurrentNodeId(nextId)
+                }, 1500)
+            }
         } else {
             setHistory(prev => [...prev, currentNodeId])
             setCurrentNodeId(nextId)
@@ -37,10 +60,60 @@ export default function CourseFinderWizard() {
     }
 
     const handleBack = () => {
+        if (showEmailInput) {
+            setShowEmailInput(false)
+            // Go back to previous question
+            const prevId = history[history.length - 1]
+            setHistory(prev => prev.slice(0, -1))
+            setCurrentNodeId(prevId)
+            return
+        }
         if (history.length === 0) return
         const prevId = history[history.length - 1]
         setHistory(prev => prev.slice(0, -1))
         setCurrentNodeId(prevId)
+    }
+
+    const handleGuestSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!email) return
+        setSaving(true)
+
+        try {
+            // 1. Save data via API
+            await fetch('/api/course-finder/guest-save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email,
+                    result: currentNode.result,
+                    history: [...history, currentNodeId]
+                })
+            })
+
+            // 2. Trigger Magic Link Login
+            // This sends the "Login" email. The "Result" email was sent by guest-save.
+            const { signIn } = await import("next-auth/react")
+            await signIn("resend", {
+                email,
+                redirect: false,
+                callbackUrl: '/dashboard?courseFinderSuccess=true' // Triggers custom email in auth.ts
+            })
+
+            setEmailSent(true)
+            // Confetti for success!
+            confetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#febd11', '#278e43', '#d0021b']
+            })
+
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setSaving(false)
+        }
     }
 
     const handleSaveResult = async () => {
@@ -55,9 +128,8 @@ export default function CourseFinderWizard() {
         })
 
         if (!session?.user) {
-            // Store result in localStorage before redirecting to auth
-            localStorage.setItem('courseFinderResult', JSON.stringify(currentNode.result))
-            router.push('/auth/signup?callbackUrl=/dashboard')
+            // Should not happen here ideally if flow works, but fallback
+            setShowEmailInput(true)
             return
         }
 
@@ -71,7 +143,9 @@ export default function CourseFinderWizard() {
                     history: [...history, currentNodeId]
                 })
             })
-            // Redirect to dashboard
+
+            // Redirect logic: Existing users -> Dashboard/Home. New users -> Onboarding (handled by Onboarding flow usually)
+            // User requested: "IF existing quiz users access the course finder ... gets back to the quiz root page"
             router.push('/dashboard')
         } catch (error) {
             console.error('Failed to save result', error)
@@ -81,6 +155,68 @@ export default function CourseFinderWizard() {
     }
 
     const isResult = currentNode.type === 'result'
+
+    // GUEST FLOW VIEW (Email Input)
+    if (isResult && !session?.user && showEmailInput) {
+        if (emailSent) {
+            return (
+                <div className="w-full max-w-3xl mx-auto px-4 py-8">
+                    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative">
+                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 animate-bounce-subtle">
+                            <CheckBadgeIcon className="w-10 h-10" />
+                        </div>
+                        <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Ergebnis gespeichert!</h3>
+                        <p className="text-gray-600 max-w-md mx-auto mb-8 text-lg">
+                            Wir haben dir eine E-Mail mit deinem Ergebnis und einem Link zum Anmelden gesendet.
+                        </p>
+                        <p className="text-sm text-gray-400">
+                            Bitte überprüfe dein Postfach ({email}).
+                        </p>
+                    </div>
+                </div>
+            )
+        }
+
+        return (
+            <div className="w-full max-w-3xl mx-auto px-4 py-8">
+                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative">
+                    <button onClick={handleBack} className="absolute top-6 left-6 text-gray-400 hover:text-gray-600">
+                        <ArrowPathIcon className="w-6 h-6 rotate-180" /> {/* Back Icon */}
+                    </button>
+
+                    <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2">Fast geschafft!</h2>
+                    <p className="text-gray-600 mb-8 max-w-sm mx-auto">
+                        Gib deine E-Mail-Adresse ein, um dein persönliches Kursergebnis zu speichern und direkt loszulegen.
+                    </p>
+
+                    <form onSubmit={handleGuestSubmit} className="w-full max-w-md space-y-4">
+                        <input
+                            type="email"
+                            required
+                            placeholder="deine@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-0 text-lg outline-none transition-all placeholder:text-gray-300"
+                        />
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="w-full py-4 bg-primary-500 text-gray-900 rounded-xl font-bold text-lg hover:bg-primary-400 transition-all flex justify-center items-center shadow-lg shadow-primary-500/20"
+                        >
+                            {saving ? (
+                                <ArrowPathIcon className="w-6 h-6 animate-spin" />
+                            ) : (
+                                'Ergebnis ansehen'
+                            )}
+                        </button>
+                    </form>
+                    <p className="text-xs text-gray-400 mt-6 max-w-xs">
+                        Mit dem Klick auf "Ergebnis ansehen" stimmst du unseren Nutzungsbedingungen zu.
+                    </p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="w-full max-w-3xl mx-auto px-4 py-8">
@@ -95,7 +231,7 @@ export default function CourseFinderWizard() {
                 </div>
 
                 {/* History Breadcrumb (Visualizing Progress) */}
-                {history.length > 0 && !calculating && (
+                {history.length > 0 && !calculating && !showEmailInput && ( // Hide history on result mainly
                     <div className="px-8 pt-8 flex flex-wrap gap-2">
                         {history.map((nodeId, idx) => {
                             const node = COURSE_FINDER_FLOW[nodeId]
@@ -179,14 +315,9 @@ export default function CourseFinderWizard() {
                                                 disabled={saving}
                                                 className="w-full sm:w-auto px-10 py-4 bg-primary-500 text-gray-900 rounded-2xl font-bold text-lg hover:bg-primary-400 transition-all shadow-xl shadow-primary-500/20 hover:-translate-y-1 flex items-center justify-center mx-auto"
                                             >
-                                                {saving ? 'Wird gespeichert...' : 'Kurs jetzt starten'}
+                                                {saving ? 'Wird gespeichert...' : 'Zurück zur Übersicht'}
                                                 {!saving && <ArrowRightIcon className="w-5 h-5 ml-2" />}
                                             </button>
-                                            {!session?.user && (
-                                                <p className="text-xs text-gray-400 mt-4">
-                                                    Kostenlos registrieren, um Fortschritt zu speichern.
-                                                </p>
-                                            )}
                                         </div>
                                     </div>
                                 ) : (
