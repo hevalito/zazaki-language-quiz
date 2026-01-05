@@ -10,7 +10,8 @@ import {
     TrophyIcon,
     XMarkIcon,
     QuestionMarkCircleIcon,
-    CalendarIcon
+    CalendarIcon,
+    PaperAirplaneIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -21,6 +22,7 @@ const navigation = [
     { name: 'Questions', href: '/admin/questions', icon: QuestionMarkCircleIcon },
     { name: 'Users', href: '/admin/users', icon: UsersIcon },
     { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
+    { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
 ]
 
 interface AdminSidebarProps {

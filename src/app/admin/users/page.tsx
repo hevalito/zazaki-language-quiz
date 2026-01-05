@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { MagnifyingGlassIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon, BellIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 
 type User = {
@@ -16,6 +16,9 @@ type User = {
     createdAt: string
     totalXP: number
     currentLevel: string
+    _count?: {
+        pushSubscriptions: number
+    }
 }
 
 export default function AdminUsersPage() {
@@ -152,6 +155,11 @@ export default function AdminUsersPage() {
                                                 <div className="text-sm font-medium text-gray-900">
                                                     {user.name || 'No Name'}
                                                     {user.nickname && <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">@{user.nickname}</span>}
+                                                    {(user._count?.pushSubscriptions ?? 0) > 0 && (
+                                                        <span className="ml-2 text-primary-600" title="Web Push Enabled">
+                                                            <BellIcon className="w-4 h-4 inline" />
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div className="text-sm text-gray-500">{user.email}</div>
                                             </div>

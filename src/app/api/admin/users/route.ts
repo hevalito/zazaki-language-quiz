@@ -39,6 +39,9 @@ export async function GET(req: Request) {
                 createdAt: true,
                 totalXP: true,
                 currentLevel: true,
+                _count: {
+                    select: { pushSubscriptions: true }
+                }
             }
         })
 
