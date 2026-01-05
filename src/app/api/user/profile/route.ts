@@ -22,6 +22,7 @@ export async function GET() {
                 avatarUrl: true,
                 dailyGoal: true,
                 preferredScript: true,
+                hasSeenTour: true,
             }
         })
 
