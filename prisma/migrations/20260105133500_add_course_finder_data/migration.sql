@@ -1,0 +1,1 @@
+ALTER TABLE "User" ADD COLUMN "courseFinderData" JSONB; ALTER TABLE "User" ALTER COLUMN "dailyGoal" SET DEFAULT 100;

@@ -2,6 +2,7 @@ export type FlowNode = {
     id: string
     text: string
     type?: 'question' | 'result' | 'info'
+    image?: string
     options?: { label: string; nextId: string }[]
     result?: {
         courseId?: string
@@ -78,7 +79,8 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
     'n3': {
         id: 'n3',
         text: 'Dêrsim (Tunceli)',
-        type: 'info', // Pass through
+        type: 'info',
+        image: 'https://placehold.co/600x400/png?text=Region+Dersim',
         options: [{ label: 'Weiter', nextId: 'n4' }]
     },
     'n4': {
@@ -183,47 +185,51 @@ export const COURSE_FINDER_FLOW: Record<string, FlowNode> = {
     // n43 -> n46
     // n49 -> n46
     // n55 (via options) -> n46
-    'n35': { id: 'n35', text: 'Çolîg -> Zentral-Zazakî', type: 'info', options: [{ label: 'Weiter', nextId: 'n46' }] },
-    'n43': { id: 'n43', text: 'Pali -> Zentral-Zazakî', type: 'info', options: [{ label: 'Weiter', nextId: 'n46' }] },
-    'n49': { id: 'n49', text: 'Xarpêt -> Zentral-Zazakî', type: 'info', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n35': { id: 'n35', text: 'Çolîg -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Bingol', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n43': { id: 'n43', text: 'Pali -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Palu', options: [{ label: 'Weiter', nextId: 'n46' }] },
+    'n49': { id: 'n49', text: 'Xarpêt -> Zentral-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Elazig', options: [{ label: 'Weiter', nextId: 'n46' }] },
     'n46': {
         id: 'n46',
         text: 'Dein Dialekt ist Zentral-Zazakî',
         type: 'result',
+        image: 'https://placehold.co/600x400/png?text=Zentral+Zazaki+Map',
         result: { dialect: 'Zentral-Zazakî', recommendation: 'Zentral-Zazakî' }
     },
 
     // SOUTH ZAZAKI GROUP
     // n37 -> n38 (South)
     // n47 -> n38 (South)
-    'n37': { id: 'n37', text: 'Çêrmûge -> Süd-Zazakî', type: 'info', options: [{ label: 'Weiter', nextId: 'n38' }] },
-    'n47': { id: 'n47', text: 'Sewrêgi -> Süd-Zazakî', type: 'info', options: [{ label: 'Weiter', nextId: 'n38' }] },
+    'n37': { id: 'n37', text: 'Çêrmûge -> Süd-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Cermik', options: [{ label: 'Weiter', nextId: 'n38' }] },
+    'n47': { id: 'n47', text: 'Sewrêgi -> Süd-Zazakî', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Siverek', options: [{ label: 'Weiter', nextId: 'n38' }] },
     'n38': {
         id: 'n38',
         text: 'Dein Dialekt ist Süd-Zazakî',
         type: 'result',
+        image: 'https://placehold.co/600x400/png?text=Sued+Zazaki+Map',
         result: { dialect: 'Süd-Zazakî', recommendation: 'Süd-Zazakî' }
     },
 
     // OTHER DIALECTS
-    'n39': { id: 'n39', text: 'Erzingan', type: 'info', options: [{ label: 'Weiter', nextId: 'n40' }] },
+    'n39': { id: 'n39', text: 'Erzingan', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Erzincan', options: [{ label: 'Weiter', nextId: 'n40' }] },
     'n40': {
         id: 'n40',
         text: 'Erzingan-Dialekt',
         type: 'result',
+        image: 'https://placehold.co/600x400/png?text=Erzincan+Map',
         result: { dialect: 'Erzingan-Dialekt', recommendation: 'Erzingan-Dialekt' }
     },
 
-    'n41': { id: 'n41', text: 'Gimgim', type: 'info', options: [{ label: 'Weiter', nextId: 'n42' }] },
-    'n51': { id: 'n51', text: 'Xinûs -> Gimgim-Xinûs', type: 'info', options: [{ label: 'Weiter', nextId: 'n42' }] },
+    'n41': { id: 'n41', text: 'Gimgim', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Varto', options: [{ label: 'Weiter', nextId: 'n42' }] },
+    'n51': { id: 'n51', text: 'Xinûs -> Gimgim-Xinûs', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Hinis', options: [{ label: 'Weiter', nextId: 'n42' }] },
     'n42': {
         id: 'n42',
         text: 'Gimgim-Xinûs-Dialekt',
         type: 'result',
+        image: 'https://placehold.co/600x400/png?text=Gimgim+Xinus+Map',
         result: { dialect: 'Gimgim-Xinûs-Dialekt', recommendation: 'Gimgim-Xinûs-Dialekt' }
     },
 
-    'n45': { id: 'n45', text: 'Pîran', type: 'info', options: [{ label: 'Weiter', nextId: 'n46' }] }, // Chart says n45->n46
+    'n45': { id: 'n45', text: 'Pîran', type: 'info', image: 'https://placehold.co/600x400/png?text=Region+Piran', options: [{ label: 'Weiter', nextId: 'n46' }] }, // Chart says n45->n46
 
     // UNCLEAR / NON-NATIVE
     'n53': { // Don't know / Not listed -> Go to n2 (loop back? No, usually fallback to Standard or list)
