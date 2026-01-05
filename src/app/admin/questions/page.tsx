@@ -14,15 +14,26 @@ export default function QuestionsAdmin() {
     const [showImport, setShowImport] = useState(false)
     const [editingQuestion, setEditingQuestion] = useState<any>(null)
     const [filterPool, setFilterPool] = useState(true) // Default to "Pool Only"
+    const [sortBy, setSortBy] = useState('createdAt')
+    const [sortOrder, setSortOrder] = useState('desc')
+    const [filterDifficulty, setFilterDifficulty] = useState('all')
+    const [filterType, setFilterType] = useState('all')
 
     useEffect(() => {
         fetchQuestions()
-    }, [filterPool])
+    }, [filterPool, sortBy, sortOrder, filterDifficulty, filterType])
 
     const fetchQuestions = async () => {
         setLoading(true)
         try {
-            const res = await fetch(`/api/admin/questions?pool=${filterPool}`)
+            const params = new URLSearchParams({
+                pool: String(filterPool),
+                sortBy,
+                order: sortOrder,
+                difficulty: filterDifficulty,
+                type: filterType
+            })
+            const res = await fetch(`/api/admin/questions?${params.toString()}`)
             if (res.ok) {
                 const data = await res.json()
                 setQuestions(data)
@@ -103,28 +114,85 @@ export default function QuestionsAdmin() {
                 </div>
             </div>
 
-            {/* Filters */}
-            <div className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <FunnelIcon className="w-5 h-5 text-gray-400" />
-                <span className="text-sm font-medium text-gray-700">Filter:</span>
-                <button
-                    onClick={() => setFilterPool(true)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${filterPool
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
-                        }`}
-                >
-                    Pool Only (No Quiz)
-                </button>
-                <button
-                    onClick={() => setFilterPool(false)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${!filterPool
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100'
-                        }`}
-                >
-                    All Questions
-                </button>
+            {/* Filters & Sort Toolbar */}
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex items-center space-x-2">
+                        <FunnelIcon className="w-5 h-5 text-gray-400" />
+                        <span className="text-sm font-medium text-gray-700">Filters:</span>
+                    </div>
+
+                    {/* Filter: Pool Status */}
+                    <div className="flex bg-gray-100 rounded-lg p-1">
+                        <button
+                            onClick={() => setFilterPool(true)}
+                            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${filterPool
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-500 hover:text-gray-900'
+                                }`}
+                        >
+                            Pool Only
+                        </button>
+                        <button
+                            onClick={() => setFilterPool(false)}
+                            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${!filterPool
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-500 hover:text-gray-900'
+                                }`}
+                        >
+                            All
+                        </button>
+                    </div>
+
+                    {/* Filter: Difficulty */}
+                    <select
+                        value={filterDifficulty}
+                        onChange={(e) => setFilterDifficulty(e.target.value)}
+                        className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    >
+                        <option value="all">Difficulty (All)</option>
+                        {[1, 2, 3, 4, 5].map(d => (
+                            <option key={d} value={d}>Level {d}</option>
+                        ))}
+                    </select>
+
+                    {/* Filter: Type */}
+                    <select
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                        className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    >
+                        <option value="all">Type (All)</option>
+                        <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                        <option value="Audio">Audio</option>
+                        <option value="Video">Video</option>
+                        {/* Add other types as needed from the enum */}
+                    </select>
+                </div>
+
+                <div className="flex items-center space-x-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 w-full md:w-auto">
+                    <span className="text-sm text-gray-500">Sort by:</span>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    >
+                        <option value="createdAt">Date Added</option>
+                        <option value="points">Points</option>
+                        <option value="difficulty">Difficulty</option>
+                    </select>
+                    <button
+                        onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                        className="p-1.5 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+                        title={sortOrder === 'asc' ? "Ascending" : "Descending"}
+                    >
+                        {sortOrder === 'asc' ? (
+                            <ArrowUpTrayIcon className="w-5 h-5 transform rotate-180" />
+                        ) : (
+                            <ArrowUpTrayIcon className="w-5 h-5" />
+                        )}
+                    </button>
+                </div>
             </div>
 
             {loading ? (

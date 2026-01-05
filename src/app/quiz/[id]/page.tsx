@@ -302,6 +302,11 @@ export default function QuizPage() {
     return [...currentQ.choices].sort(() => Math.random() - 0.5)
   }, [quiz, currentQuestionIndex])
 
+  const successMessage = useMemo(() => {
+    const messages = ["Zaf rind o!", "Rind o!", "Aferîn!"]
+    return messages[Math.floor(Math.random() * messages.length)]
+  }, [])
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -333,7 +338,7 @@ export default function QuizPage() {
                 <TrophyIcon className="w-8 h-8 text-green-600" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">Quiz beendet!</h1>
-              <p className="text-gray-600">Gut gemacht!</p>
+              <p className="text-gray-600">{successMessage}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-6">

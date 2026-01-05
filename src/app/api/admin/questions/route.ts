@@ -12,11 +12,25 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url)
         const poolOnly = searchParams.get('pool') === 'true'
+        const sortBy = searchParams.get('sortBy') || 'createdAt'
+        const sortOrder = searchParams.get('order') === 'asc' ? 'asc' : 'desc'
+        const difficulty = searchParams.get('difficulty')
+        const type = searchParams.get('type')
 
         const where: any = {}
         if (poolOnly) {
             where.quizId = null
         }
+        if (difficulty && difficulty !== 'all') {
+            where.difficulty = parseInt(difficulty)
+        }
+        if (type && type !== 'all') {
+            where.type = type
+        }
+
+        // Validate sort field to prevent injection/errors
+        const validSortFields = ['createdAt', 'points', 'difficulty']
+        const sortField = validSortFields.includes(sortBy) ? sortBy : 'createdAt'
 
         const questions = await prisma.question.findMany({
             where,
@@ -28,7 +42,7 @@ export async function GET(request: Request) {
                     }
                 }
             },
-            orderBy: { createdAt: 'desc' }
+            orderBy: { [sortField]: sortOrder }
         })
 
         return NextResponse.json(questions)
