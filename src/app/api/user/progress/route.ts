@@ -25,7 +25,10 @@ export async function GET(request: NextRequest) {
         isAdmin: true,
         firstName: true,
         nickname: true,
-        currentLevel: true
+        currentLevel: true,
+        _count: {
+          select: { attempts: true }
+        }
       }
     })
 
@@ -62,7 +65,8 @@ export async function GET(request: NextRequest) {
         isAdmin: user.isAdmin || false,
         firstName: user.firstName,
         nickname: user.nickname,
-        currentLevel: user.currentLevel
+        currentLevel: user.currentLevel,
+        attemptCount: user._count.attempts
       }
     })
   } catch (error) {

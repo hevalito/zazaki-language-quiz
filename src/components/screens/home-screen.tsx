@@ -18,6 +18,8 @@ import {
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
 
+import { InstallPrompt } from '@/components/pwa/install-prompt'
+
 interface UserProgress {
   id: string
   name: string | null
@@ -30,6 +32,7 @@ interface UserProgress {
   firstName?: string | null
   nickname?: string | null
   currentLevel?: string // Added for Continue Learning logic
+  attemptCount?: number
 }
 
 import confetti from 'canvas-confetti'
@@ -449,6 +452,11 @@ export function HomeScreen() {
           </button>
         </div>
       </div>
+
+      {/* PWA Install Prompt */}
+      {userProgress && (
+        <InstallPrompt attemptCount={userProgress.attemptCount || 0} />
+      )}
     </div>
   )
 }

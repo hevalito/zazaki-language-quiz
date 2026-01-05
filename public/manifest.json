@@ -1,6 +1,6 @@
 {
-  "name": "Zazaki - Learn Kurdish Language",
-  "short_name": "Zazaki",
+  "name": "Zazakî Quiz",
+  "short_name": "Zazakî Quiz",
   "description": "Interactive language learning app for Zazaki (Kurdish) with audio, video, and gamification",
   "start_url": "/",
   "display": "standalone",
