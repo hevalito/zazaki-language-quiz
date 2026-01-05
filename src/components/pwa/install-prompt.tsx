@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import * as pwaInstallHandlerModule from 'pwa-install-handler'
+import { pwaInstallHandler } from 'pwa-install-handler'
 import { XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline'
 
 interface InstallPromptProps {
@@ -13,32 +13,33 @@ export function InstallPrompt({ attemptCount }: InstallPromptProps) {
     const [isVisible, setIsVisible] = useState(false)
     const [isInstalled, setIsInstalled] = useState(false)
 
-    // Handle ESM/CJS interop
-    const pwaInstallHandler = (pwaInstallHandlerModule as any).default || pwaInstallHandlerModule
+    useEffect(() => {
+        // Check initial state
+        setCanInstall(pwaInstallHandler.canInstall())
+
+        // Add listener for state changes
+        const updateState = (installable: boolean) => {
+            setCanInstall(installable)
+        }
+        pwaInstallHandler.addListener(updateState)
+
+        return () => pwaInstallHandler.removeListener(updateState)
+    }, [])
 
     useEffect(() => {
-        // Check if installable
-        if (pwaInstallHandler.getPWAInstallState && pwaInstallHandler.getPWAInstallState()) {
-            setCanInstall(true)
-        }
-
-        // Also check if already dismissed
+        // Show prompt logic
         const dismissed = localStorage.getItem('zazaki-pwa-dismissed')
-        if (!dismissed && attemptCount >= 1) {
-            if (pwaInstallHandler.getPWAInstallState && pwaInstallHandler.getPWAInstallState()) {
-                setIsVisible(true)
-            }
+        if (!dismissed && attemptCount >= 1 && canInstall) {
+            setIsVisible(true)
         }
-    }, [attemptCount, pwaInstallHandler])
+    }, [attemptCount, canInstall])
 
     const handleInstall = async () => {
         try {
-            if (pwaInstallHandler.install) {
-                const installed = await pwaInstallHandler.install()
-                if (installed) {
-                    setIsInstalled(true)
-                    setIsVisible(false)
-                }
+            const installed = await pwaInstallHandler.install()
+            if (installed) {
+                setIsInstalled(true)
+                setIsVisible(false)
             }
         } catch (err) {
             console.error(err)
