@@ -20,44 +20,32 @@ export function useWebPush() {
     const [permissionState, setPermissionState] = useState<NotificationPermission>('default')
 
     useEffect(() => {
-        // Debug logging
-        console.log('useWebPush: Mounting...')
         const isSW = 'serviceWorker' in navigator
         const isPush = 'PushManager' in window
-        const vapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-        console.log(`useWebPush: Support Check - SW: ${isSW}, Push: ${isPush}, VAPID: ${!!vapid}`)
 
         if (typeof window !== 'undefined' && isSW && isPush) {
             setIsSupported(true)
             setPermissionState(Notification.permission)
-            console.log('useWebPush: Checking subscription...')
             checkSubscription()
         } else {
-            console.log('useWebPush: Not supported or missing requirements')
             setLoading(false)
         }
     }, [])
 
     const checkSubscription = async () => {
         try {
-            console.log('useWebPush: Waiting for SW ready...')
-
             // Explicitly register service worker to ensure it's active
             // This is idempotent and ensures we don't hang waiting for 'ready'
             if ('serviceWorker' in navigator) {
-                console.log('useWebPush: Ensuring SW registration...')
                 await navigator.serviceWorker.register('/sw.js')
             }
 
             const registration = await navigator.serviceWorker.ready
-            console.log('useWebPush: SW Ready. Getting subscription...')
             const subscription = await registration.pushManager.getSubscription()
-            console.log('useWebPush: Subscription found:', !!subscription)
             setIsSubscribed(!!subscription)
         } catch (error) {
             console.error('Error checking subscription', error)
         } finally {
-            console.log('useWebPush: Loading done')
             setLoading(false)
         }
     }
