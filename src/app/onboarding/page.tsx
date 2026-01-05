@@ -58,14 +58,14 @@ export default function OnboardingPage() {
                     <div className="relative w-32 h-32 mb-4">
                         <Image
                             src="/images/logo-full.png"
-                            alt="Zazaki Quiz"
+                            alt="Zazakî Quiz"
                             fill
                             className="object-contain"
                             priority
                         />
                     </div>
                     <h2 className="mt-2 text-center text-3xl font-serif font-bold text-gray-900">
-                        Willkommen bei Zazaki!
+                        Willkommen bei Zazakî!
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 max-w-sm">
                         Um dein Zertifikat später personalisieren zu können, benötigen wir deinen Namen.
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
                                 type="text"
                                 required
                                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                                placeholder="z.B. ZazakiMeister24"
+                                placeholder="z.B. ZazakîMeister24"
                                 value={formData.nickname}
                                 onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             />

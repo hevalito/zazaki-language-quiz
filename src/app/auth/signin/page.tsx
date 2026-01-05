@@ -34,7 +34,7 @@ function SignInPage() {
           <div className="relative w-48 h-48 mb-4">
             <Image
               src="/images/logo-full.png"
-              alt="Zazaki Quiz"
+              alt="Zazakî Quiz"
               fill
               className="object-contain"
               priority
@@ -44,7 +44,7 @@ function SignInPage() {
             Anmelden
           </h2>
           <p className="mt-2 text-center text-gray-600 font-sans">
-            Starte deine Zazaki-Lernreise
+            Starte deine Zazakî-Lernreise
           </p>
         </div>
 

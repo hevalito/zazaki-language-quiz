@@ -8,27 +8,27 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
 export const metadata: Metadata = {
-  title: 'Zazaki Quiz - Lerne Zazakî spielerisch',
+  title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
   description: 'Effektives Vokabel-Lernen, herausfordernde Quizze und spielerischer Fortschritt. Übe Kostenlos. Werde jeden Tag ein bisschen besser.',
   metadataBase: new URL('https://quiz.zazakiacademy.com'),
   manifest: '/manifest.json',
   openGraph: {
-    title: 'Zazaki Quiz - Lerne Zazakî spielerisch',
+    title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
     description: 'Der moderne Weg, Zazakî zu lernen. Kostenlos, effektiv und mit Spaß.',
     url: 'https://quiz.zazakiacademy.com',
-    siteName: 'Zazaki Academy',
+    siteName: 'Zazakî Academy',
     locale: 'de_DE',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zazaki Quiz - Lerne Zazakî spielerisch',
+    title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
     description: 'Effektives Vokabel-Lernen und Gamification.',
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Zazaki',
+    title: 'Zazakî',
   },
   formatDetection: {
     telephone: false,

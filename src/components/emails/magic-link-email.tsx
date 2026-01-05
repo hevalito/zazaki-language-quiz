@@ -28,7 +28,7 @@ export const ZazakiMagicLinkEmail = ({
     return (
         <Html>
             <Head />
-            <Preview>Dein Login-Link für Zazaki Quiz</Preview>
+            <Preview>Dein Login-Link für Zazakî Quiz</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Section style={logoContainer}>
@@ -36,7 +36,7 @@ export const ZazakiMagicLinkEmail = ({
                             src={`${baseUrl}/images/logo-full.png`}
                             width="180"
                             height="90"
-                            alt="Zazaki Quiz"
+                            alt="Zazakî Quiz"
                             style={logo}
                         />
                     </Section>
@@ -48,7 +48,7 @@ export const ZazakiMagicLinkEmail = ({
                     </Text>
 
                     <Text style={text}>
-                        Klicke auf den Button unten, um dich bei <strong>Zazaki Quiz</strong> anzumelden. Dieser Link ist für 24 Stunden gültig.
+                        Klicke auf den Button unten, um dich bei <strong>Zazakî Quiz</strong> anzumelden. Dieser Link ist für 24 Stunden gültig.
                     </Text>
 
                     <Section style={btnContainer}>
@@ -68,7 +68,7 @@ export const ZazakiMagicLinkEmail = ({
                     <Hr style={hr} />
 
                     <Text style={footer}>
-                        Zazaki Quiz - Lerne Kurdisch auf spielerische Weise.
+                        Zazakî Quiz - Lerne Kurdisch auf spielerische Weise.
                         <br />
                         Wenn du diese E-Mail nicht angefordert hast, kannst du sie ignorieren.
                     </Text>

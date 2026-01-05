@@ -143,7 +143,7 @@ export function HomeScreen() {
               <div className="relative w-10 h-10">
                 <Image
                   src="/images/logo-icon.png"
-                  alt="Zazaki"
+                  alt="Zazakî"
                   fill
                   className="object-contain" // object-contain to ensure it fits well
                 />
@@ -314,7 +314,7 @@ export function HomeScreen() {
                           {(recommendedQuiz.title as any)?.de || (recommendedQuiz.title as any)?.en || 'Nächstes Quiz'}
                         </h4>
                         <p className="text-sm text-gray-600">
-                          {(recommendedQuiz.lesson?.chapter?.course?.title as any)?.de || 'Lerne Zazaki'}
+                          {(recommendedQuiz.lesson?.chapter?.course?.title as any)?.de || 'Lerne Zazakî'}
                           <span className="mx-2">•</span>
                           <span className="text-brand-green font-bold text-xs px-2 py-0.5 bg-brand-green/10 rounded-full">
                             {recommendedQuiz.lesson?.chapter?.course?.level || 'A1'}

@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         const confirmUrl = `${process.env.NEXTAUTH_URL}/auth/delete-confirm?token=${token}`
 
         await resend.emails.send({
-            from: 'Zazaki Quiz <noreply@zazakiacademy.com>',
+            from: 'Zazakî Quiz <noreply@zazakiacademy.com>',
             to: user.email,
             subject: 'Bestätige die Löschung deines Kontos',
             react: DeleteAccountEmail({

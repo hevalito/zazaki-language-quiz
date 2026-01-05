@@ -35,7 +35,7 @@ export function WelcomeScreen() {
               <div className="relative w-64 h-32 sm:w-80 sm:h-40">
                 <Image
                   src="/images/logo-full.png"
-                  alt="Zazaki Quiz"
+                  alt="Zazakî Quiz"
                   fill
                   className="object-contain"
                   priority

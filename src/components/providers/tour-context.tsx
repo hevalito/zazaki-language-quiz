@@ -40,7 +40,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
             element: '#tour-welcome',
             popover: {
                 title: 'Xêr ama!',
-                description: 'Willkommen bei Zazaki Quiz! Hier lernst du spielerisch Zazaki.',
+                description: 'Willkommen bei Zazakî Quiz! Hier lernst du spielerisch Zazakî.',
                 side: 'bottom',
                 align: 'start'
             }
@@ -165,7 +165,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
             element: 'body',
             popover: {
                 title: 'Los geht\'s!',
-                description: 'Das war\'s! Viel Spaß beim Lernen. Bimanê weşiye!',
+                description: 'Das war\'s! Viel Spaß beim Lernen. Qewet bo!',
                 side: 'top',
                 doneBtnText: 'Fertig',
                 onNextClick: () => {

@@ -14,7 +14,7 @@ export function ShareBadgeButton({ title, description }: ShareBadgeButtonProps) 
     const handleShare = async () => {
         const shareData = {
             title: `Ich habe einen Erfolg freigeschaltet: ${title}! 🏆`,
-            text: `Ich habe gerade den Erfolg "${title}" in Zazaki Quiz freigeschaltet! ${description}`,
+            text: `Ich habe gerade den Erfolg "${title}" in Zazakî Quiz freigeschaltet! ${description}`,
             url: window.location.href
         }
 

@@ -27,13 +27,13 @@ async function main() {
   const course = await prisma.course.create({
     data: {
       title: {
-        en: 'Zazaki Basics',
-        de: 'Zazaki Grundlagen',
-        ku: 'Zazakiya Bingehîn'
+        en: 'Zazakî Basics',
+        de: 'Zazakî Grundlagen',
+        ku: 'Zazakîya Bingehîn'
       },
       description: {
-        en: 'Learn the fundamentals of Zazaki language',
-        de: 'Lerne die Grundlagen der Zazaki-Sprache',
+        en: 'Learn the fundamentals of Zazakî language',
+        de: 'Lerne die Grundlagen der Zazakî-Sprache',
         ku: 'Bingehên zimanê Zazakî fêr bibe'
       },
       dialectCode: 'zazaki-tr',
@@ -54,8 +54,8 @@ async function main() {
         ku: 'Silav û gotinên bingehîn'
       },
       description: {
-        en: 'Learn common greetings and basic phrases in Zazaki',
-        de: 'Lerne häufige Begrüßungen und Grundphrasen auf Zazaki',
+        en: 'Learn common greetings and basic phrases in Zazakî',
+        de: 'Lerne häufige Begrüßungen und Grundphrasen auf Zazakî',
         ku: 'Silavên gelemperî û gotinên bingehîn ên Zazakî fêr bibe'
       },
       courseId: course.id,
@@ -75,8 +75,8 @@ async function main() {
         ku: 'Silavên bingehîn'
       },
       description: {
-        en: 'Learn how to greet people in Zazaki',
-        de: 'Lerne, wie man Menschen auf Zazaki begrüßt',
+        en: 'Learn how to greet people in Zazakî',
+        de: 'Lerne, wie man Menschen auf Zazakî begrüßt',
         ku: 'Fêr bibe ka çawa kesan bi Zazakî silav bikî'
       },
       chapterId: chapter.id,
@@ -97,8 +97,8 @@ async function main() {
         ku: 'Pirtûka silavan'
       },
       description: {
-        en: 'Test your knowledge of Zazaki greetings',
-        de: 'Teste dein Wissen über Zazaki-Begrüßungen',
+        en: 'Test your knowledge of Zazakî greetings',
+        de: 'Teste dein Wissen über Zazakî-Begrüßungen',
         ku: 'Zanîna xwe ya silavên Zazakî biceribîne'
       },
       lessonId: lesson.id,
@@ -119,8 +119,8 @@ async function main() {
     {
       type: QuestionType.MULTIPLE_CHOICE,
       prompt: {
-        en: 'How do you say "Hello" in Zazaki?',
-        de: 'Wie sagt man "Hallo" auf Zazaki?',
+        en: 'How do you say "Hello" in Zazakî?',
+        de: 'Wie sagt man "Hallo" auf Zazakî?',
         ku: 'Bi Zazakî "Silav" çawa tê gotin?'
       },
       dialectCode: 'zazaki-tr',
@@ -132,8 +132,8 @@ async function main() {
         shuffleChoices: true
       },
       explanation: {
-        en: '"Merheba" is the most common way to say hello in Zazaki.',
-        de: '"Merheba" ist die häufigste Art, Hallo auf Zazaki zu sagen.',
+        en: '"Merheba" is the most common way to say hello in Zazakî.',
+        de: '"Merheba" ist die häufigste Art, Hallo auf Zazakî zu sagen.',
         ku: '"Merheba" rêya herî gelemperî ya gotina silavê bi Zazakî ye.'
       },
       choices: [
@@ -175,8 +175,8 @@ async function main() {
         shuffleChoices: true
       },
       explanation: {
-        en: '"Sipas" means "Thank you" in Zazaki.',
-        de: '"Sipas" bedeutet "Danke" auf Zazaki.',
+        en: '"Sipas" means "Thank you" in Zazakî.',
+        de: '"Sipas" bedeutet "Danke" auf Zazakî.',
         ku: '"Sipas" bi Zazakî "Spas" tê wateya.'
       },
       choices: [

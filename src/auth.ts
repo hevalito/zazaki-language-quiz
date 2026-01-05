@@ -18,14 +18,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     ResendProvider({
       apiKey: process.env.AUTH_RESEND_KEY,
-      from: "Zazaki Academy <login@zazakiacademy.com>",
+      from: "Zazakî Academy <login@zazakiacademy.com>",
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         const { host } = new URL(url)
         try {
           await resend.emails.send({
             from: provider.from!,
             to: identifier,
-            subject: `Anmelden bei Zazaki Quiz`,
+            subject: `Anmelden bei Zazakî Quiz`,
             react: ZazakiMagicLinkEmail({ url, host }),
           })
         } catch (error) {

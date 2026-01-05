@@ -36,9 +36,9 @@ export async function POST(req: Request) {
         // Send Goodbye Email
         if (userEmail) {
             await resend.emails.send({
-                from: 'Zazaki Quiz <noreply@zazakiacademy.com>',
+                from: 'Zazakî Quiz <noreply@zazakiacademy.com>',
                 to: userEmail,
-                subject: 'Auf Wiedersehen - Zazaki Quiz',
+                subject: 'Auf Wiedersehen - Zazakî Quiz',
                 react: GoodbyeEmail({ userName })
             })
         }
