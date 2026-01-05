@@ -10,12 +10,10 @@ export async function GET() {
         }
 
         const badges = await prisma.badge.findMany({
-            orderBy: {
-                orderBy: [
-                    { sortOrder: 'asc' },
-                    { createdAt: 'desc' }
-                ]
-            }
+            orderBy: [
+                { sortOrder: 'asc' },
+                { createdAt: 'desc' }
+            ]
         })
 
         return NextResponse.json(badges)
