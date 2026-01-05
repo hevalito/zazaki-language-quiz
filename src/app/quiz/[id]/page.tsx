@@ -11,8 +11,10 @@ import {
   ArrowRightIcon,
   CheckIcon,
   ClockIcon,
-  TrophyIcon
+  TrophyIcon,
+  BellIcon
 } from '@heroicons/react/24/outline'
+import { useWebPush } from '@/hooks/use-web-push'
 
 interface QuizData {
   id: string
@@ -357,6 +359,8 @@ export default function QuizPage() {
               </div>
             )}
 
+            {quiz.type === 'DAILY' && <NotificationPrompt />}
+
             <div className="space-y-4 mb-6">
               <h3 className="font-semibold text-gray-900">Fragenübersicht</h3>
               {quiz.questions.map((question, index) => {
@@ -542,6 +546,44 @@ export default function QuizPage() {
           </div>
         </div>
       </main>
+    </div>
+  )
+}
+
+function NotificationPrompt() {
+  const { isSupported, isSubscribed, subscribe, loading, permissionState } = useWebPush()
+  const [dismissed, setDismissed] = useState(false)
+
+  if (!isSupported || isSubscribed || dismissed || permissionState === 'denied') {
+    return null
+  }
+
+  return (
+    <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-lg flex items-center justify-between">
+      <div className="flex items-center space-x-3">
+        <div className="bg-indigo-100 p-2 rounded-full">
+          <BellIcon className="w-5 h-5 text-indigo-600" />
+        </div>
+        <div>
+          <h4 className="font-semibold text-indigo-900 text-sm">Nicht verpassen!</h4>
+          <p className="text-xs text-indigo-700">Lass dich benachrichtigen, wenn das nächste Quiz da ist.</p>
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => setDismissed(true)}
+          className="text-xs text-indigo-500 hover:text-indigo-700 px-2 py-1"
+        >
+          Später
+        </button>
+        <button
+          onClick={() => subscribe()}
+          disabled={loading}
+          className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
+        >
+          {loading ? '...' : 'Aktivieren'}
+        </button>
+      </div>
     </div>
   )
 }

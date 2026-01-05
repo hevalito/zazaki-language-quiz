@@ -50,7 +50,18 @@ export async function GET() {
             if (attempt) completed = true
         }
 
-        const nextAvailable = tomorrowBerlin
+        // Logic for Next Available:
+        // The Cron job runs at 08:00 UTC every day.
+        // If we are BEFORE 08:00 UTC today, the "next" quiz is Today 08:00 UTC.
+        // If we are AFTER 08:00 UTC today, the "next" quiz is Tomorrow 08:00 UTC.
+
+        const today8amUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 8, 0, 0, 0))
+
+        let nextAvailable = today8amUTC
+        if (now >= today8amUTC) {
+            nextAvailable = new Date(today8amUTC)
+            nextAvailable.setDate(nextAvailable.getDate() + 1)
+        }
 
         return NextResponse.json({
             available: !!dailyQuiz,

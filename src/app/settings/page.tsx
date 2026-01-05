@@ -7,8 +7,11 @@ import {
     UserCircleIcon,
     ArrowLeftIcon,
     CheckCircleIcon,
-    CameraIcon
+    CameraIcon,
+    BellIcon,
+    BellSlashIcon
 } from '@heroicons/react/24/outline'
+import { useWebPush } from '@/hooks/use-web-push'
 
 export default function SettingsPage() {
     const { data: session, update } = useSession()
@@ -238,6 +241,14 @@ export default function SettingsPage() {
                             </select>
                         </div>
 
+                        <hr className="border-gray-100" />
+
+                        <div>
+                            <h3 className="block text-sm font-medium text-gray-700 mb-2">Benachrichtigungen</h3>
+                            <PushNotificationToggle />
+                        </div>
+
+
                         <div className="pt-4">
                             <button
                                 type="submit"
@@ -345,5 +356,55 @@ function DeleteButton() {
         >
             {loading ? 'Sende...' : 'E-Mail anfordern'}
         </button>
+    )
+}
+
+
+
+function PushNotificationToggle() {
+    const { isSupported, isSubscribed, subscribe, unsubscribe, loading, permissionState } = useWebPush()
+
+    if (!isSupported) {
+        return <p className="text-sm text-gray-500">Push-Benachrichtigungen werden von diesem Browser nicht unterstützt.</p>
+    }
+
+    if (permissionState === 'denied') {
+        return <p className="text-sm text-red-500">Benachrichtigungen sind blockiert. Bitte in den Browsereinstellungen aktivieren.</p>
+    }
+
+    const handleToggle = async () => {
+        if (isSubscribed) {
+            await unsubscribe()
+        } else {
+            await subscribe()
+        }
+    }
+
+    return (
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-center space-x-3">
+                {isSubscribed ? (
+                    <BellIcon className="w-6 h-6 text-primary-600" />
+                ) : (
+                    <BellSlashIcon className="w-6 h-6 text-gray-400" />
+                )}
+                <div>
+                    <h4 className="text-sm font-medium text-gray-900">Tägliche Erinnerung</h4>
+                    <p className="text-xs text-gray-500">Erhalte eine Benachrichtigung, wenn das neue tägliche Quiz verfügbar ist.</p>
+                </div>
+            </div>
+            <button
+                type="button"
+                onClick={handleToggle}
+                disabled={loading}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${isSubscribed ? 'bg-primary-600' : 'bg-gray-200'
+                    }`}
+            >
+                <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isSubscribed ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                />
+            </button>
+        </div>
     )
 }

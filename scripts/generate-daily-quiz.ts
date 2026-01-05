@@ -36,8 +36,6 @@ async function main() {
                     const resend = new Resend(process.env.AUTH_RESEND_KEY)
                     const daysLeft = Math.floor(poolCount / 5)
 
-                    // Send to first admin for now, or loop through all (Resend supports batch or single)
-                    // We'll loop to be safe and personal
                     for (const admin of admins) {
                         if (admin.email) {
                             try {
@@ -60,6 +58,57 @@ async function main() {
                 } else {
                     console.log('No admins found or AUTH_RESEND_KEY missing.')
                 }
+            }
+
+            // --- Web Push Notifications ---
+            if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
+                console.log('Sending push notifications...')
+                try {
+                    const webPush = await import('web-push')
+                    webPush.setVapidDetails(
+                        process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
+                        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+                        process.env.VAPID_PRIVATE_KEY
+                    )
+
+                    const subscriptions = await prisma.pushSubscription.findMany()
+                    console.log(`Found ${subscriptions.length} subscriptions.`)
+
+                    const notificationPayload = JSON.stringify({
+                        title: 'Neues tägliches Quiz! 🧠',
+                        body: 'Dein tägliches Zazakî-Quiz ist bereit. Schaffst du es heute?',
+                        url: '/daily', // Assuming /daily redirects or is the page
+                        actions: [
+                            { action: 'open', title: 'Jetzt spielen' }
+                        ]
+                    })
+
+                    const promises = subscriptions.map((sub: any) =>
+                        webPush.sendNotification({
+                            endpoint: sub.endpoint,
+                            keys: {
+                                p256dh: sub.p256dh,
+                                auth: sub.auth
+                            }
+                        }, notificationPayload)
+                            .catch((err: any) => {
+                                if (err.statusCode === 410 || err.statusCode === 404) {
+                                    // Subscription expired or removed
+                                    console.log('Removing expired subscription for user', sub.userId)
+                                    return prisma.pushSubscription.delete({ where: { id: sub.id } })
+                                }
+                                console.error('Error sending push:', err)
+                            })
+                    )
+
+                    await Promise.all(promises)
+                    console.log('Push notifications sent.')
+
+                } catch (pushError) {
+                    console.error('Failed to send push notifications:', pushError)
+                }
+            } else {
+                console.log('VAPID keys missing, skipping push notifications.')
             }
 
         } else {
