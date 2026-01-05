@@ -131,3 +131,7 @@ export function isSameBerlinDay(d1: Date, d2: Date): boolean {
     const s2 = d2.toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' })
     return s1 === s2
 }
+
+export function getBerlinDateString(date: Date = new Date()): string {
+    return date.toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' })
+}

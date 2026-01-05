@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { checkBadges } from '@/lib/gamification'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
-import { isSameBerlinDay } from '@/lib/date-utils'
+import { isSameBerlinDay, getBerlinDateString } from '@/lib/date-utils'
 
 export async function POST(
   request: NextRequest,
@@ -130,14 +130,87 @@ export async function POST(
     })
 
     // Update user XP and progress
-    // Only update if xpEarned > 0 to avoid unnecessary DB writes or progress confusion
-    if (xpEarned > 0) {
-      await updateUserProgress(session.user.id, xpEarned, quiz.lessonId)
-    }
-
     // Check for new badges only if new XP was obtained
     let newBadges: any[] = []
-    if (xpEarned > 0) {
+
+    // STREAK LOGIC:
+    // Update streak regardless of XP? Or only if XP > 0?
+    // Usually streak requires "learning activity", so XP > 0 is a good proxy.
+    // However, if they just repeat a quiz for practice (0 XP), should it count?
+    // Let's say yes, meaningful engagement counts. But creating an attempt is enough?
+    // Let's stick to: If they finished a quiz, it counts. Even if 0 XP.
+
+    // 1. Fetch current user state for streak
+    const currentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { streak: true, lastActiveDate: true }
+    })
+
+    if (currentUser) {
+      const todayStr = getBerlinDateString(new Date())
+      const lastActiveStr = currentUser.lastActiveDate
+        ? getBerlinDateString(currentUser.lastActiveDate)
+        : null
+
+      let newStreak = currentUser.streak
+
+      if (todayStr !== lastActiveStr) {
+        // It's a different day. Check if it's consecutive.
+
+        // Calculate "Yesterday" in Berlin
+        // We do this by creating a date representing Today Berlin, subtracting 24h, and formatting.
+        // Robust way:
+        const todayDate = new Date()
+        const yesterdayDate = new Date(todayDate)
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+
+        // Check if yesterdayDate's Berlin string matches lastActiveStr
+        // We might need to be careful about time boundaries (e.g. 00:30 vs 23:30).
+        // Safest: Parsing the YYYY-MM-DD strings.
+
+        const lastActiveDateObj = currentUser.lastActiveDate ? new Date(currentUser.lastActiveDate) : null
+
+        // If we have a last active date, checking if it was "yesterday"
+        if (lastActiveStr) {
+          // Create date objects relative to arbitrary time to compare "days"
+          const d1 = new Date(todayStr)
+          const d2 = new Date(lastActiveStr)
+          // Diff in milliseconds
+          const diffTime = Math.abs(d1.getTime() - d2.getTime())
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+          if (diffDays === 1) {
+            newStreak += 1
+          } else {
+            newStreak = 1 // Broken streak
+          }
+        } else {
+          newStreak = 1 // First ever activity
+        }
+
+        // Update User
+        await prisma.user.update({
+          where: { id: session.user.id },
+          data: {
+            streak: newStreak,
+            lastActiveDate: new Date(),
+            totalXP: xpEarned > 0 ? { increment: xpEarned } : undefined
+          }
+        })
+      } else {
+        // Same day, just update XP if needed
+        if (xpEarned > 0) {
+          await prisma.user.update({
+            where: { id: session.user.id },
+            data: {
+              totalXP: { increment: xpEarned }
+            }
+          })
+        }
+      }
+    }
+
+    if (xpEarned > 0 || (currentUser && currentUser.streak > 0)) { // Re-check badges if streak might have changed
       const badgeResult = await checkBadges(session.user.id)
       newBadges = badgeResult.newBadges
     }
@@ -229,46 +302,4 @@ async function updateSpacedRepetition(userId: string, questionId: string, isCorr
   }
 }
 
-async function updateUserProgress(userId: string, xpEarned: number, lessonId: string | null) {
-  try {
-    // Update user's total XP
-    if (xpEarned > 0) {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          totalXP: {
-            increment: xpEarned
-          }
-        }
-      })
-    }
 
-    // Update lesson progress if applicable
-    if (lessonId) {
-      // Logic for lesson completion?
-      // For now just tracking XP.
-      await prisma.progress.upsert({
-        where: {
-          userId_lessonId: {
-            userId,
-            lessonId
-          }
-        },
-        update: {
-          xpEarned: {
-            increment: xpEarned
-          },
-          completed: true // Mark lesson as involved/completed?
-        },
-        create: {
-          userId,
-          lessonId,
-          xpEarned,
-          completed: true
-        }
-      })
-    }
-  } catch (error) {
-    console.error('Error updating user progress:', error)
-  }
-}
