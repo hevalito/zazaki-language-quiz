@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { QuizCard } from '@/components/library/quiz-card'
 import { FilterBar } from '@/components/library/filter-bar'
-import { BookOpenIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { BookOpenIcon, ArrowLeftIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 export function QuizLibrary() {
     const router = useRouter()
@@ -13,6 +13,7 @@ export function QuizLibrary() {
     const [loading, setLoading] = useState(true)
     const [currentCourseId, setCurrentCourseId] = useState(searchParams.get('tab') === 'daily' ? 'daily' : '')
     const [currentStatus, setCurrentStatus] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
         fetchQuizzes()
@@ -43,6 +44,21 @@ export function QuizLibrary() {
         }
     }
 
+    const filteredQuizzes = quizzes.filter(quiz => {
+        if (!searchQuery) return true
+        const term = searchQuery.toLowerCase()
+
+        // Check titles (de/en)
+        const titleDE = (quiz.title?.de || '').toLowerCase()
+        const titleEN = (quiz.title?.en || '').toLowerCase()
+
+        // Check descriptions (de/en)
+        const descDE = (quiz.description?.de || '').toLowerCase()
+        const descEN = (quiz.description?.en || '').toLowerCase()
+
+        return titleDE.includes(term) || titleEN.includes(term) || descDE.includes(term) || descEN.includes(term)
+    })
+
     const handleStartQuiz = (id: string) => {
         router.push(`/quiz/${id}`)
     }
@@ -72,6 +88,20 @@ export function QuizLibrary() {
             </header>
 
             <div className="container mx-auto px-4 py-6">
+                {/* Search */}
+                <div className="relative mb-6">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Suche nach Quizzen..."
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow shadow-sm"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+
                 {/* Filters */}
                 <FilterBar
                     currentCourseId={currentCourseId}
@@ -87,9 +117,9 @@ export function QuizLibrary() {
                             <div key={i} className="h-48 bg-gray-200 rounded-xl animate-pulse"></div>
                         ))}
                     </div>
-                ) : quizzes.length > 0 ? (
+                ) : filteredQuizzes.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {quizzes.map((quiz) => (
+                        {filteredQuizzes.map((quiz) => (
                             <QuizCard
                                 key={quiz.id}
                                 quiz={quiz}
@@ -100,10 +130,10 @@ export function QuizLibrary() {
                 ) : (
                     <div className="text-center py-12">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <BookOpenIcon className="w-8 h-8 text-gray-400" />
+                            <MagnifyingGlassIcon className="w-8 h-8 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900">Keine Quiz gefunden</h3>
-                        <p className="text-gray-500 mt-2">Versuche es mit anderen Filtern.</p>
+                        <h3 className="text-lg font-medium text-gray-900">Keine Quizze gefunden</h3>
+                        <p className="text-gray-500 mt-2">Versuche es mit einem anderen Suchbegriff oder Filter.</p>
                     </div>
                 )}
             </div>

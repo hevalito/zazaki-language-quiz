@@ -12,8 +12,9 @@ interface QuizCardProps {
 }
 
 export function QuizCard({ quiz, onStart }: QuizCardProps) {
-    const getTitle = (title: any) => {
-        return title?.de || title?.en || 'Unbenanntes Quiz'
+    const getLocalizedText = (obj: any) => {
+        if (!obj) return ''
+        return obj.de || obj.en || ''
     }
 
     const levelColors: Record<string, string> = {
@@ -32,6 +33,11 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
     const questionCount = quiz._count?.questions || 0
     const tags = quiz.lesson?.targetSkills || []
 
+    // Get localized strings
+    const title = getLocalizedText(quiz.title) || 'Unbenanntes Quiz'
+    const courseTitle = getLocalizedText(quiz.lesson?.chapter?.course?.title) || (quiz.type === 'DAILY' ? 'Tägliche Herausforderung' : '')
+    const description = getLocalizedText(quiz.description)
+
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:border-primary-200 p-5 flex flex-col h-full group">
             <div className="flex justify-between items-start mb-3">
@@ -46,13 +52,24 @@ export function QuizCard({ quiz, onStart }: QuizCardProps) {
                 )}
             </div>
 
-            <h3 className="text-lg font-serif font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
-                {getTitle(quiz.title)}
+            <h3 className="text-lg font-serif font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                {title}
             </h3>
 
-            <p className="text-sm text-gray-500 mb-4 line-clamp-2">
-                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
-            </p>
+            {courseTitle && (
+                <p className="text-xs text-primary-600 font-medium mb-2 truncate opacity-80">
+                    {courseTitle}
+                </p>
+            )}
+
+            {description && (
+                <p className="text-sm text-gray-500 mb-4 line-clamp-2" title={description}>
+                    {description}
+                </p>
+            )}
+
+            {/* Spacer if no description/tags locally to keep cards somewhat aligned? 
+            Flex-grow handling will push button down anyway. */}
 
             {/* Metadata tags */}
             <div className="flex flex-wrap gap-2 mb-4 mt-auto">
