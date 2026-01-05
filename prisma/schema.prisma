@@ -72,6 +72,9 @@ model User {
   
   // Admin role
   isAdmin         Boolean    @default(false)
+  
+  // Onboarding
+  hasSeenTour     Boolean    @default(false)
 
   // Account Deletion
   deletionToken        String?   @unique

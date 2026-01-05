@@ -111,7 +111,7 @@ export default function LeaderboardPage() {
                         <p>Noch keine Einträge für diesen Zeitraum.</p>
                     </div>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-3" id="leaderboard-list">
                         {entries.map((entry) => (
                             <div
                                 key={entry.id}

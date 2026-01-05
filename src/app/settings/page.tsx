@@ -141,7 +141,7 @@ export default function SettingsPage() {
             <main className="container mx-auto px-4 py-8 max-w-2xl">
                 <div className="bg-white rounded-lg shadow-sm p-6">
                     <div className="flex flex-col items-center justify-center mb-8">
-                        <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>
+                        <div id="tour-profile-picture" className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>
                             <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 overflow-hidden ring-4 ring-white shadow-sm transition-all group-hover:ring-primary-100">
                                 {loadingAvatar ? (
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>

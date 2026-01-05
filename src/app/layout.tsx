@@ -44,6 +44,7 @@ export const viewport: Viewport = {
 }
 
 import { UnlockManager } from '@/components/achievements/unlock-manager'
+import { TourProvider } from '@/components/providers/tour-context'
 
 export default async function RootLayout({
   children,
@@ -57,9 +58,11 @@ export default async function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans h-full bg-gray-50 text-gray-900`}>
         <Providers session={session}>
           <UnlockManager />
-          <div className="min-h-full">
-            {children}
-          </div>
+          <TourProvider>
+            <div className="min-h-full">
+              {children}
+            </div>
+          </TourProvider>
         </Providers>
       </body>
     </html>

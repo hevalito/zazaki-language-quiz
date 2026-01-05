@@ -136,7 +136,7 @@ export function HomeScreen() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 safe-area-top">
+      <header className="bg-white shadow-sm border-b border-gray-200 safe-area-top" id="tour-welcome">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -188,7 +188,7 @@ export function HomeScreen() {
 
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Daily Progress */}
-        <div className="card relative overflow-hidden group">
+        <div className="card relative overflow-hidden group" id="tour-daily-goal">
           {/* Background Gradient & Glow */}
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-primary-100/50 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
 
@@ -261,10 +261,12 @@ export function HomeScreen() {
         {/* ... (previous card ends) ... */}
 
         {/* Daily Challenge */}
-        <DailyQuizCard />
+        <div id="tour-daily-challenge">
+          <DailyQuizCard />
+        </div>
 
         {/* Continue Learning */}
-        <div className="card">
+        <div className="card" id="tour-continue-learning">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-serif font-bold text-gray-900">Weiterlernen</h3>
           </div>
@@ -371,6 +373,7 @@ export function HomeScreen() {
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
           <button
+            id="tour-leaderboard-nav"
             onClick={() => window.location.href = '/leaderboard'}
             className="card-interactive text-center group"
           >
@@ -382,6 +385,7 @@ export function HomeScreen() {
           </button>
 
           <button
+            id="tour-achievements-nav"
             onClick={() => window.location.href = '/achievements'}
             className="card-interactive text-center group"
           >
@@ -395,7 +399,7 @@ export function HomeScreen() {
 
         {/* Recent Activity */}
         {recentActivity.length > 0 && (
-          <div className="card">
+          <div className="card" id="tour-recent-activity">
             <h3 className="text-lg font-serif font-bold text-gray-900 mb-4">Letzte Aktivitäten</h3>
             <div className="space-y-3">
               {recentActivity.map((activity) => (
