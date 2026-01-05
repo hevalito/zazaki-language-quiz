@@ -11,7 +11,8 @@ import {
   Cog6ToothIcon,
   ArrowRightIcon,
   BookOpenIcon,
-  SparklesIcon
+  SparklesIcon,
+  CheckIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
@@ -27,6 +28,7 @@ interface UserProgress {
   isAdmin: boolean
   firstName?: string | null
   nickname?: string | null
+  currentLevel?: string // Added for Continue Learning logic
 }
 
 import confetti from 'canvas-confetti'
@@ -194,8 +196,8 @@ export function HomeScreen() {
           <div className="flex items-center justify-between mb-2 relative z-10">
             <h2 className="text-lg font-serif font-bold text-gray-900">Tagesziel</h2>
             <div className={`text-sm font-bold px-3 py-1 rounded-full border ${todayXP >= dailyGoal
-                ? 'bg-green-100 text-green-700 border-green-200'
-                : 'bg-primary-50 text-primary-700 border-primary-100'
+              ? 'bg-green-100 text-green-700 border-green-200'
+              : 'bg-primary-50 text-primary-700 border-primary-100'
               }`}>
               {todayXP} / {dailyGoal} XP Heute
             </div>
@@ -265,55 +267,104 @@ export function HomeScreen() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-serif font-bold text-gray-900">Weiterlernen</h3>
-            {/* <span className="text-sm text-gray-500">Lektion 3 von 12</span> */}
           </div>
 
           <div className="space-y-4">
-            {availableQuizzes.length > 0 ? (
-              <>
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center border border-brand-green/20">
-                    <PlayIcon className="w-6 h-6 text-brand-green" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-900 font-serif text-lg">
-                      {(availableQuizzes[0].title as any)?.de || (availableQuizzes[0].title as any)?.en || 'Nächstes Quiz'}
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      {(availableQuizzes[0].lesson.chapter.course.title as any)?.de || 'Lerne Zazaki'}
-                    </p>
-                  </div>
-                  <ArrowRightIcon className="w-5 h-5 text-gray-400" />
-                </div>
+            {(() => {
+              // 1. Filter out completed quizzes & Daily quizzes (just in case)
+              const standardQuizzes = availableQuizzes.filter((q: any) => q.type !== 'DAILY')
+              const uncompletedQuizzes = standardQuizzes.filter((q: any) => q.status !== 'completed')
 
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => window.location.href = `/quiz/${availableQuizzes[0].id}`}
-                    className="btn-primary flex justify-center items-center"
-                  >
-                    <PlayIcon className="w-5 h-5 mr-2" />
-                    Starten
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '/library'}
-                    className="btn-secondary flex justify-center items-center"
-                  >
-                    <BookOpenIcon className="w-5 h-5 mr-2" />
-                    Bibliothek
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-6">
-                <p className="text-gray-500 mb-4 font-normal">Keine offenen Quiz gefunden.</p>
-                <button
-                  onClick={() => window.location.href = '/library'}
-                  className="btn-primary w-full"
-                >
-                  Zur Bibliothek
-                </button>
-              </div>
-            )}
+              // 2. Find the best next quiz
+              let recommendedQuiz = null
+
+              if (uncompletedQuizzes.length > 0) {
+                // Determine user's "current level" from the last COMPLETED quiz
+                const completedQuizzes = standardQuizzes.filter((q: any) => q.status === 'completed')
+
+                // Sort completed by most recent attempt
+                const sortedCompleted = completedQuizzes.sort((a: any, b: any) => {
+                  const dateA = new Date(a.attempts[0]?.completedAt || 0).getTime()
+                  const dateB = new Date(b.attempts[0]?.completedAt || 0).getTime()
+                  return dateB - dateA // Descending
+                })
+
+                const lastActiveLevel = sortedCompleted[0]?.lesson?.chapter?.course?.level || userProgress?.currentLevel || 'A1'
+
+                // Strategy A: Find first uncompleted in the SAME level
+                recommendedQuiz = uncompletedQuizzes.find((q: any) => q.lesson?.chapter?.course?.level === lastActiveLevel)
+
+                // Strategy B: If none, find first uncompleted in ANY level (trusting the API order or just taking the next available)
+                if (!recommendedQuiz) {
+                  recommendedQuiz = uncompletedQuizzes[0]
+                }
+              }
+
+              if (recommendedQuiz) {
+                return (
+                  <>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center border border-brand-green/20">
+                        <PlayIcon className="w-6 h-6 text-brand-green" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 font-serif text-lg">
+                          {(recommendedQuiz.title as any)?.de || (recommendedQuiz.title as any)?.en || 'Nächstes Quiz'}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {(recommendedQuiz.lesson?.chapter?.course?.title as any)?.de || 'Lerne Zazaki'}
+                          <span className="mx-2">•</span>
+                          <span className="text-brand-green font-bold text-xs px-2 py-0.5 bg-brand-green/10 rounded-full">
+                            {recommendedQuiz.lesson?.chapter?.course?.level || 'A1'}
+                          </span>
+                        </p>
+                      </div>
+                      <ArrowRightIcon className="w-5 h-5 text-gray-400" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => window.location.href = `/quiz/${recommendedQuiz.id}`}
+                        className="btn-primary flex justify-center items-center"
+                      >
+                        <PlayIcon className="w-5 h-5 mr-2" />
+                        Starten
+                      </button>
+                      <button
+                        onClick={() => window.location.href = '/library'}
+                        className="btn-secondary flex justify-center items-center"
+                      >
+                        <BookOpenIcon className="w-5 h-5 mr-2" />
+                        Bibliothek
+                      </button>
+                    </div>
+                  </>
+                )
+              } else {
+                // All Caught Up State
+                return (
+                  <div className="text-center py-6 bg-green-50 rounded-xl border border-green-100 p-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <CheckIcon className="w-6 h-6 text-green-600" />
+                    </div>
+                    <h4 className="text-gray-900 font-bold mb-2">Wow! Alles erledigt.</h4>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Du hast alle verfügbaren Lektionen abgeschlossen. Sammle weitere XP mit dem täglichen Quiz!
+                    </p>
+                    <button
+                      onClick={() => {
+                        // Scroll to daily quiz or just highlight it?
+                        // Ideally scroll to top of page where daily quiz is
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }}
+                      className="btn-primary w-full bg-brand-orange hover:bg-brand-orange/90 border-brand-orange"
+                    >
+                      Zum Tagesquiz
+                    </button>
+                  </div>
+                )
+              }
+            })()}
           </div>
         </div>
 

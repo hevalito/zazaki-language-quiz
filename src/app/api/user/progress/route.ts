@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
         lastActiveDate: true,
         isAdmin: true,
         firstName: true,
-        nickname: true
+        nickname: true,
+        currentLevel: true
       }
     })
 
@@ -60,7 +61,8 @@ export async function GET(request: NextRequest) {
         todayXP,
         isAdmin: user.isAdmin || false,
         firstName: user.firstName,
-        nickname: user.nickname
+        nickname: user.nickname,
+        currentLevel: user.currentLevel
       }
     })
   } catch (error) {
