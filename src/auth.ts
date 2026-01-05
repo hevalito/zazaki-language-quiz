@@ -53,19 +53,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     ...authConfig.callbacks,
     async signIn({ user, account, profile }) {
-      // Auto-create user profile on first sign in
+      // Auto-create user profile on first sign in and handle Course Finder emails
       if (account?.provider && user.email) {
         try {
-          // Force Admin for specific users
-          if (user.email === 'heval@me.com' || user.email === 'mail@zazakiacademy.com') {
-            const existingUser = await prisma.user.findUnique({
-              where: { email: user.email }
-            });
+          // 1. Fetch latest user data including courseFinderData
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email }
+          });
 
-            if (existingUser && !existingUser.isAdmin) {
+          if (existingUser) {
+            // Handle Admin Flagging (Legacy/Hardcoded)
+            if ((user.email === 'heval@me.com' || user.email === 'mail@zazakiacademy.com') && !existingUser.isAdmin) {
               await prisma.user.update({
                 where: { email: user.email },
                 data: { isAdmin: true }
+              })
+            }
+
+            // Handle Pending Course Finder Email
+            // @ts-ignore
+            const cfData = existingUser.courseFinderData as any
+            if (cfData?.resultEmailPending && cfData?.result) {
+              const { CourseFinderResultEmail } = await import("@/components/emails/course-finder-result-email")
+              const dashboardUrl = `${process.env.NEXTAUTH_URL}/dashboard`
+
+              await resend.emails.send({
+                from: "Zazakî Academy <updates@zazakiacademy.com>",
+                to: user.email,
+                subject: `Dein Zazakî-Kurs Ergebnis: ${cfData.result.recommendation}`,
+                react: CourseFinderResultEmail({
+                  name: existingUser.firstName || existingUser.name || undefined, // undefined lets component handle fallback if we want, or we pass undefined
+                  dialect: cfData.result.dialect,
+                  recommendation: cfData.result.recommendation,
+                  dashboardUrl,
+                })
+              })
+
+              // Clear the pending flag
+              await prisma.user.update({
+                where: { email: user.email },
+                data: {
+                  courseFinderData: {
+                    ...cfData,
+                    resultEmailPending: false
+                  }
+                }
               })
             }
           }

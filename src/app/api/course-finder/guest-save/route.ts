@@ -21,7 +21,8 @@ export async function POST(req: Request) {
                 courseFinderData: {
                     result,
                     history,
-                    completedAt: new Date().toISOString()
+                    completedAt: new Date().toISOString(),
+                    resultEmailPending: true // Flag to send email on login
                 }
             },
             create: {
@@ -29,7 +30,8 @@ export async function POST(req: Request) {
                 courseFinderData: {
                     result,
                     history,
-                    completedAt: new Date().toISOString()
+                    completedAt: new Date().toISOString(),
+                    resultEmailPending: true // Flag to send email on login
                 },
                 // Set default fields for new users
                 dailyGoal: 100,
@@ -37,20 +39,10 @@ export async function POST(req: Request) {
             }
         })
 
-        // 2. Send Result Email
-        const dashboardUrl = `${process.env.NEXTAUTH_URL}/dashboard`
+        // NOTE: Result email is now sent in auth.ts signIn callback
+        // after the user clicks the magic link.
 
-        await resend.emails.send({
-            from: "Zazakî Academy <updates@zazakiacademy.com>",
-            to: email,
-            subject: `Dein Zazakî-Kurs Ergebnis: ${result.recommendation}`,
-            react: CourseFinderResultEmail({
-                name: user.firstName || user.name || 'Heval',
-                dialect: result.dialect,
-                recommendation: result.recommendation,
-                dashboardUrl,
-            })
-        })
+        return NextResponse.json({ success: true })
 
         return NextResponse.json({ success: true })
     } catch (error) {
