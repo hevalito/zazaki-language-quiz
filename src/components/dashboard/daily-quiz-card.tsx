@@ -108,7 +108,8 @@ export function DailyQuizCard() {
                         {status.completed && (
                             <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                                 <CheckCircleIcon className="w-3 h-3 mr-1" />
-                                Für heute abgeschlossen
+                                <span className="md:hidden">Abgeschlossen</span>
+                                <span className="hidden md:inline">Für heute abgeschlossen</span>
                             </span>
                         )}
                     </div>

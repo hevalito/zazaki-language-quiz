@@ -94,7 +94,7 @@ export default function LeaderboardPage() {
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
-                            Ewige Liste
+                            All Time
                         </button>
                     </div>
                 </div>
