@@ -66,7 +66,7 @@ export default function LeaderboardPage() {
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center">
                         <button
-                            onClick={() => router.back()}
+                            onClick={() => router.push('/dashboard')}
                             className="mr-4 text-gray-600 hover:text-gray-900"
                         >
                             <ArrowLeftIcon className="w-5 h-5" />

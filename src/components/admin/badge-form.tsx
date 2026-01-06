@@ -236,7 +236,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                     <div className="flex justify-end pt-5">
                         <button
                             type="button"
-                            onClick={() => router.back()}
+                            onClick={() => router.push('/admin/achievements')}
                             className="mr-3 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
                         >
                             Cancel

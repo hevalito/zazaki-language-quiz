@@ -448,7 +448,7 @@ export default function QuizPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/library')}
               className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
             >
               <ArrowLeftIcon className="w-5 h-5" />
