@@ -67,7 +67,6 @@ export async function POST(request: Request) {
                 code: data.code,
                 title: data.title,
                 description: data.description,
-                description: data.description,
                 iconUrl: data.iconUrl,
                 imageUrl: data.imageUrl,
                 conditionLabel: data.conditionLabel,
