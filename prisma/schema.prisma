@@ -82,6 +82,11 @@ model User {
   deletionToken        String?   @unique
   deletionTokenExpires DateTime?
 
+  // Notification Preferences
+  notifyDaily     Boolean    @default(true)
+  notifyFeatures  Boolean    @default(true)
+  notifyWeekly    Boolean    @default(true)
+
   // Relations
   accounts      Account[]
   sessions      Session[]
@@ -90,6 +95,21 @@ model User {
   badges        UserBadge[]
   spacedItems   SpacedItem[]
   pushSubscriptions PushSubscription[]
+  sentNotifications NotificationHistory[]
+}
+
+model NotificationHistory {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  url         String?
+  type        String   // DAILY, FEATURES, WEEKLY, BROADCAST
+  sentCount   Int
+  failedCount Int
+  sentByUserId String?
+  createdAt   DateTime @default(now())
+
+  sentBy      User?    @relation(fields: [sentByUserId], references: [id], onDelete: SetNull)
 }
 
 model PushSubscription {

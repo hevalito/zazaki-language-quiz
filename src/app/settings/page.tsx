@@ -30,6 +30,10 @@ export default function SettingsPage() {
         dailyGoal: 100,
         preferredScript: 'LATIN',
         courseFinderData: null,
+
+        notifyDaily: true,
+        notifyFeatures: true,
+        notifyWeekly: true,
     })
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +91,10 @@ export default function SettingsPage() {
                     lastName: data.lastName || '',
                     dailyGoal: data.dailyGoal || 100,
                     preferredScript: data.preferredScript || 'LATIN',
-                    courseFinderData: data.courseFinderData || null
+                    courseFinderData: data.courseFinderData || null,
+                    notifyDaily: data.notifyDaily ?? true,
+                    notifyFeatures: data.notifyFeatures ?? true,
+                    notifyWeekly: data.notifyWeekly ?? true,
                 })
             }
         } catch (error) {

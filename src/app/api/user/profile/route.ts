@@ -29,7 +29,10 @@ export async function GET() {
                 preferredScript: true,
                 hasSeenTour: true,
                 streak: true, // Needed for comparison
-                courseFinderData: true // Include Course Finder Data
+                courseFinderData: true, // Include Course Finder Data
+                notifyDaily: true,
+                notifyFeatures: true,
+                notifyWeekly: true
             }
         })
 
@@ -64,7 +67,7 @@ export async function PUT(request: Request) {
         }
 
         const body = await request.json()
-        const { nickname, firstName, lastName, dailyGoal, preferredScript } = body
+        const { nickname, firstName, lastName, dailyGoal, preferredScript, notifyDaily, notifyFeatures, notifyWeekly } = body
 
         // Validate inputs if necessary
 
@@ -76,6 +79,9 @@ export async function PUT(request: Request) {
                 lastName,
                 dailyGoal: dailyGoal ? parseInt(dailyGoal) : undefined,
                 preferredScript,
+                ...(notifyDaily !== undefined && { notifyDaily }),
+                ...(notifyFeatures !== undefined && { notifyFeatures }),
+                ...(notifyWeekly !== undefined && { notifyWeekly }),
             }
         })
 

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const { title, body, url } = await req.json()
+        const { title, body, url, segment } = await req.json()
 
         if (!title || !body) {
             return new NextResponse('Title and body required', { status: 400 })
@@ -37,11 +37,18 @@ export async function POST(req: NextRequest) {
             process.env.VAPID_PRIVATE_KEY
         )
 
-        // Fetch all subscriptions
-        const subscriptions = await prisma.pushSubscription.findMany()
+        // Filter subscriptions based on segment
+        let whereClause = {}
+        if (segment === 'DAILY') whereClause = { user: { notifyDaily: true } }
+        else if (segment === 'FEATURES') whereClause = { user: { notifyFeatures: true } }
+        else if (segment === 'WEEKLY') whereClause = { user: { notifyWeekly: true } }
+
+        const subscriptions = await prisma.pushSubscription.findMany({
+            where: whereClause
+        })
 
         if (subscriptions.length === 0) {
-            return NextResponse.json({ success: true, count: 0, message: 'No subscriptions found' })
+            return NextResponse.json({ success: true, count: 0, message: 'No matching subscriptions found' })
         }
 
         const payload = JSON.stringify({
@@ -72,6 +79,7 @@ export async function POST(req: NextRequest) {
                     failureCount++
                     if (err.statusCode === 410 || err.statusCode === 404) {
                         removedCount++
+                        // Clean up dead subscription
                         return prisma.pushSubscription.delete({ where: { id: sub.id } })
                     }
                     console.error(`Failed to send push to ${sub.id}:`, err)
@@ -79,6 +87,19 @@ export async function POST(req: NextRequest) {
         )
 
         await Promise.all(promises)
+
+        // Log to history
+        await prisma.notificationHistory.create({
+            data: {
+                title,
+                body,
+                url,
+                type: segment || 'BROADCAST',
+                sentCount: successCount,
+                failedCount: failureCount,
+                sentByUserId: session.user.id
+            }
+        })
 
         return NextResponse.json({
             success: true,
