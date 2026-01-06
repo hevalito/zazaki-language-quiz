@@ -18,6 +18,7 @@ export default function AchievementsAdmin() {
     const [statusFilter, setStatusFilter] = useState('all') // all, active, inactive
     const [loading, setLoading] = useState(true)
     const [badges, setBadges] = useState<Badge[]>([])
+    const [restoring, setRestoring] = useState(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -87,6 +88,25 @@ export default function AchievementsAdmin() {
         }
     }
 
+    const handleRestore = async () => {
+        if (!confirm('This will restore default badges. Existing badges with same codes will be updated (icon/title). Continue?')) return
+        setRestoring(true)
+        try {
+            const res = await fetch('/api/admin/badges/restore', { method: 'POST' })
+            if (res.ok) {
+                alert('Badges restored successfully')
+                fetchBadges()
+            } else {
+                alert('Failed to restore badges')
+            }
+        } catch (error) {
+            console.error('Error restoring badges', error)
+            alert('Error restoring badges')
+        } finally {
+            setRestoring(false)
+        }
+    }
+
     const getTitle = (title: any) => title?.en || title?.de || 'Untitled'
 
     if (loading) return <div className="p-8">Loading...</div>
@@ -95,13 +115,22 @@ export default function AchievementsAdmin() {
         <div className="px-4 py-6 sm:px-0">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">Achievements Management</h1>
-                <Link
-                    href="/admin/achievements/new"
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-                >
-                    <PlusIcon className="h-5 w-5 mr-2" />
-                    Create New Badge
-                </Link>
+                <div className="flex space-x-2">
+                    <button
+                        onClick={handleRestore}
+                        disabled={restoring}
+                        className="inline-flex items-center px-4 py-2 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 disabled:opacity-50"
+                    >
+                        {restoring ? 'Restoring...' : 'Restore Defaults'}
+                    </button>
+                    <Link
+                        href="/admin/achievements/new"
+                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                    >
+                        <PlusIcon className="h-5 w-5 mr-2" />
+                        Create New Badge
+                    </Link>
+                </div>
             </div>
 
             {/* Filters */}
