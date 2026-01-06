@@ -32,14 +32,18 @@ export async function GET(req: Request) {
             select: {
                 id: true,
                 name: true,
+                firstName: true,
+                lastName: true,
                 email: true,
                 image: true,
                 isAdmin: true,
                 nickname: true,
                 createdAt: true,
+                lastActiveDate: true,
                 totalXP: true,
                 currentLevel: true,
-                courseFinderData: true, // Include Course Finder Data
+                dailyGoal: true,
+                courseFinderData: true,
                 _count: {
                     select: { pushSubscriptions: true }
                 }

@@ -23,7 +23,7 @@ export async function PATCH(
 
         const { id } = await params
         const body = await req.json()
-        const { isAdmin, nickname, name } = body
+        const { isAdmin, nickname, name, firstName, lastName, dailyGoal } = body
 
         // Prevent removing admin from oneself to avoid locking out
         if (id === currentUser.id && isAdmin === false) {
@@ -35,7 +35,10 @@ export async function PATCH(
             data: {
                 isAdmin,
                 nickname,
-                name
+                name,
+                firstName,
+                lastName,
+                dailyGoal
             }
         })
 

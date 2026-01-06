@@ -9,13 +9,18 @@ import Image from 'next/image'
 type User = {
     id: string
     name: string | null
+    firstName: string | null
+    lastName: string | null
     email: string | null
     image: string | null
     isAdmin: boolean
     nickname: string | null
     createdAt: string
+    lastActiveDate: string | null
     totalXP: number
     currentLevel: string
+    dailyGoal: number
+    courseFinderData: any
     _count?: {
         pushSubscriptions: number
     }
@@ -23,19 +28,26 @@ type User = {
 
 export default function AdminUsersPage() {
     const [search, setSearch] = useState('')
+    const [roleFilter, setRoleFilter] = useState<'ALL' | 'ADMIN' | 'STUDENT'>('ALL')
     const [editingUser, setEditingUser] = useState<User | null>(null)
 
     const queryClient = useQueryClient()
 
     // Fetch Users
     const { data: users, isLoading } = useQuery({
-        queryKey: ['admin-users', search],
+        queryKey: ['admin-users', search, roleFilter],
         queryFn: async () => {
             const params = new URLSearchParams()
             if (search) params.append('q', search)
             const res = await fetch(`/api/admin/users?${params.toString()}`)
             if (!res.ok) throw new Error('Failed to fetch users')
-            return res.json() as Promise<User[]>
+            let data = await res.json() as User[]
+
+            // Client side filtering for role (since API doesn't support it yet, optional optimization)
+            if (roleFilter === 'ADMIN') data = data.filter(u => u.isAdmin)
+            if (roleFilter === 'STUDENT') data = data.filter(u => !u.isAdmin)
+
+            return data
         },
     })
 
@@ -70,7 +82,7 @@ export default function AdminUsersPage() {
     })
 
     const confirmDelete = (user: User) => {
-        if (confirm(`Are you sure you want to delete ${user.name || user.email}? This action cannot be undone.`)) {
+        if (confirm(`Are you sure you want to delete ${getUserDisplayName(user)}? This action cannot be undone.`)) {
             deleteMutation.mutate(user.id)
         }
     }
@@ -82,10 +94,22 @@ export default function AdminUsersPage() {
             id: editingUser.id,
             data: {
                 name: editingUser.name,
+                firstName: editingUser.firstName,
+                lastName: editingUser.lastName,
                 nickname: editingUser.nickname,
+                dailyGoal: editingUser.dailyGoal,
                 isAdmin: editingUser.isAdmin,
             },
         })
+    }
+
+    // Helper to get smart display name
+    const getUserDisplayName = (user: User) => {
+        if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`
+        if (user.firstName) return user.firstName
+        if (user.nickname) return user.nickname
+        if (user.name) return user.name
+        return user.email || 'No Name'
     }
 
     return (
@@ -94,18 +118,31 @@ export default function AdminUsersPage() {
                 <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
             </div>
 
-            {/* Search Bar */}
-            <div className="relative max-w-md">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+            {/* Filters */}
+            <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-grow max-w-md">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                        type="text"
+                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        placeholder="Search users..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                 </div>
-                <input
-                    type="text"
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                    placeholder="Search by name, email, or nickname..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+                <div>
+                    <select
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value as any)}
+                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+                    >
+                        <option value="ALL">All Roles</option>
+                        <option value="ADMIN">Admins</option>
+                        <option value="STUDENT">Students</option>
+                    </select>
+                </div>
             </div>
 
             {/* Users Table */}
@@ -116,7 +153,7 @@ export default function AdminUsersPage() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stats</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -147,14 +184,13 @@ export default function AdminUsersPage() {
                                                     <Image src={user.image} alt="" fill className="object-cover" />
                                                 ) : (
                                                     <div className="flex items-center justify-center h-full w-full text-gray-400">
-                                                        <span className="text-xl font-bold">{user.name?.[0] || user.email?.[0]?.toUpperCase()}</span>
+                                                        <span className="text-xl font-bold">{getUserDisplayName(user)[0].toUpperCase()}</span>
                                                     </div>
                                                 )}
                                             </div>
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-gray-900">
-                                                    {user.name || 'No Name'}
-                                                    {user.nickname && <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">@{user.nickname}</span>}
+                                                    {getUserDisplayName(user)}
                                                     {(user._count?.pushSubscriptions ?? 0) > 0 && (
                                                         <span className="ml-2 text-primary-600" title="Web Push Enabled">
                                                             <BellIcon className="w-4 h-4 inline" />
@@ -166,21 +202,19 @@ export default function AdminUsersPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <button
-                                            onClick={() => updateMutation.mutate({ id: user.id, data: { isAdmin: !user.isAdmin } })}
-                                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer transition-colors ${user.isAdmin
-                                                ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
-                                                : 'bg-green-100 text-green-800 hover:bg-green-200'
-                                                }`}
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isAdmin
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : 'bg-green-100 text-green-800'
+                                            }`}
                                         >
                                             {user.isAdmin ? 'Admin' : 'Student'}
-                                        </button>
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">Level {user.currentLevel || 'A1'}</div>
                                         <div className="text-sm text-gray-500">{user.totalXP || 0} XP</div>
                                         {/* @ts-ignore */}
-                                        {user.courseFinderData?.result && (
+                                        {user.courseFinderData?.result?.dialect && (
                                             <div className="mt-1">
                                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
                                                     {/* @ts-ignore */}
@@ -189,8 +223,11 @@ export default function AdminUsersPage() {
                                             </div>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {new Date(user.createdAt).toLocaleDateString()}
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-900">Joined {new Date(user.createdAt).toLocaleDateString()}</div>
+                                        <div className="text-sm text-gray-500">
+                                            Last Active: {user.lastActiveDate ? new Date(user.lastActiveDate).toLocaleDateString() : 'Never'}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <button
@@ -217,42 +254,93 @@ export default function AdminUsersPage() {
 
             {/* Edit User Modal */}
             {editingUser && (
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Edit User</h3>
-                        <form onSubmit={handleEditSave} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Display Name</label>
-                                <input
-                                    type="text"
-                                    value={editingUser.name || ''}
-                                    onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Nickname</label>
-                                <input
-                                    type="text"
-                                    value={editingUser.nickname || ''}
-                                    onChange={(e) => setEditingUser({ ...editingUser, nickname: e.target.value })}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                                />
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    id="isAdmin"
-                                    type="checkbox"
-                                    checked={editingUser.isAdmin}
-                                    onChange={(e) => setEditingUser({ ...editingUser, isAdmin: e.target.checked })}
-                                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                                />
-                                <label htmlFor="isAdmin" className="ml-2 block text-sm text-gray-900">
-                                    Administrator Privileges
-                                </label>
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-auto shadow-xl">
+                        <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-lg font-medium text-gray-900">Edit User: {editingUser.email}</h3>
+                            <button onClick={() => setEditingUser(null)} className="text-gray-400 hover:text-gray-500">
+                                <XMarkIcon className="h-6 w-6" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleEditSave} className="space-y-6">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">First Name</label>
+                                    <input
+                                        type="text"
+                                        value={editingUser.firstName || ''}
+                                        onChange={(e) => setEditingUser({ ...editingUser, firstName: e.target.value })}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                                    <input
+                                        type="text"
+                                        value={editingUser.lastName || ''}
+                                        onChange={(e) => setEditingUser({ ...editingUser, lastName: e.target.value })}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Display Name</label>
+                                    <input
+                                        type="text"
+                                        value={editingUser.name || ''}
+                                        onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Nickname</label>
+                                    <input
+                                        type="text"
+                                        value={editingUser.nickname || ''}
+                                        onChange={(e) => setEditingUser({ ...editingUser, nickname: e.target.value })}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Daily Goal (XP)</label>
+                                    <input
+                                        type="number"
+                                        value={editingUser.dailyGoal || 100}
+                                        onChange={(e) => setEditingUser({ ...editingUser, dailyGoal: parseInt(e.target.value) })}
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                    />
+                                </div>
                             </div>
 
-                            <div className="mt-5 sm:mt-6 flex gap-3 justify-end">
+                            <div className="bg-gray-50 p-4 rounded-md">
+                                <div className="flex items-center">
+                                    <input
+                                        id="isAdmin"
+                                        type="checkbox"
+                                        checked={editingUser.isAdmin}
+                                        onChange={(e) => setEditingUser({ ...editingUser, isAdmin: e.target.checked })}
+                                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="isAdmin" className="ml-2 block text-sm font-medium text-gray-900">
+                                        Administrator Privileges
+                                    </label>
+                                </div>
+                                <p className="mt-1 text-xs text-gray-500 ml-6">Grants full access to this dashboard, course editor, and user management.</p>
+                            </div>
+
+                            {/* Read-Only Stats */}
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div className="p-3 bg-gray-50 rounded">
+                                    <span className="block text-xs font-bold text-gray-400 uppercase">Total XP</span>
+                                    <span className="font-mono text-lg">{editingUser.totalXP}</span>
+                                </div>
+                                <div className="p-3 bg-gray-50 rounded">
+                                    <span className="block text-xs font-bold text-gray-400 uppercase">Current Level</span>
+                                    <span className="font-mono text-lg">{editingUser.currentLevel}</span>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3 justify-end pt-4 border-t border-gray-100">
                                 <button
                                     type="button"
                                     onClick={() => setEditingUser(null)}
