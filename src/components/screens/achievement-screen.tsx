@@ -90,7 +90,25 @@ export function AchievementScreen() {
                                 <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${badge.isEarned ? 'bg-purple-100' : 'bg-gray-100'
                                     }`}>
                                     {/* Icon Logic */}
-                                    {(badge as any).iconUrl && ((badge as any).iconUrl.startsWith('http') || (badge as any).iconUrl.startsWith('/')) ? (
+                                    {(badge as any).imageUrl ? (
+                                        <div className="relative w-12 h-12">
+                                            {/* Bloom/Blur effect container */}
+                                            <div className={`absolute inset-0 rounded-full overflow-hidden ${!badge.isEarned ? 'grayscale brightness-50 contrast-125' : ''}`}>
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={(badge as any).imageUrl}
+                                                    alt={getTitle(badge.title)}
+                                                    className={`w-full h-full object-cover ${!badge.isEarned ? 'blur-sm scale-110' : ''}`}
+                                                />
+                                            </div>
+                                            {/* Lock Overlay */}
+                                            {!badge.isEarned && (
+                                                <div className="absolute inset-0 flex items-center justify-center z-10">
+                                                    <LockClosedIcon className="w-5 h-5 text-white/80 drop-shadow-md" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (badge as any).iconUrl && ((badge as any).iconUrl.startsWith('http') || (badge as any).iconUrl.startsWith('/')) ? (
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                             src={(badge as any).iconUrl}
@@ -116,6 +134,30 @@ export function AchievementScreen() {
                                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                                         {getDescription(badge.description)}
                                     </p>
+
+                                    {/* Condition Label */}
+                                    {(badge as any).conditionLabel && ((badge as any).conditionLabel.en || (badge as any).conditionLabel.de) && (
+                                        <p className="text-xs font-bold text-gray-700 mt-2">
+                                            {(badge as any).conditionLabel.de || (badge as any).conditionLabel.en}
+                                        </p>
+                                    )}
+
+                                    {/* Progress Bar for Locked Items */}
+                                    {!badge.isEarned && (badge as any).progress && (badge as any).progress.target > 0 && (
+                                        <div className="mt-3">
+                                            <div className="flex justify-between text-[10px] text-gray-500 mb-1">
+                                                <span>Progress</span>
+                                                <span className="font-medium">{(badge as any).progress.display}</span>
+                                            </div>
+                                            <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                                <div
+                                                    className="bg-purple-500 h-full rounded-full opacity-60"
+                                                    style={{ width: `${Math.min(100, Math.max(0, ((badge as any).progress.current / (badge as any).progress.target) * 100))}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {badge.isEarned && (
                                         <p className="text-xs text-purple-600 mt-2 font-medium">
                                             Freigeschaltet am {new Date(badge.earnedAt!).toLocaleDateString()}

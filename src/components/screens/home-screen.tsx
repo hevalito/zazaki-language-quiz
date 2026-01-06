@@ -77,6 +77,10 @@ export function HomeScreen() {
             setUserProgress(progressData.user)
           } else {
             console.error('Failed to fetch user progress')
+            if (responses[0].status === 404) {
+              // User not found in DB but session exists -> Invalid state, force signout
+              signOut()
+            }
           }
         }
 

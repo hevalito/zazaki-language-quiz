@@ -28,6 +28,12 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
             de: initialData?.description?.de || ''
         },
         iconUrl: initialData?.iconUrl || '🏆',
+        imageUrl: initialData?.imageUrl || '',
+        iconType: initialData?.imageUrl ? 'image' : 'emoji',
+        conditionLabel: {
+            en: initialData?.conditionLabel?.en || '',
+            de: initialData?.conditionLabel?.de || ''
+        },
         criteriaType: initialData?.criteria?.type || 'lesson_completion',
         criteriaValue: initialData?.criteria?.level || initialData?.criteria?.value || initialData?.criteria?.count || 1,
         isActive: initialData?.isActive ?? true
@@ -42,7 +48,9 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                 code: formData.code,
                 title: formData.title,
                 description: formData.description,
-                iconUrl: formData.iconUrl,
+                iconUrl: formData.iconType === 'emoji' ? formData.iconUrl : null,
+                imageUrl: formData.iconType === 'image' ? formData.imageUrl : null,
+                conditionLabel: formData.conditionLabel,
                 criteria: formData.criteriaType === 'level_reached'
                     ? { type: 'level_reached', level: formData.criteriaValue }
                     : { type: formData.criteriaType, count: Number(formData.criteriaValue) },
@@ -100,25 +108,71 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                             />
                         </div>
 
-                        {/* Emoji Picker */}
-                        <div className="sm:col-span-6 relative">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji)</label>
-                            <button
-                                type="button"
-                                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                className="inline-flex items-center justify-center w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-gray-50 bg-white text-3xl transition-colors"
-                            >
-                                {formData.iconUrl || '🏆'}
-                            </button>
-                            {showEmojiPicker && (
-                                <div className="absolute z-10 mt-2">
-                                    <div className="fixed inset-0" onClick={() => setShowEmojiPicker(false)} />
-                                    <div className="relative z-20">
-                                        <EmojiPicker onEmojiClick={onEmojiClick} width={350} height={400} />
-                                    </div>
-                                </div>
-                            )}
+                        {/* Icon Type Selection */}
+                        <div className="sm:col-span-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Icon Type</label>
+                            <div className="flex items-center space-x-4">
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        checked={formData.iconType === 'emoji'}
+                                        onChange={() => setFormData({ ...formData, iconType: 'emoji' })}
+                                        className="form-radio text-blue-600"
+                                    />
+                                    <span className="ml-2">Emoji</span>
+                                </label>
+                                <label className="inline-flex items-center">
+                                    <input
+                                        type="radio"
+                                        checked={formData.iconType === 'image'}
+                                        onChange={() => setFormData({ ...formData, iconType: 'image' })}
+                                        className="form-radio text-blue-600"
+                                    />
+                                    <span className="ml-2">Custom Image</span>
+                                </label>
+                            </div>
                         </div>
+
+                        {/* Emoji Picker */}
+                        {formData.iconType === 'emoji' && (
+                            <div className="sm:col-span-6 relative">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji)</label>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    className="inline-flex items-center justify-center w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-gray-50 bg-white text-3xl transition-colors"
+                                >
+                                    {formData.iconUrl || '🏆'}
+                                </button>
+                                {showEmojiPicker && (
+                                    <div className="absolute z-10 mt-2">
+                                        <div className="fixed inset-0" onClick={() => setShowEmojiPicker(false)} />
+                                        <div className="relative z-20">
+                                            <EmojiPicker onEmojiClick={onEmojiClick} width={350} height={400} />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Image URL Input */}
+                        {formData.iconType === 'image' && (
+                            <div className="sm:col-span-6">
+                                <label className="block text-sm font-medium text-gray-700">Image URL</label>
+                                <div className="mt-1 flex rounded-md shadow-sm">
+                                    <input
+                                        type="text"
+                                        value={formData.imageUrl}
+                                        onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
+                                        className="flex-1 block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        placeholder="https://example.com/badge.png"
+                                    />
+                                </div>
+                                <p className="mt-2 text-sm text-gray-500">
+                                    Recommended: Square image (1:1), PNG or JPG. Will be masked as a circle.
+                                </p>
+                            </div>
+                        )}
 
                         {/* Language Specific Content */}
                         <div className="sm:col-span-6">
@@ -156,6 +210,26 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                 })}
                                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                                             />
+                                        </div>
+
+                                        {/* Condition Label */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">
+                                                Condition Label ({lang === 'de' ? 'German' : 'English'})
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={formData.conditionLabel[lang]}
+                                                onChange={e => setFormData({
+                                                    ...formData,
+                                                    conditionLabel: { ...formData.conditionLabel, [lang]: e.target.value }
+                                                })}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                placeholder={lang === 'de' ? 'z.B. 1000 XP' : 'e.g. 1000 XP'}
+                                            />
+                                            <p className="mt-1 text-xs text-gray-500">
+                                                Shown in bold to describe the requirement.
+                                            </p>
                                         </div>
                                     </div>
                                 )}

@@ -5,7 +5,8 @@ import { NextResponse } from "next/server"
 const { auth } = NextAuth(authConfig)
 
 export default auth((req) => {
-    const isLoggedIn = !!req.auth
+    // Explicitly check for user existence to avoid partial session objects
+    const isLoggedIn = !!req.auth?.user
     const isOnboarding = req.nextUrl.pathname.startsWith("/onboarding")
     const isAuthPage = req.nextUrl.pathname.startsWith("/auth")
     const isApiAuthByPass = req.nextUrl.pathname.startsWith("/api/auth")
@@ -15,7 +16,9 @@ export default auth((req) => {
 
     // If trying to access onboarding but not logged in, redirect to home/login
     if (isOnboarding && !isLoggedIn) {
-        return NextResponse.redirect(new URL("/", req.nextUrl))
+        const url = req.nextUrl.clone()
+        url.pathname = "/"
+        return NextResponse.redirect(url)
     }
 
     // If logged in
@@ -26,19 +29,44 @@ export default auth((req) => {
 
         // If profile incomplete and NOT on onboarding, redirect to onboarding
         if (!isProfileComplete && !isOnboarding) {
-            return NextResponse.redirect(new URL("/onboarding", req.nextUrl))
+            const url = req.nextUrl.clone()
+            url.pathname = "/onboarding"
+            return NextResponse.redirect(url)
         }
 
         // If profile complete and ON onboarding, redirect to dashboard
         if (isProfileComplete && isOnboarding) {
-            return NextResponse.redirect(new URL("/", req.nextUrl))
+            const url = req.nextUrl.clone()
+            url.pathname = "/"
+            return NextResponse.redirect(url)
         }
     }
 
     // Protect private routes
-    // Allow public access to home, leaderboard, and course-finder
-    if (!isLoggedIn && !isAuthPage && req.nextUrl.pathname !== "/" && req.nextUrl.pathname !== "/leaderboard" && !req.nextUrl.pathname.startsWith("/course-finder")) {
-        return NextResponse.redirect(new URL("/auth/signin", req.nextUrl))
+    // ONLY allow public access to:
+    // 1. Root (Landing Page checks auth internally)
+    // 2. Course Finder (Public Tool)
+    // 3. Auth Pages (Sign In, etc)
+    // 4. Static PWA assets (manifest, robots)
+    const isPublicRoute =
+        req.nextUrl.pathname === "/" ||
+        req.nextUrl.pathname.startsWith("/course-finder") ||
+        req.nextUrl.pathname.startsWith("/api/course-finder") ||
+        req.nextUrl.pathname === "/manifest.json" ||
+        req.nextUrl.pathname === "/robots.txt" ||
+        req.nextUrl.pathname === "/sw.js" ||
+        req.nextUrl.pathname === "/push-worker.js"
+
+    if (!isLoggedIn && !isAuthPage && !isPublicRoute) {
+        // Construct absolute URL using the Host header to ensure we redirect to the correct domain/port.
+        // This handles cases where the internal container port (e.g. 3000) differs from the public port (e.g. 3001).
+        const host = req.headers.get("host") || req.nextUrl.host
+        const protocol = req.nextUrl.protocol
+
+        const signInUrl = new URL("/auth/signin", `${protocol}//${host}`)
+        signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname + req.nextUrl.search)
+
+        return NextResponse.redirect(signInUrl)
     }
 
     return

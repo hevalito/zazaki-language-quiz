@@ -29,12 +29,63 @@ export async function GET() {
             earnedBadgeMap.set(ub.badgeId, ub)
         })
 
-        // 3. Merge data
-        const badges = allBadges.map(badge => ({
-            ...badge,
-            isEarned: earnedBadgeMap.has(badge.id),
-            earnedAt: earnedBadgeMap.get(badge.id)?.earnedAt
-        }))
+        // 3. Fetch full user stats for progress calc
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { totalXP: true, streak: true, currentLevel: true }
+        })
+
+        if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+
+        // 4. Merge data and calculate progress
+        const badges = allBadges.map(badge => {
+            const userBadge = earnedBadgeMap.get(badge.id)
+            const isEarned = !!userBadge
+            const criteria = badge.criteria as any
+
+            let current = 0
+            let target = 0
+            let displayProgress = ''
+
+            if (isEarned) {
+                current = 100
+                target = 100
+            } else if (criteria) {
+                switch (criteria.type) {
+                    case 'total_xp':
+                        target = criteria.count || 0
+                        current = Math.min(user.totalXP, target)
+                        displayProgress = `${current} / ${target} XP`
+                        break
+                    case 'streak':
+                        target = criteria.count || 0
+                        current = user.streak
+                        displayProgress = `${current} / ${target} Days`
+                        break
+                    case 'level_reached':
+                        const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                        const targetIdx = levels.indexOf(criteria.level)
+                        const currentIdx = levels.indexOf(user.currentLevel)
+                        // Simple progress: 0 if below, 1 if met (but checking indices helps show closeness)
+                        target = targetIdx
+                        current = Math.min(currentIdx, targetIdx)
+                        // To avoid 0/0 issues or complex mapping, let's just show text
+                        displayProgress = `${user.currentLevel} / ${criteria.level}`
+                        break
+                    default:
+                        // Default to 0 progress for untracked types
+                        target = criteria.count || 1
+                        current = 0
+                }
+            }
+
+            return {
+                ...badge,
+                isEarned,
+                earnedAt: userBadge?.earnedAt,
+                progress: { current, target, display: displayProgress }
+            }
+        })
 
         return NextResponse.json(badges)
 

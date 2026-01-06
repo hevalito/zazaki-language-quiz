@@ -57,10 +57,10 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Extended profile
-  nickname      String?
-  firstName     String?
-  lastName      String?
-  avatarUrl     String?
+  nickname  String?
+  firstName String?
+  lastName  String?
+  avatarUrl String?
 
   // Language learning specific fields
   preferredScript ScriptType @default(LATIN)
@@ -69,47 +69,46 @@ model User {
   lastActiveDate  DateTime?
   totalXP         Int        @default(0)
   currentLevel    Level      @default(A1)
-  
-  // Admin role
-  isAdmin         Boolean    @default(false)
-  
-  // Onboarding
-  hasSeenTour     Boolean    @default(false)
-  courseFinderData Json?
 
+  // Admin role
+  isAdmin Boolean @default(false)
+
+  // Onboarding
+  hasSeenTour      Boolean @default(false)
+  courseFinderData Json?
 
   // Account Deletion
   deletionToken        String?   @unique
   deletionTokenExpires DateTime?
 
   // Notification Preferences
-  notifyDaily     Boolean    @default(true)
-  notifyFeatures  Boolean    @default(true)
-  notifyWeekly    Boolean    @default(true)
+  notifyDaily    Boolean @default(true)
+  notifyFeatures Boolean @default(true)
+  notifyWeekly   Boolean @default(true)
 
   // Relations
-  accounts      Account[]
-  sessions      Session[]
-  attempts      Attempt[]
-  progress      Progress[]
-  badges        UserBadge[]
-  spacedItems   SpacedItem[]
+  accounts          Account[]
+  sessions          Session[]
+  attempts          Attempt[]
+  progress          Progress[]
+  badges            UserBadge[]
+  spacedItems       SpacedItem[]
   pushSubscriptions PushSubscription[]
   sentNotifications NotificationHistory[]
 }
 
 model NotificationHistory {
-  id          String   @id @default(cuid())
-  title       String
-  body        String
-  url         String?
-  type        String   // DAILY, FEATURES, WEEKLY, BROADCAST
-  sentCount   Int
-  failedCount Int
+  id           String   @id @default(cuid())
+  title        String
+  body         String
+  url          String?
+  type         String // DAILY, FEATURES, WEEKLY, BROADCAST
+  sentCount    Int
+  failedCount  Int
   sentByUserId String?
-  createdAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
 
-  sentBy      User?    @relation(fields: [sentByUserId], references: [id], onDelete: SetNull)
+  sentBy User? @relation(fields: [sentByUserId], references: [id], onDelete: SetNull)
 }
 
 model PushSubscription {
@@ -128,15 +127,15 @@ model PushSubscription {
 
 // Course structure
 model Course {
-  id          String    @id @default(cuid())
-  title       Json      // Multi-language support: {"en": "Zazaki Basics", "de": "Zazaki Grundlagen", "ku": "..."}
+  id          String   @id @default(cuid())
+  title       Json // Multi-language support: {"en": "Zazaki Basics", "de": "Zazaki Grundlagen", "ku": "..."}
   description Json?
-  dialectCode String    // zazaki-xx, sorani-xx, etc.
-  level       Level     @default(A1)
-  isPublished Boolean   @default(false)
-  order       Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  dialectCode String // zazaki-xx, sorani-xx, etc.
+  level       Level    @default(A1)
+  isPublished Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   chapters Chapter[]
   progress Progress[]
@@ -146,7 +145,7 @@ model Course {
 
 model Chapter {
   id          String   @id @default(cuid())
-  title       Json     // Multi-language
+  title       Json // Multi-language
   description Json?
   courseId    String
   order       Int      @default(0)
@@ -161,35 +160,35 @@ model Chapter {
 }
 
 model Lesson {
-  id          String   @id @default(cuid())
-  title       Json     // Multi-language
-  description Json?
-  chapterId   String
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
+  id           String   @id @default(cuid())
+  title        Json // Multi-language
+  description  Json?
+  chapterId    String
+  order        Int      @default(0)
+  isPublished  Boolean  @default(false)
   targetSkills String[] // ["vocabulary", "grammar", "pronunciation"]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  quizzes   Quiz[]
-  progress  Progress[]
+  chapter  Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  quizzes  Quiz[]
+  progress Progress[]
 
   @@index([chapterId, order])
 }
 
 model Quiz {
-  id          String   @id @default(cuid())
-  title       Json     // Multi-language
+  id          String    @id @default(cuid())
+  title       Json // Multi-language
   description Json?
-  lessonId    String?  // Optional for daily quizzes (which might not belong to a lesson)
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  type        QuizType @default(STANDARD)
+  lessonId    String? // Optional for daily quizzes (which might not belong to a lesson)
+  order       Int       @default(0)
+  isPublished Boolean   @default(false)
+  type        QuizType  @default(STANDARD)
   date        DateTime? @unique
-  config      Json     // Quiz-specific configuration
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  config      Json // Quiz-specific configuration
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   lesson    Lesson?    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   questions Question[]
@@ -202,8 +201,8 @@ model Quiz {
 model Question {
   id          String       @id @default(cuid())
   type        QuestionType
-  prompt      Json         // Multi-language question text
-  dialectCode String       // zazaki-xx
+  prompt      Json // Multi-language question text
+  dialectCode String // zazaki-xx
   script      ScriptType   @default(LATIN)
   difficulty  Int          @default(1) // 1-5 scale
   points      Int          @default(10)
@@ -211,19 +210,19 @@ model Question {
   order       Int          @default(0)
 
   // Media support
-  audioUrl    String?
-  videoUrl    String?
-  imageUrl    String?
-  
+  audioUrl String?
+  videoUrl String?
+  imageUrl String?
+
   // Question-specific configuration
-  settings    Json         // Flexible settings per question type
-  explanation Json?        // Multi-language explanations
-  hints       Json?        // Multi-language hints
+  settings    Json // Flexible settings per question type
+  explanation Json? // Multi-language explanations
+  hints       Json? // Multi-language hints
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  quiz        Quiz?        @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz        Quiz?         @relation(fields: [quizId], references: [id], onDelete: Cascade)
   choices     Choice[]
   answers     Answer[]
   spacedItems SpacedItem[]
@@ -236,7 +235,7 @@ model Question {
 model Choice {
   id         String  @id @default(cuid())
   questionId String
-  label      Json    // Multi-language choice text
+  label      Json // Multi-language choice text
   isCorrect  Boolean @default(false)
   order      Int     @default(0)
   mediaUrl   String? // For image/audio choices
@@ -257,7 +256,7 @@ model Attempt {
   xpEarned    Int       @default(0)
   maxScore    Int       @default(0)
   timeSpent   Int       @default(0) // in seconds
-  metadata    Json?     // Additional attempt data
+  metadata    Json? // Additional attempt data
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   quiz    Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -268,16 +267,16 @@ model Attempt {
 }
 
 model Answer {
-  id           String      @id @default(cuid())
+  id           String       @id @default(cuid())
   attemptId    String
   questionId   String
   result       AnswerResult
-  responseData Json        // Flexible response storage
-  isCorrect    Boolean     @default(false)
-  pointsEarned Int         @default(0)
-  timeSpent    Int         @default(0) // in milliseconds
-  confidence   Float?      // For STT/pronunciation scoring
-  createdAt    DateTime    @default(now())
+  responseData Json // Flexible response storage
+  isCorrect    Boolean      @default(false)
+  pointsEarned Int          @default(0)
+  timeSpent    Int          @default(0) // in milliseconds
+  confidence   Float? // For STT/pronunciation scoring
+  createdAt    DateTime     @default(now())
 
   attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -287,16 +286,16 @@ model Answer {
 
 // Spaced repetition system
 model SpacedItem {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   userId     String
   questionId String
-  easiness   Float    @default(2.5) // SM-2 algorithm
-  interval   Int      @default(1)   // days
-  repetition Int      @default(0)
-  dueDate    DateTime @default(now())
+  easiness   Float     @default(2.5) // SM-2 algorithm
+  interval   Int       @default(1) // days
+  repetition Int       @default(0)
+  dueDate    DateTime  @default(now())
   lastReview DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -307,15 +306,15 @@ model SpacedItem {
 
 // Progress tracking
 model Progress {
-  id         String   @id @default(cuid())
-  userId     String
-  courseId   String?
-  lessonId   String?
-  xpEarned   Int      @default(0)
-  completed  Boolean  @default(false)
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String?
+  lessonId    String?
+  xpEarned    Int       @default(0)
+  completed   Boolean   @default(false)
   completedAt DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
@@ -330,10 +329,12 @@ model Progress {
 model Badge {
   id          String   @id @default(cuid())
   code        String   @unique
-  title       Json     // Multi-language
-  description Json     // Multi-language
+  title       Json // Multi-language
+  description Json // Multi-language
   iconUrl     String?
-  criteria    Json     // Badge earning criteria
+  imageUrl    String?
+  conditionLabel Json?
+  criteria    Json // Badge earning criteria
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

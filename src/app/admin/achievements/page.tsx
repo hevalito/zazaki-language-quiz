@@ -14,16 +14,25 @@ interface Badge {
 }
 
 export default function AchievementsAdmin() {
-    const [badges, setBadges] = useState<Badge[]>([])
+    const [search, setSearch] = useState('')
+    const [statusFilter, setStatusFilter] = useState('all') // all, active, inactive
     const [loading, setLoading] = useState(true)
+    const [badges, setBadges] = useState<Badge[]>([])
 
     useEffect(() => {
-        fetchBadges()
-    }, [])
+        const timer = setTimeout(() => {
+            fetchBadges()
+        }, 300)
+        return () => clearTimeout(timer)
+    }, [search, statusFilter])
 
     const fetchBadges = async () => {
         try {
-            const res = await fetch('/api/admin/badges')
+            const params = new URLSearchParams()
+            if (search) params.append('search', search)
+            if (statusFilter !== 'all') params.append('isActive', statusFilter === 'active' ? 'true' : 'false')
+
+            const res = await fetch(`/api/admin/badges?${params.toString()}`)
             if (res.ok) {
                 const data = await res.json()
                 setBadges(data)
@@ -95,6 +104,30 @@ export default function AchievementsAdmin() {
                 </Link>
             </div>
 
+            {/* Filters */}
+            <div className="bg-white p-4 rounded-md shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
+                <div className="flex-1 w-full text-black">
+                    <input
+                        type="text"
+                        placeholder="Search badges by title or code..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                    />
+                </div>
+                <div className="w-full sm:w-auto text-black">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                    >
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul role="list" className="divide-y divide-gray-200">
                     {badges.map((badge, index) => (
@@ -117,7 +150,14 @@ export default function AchievementsAdmin() {
                                             <ChevronDownIcon className="w-4 h-4" />
                                         </button>
                                     </div>
-                                    <span className="text-2xl mr-4">{badge.iconUrl || '🏆'}</span>
+                                    <span className="text-2xl mr-4 flex-shrink-0 w-10 h-10 flex items-center justify-center">
+                                        {(badge as any).imageUrl ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src={(badge as any).imageUrl} alt="icon" className="w-10 h-10 object-cover rounded-full" />
+                                        ) : (
+                                            badge.iconUrl || '🏆'
+                                        )}
+                                    </span>
                                     <div>
                                         <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(badge.title)}</h3>
                                         <p className="text-sm text-gray-500">Code: {badge.code}</p>
