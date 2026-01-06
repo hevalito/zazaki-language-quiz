@@ -284,7 +284,14 @@ export default function SettingsPage() {
 
                         <div>
                             <h3 className="block text-sm font-medium text-gray-700 mb-2">Benachrichtigungen</h3>
-                            <PushNotificationToggle />
+                            <PushNotificationToggle
+                                settings={{
+                                    daily: formData.notifyDaily,
+                                    features: formData.notifyFeatures,
+                                    weekly: formData.notifyWeekly
+                                }}
+                                onChange={(key, val) => setFormData(prev => ({ ...prev, [key]: val }))}
+                            />
                         </div>
 
 
@@ -400,7 +407,16 @@ function DeleteButton() {
 
 
 
-function PushNotificationToggle() {
+interface PushNotificationToggleProps {
+    settings: {
+        daily: boolean
+        features: boolean
+        weekly: boolean
+    }
+    onChange: (key: string, value: boolean) => void
+}
+
+function PushNotificationToggle({ settings, onChange }: PushNotificationToggleProps) {
     const { isSupported, isSubscribed, subscribe, unsubscribe, loading, permissionState, isIOS, isStandalone } = useWebPush()
 
     if (!isSupported) {
@@ -434,31 +450,78 @@ function PushNotificationToggle() {
     }
 
     return (
-        <div id="tour-notifications" className="flex items-center justify-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200 justify-between">
-            <div className="flex items-center space-x-3">
-                {isSubscribed ? (
-                    <BellIcon className="w-6 h-6 text-primary-600" />
-                ) : (
-                    <BellSlashIcon className="w-6 h-6 text-gray-400" />
-                )}
-                <div>
-                    <h4 className="text-sm font-medium text-gray-900">Tägliche Erinnerung</h4>
-                    <p className="text-xs text-gray-500">Erhalte eine Benachrichtigung, wenn das neue tägliche Quiz verfügbar ist.</p>
+        <div className="space-y-4">
+            <div id="tour-notifications" className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-center space-x-3">
+                    {isSubscribed ? (
+                        <BellIcon className="w-6 h-6 text-primary-600" />
+                    ) : (
+                        <BellSlashIcon className="w-6 h-6 text-gray-400" />
+                    )}
+                    <div>
+                        <h4 className="text-sm font-medium text-gray-900">Push-Benachrichtigungen</h4>
+                        <p className="text-xs text-gray-500">
+                            {isSubscribed ? 'Aktiviert' : 'Deaktiviert'}
+                        </p>
+                    </div>
                 </div>
+                <button
+                    type="button"
+                    onClick={handleToggle}
+                    disabled={loading}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${isSubscribed ? 'bg-primary-600' : 'bg-gray-200'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}
+                        `}
+                >
+                    <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isSubscribed ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                    />
+                </button>
+                {loading && <div className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-lg"><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div></div>}
             </div>
-            <button
-                type="button"
-                onClick={handleToggle}
-                disabled={loading}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${isSubscribed ? 'bg-primary-600' : 'bg-gray-200'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}
-                    `}
-            >
-                <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isSubscribed ? 'translate-x-5' : 'translate-x-0'
-                        }`}
-                />
-            </button>
-            {loading && <div className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-lg"><div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div></div>}
+
+            {isSubscribed && (
+                <div className="pl-4 space-y-3 animate-in fade-in slide-in-from-top-2 border-l-2 border-gray-100 ml-4">
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={settings.daily}
+                            onChange={(e) => onChange('notifyDaily', e.target.checked)}
+                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                        />
+                        <div>
+                            <span className="text-sm font-medium text-gray-700 block">Tägliche Erinnerung</span>
+                            <span className="text-xs text-gray-500">Erinnerung an dein tägliches Quiz</span>
+                        </div>
+                    </label>
+
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={settings.features}
+                            onChange={(e) => onChange('notifyFeatures', e.target.checked)}
+                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                        />
+                        <div>
+                            <span className="text-sm font-medium text-gray-700 block">Neuigkeiten & Features</span>
+                            <span className="text-xs text-gray-500">Infos über neue Kurse und Updates</span>
+                        </div>
+                    </label>
+
+                    <label className="flex items-center space-x-3 cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={settings.weekly}
+                            onChange={(e) => onChange('notifyWeekly', e.target.checked)}
+                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                        />
+                        <div>
+                            <span className="text-sm font-medium text-gray-700 block">Wöchentliche Zusammenfassung</span>
+                            <span className="text-xs text-gray-500">Dein Fortschritt im Überblick</span>
+                        </div>
+                    </label>
+                </div>
+            )}
         </div>
     )
 }
