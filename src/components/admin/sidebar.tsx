@@ -108,7 +108,7 @@ export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
                             <div className="flex items-center">
                                 <div className="ml-3">
                                     <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                                        v2.0.0
+                                        v{process.env.NEXT_PUBLIC_APP_VERSION}
                                     </p>
                                 </div>
                             </div>

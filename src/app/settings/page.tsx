@@ -336,7 +336,7 @@ export default function SettingsPage() {
                         </button>
                     </div>
 
-                    <p className="mt-8 text-xs text-gray-400 text-center">Version 2.0.1</p>
+                    <p className="mt-8 text-xs text-gray-400 text-center">Version {process.env.NEXT_PUBLIC_APP_VERSION}</p>
                 </div>
             </main >
 

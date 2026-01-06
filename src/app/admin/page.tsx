@@ -51,7 +51,7 @@ export default async function AdminDashboard() {
           <p className="text-gray-500 mt-2 font-medium">Manage your learning platform efficiently.</p>
         </div>
         <div className="text-sm text-gray-400 font-mono">
-          v2.0.0
+          v{process.env.NEXT_PUBLIC_APP_VERSION}
         </div>
       </div>
 
