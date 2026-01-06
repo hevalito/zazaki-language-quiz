@@ -18,7 +18,6 @@ export default function AchievementsAdmin() {
     const [statusFilter, setStatusFilter] = useState('all') // all, active, inactive
     const [loading, setLoading] = useState(true)
     const [badges, setBadges] = useState<Badge[]>([])
-    const [restoring, setRestoring] = useState(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -86,43 +85,14 @@ export default function AchievementsAdmin() {
             console.error('Failed to save order', error)
             // Ideally revert state here on error
         }
-    }
+        const getTitle = (title: any) => title?.en || title?.de || 'Untitled'
 
-    const handleRestore = async () => {
-        if (!confirm('This will restore default badges. Existing badges with same codes will be updated (icon/title). Continue?')) return
-        setRestoring(true)
-        try {
-            const res = await fetch('/api/admin/badges/restore', { method: 'POST' })
-            if (res.ok) {
-                alert('Badges restored successfully')
-                fetchBadges()
-            } else {
-                alert('Failed to restore badges')
-            }
-        } catch (error) {
-            console.error('Error restoring badges', error)
-            alert('Error restoring badges')
-        } finally {
-            setRestoring(false)
-        }
-    }
+        if (loading) return <div className="p-8">Loading...</div>
 
-    const getTitle = (title: any) => title?.en || title?.de || 'Untitled'
-
-    if (loading) return <div className="p-8">Loading...</div>
-
-    return (
-        <div className="px-4 py-6 sm:px-0">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Achievements Management</h1>
-                <div className="flex space-x-2">
-                    <button
-                        onClick={handleRestore}
-                        disabled={restoring}
-                        className="inline-flex items-center px-4 py-2 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 disabled:opacity-50"
-                    >
-                        {restoring ? 'Restoring...' : 'Restore Defaults'}
-                    </button>
+        return (
+            <div className="px-4 py-6 sm:px-0">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold text-gray-900">Achievements Management</h1>
                     <Link
                         href="/admin/achievements/new"
                         className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
@@ -131,97 +101,96 @@ export default function AchievementsAdmin() {
                         Create New Badge
                     </Link>
                 </div>
-            </div>
 
-            {/* Filters */}
-            <div className="bg-white p-4 rounded-md shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
-                <div className="flex-1 w-full text-black">
-                    <input
-                        type="text"
-                        placeholder="Search badges by title or code..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
-                    />
+                {/* Filters */}
+                <div className="bg-white p-4 rounded-md shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
+                    <div className="flex-1 w-full text-black">
+                        <input
+                            type="text"
+                            placeholder="Search badges by title or code..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                        />
+                    </div>
+                    <div className="w-full sm:w-auto text-black">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
                 </div>
-                <div className="w-full sm:w-auto text-black">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
-                    >
-                        <option value="all">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                </div>
-            </div>
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                <ul role="list" className="divide-y divide-gray-200">
-                    {badges.map((badge, index) => (
-                        <li key={badge.id}>
-                            <div className="px-4 py-4 flex items-center justify-between sm:px-6">
-                                <div className="flex items-center">
-                                    <div className="flex flex-col mr-4 space-y-1">
-                                        <button
-                                            onClick={() => handleMove(index, 'up')}
-                                            disabled={index === 0}
-                                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                        >
-                                            <ChevronUpIcon className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleMove(index, 'down')}
-                                            disabled={index === badges.length - 1}
-                                            className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                                        >
-                                            <ChevronDownIcon className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                    <span className="text-2xl mr-4 flex-shrink-0 w-10 h-10 flex items-center justify-center">
-                                        {(badge as any).imageUrl ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={(badge as any).imageUrl} alt="icon" className="w-10 h-10 object-cover rounded-full" />
-                                        ) : (
-                                            badge.iconUrl || '🏆'
-                                        )}
-                                    </span>
-                                    <div>
-                                        <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(badge.title)}</h3>
-                                        <p className="text-sm text-gray-500">Code: {badge.code}</p>
-                                        <div className="mt-1 flex items-center">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badge.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                }`}>
-                                                {badge.isActive ? 'Active' : 'Inactive'}
-                                            </span>
+                <div className="bg-white shadow overflow-hidden sm:rounded-md">
+                    <ul role="list" className="divide-y divide-gray-200">
+                        {badges.map((badge, index) => (
+                            <li key={badge.id}>
+                                <div className="px-4 py-4 flex items-center justify-between sm:px-6">
+                                    <div className="flex items-center">
+                                        <div className="flex flex-col mr-4 space-y-1">
+                                            <button
+                                                onClick={() => handleMove(index, 'up')}
+                                                disabled={index === 0}
+                                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <ChevronUpIcon className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleMove(index, 'down')}
+                                                disabled={index === badges.length - 1}
+                                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <ChevronDownIcon className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                        <span className="text-2xl mr-4 flex-shrink-0 w-10 h-10 flex items-center justify-center">
+                                            {(badge as any).imageUrl ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={(badge as any).imageUrl} alt="icon" className="w-10 h-10 object-cover rounded-full" />
+                                            ) : (
+                                                badge.iconUrl || '🏆'
+                                            )}
+                                        </span>
+                                        <div>
+                                            <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(badge.title)}</h3>
+                                            <p className="text-sm text-gray-500">Code: {badge.code}</p>
+                                            <div className="mt-1 flex items-center">
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badge.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                    }`}>
+                                                    {badge.isActive ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Link
+                                            href={`/admin/achievements/${badge.id}`}
+                                            className="p-2 text-gray-400 hover:text-gray-500"
+                                        >
+                                            <PencilSquareIcon className="h-5 w-5" />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(badge.id)}
+                                            className="p-2 text-red-400 hover:text-red-500"
+                                        >
+                                            <TrashIcon className="h-5 w-5" />
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <Link
-                                        href={`/admin/achievements/${badge.id}`}
-                                        className="p-2 text-gray-400 hover:text-gray-500"
-                                    >
-                                        <PencilSquareIcon className="h-5 w-5" />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(badge.id)}
-                                        className="p-2 text-red-400 hover:text-red-500"
-                                    >
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                    {badges.length === 0 && (
-                        <li className="px-4 py-12 text-center text-gray-500">
-                            No badges found. Create one to get started.
-                        </li>
-                    )}
-                </ul>
+                            </li>
+                        ))}
+                        {badges.length === 0 && (
+                            <li className="px-4 py-12 text-center text-gray-500">
+                                No badges found. Create one to get started.
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
