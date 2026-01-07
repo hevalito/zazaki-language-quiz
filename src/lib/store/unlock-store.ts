@@ -6,6 +6,7 @@ export interface Badge {
     title: any
     description: any
     iconUrl: string | null
+    imageUrl: string | null
     criteria: any
 }
 
