@@ -29,6 +29,7 @@ export default function AchievementsAdmin() {
 
     const fetchBadges = async () => {
         try {
+            console.log('Fetching badges...')
             setError(null)
             const params = new URLSearchParams()
             if (search) params.append('search', search)
@@ -37,18 +38,29 @@ export default function AchievementsAdmin() {
             const res = await fetch(`/api/admin/badges?${params.toString()}`)
             if (res.ok) {
                 const data = await res.json()
-                setBadges(data)
+                console.log('Badges fetched (raw):', data)
+                if (Array.isArray(data)) {
+                    console.log('Setting badges state with length:', data.length)
+                    setBadges(data)
+                } else {
+                    console.error('Data is not an array:', data)
+                    setError('Received invalid data format')
+                }
             } else {
                 const err = await res.json()
+                console.error('Fetch failed:', err)
                 setError(err.details || 'Failed to fetch badges')
             }
         } catch (error) {
             console.error('Failed to fetch badges', error)
             setError('Network error occurred')
         } finally {
+            console.log('Loading set to false')
             setLoading(false)
         }
     }
+
+    console.log('Render: badges length:', badges.length, 'loading:', loading, 'error:', error)
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this badge?')) return
