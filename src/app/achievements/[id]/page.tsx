@@ -19,6 +19,15 @@ export default async function AchievementDetailPage(props: Props) {
         redirect('/api/auth/signin')
     }
 
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { totalXP: true, streak: true, currentLevel: true }
+    })
+
+    if (!user) {
+        return null
+    }
+
     const badge = await prisma.badge.findUnique({
         where: { id: params.id },
         include: {
@@ -43,6 +52,56 @@ export default async function AchievementDetailPage(props: Props) {
     const getTitle = (t: any) => t?.de || t?.en || 'Erfolg'
     const getDescription = (t: any) => t?.de || t?.en || ''
     const getConditionLabel = (t: any) => t?.de || t?.en || ''
+
+    // Progress Calculation
+    let current = 0
+    let target = 0
+    let displayProgress = ''
+    let progressPercentage = 0
+    const criteria = badge.criteria as any
+
+    if (isEarned) {
+        current = 100
+        target = 100
+        progressPercentage = 100
+    } else if (criteria) {
+        switch (criteria.type) {
+            case 'total_xp':
+                target = criteria.count || 0
+                current = Math.min(user.totalXP, target)
+                displayProgress = `${current} / ${target} XP`
+                progressPercentage = target > 0 ? (current / target) * 100 : 0
+                break
+            case 'streak':
+                target = criteria.count || 0
+                current = user.streak
+                displayProgress = `${current} / ${target} Tage`
+                progressPercentage = target > 0 ? (current / target) * 100 : 0
+                break
+            case 'level_reached':
+                const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                const targetIdx = levels.indexOf(criteria.level)
+                const currentIdx = levels.indexOf(user.currentLevel)
+
+                // For level, we treat the indices as steps
+                target = targetIdx
+                current = currentIdx
+                displayProgress = `${user.currentLevel} / ${criteria.level}`
+
+                // If current >= target, it's 100% (though isEarned should handle this mostly)
+                if (currentIdx >= targetIdx) {
+                    progressPercentage = 100
+                } else {
+                    // Avoid division by zero if target is A1 (index 0) - though usually badges are for higher levels
+                    progressPercentage = targetIdx > 0 ? (currentIdx / targetIdx) * 100 : 0
+                }
+                break
+            default:
+                target = criteria.count || 0
+                current = 0
+                progressPercentage = 0
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -141,14 +200,26 @@ export default async function AchievementDetailPage(props: Props) {
                             )}
                         </div>
 
-                        {/* Progress Visual (Fake for now if not tracked perfectly) */}
-                        {!isEarned && (
+                        {/* Progress Visual */}
+                        {!isEarned && progressPercentage > 0 && (
                             <div className="mt-8 pt-6 border-t border-gray-100">
-                                <p className="text-sm font-bold text-gray-900 mb-2">Fortschritt</p>
-                                <div className="w-full bg-gray-100 rounded-full h-2.5">
-                                    <div className="bg-gray-300 h-2.5 rounded-full" style={{ width: '0%' }}></div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className="text-sm font-bold text-gray-900">Fortschritt</p>
+                                    <span className="text-xs font-medium text-gray-500">{displayProgress}</span>
+                                </div>
+                                <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                                    <div
+                                        className="bg-brand-orange h-2.5 rounded-full transition-all duration-1000 ease-out"
+                                        style={{ width: `${progressPercentage}%` }}
+                                    ></div>
                                 </div>
                                 <p className="text-xs text-gray-400 mt-2">Spiele weiter, um diesen Erfolg freizuschalten!</p>
+                            </div>
+                        )}
+
+                        {!isEarned && progressPercentage === 0 && (
+                            <div className="mt-8 pt-6 border-t border-gray-100">
+                                <p className="text-xs text-gray-400 mt-2 text-center">Spiele weiter, um diesen Erfolg freizuschalten!</p>
                             </div>
                         )}
 
