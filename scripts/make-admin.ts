@@ -4,25 +4,34 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-    const email = process.argv[2]
-    if (!email) {
-        console.error('Please provide an email address')
+    const email = 'heval@me.com'
+
+    console.log(`Looking for user ${email}...`)
+
+    const user = await prisma.user.findUnique({
+        where: { email },
+    })
+
+    if (!user) {
+        console.error(`User ${email} not found!`)
         process.exit(1)
     }
 
-    console.log(`Making ${email} an admin...`)
+    console.log(`Found user ${user.name} (${user.id}). Updating to admin...`)
 
-    try {
-        const user = await prisma.user.update({
-            where: { email },
-            data: { isAdmin: true },
-        })
-        console.log(`Success! User ${user.email} (ID: ${user.id}) is now an admin.`)
-    } catch (error) {
-        console.error('Error updating user:', error)
-    } finally {
-        await prisma.$disconnect()
-    }
+    await prisma.user.update({
+        where: { email },
+        data: { isAdmin: true },
+    })
+
+    console.log(`Successfully made ${email} an admin! 🎉`)
 }
 
 main()
+    .catch((e) => {
+        console.error(e)
+        process.exit(1)
+    })
+    .finally(async () => {
+        await prisma.$disconnect()
+    })

@@ -42,6 +42,7 @@ export default async function AchievementDetailPage(props: Props) {
     // Helper for translations
     const getTitle = (t: any) => t?.de || t?.en || 'Erfolg'
     const getDescription = (t: any) => t?.de || t?.en || ''
+    const getConditionLabel = (t: any) => t?.de || t?.en || ''
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -119,6 +120,18 @@ export default async function AchievementDetailPage(props: Props) {
                             <p className="text-gray-600 leading-relaxed mb-6">
                                 {getDescription(badge.description)}
                             </p>
+
+                            {/* Condition Label */}
+                            {getConditionLabel(badge.conditionLabel) && (
+                                <div className={`mb-8 inline-flex flex-col items-center justify-center min-w-[200px] px-6 py-3 rounded-2xl border ${isEarned ? 'bg-orange-50 border-orange-100' : 'bg-gray-50 border-gray-100'}`}>
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isEarned ? 'text-orange-600/70' : 'text-gray-400'}`}>
+                                        {isEarned ? 'Geschafft' : 'Ziel'}
+                                    </span>
+                                    <span className={`font-bold text-lg ${isEarned ? 'text-gray-900' : 'text-gray-800'}`}>
+                                        {getConditionLabel(badge.conditionLabel)}
+                                    </span>
+                                </div>
+                            )}
 
                             {isEarned && earnedAt && (
                                 <div className="flex items-center justify-center text-sm text-gray-500 bg-gray-50 rounded-lg py-3 px-4 mx-auto w-fit">
