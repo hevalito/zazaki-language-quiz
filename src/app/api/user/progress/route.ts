@@ -27,7 +27,10 @@ export async function GET(request: NextRequest) {
         nickname: true,
         currentLevel: true,
         _count: {
-          select: { attempts: true }
+          select: {
+            attempts: true,
+            badges: true
+          }
         }
       }
     })
@@ -66,7 +69,8 @@ export async function GET(request: NextRequest) {
         firstName: user.firstName,
         nickname: user.nickname,
         currentLevel: user.currentLevel,
-        attemptCount: user._count.attempts
+        attemptCount: user._count.attempts,
+        achievementCount: user._count.badges
       }
     })
   } catch (error) {

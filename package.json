@@ -1,6 +1,6 @@
 {
   "name": "zazaki-quiz",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Modern mobile-first Zazaki (Kurdish) language learning quiz application",
   "private": true,
   "scripts": {

@@ -16,7 +16,7 @@ import {
   CheckIcon,
   MapIcon
 } from '@heroicons/react/24/outline'
-import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid'
+import { FireIcon as FireIconSolid, SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
 
 import { InstallPrompt } from '@/components/pwa/install-prompt'
@@ -34,6 +34,7 @@ interface UserProgress {
   nickname?: string | null
   currentLevel?: string // Added for Continue Learning logic
   attemptCount?: number
+  achievementCount?: number
 }
 
 import confetti from 'canvas-confetti'
@@ -181,6 +182,12 @@ export function HomeScreen() {
                   <FireIcon className="w-4 h-4 text-gray-400" />
                 )}
                 <span className="text-sm font-bold text-gray-900 font-sans">{streak}</span>
+              </div>
+
+              {/* Achievements */}
+              <div className="flex items-center space-x-1 bg-purple-600/10 px-3 py-1 rounded-full border border-purple-600/20">
+                <SparklesIconSolid className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-bold text-gray-900 font-sans">{userProgress?.achievementCount || 0}</span>
               </div>
 
               {/* Settings */}
