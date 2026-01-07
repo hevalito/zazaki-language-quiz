@@ -59,12 +59,9 @@ export default function AchievementsAdmin() {
             console.error('Failed to fetch badges', error)
             setError('Network error occurred')
         } finally {
-            console.log('Loading set to false')
             setLoading(false)
         }
     }
-
-    console.log('Render: badges length:', badges.length, 'loading:', loading, 'error:', error)
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this badge?')) return
@@ -115,11 +112,6 @@ export default function AchievementsAdmin() {
 
     return (
         <div className="px-4 py-6 sm:px-0">
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-                <p className="font-bold">DEBUG MODE</p>
-                <p>Badges loaded: {badges.length}</p>
-                <p>First badge: {badges[0]?.code || 'None'}</p>
-            </div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">Achievements Management</h1>
                 <Link
@@ -236,5 +228,4 @@ export default function AchievementsAdmin() {
             </div>
         </div>
     )
-}
 }
