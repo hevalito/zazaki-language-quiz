@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/admin-auth'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
     try {
         const isAdmin = await requireAdmin()
@@ -19,13 +21,9 @@ export async function GET(request: Request) {
             where.isActive = isActive === 'true'
         }
 
+        // Simplified search to avoid potential Prisma JSON filter issues for now
         if (search) {
-            where.OR = [
-                // Prisma JSON filtering has limitations, simple string search might fail on JSON paths if not strictly typed or supported by DB version.
-                // Fallback to code search and fetching all + filtering in memory if needed, but 'string_contains' is PostgreSQL specific for JSONB.
-                // Let's try simpler exact match or code search first to be safe, or just code.
-                { code: { contains: search, mode: 'insensitive' } }
-            ]
+            where.code = { contains: search, mode: 'insensitive' }
         }
 
         const badges = await prisma.badge.findMany({
@@ -35,6 +33,8 @@ export async function GET(request: Request) {
                 { createdAt: 'desc' }
             ]
         })
+
+        console.log(`[API] /admin/badges found ${badges.length} badges. Filters:`, where)
 
         return NextResponse.json(badges)
     } catch (error) {
