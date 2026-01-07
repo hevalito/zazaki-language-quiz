@@ -64,23 +64,37 @@ export default async function AchievementDetailPage(props: Props) {
 
                     <div className="px-6 pb-8 relative">
                         {/* Icon Badge */}
-                        <div className={`w-28 h-28 mx-auto -mt-14 rounded-full border-4 border-white shadow-lg flex items-center justify-center ${isEarned ? 'bg-orange-50' : 'bg-gray-100'}`}>
-                            {badge.iconUrl && (badge.iconUrl.startsWith('http') || badge.iconUrl.startsWith('/')) ? (
+                        <div className={`w-36 h-36 mx-auto -mt-16 rounded-full border-4 border-white shadow-lg flex items-center justify-center overflow-hidden ${isEarned ? 'bg-orange-50' : 'bg-gray-100'}`}>
+                            {badge.imageUrl ? (
+                                <div className={`relative w-full h-full ${!isEarned ? 'grayscale brightness-75 contrast-125' : ''}`}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={badge.imageUrl}
+                                        alt={getTitle(badge.title)}
+                                        className={`w-full h-full object-cover ${!isEarned ? 'blur-[2px] scale-105' : ''}`}
+                                    />
+                                    {!isEarned && (
+                                        <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/10">
+                                            <LockClosedIcon className="w-12 h-12 text-white/90 drop-shadow-md" />
+                                        </div>
+                                    )}
+                                </div>
+                            ) : badge.iconUrl && (badge.iconUrl.startsWith('http') || badge.iconUrl.startsWith('/')) ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
                                     src={badge.iconUrl}
                                     alt={getTitle(badge.title)}
-                                    className={`w-16 h-16 object-contain ${!isEarned && 'grayscale opacity-50'}`}
+                                    className={`w-20 h-20 object-contain ${!isEarned && 'grayscale opacity-50'}`}
                                 />
                             ) : badge.iconUrl ? (
-                                <span className={`text-5xl ${!isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getTitle(badge.title)}>
+                                <span className={`text-6xl ${!isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getTitle(badge.title)}>
                                     {badge.iconUrl}
                                 </span>
                             ) : (
                                 isEarned ? (
-                                    <TrophyIconSolid className="w-14 h-14 text-brand-orange" />
+                                    <TrophyIconSolid className="w-16 h-16 text-brand-orange" />
                                 ) : (
-                                    <LockClosedIcon className="w-12 h-12 text-gray-400" />
+                                    <LockClosedIcon className="w-16 h-16 text-gray-400" />
                                 )
                             )}
                         </div>
