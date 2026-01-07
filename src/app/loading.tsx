@@ -1,12 +1,30 @@
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Loading() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] p-4 space-y-4">
-            <div className="relative w-16 h-16">
-                <div className="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
-                <div className="absolute inset-0 border-4 border-primary-500 rounded-full border-t-transparent animate-spin"></div>
+        <div className="container mx-auto px-4 py-8 space-y-8 max-w-md safe-area-top safe-area-bottom">
+            {/* Header Area */}
+            <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                    <Skeleton className="h-8 w-32" />
+                    <Skeleton className="h-4 w-48" />
+                </div>
+                <Skeleton className="h-10 w-10 rounded-full" />
             </div>
-            <p className="text-gray-500 font-medium animate-pulse">Loading...</p>
+
+            {/* Main Content Area - Mimic Card Grid */}
+            <div className="grid grid-cols-1 gap-4">
+                <Skeleton className="h-32 w-full rounded-xl" />
+                <Skeleton className="h-24 w-full rounded-xl" />
+                <Skeleton className="h-24 w-full rounded-xl" />
+            </div>
+
+            {/* Navigation Bar Placeholder */}
+            <div className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t p-2 flex justify-around items-center safe-area-bottom">
+                <Skeleton className="h-8 w-8 rounded-md" />
+                <Skeleton className="h-8 w-8 rounded-md" />
+                <Skeleton className="h-8 w-8 rounded-md" />
+            </div>
         </div>
     )
 }

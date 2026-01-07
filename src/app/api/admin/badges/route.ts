@@ -38,8 +38,9 @@ export async function GET(request: Request) {
 
         return NextResponse.json(badges)
     } catch (error) {
+        console.error('Failed to fetch badges:', error)
         return NextResponse.json(
-            { error: 'Internal server error' },
+            { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         )
     }
