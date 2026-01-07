@@ -24,6 +24,8 @@ export async function PUT(
                 title: data.title,
                 description: data.description,
                 iconUrl: data.iconUrl,
+                imageUrl: data.imageUrl,
+                conditionLabel: data.conditionLabel,
                 criteria: data.criteria,
                 isActive: data.isActive
             }
