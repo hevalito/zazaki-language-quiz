@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
 import { LanguageTabs } from './language-tabs'
+import { ImageUpload } from './image-upload'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), { ssr: false })
 
@@ -158,16 +159,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         {/* Image URL Input */}
                         {formData.iconType === 'image' && (
                             <div className="sm:col-span-6">
-                                <label className="block text-sm font-medium text-gray-700">Image URL</label>
-                                <div className="mt-1 flex rounded-md shadow-sm">
-                                    <input
-                                        type="text"
-                                        value={formData.imageUrl}
-                                        onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                        className="flex-1 block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                        placeholder="https://example.com/badge.png"
-                                    />
-                                </div>
+                                <ImageUpload
+                                    value={formData.imageUrl || ''}
+                                    onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url }))}
+                                    label="Badge Image"
+                                />
                                 <p className="mt-2 text-sm text-gray-500">
                                     Recommended: Square image (1:1), PNG or JPG. Will be masked as a circle.
                                 </p>
