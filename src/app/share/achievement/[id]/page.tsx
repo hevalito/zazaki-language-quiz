@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
     }
 
-    const userName = userBadge.user.firstName || userBadge.user.nickname || 'Ein Nutzer'
+    const userName = userBadge.user.nickname || userBadge.user.firstName || 'Ein Nutzer'
     const badgeTitle = (userBadge.badge.title as any)?.de || (userBadge.badge.title as any)?.en || 'Erfolg'
 
     return {
@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SharedAchievementPage({ params }: Props) {
     const { id } = await params
 
+    // Fetch user and badge data
     const userBadge = await prisma.userBadge.findUnique({
         where: { id },
         include: {
@@ -56,6 +57,7 @@ export default async function SharedAchievementPage({ params }: Props) {
                     lastName: true,
                     nickname: true,
                     avatarUrl: true,
+                    image: true,
                     currentLevel: true,
                     streak: true,
                     totalXP: true
@@ -75,20 +77,31 @@ export default async function SharedAchievementPage({ params }: Props) {
     const getTitle = (t: any) => t?.de || t?.en || 'Erfolg'
     const getDescription = (t: any) => t?.de || t?.en || ''
 
-    const displayName = user.firstName || user.nickname || 'Namenloser Lerner'
+    // Use Nickname as primary name
+    const displayName = user.nickname || user.firstName || 'Namenloser Lerner'
     const userInitial = displayName.charAt(0).toUpperCase()
+
+    // Avatar logic: helper to get the best available image
+    const avatarSrc = user.avatarUrl || user.image
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* Header / Nav */}
-            <header className="bg-white border-b border-gray-200 py-4 px-4 sticky top-0 z-10">
+            <header className="bg-white border-b border-gray-200 py-3 px-4 sticky top-0 z-10">
                 <div className="container mx-auto flex items-center justify-between max-w-lg">
-                    <div className="font-serif font-bold text-xl text-brand-orange">
-                        Zazakî Quiz
+                    <div className="relative w-32 h-8">
+                        <Image
+                            src="/images/logo-full.png"
+                            alt="Zazakî Quiz"
+                            fill
+                            className="object-contain object-left"
+                            priority
+                        />
                     </div>
                     <Link
                         href="/"
-                        className="text-sm font-medium bg-brand-orange text-white px-4 py-2 rounded-full shadow-sm hover:bg-orange-600 transition-colors"
+                        style={{ backgroundColor: 'rgb(254 189 17)' }}
+                        className="text-sm font-bold text-gray-900 px-4 py-2 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
                     >
                         App Öffnen
                     </Link>
@@ -99,20 +112,17 @@ export default async function SharedAchievementPage({ params }: Props) {
 
                 {/* User Profile Section */}
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 mb-6 text-center">
-                    <div className="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center border-4 border-white shadow-md relative mb-4">
-                        {user.avatarUrl ? (
+                    <div className="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center border-4 border-white shadow-md mb-4 overflow-hidden">
+                        {avatarSrc ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
-                                src={user.avatarUrl}
+                                src={avatarSrc}
                                 alt={displayName}
-                                className="w-full h-full rounded-full object-cover"
+                                className="w-full h-full object-cover"
                             />
                         ) : (
                             <span className="text-2xl font-bold text-gray-400">{userInitial}</span>
                         )}
-                        <div className="absolute -bottom-1 -right-1 bg-brand-orange text-white text-xs font-bold px-2 py-0.5 rounded-full border-2 border-white">
-                            Lvl {user.currentLevel}
-                        </div>
                     </div>
 
                     <h2 className="text-xl font-bold text-gray-900 mb-1">
@@ -139,14 +149,18 @@ export default async function SharedAchievementPage({ params }: Props) {
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-brand-orange/20 relative mb-12">
                     <div className="h-32 relative bg-gradient-to-br from-brand-orange to-red-500">
                         <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10"></div>
-                        <div className="absolute bottom-3 left-0 right-0 text-center text-white/90 text-sm font-medium tracking-wide uppercase">
-                            Neuer Erfolg Freigeschaltet
+
+                        {/* Status Pill moved to top-center to not be obscured */}
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+                            <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                                Neuer Erfolg Freigeschaltet
+                            </div>
                         </div>
                     </div>
 
                     <div className="px-6 pb-8 relative">
                         {/* Huge floating Icon */}
-                        <div className="w-32 h-32 mx-auto -mt-16 rounded-full border-4 border-white shadow-xl flex items-center justify-center overflow-hidden bg-orange-50 mb-4 transform hover:scale-105 transition-transform duration-300">
+                        <div className="w-32 h-32 mx-auto -mt-16 rounded-full border-4 border-white shadow-xl flex items-center justify-center overflow-hidden bg-orange-50 mb-4 transform hover:scale-105 transition-transform duration-300 relative z-10">
                             {badge.imageUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
@@ -205,7 +219,8 @@ export default async function SharedAchievementPage({ params }: Props) {
 
                         <Link
                             href="/auth/signup"
-                            className="bg-brand-orange hover:bg-orange-600 text-white font-bold py-3.5 px-8 rounded-full shadow-lg hover:shadow-orange-500/20 transition-all transform hover:-translate-y-0.5 inline-block w-full sm:w-auto"
+                            style={{ backgroundColor: 'rgb(254 189 17)' }}
+                            className="text-gray-900 font-bold py-3.5 px-8 rounded-full shadow-lg hover:shadow-orange-500/20 transition-all transform hover:-translate-y-0.5 inline-block w-full sm:w-auto hover:opacity-90"
                         >
                             Jetzt kostenlos starten
                         </Link>

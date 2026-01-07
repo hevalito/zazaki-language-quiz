@@ -46,17 +46,9 @@ export default async function Image({ params }: { params: { id: string } }) {
     }
 
     const { user, badge } = userBadge
-    const userName = user.firstName || user.nickname || 'Ein Nutzer'
+    // Use Nickname as priority
+    const userName = user.nickname || user.firstName || 'Ein Nutzer'
     const badgeTitle = (badge.title as any)?.de || (badge.title as any)?.en || 'Erfolg'
-
-    // Determine visuals
-    // Note: We can only use absolute URLs for images in OG generation.
-    // If imageUrl or avatarUrl are relative paths, they might not work unless we have the full URL (deployment url).
-    // For safety, we will stick to text/icons if the URLs are relative or use a placeholder logic if needed.
-    // However, often production URLs are full S3/cloud links.
-
-    // Since we don't have the BASE_URL reliably at build time without env vars, and relative paths fail,
-    // we'll try to render what we can.
 
     return new ImageResponse(
         (
@@ -98,7 +90,7 @@ export default async function Image({ params }: { params: { id: string } }) {
                     border: '1px solid #eee',
                     maxWidth: '80%'
                 }}>
-                    {/* User Avatar - using a colored circle with initial as fallback since standard img tags can be tricky without allow-listing */}
+                    {/* User Avatar - using a colored circle with initial as fallback */}
                     <div style={{
                         width: 120,
                         height: 120,
