@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import { TrophyIcon, LockClosedIcon } from '@heroicons/react/24/outline'
-import { TrophyIcon as TrophyIconSolid } from '@heroicons/react/24/solid'
+import { LockClosedIcon } from '@heroicons/react/24/outline'
+import { SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 
@@ -64,14 +64,23 @@ export function AchievementScreen() {
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4 flex items-center">
-                    <Link href="/" className="mr-4 p-2 hover:bg-gray-100 rounded-full">
-                        <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
-                    </Link>
-                    <h1 className="text-xl font-bold text-gray-900 flex items-center">
-                        <TrophyIconSolid className="w-6 h-6 text-purple-600 mr-2" />
-                        Erfolge
-                    </h1>
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex items-center space-x-3">
+                        <Link
+                            href="/"
+                            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                            aria-label="Zurück"
+                        >
+                            <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                        </Link>
+                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <SparklesIconSolid className="w-6 h-6 text-primary-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-bold text-gray-900">Erfolge</h1>
+                            <p className="text-sm text-gray-500">Sammle Trophäen</p>
+                        </div>
+                    </div>
                 </div>
             </header>
 
@@ -121,7 +130,7 @@ export function AchievementScreen() {
                                         </span>
                                     ) : (
                                         badge.isEarned ? (
-                                            <TrophyIconSolid className="w-6 h-6 text-purple-600" />
+                                            <SparklesIconSolid className="w-6 h-6 text-purple-600" />
                                         ) : (
                                             <LockClosedIcon className="w-6 h-6 text-gray-400" />
                                         )

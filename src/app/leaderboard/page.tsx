@@ -63,15 +63,22 @@ export default function LeaderboardPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center">
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex items-center space-x-3">
                         <button
-                            onClick={() => router.push('/dashboard')}
-                            className="mr-4 text-gray-600 hover:text-gray-900"
+                            onClick={() => router.push('/')}
+                            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                            aria-label="Zurück"
                         >
-                            <ArrowLeftIcon className="w-5 h-5" />
+                            <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </button>
-                        <h1 className="text-xl font-bold text-gray-900">Bestenliste</h1>
+                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <TrophyIcon className="w-6 h-6 text-primary-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-bold text-gray-900">Bestenliste</h1>
+                            <p className="text-sm text-gray-500">Erklimme die Spitze</p>
+                        </div>
                     </div>
                 </div>
 

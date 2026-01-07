@@ -46,6 +46,8 @@ export const viewport: Viewport = {
 import { UnlockManager } from '@/components/achievements/unlock-manager'
 import { TourProvider } from '@/components/providers/tour-context'
 
+import { MobileNav } from '@/components/layout/mobile-nav'
+
 export default async function RootLayout({
   children,
 }: {
@@ -59,9 +61,10 @@ export default async function RootLayout({
         <Providers session={session}>
           <UnlockManager />
           <TourProvider>
-            <div className="min-h-full">
+            <div className="min-h-full pb-20 md:pb-0">
               {children}
             </div>
+            <MobileNav />
           </TourProvider>
         </Providers>
       </body>

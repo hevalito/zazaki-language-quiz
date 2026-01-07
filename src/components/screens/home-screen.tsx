@@ -407,7 +407,7 @@ export function HomeScreen() {
             className="card-interactive text-center group"
           >
             <div className="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-red/20 transition-colors">
-              <FireIcon className="w-6 h-6 text-brand-red" />
+              <SparklesIcon className="w-6 h-6 text-brand-red" />
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">Erfolge</h4>
             <p className="text-sm text-gray-600">Sammle Trophäen</p>
