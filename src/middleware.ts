@@ -55,7 +55,8 @@ export default auth((req) => {
         req.nextUrl.pathname === "/manifest.json" ||
         req.nextUrl.pathname === "/robots.txt" ||
         req.nextUrl.pathname === "/sw.js" ||
-        req.nextUrl.pathname === "/push-worker.js"
+        req.nextUrl.pathname === "/push-worker.js" ||
+        req.nextUrl.pathname.startsWith("/share/achievement")
 
     if (!isLoggedIn && !isAuthPage && !isPublicRoute) {
         // Construct absolute URL using the Host header to ensure we redirect to the correct domain/port.

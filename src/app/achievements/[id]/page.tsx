@@ -232,6 +232,7 @@ export default async function AchievementDetailPage(props: Props) {
                         <ShareBadgeButton
                             title={getTitle(badge.title)}
                             description={getDescription(badge.description)}
+                            shareId={isEarned && badge.userBadges[0] ? badge.userBadges[0].id : undefined}
                         />
                     </div>
                 )}

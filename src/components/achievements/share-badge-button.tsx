@@ -6,16 +6,22 @@ import { useState } from 'react'
 interface ShareBadgeButtonProps {
     title: string
     description: string
+    shareId?: string
 }
 
-export function ShareBadgeButton({ title, description }: ShareBadgeButtonProps) {
+export function ShareBadgeButton({ title, description, shareId }: ShareBadgeButtonProps) {
     const [copied, setCopied] = useState(false)
 
     const handleShare = async () => {
+        // If shareId provided, build the public public URL, otherwise fallback to current location
+        const url = shareId
+            ? `${window.location.origin}/share/achievement/${shareId}`
+            : window.location.href
+
         const shareData = {
             title: `Ich habe einen Erfolg freigeschaltet: ${title}! 🏆`,
             text: `Ich habe gerade den Erfolg "${title}" in Zazakî Quiz freigeschaltet! ${description}`,
-            url: window.location.href
+            url
         }
 
         if (navigator.share) {

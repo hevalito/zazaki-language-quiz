@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import {
     BookOpenIcon,
     TrophyIcon,
@@ -21,9 +22,20 @@ import { cn } from '@/lib/utils'
 
 export function MobileNav() {
     const pathname = usePathname()
+    const { data: session } = useSession()
 
-    // Hide on admin routes and auth pages if needed
-    if (pathname?.startsWith('/admin') || pathname?.startsWith('/sign-in') || pathname?.startsWith('/sign-up')) {
+    // Hide on:
+    // 1. Admin routes
+    // 2. Auth pages (sign-in/up)
+    // 3. Share pages (always focused view)
+    // 4. Public Landing Page (Home "/" when not logged in)
+    if (
+        pathname?.startsWith('/admin') ||
+        pathname?.startsWith('/sign-in') ||
+        pathname?.startsWith('/sign-up') ||
+        pathname?.startsWith('/share') ||
+        (pathname === '/' && !session)
+    ) {
         return null
     }
 
