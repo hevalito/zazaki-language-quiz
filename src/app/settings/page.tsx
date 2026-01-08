@@ -17,15 +17,109 @@ import { useTranslation } from '@/hooks/use-translation'
 
 export default function SettingsPage() {
     const { t } = useTranslation()
+    const router = useRouter()
     const { data: session, update } = useSession()
-    // ...
 
-    // ... (handleFileChange) ...
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [loadingAvatar, setLoadingAvatar] = useState(false)
 
-    // ... (fetchProfile) ...
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        nickname: '',
+        dailyGoal: 50,
+        notifyDaily: false,
+        notifyFeatures: true,
+        notifyWeekly: false,
+        courseFinderData: null
+    })
+
+    useEffect(() => {
+        if (session?.user) {
+            fetchProfile()
+        }
+    }, [session])
+
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch('/api/user/profile')
+            if (res.ok) {
+                const data = await res.json()
+                setFormData({
+                    firstName: data.firstName || '',
+                    lastName: data.lastName || '',
+                    nickname: data.nickname || '',
+                    dailyGoal: data.dailyGoal || 50,
+                    notifyDaily: data.settings?.notifyDaily ?? false,
+                    notifyFeatures: data.settings?.notifyFeatures ?? true,
+                    notifyWeekly: data.settings?.notifyWeekly ?? false,
+                    courseFinderData: data.courseFinderData || null
+                })
+            }
+        } catch (error) {
+            console.error('Failed to load profile', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setLoadingAvatar(true)
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            const res = await fetch('/api/user/avatar', {
+                method: 'POST',
+                body: formData
+            })
+            if (res.ok) {
+                const data = await res.json()
+                await update({ image: data.url }) // Update session
+                router.refresh()
+            }
+        } catch (error) {
+            console.error('Avatar upload failed', error)
+            alert(t('settings.avatar.error', 'Fehler beim Hochladen'))
+        } finally {
+            setLoadingAvatar(false)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        // ... (rest of implementation) ...
+        e.preventDefault()
+        setSaving(true)
+        setSuccess(false)
+
+        try {
+            const res = await fetch('/api/user/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+
+            if (res.ok) {
+                const data = await res.json()
+                setSuccess(true)
+                // Update session if needed
+                if (data.name !== session?.user?.name) {
+                    await update({ name: data.name })
+                }
+                setTimeout(() => setSuccess(false), 3000)
+            } else {
+                alert(t('common.error', 'Fehler beim Speichern'))
+            }
+        } catch (error) {
+            console.error('Save failed', error)
+            alert(t('common.error', 'Ein Fehler ist aufgetreten'))
+        } finally {
+            setSaving(false)
+        }
     }
 
     if (loading) {
