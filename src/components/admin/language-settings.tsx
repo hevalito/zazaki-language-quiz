@@ -82,14 +82,14 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
             {isAdding && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-end gap-3 animate-fade-in">
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Code (ISO 2)</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Code (ISO 2/3)</label>
                         <input
                             type="text"
-                            placeholder="e.g. tr"
+                            placeholder="e.g. zza"
                             value={newLangCode}
                             onChange={e => setNewLangCode(e.target.value.toLowerCase())}
                             className="block w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            maxLength={2}
+                            maxLength={3}
                         />
                     </div>
                     <div className="flex-1">
