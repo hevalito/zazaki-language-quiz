@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { updateSpacedRepetition } from '@/lib/spaced-repetition'
+import { logActivity } from '@/lib/activity'
 
 export async function POST(request: Request) {
     try {
@@ -29,7 +30,14 @@ export async function POST(request: Request) {
         // 2. Update Spaced Repetition Logic (The Core of Learning Room)
         await updateSpacedRepetition(session.user.id, questionId, isCorrect)
 
-        // 3. Return result + Explanation (CRITICAL for learning)
+        // 3. Log Activity
+        await logActivity(session.user.id, 'LEARNING_PRACTICE', {
+            questionId,
+            isCorrect,
+            questionType: question.type
+        })
+
+        // 4. Return result + Explanation (CRITICAL for learning)
         // NO XP Awarded.
 
         return NextResponse.json({

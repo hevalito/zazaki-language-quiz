@@ -105,7 +105,7 @@ export default async function AdminDashboard() {
                 )}
               </div>
               <div className="mt-8 pt-6 border-t border-gray-50">
-                <a href="/admin/users" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center group">
+                <a href="/admin/activity" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center group">
                   View all user activity
                   <ArrowRightIcon className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </a>

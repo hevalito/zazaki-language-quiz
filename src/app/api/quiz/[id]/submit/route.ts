@@ -5,6 +5,7 @@ import { auth } from '@/auth'
 import { isSameBerlinDay, getBerlinDateString } from '@/lib/date-utils'
 import { getSystemSettings } from '@/lib/settings'
 import { updateSpacedRepetition } from '@/lib/spaced-repetition'
+import { logActivity } from '@/lib/activity'
 
 
 export async function POST(
@@ -270,6 +271,24 @@ export async function POST(
     if (xpEarned > 0 || (currentUser && currentUser.streak > 0)) { // Re-check badges if streak might have changed
       const badgeResult = await checkBadges(session.user.id)
       newBadges = badgeResult.newBadges
+    }
+
+    // Log Activity
+    await logActivity(session.user.id, 'QUIZ_COMPLETED', {
+      quizId: quiz.id,
+      quizTitle: quiz.title,
+      score: totalScore,
+      maxScore,
+      xpEarned
+    })
+
+    if (newBadges.length > 0) {
+      for (const badge of newBadges) {
+        await logActivity(session.user.id, 'BADGE_EARNED', {
+          badgeId: badge.id,
+          badgeTitle: badge.title
+        })
+      }
     }
 
     return NextResponse.json({
