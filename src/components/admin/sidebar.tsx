@@ -12,7 +12,8 @@ import {
     QuestionMarkCircleIcon,
     CalendarIcon,
     PaperAirplaneIcon,
-    Cog6ToothIcon
+    Cog6ToothIcon,
+    LanguageIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -24,6 +25,7 @@ const navigation = [
     { name: 'Users', href: '/admin/users', icon: UsersIcon },
     { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
     { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
+    { name: 'Translations', href: '/admin/translations', icon: LanguageIcon },
     { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ]
 

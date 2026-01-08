@@ -15,6 +15,7 @@ import {
   BellIcon
 } from '@heroicons/react/24/outline'
 import { useWebPush } from '@/hooks/use-web-push'
+import { useTranslation } from '@/hooks/use-translation'
 
 interface QuizData {
   id: string
@@ -34,6 +35,8 @@ interface QuizData {
     randomize?: boolean
     randomizeAnswers?: boolean
   }
+  type?: string
+  activeAttempt?: any
 }
 
 interface QuestionData {
@@ -66,6 +69,7 @@ interface Answer {
 }
 
 export default function QuizPage() {
+  const { t } = useTranslation()
   const params = useParams()
   const router = useRouter()
   const { data: session } = useSession()
@@ -217,7 +221,7 @@ export default function QuizPage() {
 
     } catch (error) {
       console.error('Error saving answer:', error)
-      alert('Could not save answer. Please check connection.')
+      alert(t('error.saveAnswer', 'Konnte Antwort nicht speichern. Bitte Verbindung prüfen.'))
     } finally {
       setSubmitting(false)
     }
@@ -303,16 +307,20 @@ export default function QuizPage() {
   }, [quiz, currentQuestionIndex])
 
   const successMessage = useMemo(() => {
-    const messages = ["Zaf rind o!", "Rind o!", "Aferîn!"]
+    const messages = [
+      t('success.great', "Zaf rind o!"),
+      t('success.good', "Rind o!"),
+      t('success.bravo', "Aferîn!")
+    ]
     return messages[Math.floor(Math.random() * messages.length)]
-  }, [])
+  }, [t])
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Lade Quiz...</p>
+          <p className="mt-4 text-gray-600">{t('loading.quiz', 'Lade Quiz...')}</p>
         </div>
       </div>
     )
@@ -322,7 +330,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Quiz nicht gefunden</p>
+          <p className="text-gray-600">{t('error.quizNotFound', 'Quiz nicht gefunden')}</p>
         </div>
       </div>
     )
@@ -337,42 +345,42 @@ export default function QuizPage() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <TrophyIcon className="w-8 h-8 text-green-600" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Quiz beendet!</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('quiz.finished', 'Quiz beendet!')}</h1>
               <p className="text-gray-600">{successMessage}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{quizResults.score}</div>
-                <div className="text-sm text-blue-600">XP (Gesamt)</div>
+                <div className="text-sm text-blue-600">{t('quiz.xpTotal', 'XP (Gesamt)')}</div>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">{quizResults.percentage}%</div>
-                <div className="text-sm text-green-600">Genauigkeit</div>
+                <div className="text-sm text-green-600">{t('quiz.accuracy', 'Genauigkeit')}</div>
               </div>
               <div className="text-center p-4 bg-yellow-50 rounded-lg">
                 <div className="text-2xl font-bold text-yellow-600">
                   {quizResults.xpEarned ?? 0}
                 </div>
-                <div className="text-sm text-yellow-600">XP (Neu)</div>
+                <div className="text-sm text-yellow-600">{t('quiz.xpNew', 'XP (Neu)')}</div>
               </div>
             </div>
 
             {quizResults.score > 0 && quizResults.xpEarned === 0 && (
               <div className="mb-6 p-4 bg-gray-50 text-gray-600 rounded-lg text-sm text-center border border-gray-200">
-                Dein Ergebnis wurde gespeichert, aber da du dieses Quiz bereits abgeschlossen hast, gibt es für diese Wiederholung keine XP.
+                {t('quiz.repeatNoXp', 'Dein Ergebnis wurde gespeichert, aber da du dieses Quiz bereits abgeschlossen hast, gibt es für diese Wiederholung keine XP.')}
               </div>
             )}
 
             {quiz.type === 'DAILY' && <NotificationPrompt />}
 
             <div className="space-y-4 mb-6">
-              <h3 className="font-semibold text-gray-900">Fragenübersicht</h3>
+              <h3 className="font-semibold text-gray-900">{t('quiz.modal.summaryTitle', 'Fragenübersicht')}</h3>
               {quiz.questions.map((question, index) => {
                 const result = quizResults.results.find((r: any) => r.questionId === question.id)
                 return (
                   <div key={question.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-700">Frage {index + 1}</span>
+                    <span className="text-sm text-gray-700">{t('quiz.questionLabel', 'Frage')} {index + 1}</span>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">
                         {result?.pointsEarned || 0} / {question.points} XP
@@ -395,13 +403,13 @@ export default function QuizPage() {
                 onClick={() => router.push('/')}
                 className="flex-1 btn-secondary"
               >
-                Zurück zur Startseite
+                {t('quiz.backHome', 'Zurück zur Startseite')}
               </button>
               <button
                 onClick={handleRestart}
                 className="flex-1 btn-primary"
               >
-                Quiz wiederholen
+                {t('quiz.restart', 'Quiz wiederholen')}
               </button>
             </div>
           </div>
@@ -412,32 +420,6 @@ export default function QuizPage() {
 
   const currentQuestion = quiz.questions[currentQuestionIndex]
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100
-
-
-
-  interface QuizData {
-    id: string
-    type?: string
-    title: MultiLanguageContent
-    description?: MultiLanguageContent
-    questions: QuestionData[]
-    lesson: {
-      title: MultiLanguageContent
-      chapter: {
-        title: MultiLanguageContent
-        course: {
-          title: MultiLanguageContent
-        }
-      }
-    } | null
-    config?: {
-      randomize?: boolean
-      randomizeAnswers?: boolean
-    }
-    activeAttempt?: any
-  }
-
-  // ... inside component ...
 
   const isDaily = quiz.type === 'DAILY'
 
@@ -452,13 +434,13 @@ export default function QuizPage() {
               className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
             >
               <ArrowLeftIcon className="w-5 h-5" />
-              <span>Zurück</span>
+              <span>{t('nav.back', 'Zurück')}</span>
             </button>
 
             <div className="text-center">
               <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900'}`}>{getTitle(quiz.title)}</h1>
               <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500'}`}>
-                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: 'Tägliche Herausforderung' })}
+                {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: t('daily.title', 'Tägliche Herausforderung') })}
               </p>
             </div>
 
@@ -486,7 +468,7 @@ export default function QuizPage() {
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-medium text-gray-500">
-                Frage {currentQuestionIndex + 1}
+                {t('quiz.questionLabel', 'Frage')} {currentQuestionIndex + 1}
               </span>
               <span className="text-sm text-gray-500">
                 {currentQuestion.points} XP
@@ -530,7 +512,7 @@ export default function QuizPage() {
               className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowLeftIcon className="w-4 h-4" />
-              <span>Zurück</span>
+              <span>{t('nav.back', 'Zurück')}</span>
             </button>
 
             <button
@@ -540,8 +522,8 @@ export default function QuizPage() {
             >
               <span>
                 {currentQuestionIndex === quiz.questions.length - 1
-                  ? (submitting ? 'Wird gesendet...' : 'Quiz abgeben')
-                  : 'Weiter'
+                  ? (submitting ? t('quiz.sending', 'Wird gesendet...') : t('quiz.submit', 'Quiz abgeben'))
+                  : t('quiz.next', 'Weiter')
                 }
               </span>
               {currentQuestionIndex < quiz.questions.length - 1 && (
@@ -557,6 +539,7 @@ export default function QuizPage() {
 
 function NotificationPrompt() {
   const { isSupported, isSubscribed, subscribe, loading, permissionState } = useWebPush()
+  const { t } = useTranslation()
   const [dismissed, setDismissed] = useState(false)
 
   if (!isSupported || isSubscribed || dismissed || permissionState === 'denied') {
@@ -570,8 +553,8 @@ function NotificationPrompt() {
           <BellIcon className="w-5 h-5 text-indigo-600" />
         </div>
         <div>
-          <h4 className="font-semibold text-indigo-900 text-sm">Nicht verpassen!</h4>
-          <p className="text-xs text-indigo-700">Lass dich benachrichtigen, wenn das nächste Quiz da ist.</p>
+          <h4 className="font-semibold text-indigo-900 text-sm">{t('push.prompt.title', 'Nicht verpassen!')}</h4>
+          <p className="text-xs text-indigo-700">{t('push.prompt.desc', 'Lass dich benachrichtigen, wenn das nächste Quiz da ist.')}</p>
         </div>
       </div>
       <div className="flex items-center space-x-2">
@@ -579,14 +562,14 @@ function NotificationPrompt() {
           onClick={() => setDismissed(true)}
           className="text-xs text-indigo-500 hover:text-indigo-700 px-2 py-1"
         >
-          Später
+          {t('push.prompt.later', 'Später')}
         </button>
         <button
           onClick={() => subscribe()}
           disabled={loading}
           className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors"
         >
-          {loading ? '...' : 'Aktivieren'}
+          {loading ? '...' : t('push.prompt.activate', 'Aktivieren')}
         </button>
       </div>
     </div>

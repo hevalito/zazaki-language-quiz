@@ -6,7 +6,11 @@ import { QuizCard } from '@/components/library/quiz-card'
 import { FilterBar } from '@/components/library/filter-bar'
 import { BookOpenIcon, ArrowLeftIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
+
+import { useTranslation } from '@/hooks/use-translation'
+
 export function QuizLibrary() {
+    const { t } = useTranslation()
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -89,7 +93,7 @@ export function QuizLibrary() {
                         <button
                             onClick={() => router.push('/')}
                             className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                            aria-label="Zurück"
+                            aria-label={t('nav.back', 'Zurück')}
                         >
                             <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </button>
@@ -97,8 +101,8 @@ export function QuizLibrary() {
                             <BookOpenIcon className="w-6 h-6 text-primary-600" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">Bibliothek</h1>
-                            <p className="text-sm text-gray-500">Entdecke und lerne</p>
+                            <h1 className="text-xl font-bold text-gray-900">{t('library.title', 'Bibliothek')}</h1>
+                            <p className="text-sm text-gray-500">{t('library.subtitle', 'Entdecke und lerne')}</p>
                         </div>
                     </div>
                 </div>
@@ -112,7 +116,7 @@ export function QuizLibrary() {
                     </div>
                     <input
                         type="text"
-                        placeholder="Suche nach Quizzen..."
+                        placeholder={t('library.search.placeholder', 'Suche nach Quizzen...')}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow shadow-sm"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -149,8 +153,8 @@ export function QuizLibrary() {
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <MagnifyingGlassIcon className="w-8 h-8 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900">Keine Quizze gefunden</h3>
-                        <p className="text-gray-500 mt-2">Versuche es mit einem anderen Suchbegriff oder Filter.</p>
+                        <h3 className="text-lg font-medium text-gray-900">{t('library.empty.title', 'Keine Quizze gefunden')}</h3>
+                        <p className="text-gray-500 mt-2">{t('library.empty.desc', 'Versuche es mit einem anderen Suchbegriff oder Filter.')}</p>
                     </div>
                 )}
             </div>

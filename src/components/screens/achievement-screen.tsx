@@ -6,17 +6,27 @@ import { SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 
+
+import { useTranslation, useTranslationContext } from '@/hooks/use-translation'
+
+// We need data structure to match new translation type
+// But badges themselves have DE/EN in their fields.
+// The UI shell needs tokenization.
+
 interface Badge {
     id: string
     code: string
     title: { [key: string]: string }
     description: { [key: string]: string }
+    conditionLabel?: { [key: string]: string }
     criteria: any
     isEarned: boolean
     earnedAt?: string
 }
 
 export function AchievementScreen() {
+    const { t } = useTranslation() // Hook for UI strings
+    const { locale } = useTranslationContext() // Get current locale for badge content
     const [badges, setBadges] = useState<Badge[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -57,9 +67,12 @@ export function AchievementScreen() {
         )
     }
 
-    // Helper for translations
-    const getTitle = (t: any) => t?.de || t?.en || 'Erfolg'
-    const getDescription = (t: any) => t?.de || t?.en || ''
+    // Helper for translations (Badge content itself)
+    // We try to use the 'locale' from context, strictly falling back to 'de'.
+    const getLocalizedContent = (field: any) => {
+        if (!field) return ''
+        return field[locale] || field['de'] || field['en'] || ''
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -69,7 +82,7 @@ export function AchievementScreen() {
                         <Link
                             href="/"
                             className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                            aria-label="Zurück"
+                            aria-label={t('nav.back', 'Zurück')}
                         >
                             <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </Link>
@@ -77,8 +90,8 @@ export function AchievementScreen() {
                             <SparklesIconSolid className="w-6 h-6 text-primary-600" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">Erfolge</h1>
-                            <p className="text-sm text-gray-500">Sammle Trophäen</p>
+                            <h1 className="text-xl font-bold text-gray-900">{t('achievements.title', 'Erfolge')}</h1>
+                            <p className="text-sm text-gray-500">{t('achievements.subtitle', 'Sammle Trophäen')}</p>
                         </div>
                     </div>
                 </div>
@@ -106,7 +119,7 @@ export function AchievementScreen() {
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
                                                     src={(badge as any).imageUrl}
-                                                    alt={getTitle(badge.title)}
+                                                    alt={getLocalizedContent(badge.title)}
                                                     className={`w-full h-full object-cover ${!badge.isEarned ? 'blur-sm scale-110' : ''}`}
                                                 />
                                             </div>
@@ -121,11 +134,11 @@ export function AchievementScreen() {
                                         // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                             src={(badge as any).iconUrl}
-                                            alt={getTitle(badge.title)}
+                                            alt={getLocalizedContent(badge.title)}
                                             className={`w-8 h-8 object-contain ${!badge.isEarned && 'grayscale opacity-50'}`}
                                         />
                                     ) : (badge as any).iconUrl ? (
-                                        <span className={`text-2xl ${!badge.isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getTitle(badge.title)}>
+                                        <span className={`text-2xl ${!badge.isEarned && 'grayscale opacity-50 filter'}`} role="img" aria-label={getLocalizedContent(badge.title)}>
                                             {(badge as any).iconUrl}
                                         </span>
                                     ) : (
@@ -138,16 +151,16 @@ export function AchievementScreen() {
                                 </div>
                                 <div>
                                     <h3 className={`font-bold ${badge.isEarned ? 'text-gray-900' : 'text-gray-500'}`}>
-                                        {getTitle(badge.title)}
+                                        {getLocalizedContent(badge.title)}
                                     </h3>
                                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                        {getDescription(badge.description)}
+                                        {getLocalizedContent(badge.description)}
                                     </p>
 
                                     {/* Condition Label */}
-                                    {(badge as any).conditionLabel && ((badge as any).conditionLabel.en || (badge as any).conditionLabel.de) && (
+                                    {getLocalizedContent(badge.conditionLabel) && (
                                         <p className="text-xs font-bold text-gray-700 mt-2">
-                                            {(badge as any).conditionLabel.de || (badge as any).conditionLabel.en}
+                                            {getLocalizedContent(badge.conditionLabel)}
                                         </p>
                                     )}
 
@@ -155,7 +168,7 @@ export function AchievementScreen() {
                                     {!badge.isEarned && (badge as any).progress && (badge as any).progress.target > 0 && (
                                         <div className="mt-3">
                                             <div className="flex justify-between text-[10px] text-gray-500 mb-1">
-                                                <span>Progress</span>
+                                                <span>{t('achievements.progress', 'Fortschritt')}</span>
                                                 <span className="font-medium">{(badge as any).progress.display}</span>
                                             </div>
                                             <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
@@ -169,7 +182,7 @@ export function AchievementScreen() {
 
                                     {badge.isEarned && (
                                         <p className="text-xs text-purple-600 mt-2 font-medium">
-                                            Freigeschaltet am {new Date(badge.earnedAt!).toLocaleDateString()}
+                                            {t('achievements.unlockedOn', 'Freigeschaltet am')} {new Date(badge.earnedAt!).toLocaleDateString()}
                                         </p>
                                     )}
                                 </div>

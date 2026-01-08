@@ -20,7 +20,9 @@ import {
 import { FireIcon as FireIconSolid, SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
 
+
 import { InstallPrompt } from '@/components/pwa/install-prompt'
+import { useTranslation } from '@/hooks/use-translation'
 
 interface UserProgress {
   id: string
@@ -134,12 +136,15 @@ export function HomeScreen() {
     }
   }, [todayXP, dailyGoal, confettiFired, loading])
 
+
+  const { t } = useTranslation()
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Tenê vinde. Hawo bar beno...</p>
+          <p className="mt-4 text-gray-600">{t('loading.text', 'Tenê vinde. Hawo bar beno...')}</p>
         </div>
       </div>
     )
@@ -164,12 +169,12 @@ export function HomeScreen() {
                 <h1 className="text-xl font-serif font-bold text-gray-900 leading-tight">Zazakî Quiz</h1>
                 <p className="text-xs text-gray-500 font-sans">
                   {userProgress?.firstName
-                    ? `Xêr ama, ${userProgress.firstName}!`
+                    ? `${t('header.welcome', 'Xêr ama')}, ${userProgress.firstName}!`
                     : userProgress?.nickname
-                      ? `Xêr ama, ${userProgress.nickname}!`
+                      ? `${t('header.welcome', 'Xêr ama')}, ${userProgress.nickname}!`
                       : user?.name?.split(' ')[0]
-                        ? `Xêr ama, ${user.name.split(' ')[0]}!`
-                        : 'Xêr ama'}
+                        ? `${t('header.welcome', 'Xêr ama')}, ${user.name.split(' ')[0]}!`
+                        : t('header.welcome', 'Xêr ama')}
                 </p>
               </div>
             </div>
@@ -212,12 +217,12 @@ export function HomeScreen() {
 
           {/* Header Row */}
           <div className="flex items-center justify-between mb-2 relative z-10">
-            <h2 className="text-lg font-serif font-bold text-gray-900">Tagesziel</h2>
+            <h2 className="text-lg font-serif font-bold text-gray-900">{t('dailyGoal.title', 'Tagesziel')}</h2>
             <div className={`text-sm font-bold px-3 py-1 rounded-full border ${todayXP >= dailyGoal
               ? 'bg-green-100 text-green-700 border-green-200'
               : 'bg-primary-50 text-primary-700 border-primary-100'
               }`}>
-              {todayXP} / {dailyGoal} XP Heute
+              {todayXP} / {dailyGoal} XP {t('dailyGoal.today', 'Heute')}
             </div>
           </div>
 
@@ -242,16 +247,16 @@ export function HomeScreen() {
               <div className="text-center group/stat">
                 <p className="text-xs text-brand-orange font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <FireIconSolid className="w-3 h-3 mr-1" />
-                  Streak
+                  {t('stats.streak', 'Streak')}
                 </p>
-                <p className="text-lg font-bold text-gray-900">{streak} <span className="text-xs font-normal text-gray-500">Tage</span></p>
+                <p className="text-lg font-bold text-gray-900">{streak} <span className="text-xs font-normal text-gray-500">{t('stats.streak.days', 'Tage')}</span></p>
               </div>
 
               {/* Goal % */}
               <div className="text-center group/stat border-l border-r border-gray-100">
                 <p className="text-xs text-primary-600 font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <TrophyIcon className="w-3 h-3 mr-1" />
-                  Ziel
+                  {t('stats.goal', 'Ziel')}
                 </p>
                 <p className="text-lg font-bold text-gray-900">{Math.round(progressPercentage)}<span className="text-xs">%</span></p>
               </div>
@@ -260,7 +265,7 @@ export function HomeScreen() {
               <div className="text-center group/stat">
                 <p className="text-xs text-brand-purple font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <SparklesIcon className="w-3 h-3 mr-1" />
-                  Gesamt
+                  {t('stats.total', 'Gesamt')}
                 </p>
                 <p className="text-lg font-bold text-gray-900">{totalXP.toLocaleString()}</p>
               </div>
@@ -268,7 +273,7 @@ export function HomeScreen() {
 
             {todayXP >= dailyGoal && !confettiFired && (
               <div className="text-center animate-bounce-subtle mt-2">
-                <span className="text-brand-green font-bold text-xs">🎉 Ziel erreicht!</span>
+                <span className="text-brand-green font-bold text-xs">🎉 {t('dailyGoal.reached', 'Ziel erreicht!')}</span>
               </div>
             )}
           </div>
@@ -286,7 +291,7 @@ export function HomeScreen() {
         {/* Continue Learning */}
         <div className="card" id="tour-continue-learning">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-serif font-bold text-gray-900">Weiterlernen</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900">{t('continue.title', 'Weiterlernen')}</h3>
           </div>
 
           <div className="space-y-4">
@@ -329,7 +334,7 @@ export function HomeScreen() {
                       </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-gray-900 font-serif text-lg">
-                          {(recommendedQuiz.title as any)?.de || (recommendedQuiz.title as any)?.en || 'Nächstes Quiz'}
+                          {(recommendedQuiz.title as any)?.de || (recommendedQuiz.title as any)?.en || t('continue.nextQuiz', 'Nächstes Quiz')}
                         </h4>
                         <p className="text-sm text-gray-600">
                           {(recommendedQuiz.lesson?.chapter?.course?.title as any)?.de || 'Lerne Zazakî'}
@@ -348,14 +353,14 @@ export function HomeScreen() {
                         className="btn-primary flex justify-center items-center"
                       >
                         <PlayIcon className="w-5 h-5 mr-2" />
-                        Starten
+                        {t('continue.start', 'Starten')}
                       </button>
                       <button
                         onClick={() => window.location.href = '/library'}
                         className="btn-secondary flex justify-center items-center"
                       >
                         <BookOpenIcon className="w-5 h-5 mr-2" />
-                        Bibliothek
+                        {t('continue.library', 'Bibliothek')}
                       </button>
                     </div>
                   </>
@@ -367,16 +372,16 @@ export function HomeScreen() {
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <CheckIcon className="w-6 h-6 text-green-600" />
                     </div>
-                    <h4 className="text-gray-900 font-bold mb-2">Wow! Alles erledigt.</h4>
+                    <h4 className="text-gray-900 font-bold mb-2">{t('continue.allDone', 'Wow! Alles erledigt.')}</h4>
                     <p className="text-gray-600 text-sm mb-4">
-                      Du hast alle verfügbaren Lektionen abgeschlossen. Sammle weitere XP mit dem täglichen Quiz!
+                      {t('continue.allDoneDesc', 'Du hast alle verfügbaren Lektionen abgeschlossen. Sammle weitere XP mit dem täglichen Quiz!')}
                     </p>
                     <button
                       onClick={() => router.push('/library')}
                       className="btn-primary w-full bg-brand-orange hover:bg-brand-orange/90 border-brand-orange flex items-center justify-center text-center"
                     >
                       <BookOpenIcon className="w-5 h-5 mr-2" />
-                      Zur Bibliothek
+                      {t('continue.toLibrary', 'Zur Bibliothek')}
                     </button>
                   </div>
                 )
@@ -395,8 +400,8 @@ export function HomeScreen() {
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
               <AcademicCapIcon className="w-6 h-6 text-green-700" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">Lernraum</h4>
-            <p className="text-sm text-gray-600">Trainiere deine Fehler</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.learning', 'Lernraum')}</h4>
+            <p className="text-sm text-gray-600">{t('quick.learningDesc', 'Trainiere deine Fehler')}</p>
           </button>
           <button
             onClick={() => window.location.href = '/library'}
@@ -405,8 +410,8 @@ export function HomeScreen() {
             <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-200 transition-colors">
               <BookOpenIcon className="w-6 h-6 text-indigo-700" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">Bibliothek</h4>
-            <p className="text-sm text-gray-600">Alle Quizze</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.library', 'Bibliothek')}</h4>
+            <p className="text-sm text-gray-600">{t('quick.libraryDesc', 'Alle Quizze')}</p>
           </button>
           <button
             id="tour-leaderboard-nav"
@@ -416,8 +421,8 @@ export function HomeScreen() {
             <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-200 transition-colors">
               <TrophyIcon className="w-6 h-6 text-primary-700" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">Bestenliste</h4>
-            <p className="text-sm text-gray-600">Erklimme die Spitze</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.leaderboard', 'Bestenliste')}</h4>
+            <p className="text-sm text-gray-600">{t('quick.leaderboardDesc', 'Erklimme die Spitze')}</p>
           </button>
 
           <button
@@ -428,8 +433,8 @@ export function HomeScreen() {
             <div className="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-red/20 transition-colors">
               <SparklesIcon className="w-6 h-6 text-brand-red" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">Erfolge</h4>
-            <p className="text-sm text-gray-600">Sammle Trophäen</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.achievements', 'Erfolge')}</h4>
+            <p className="text-sm text-gray-600">{t('quick.achievementsDesc', 'Sammle Trophäen')}</p>
           </button>
           <button
             onClick={() => window.location.href = '/course-finder'}
@@ -438,15 +443,15 @@ export function HomeScreen() {
             <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-200 transition-colors">
               <MapIcon className="w-6 h-6 text-teal-700" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">Kursfinder</h4>
-            <p className="text-sm text-gray-600">Finde den perfekten Sprachkurs</p>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.courseFinder', 'Kursfinder')}</h4>
+            <p className="text-sm text-gray-600">{t('quick.courseFinderDesc', 'Finde den perfekten Sprachkurs')}</p>
           </button>
         </div>
 
         {/* Recent Activity */}
         {recentActivity.length > 0 && (
           <div className="card" id="tour-recent-activity">
-            <h3 className="text-lg font-serif font-bold text-gray-900 mb-4">Letzte Aktivitäten</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900 mb-4">{t('activity.title', 'Letzte Aktivitäten')}</h3>
             <div className="space-y-3">
               {recentActivity.map((activity) => (
                 <div key={activity.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
@@ -455,7 +460,7 @@ export function HomeScreen() {
                       <span className="text-brand-green text-xs font-bold">✓</span>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.de || (activity.title as any)?.en || 'Quiz'}" abgeschlossen</p>
+                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.de || (activity.title as any)?.en || 'Quiz'}" {t('activity.completed', 'abgeschlossen')}</p>
                       <p className="text-xs text-gray-500">
                         {new Date(activity.date).toLocaleDateString()}
                       </p>
@@ -475,14 +480,14 @@ export function HomeScreen() {
               href="/admin"
               className="btn-primary w-full text-center block"
             >
-              Admin-Bereich
+              {t('admin.panel', 'Admin-Bereich')}
             </a>
           )}
           <button
             onClick={() => signOut()}
             className="btn-secondary w-full"
           >
-            Abmelden
+            {t('auth.signOut', 'Abmelden')}
           </button>
         </div>
       </div>

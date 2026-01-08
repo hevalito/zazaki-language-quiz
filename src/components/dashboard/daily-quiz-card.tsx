@@ -9,7 +9,11 @@ import {
 } from '@heroicons/react/24/solid'
 import { useRouter } from 'next/navigation'
 
+
+import { useTranslation } from '@/hooks/use-translation'
+
 export function DailyQuizCard() {
+    const { t } = useTranslation()
     const [status, setStatus] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [timeLeft, setTimeLeft] = useState('')
@@ -77,16 +81,16 @@ export function DailyQuizCard() {
                     <div>
                         <div className="flex items-center space-x-2 mb-1">
                             <span className="bg-white/20 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
-                                Daily Challenge
+                                {t('daily.context.title', 'Daily Challenge')}
                             </span>
                             <span className="flex items-center text-xs font-medium text-indigo-100 bg-indigo-900/30 px-2 py-0.5 rounded-full">
                                 <SparklesIcon className="w-3 h-3 mr-1 text-yellow-300" />
-                                +XP Bonus
+                                {t('daily.context.bonus', '+XP Bonus')}
                             </span>
                         </div>
-                        <h3 className="text-xl font-bold font-serif mb-1">Bereit zu spielen?</h3>
+                        <h3 className="text-xl font-bold font-serif mb-1">{t('daily.ready.c2a', 'Bereit zu spielen?')}</h3>
                         <p className="text-indigo-100 text-sm">
-                            {status.quiz.questionCount} Fragen • Nur heute
+                            {(t('daily.ready.details', '{count} Fragen • Nur heute') as string).replace('{count}', status.quiz.questionCount)}
                         </p>
                     </div>
 
@@ -104,19 +108,19 @@ export function DailyQuizCard() {
             <div className="flex items-center justify-between">
                 <div>
                     <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-gray-500 font-bold uppercase text-xs tracking-wider">Daily Challenge</span>
+                        <span className="text-gray-500 font-bold uppercase text-xs tracking-wider">{t('daily.context.title', 'Daily Challenge')}</span>
                         {status.completed && (
                             <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                                 <CheckCircleIcon className="w-3 h-3 mr-1" />
-                                <span className="md:hidden">Abgeschlossen</span>
-                                <span className="hidden md:inline">Für heute abgeschlossen</span>
+                                <span className="md:hidden">{t('daily.status.completedShort', 'Abgeschlossen')}</span>
+                                <span className="hidden md:inline">{t('daily.status.completed', 'Für heute abgeschlossen')}</span>
                             </span>
                         )}
                     </div>
                     <div className="flex items-center text-gray-400">
                         <ClockIcon className="w-5 h-5 mr-2" />
-                        <span className="font-mono text-lg font-medium">{timeLeft || 'Lade...'}</span>
-                        <span className="text-xs ml-2 text-gray-400">bis zum nächsten Quiz</span>
+                        <span className="font-mono text-lg font-medium">{timeLeft || t('daily.status.loading', 'Lade...')}</span>
+                        <span className="text-xs ml-2 text-gray-400">{t('daily.status.next', 'bis zum nächsten Quiz')}</span>
                     </div>
                 </div>
                 {/* History Link? */}
@@ -125,7 +129,7 @@ export function DailyQuizCard() {
                         onClick={(e) => { e.stopPropagation(); router.push('/library?tab=daily') }}
                         className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
                     >
-                        Archiv ansehen
+                        {t('daily.archive.link', 'Archiv ansehen')}
                     </button>
                 </div>
             </div>

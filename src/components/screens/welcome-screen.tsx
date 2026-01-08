@@ -3,7 +3,9 @@
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import Image from 'next/image'
+
 import { PlayIcon, SparklesIcon, AcademicCapIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { useTranslation } from '@/hooks/use-translation'
 
 export function WelcomeScreen() {
   const [isLoading, setIsLoading] = useState(false)
@@ -25,6 +27,9 @@ export function WelcomeScreen() {
     }
   }
 
+
+  const { t } = useTranslation()
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -44,9 +49,9 @@ export function WelcomeScreen() {
             </div>
 
             <h1 className="text-4xl font-serif font-bold tracking-tight text-gray-900 sm:text-6xl mb-6">
-              Lerne Zazakî <br />
+              {t('welcome.hero.title', 'Lerne Zazakî')} <br />
               <span className="text-primary-600 relative inline-block">
-                spielerisch
+                {t('welcome.hero.subtitle', 'spielerisch')}
                 <svg className="absolute w-full h-3 -bottom-1 left-0 text-primary-300 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
                   <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                 </svg>
@@ -54,7 +59,7 @@ export function WelcomeScreen() {
             </h1>
 
             <p className="mt-6 text-lg leading-8 text-gray-600 font-sans max-w-lg mx-auto">
-              Effektives Vokabel-Lernen, herausfordernde Quizze und spielerischer Fortschritt. Übe Kostenlos. Werde jeden Tag ein bisschen besser.
+              {t('welcome.hero.desc', 'Effektives Vokabel-Lernen, herausfordernde Quizze und spielerischer Fortschritt. Übe Kostenlos. Werde jeden Tag ein bisschen besser.')}
             </p>
 
             <div className="mt-10 max-w-sm mx-auto">
@@ -65,13 +70,13 @@ export function WelcomeScreen() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">Posteingang prüfen!</h3>
-                  <p className="text-gray-600">Link wurde gesendet an <span className="font-semibold">{email}</span></p>
+                  <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">{t('welcome.email.check', 'Posteingang prüfen!')}</h3>
+                  <p className="text-gray-600">{t('welcome.email.sent', 'Link wurde gesendet an')} <span className="font-semibold">{email}</span></p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-4 text-sm text-primary-600 hover:text-primary-700 font-medium underline"
                   >
-                    Andere E-Mail verwenden
+                    {t('welcome.email.other', 'Andere E-Mail verwenden')}
                   </button>
                 </div>
               ) : (
@@ -80,7 +85,7 @@ export function WelcomeScreen() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Deine E-Mail Adresse"
+                    placeholder={t('welcome.input.placeholder', 'Deine E-Mail Adresse')}
                     className="flex-1 px-4 py-3 rounded-xl border-none bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-400 outline-none text-gray-900 placeholder-gray-500"
                     required
                     onKeyDown={(e) => {
@@ -99,14 +104,14 @@ export function WelcomeScreen() {
                       <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        Loslegen <ArrowRightIcon className="w-4 h-4" />
+                        {t('welcome.cta.start', 'Loslegen')} <ArrowRightIcon className="w-4 h-4" />
                       </>
                     )}
                   </button>
                 </div>
               )}
               <p className="mt-4 text-xs text-center text-gray-500">
-                Kein Passwort nötig. Login via E-Mail Magic Link.
+                {t('welcome.input.note', 'Kein Passwort nötig. Login via E-Mail Magic Link.')}
               </p>
             </div>
           </div>
@@ -125,20 +130,20 @@ export function WelcomeScreen() {
             {
               icon: <PlayIcon className="w-6 h-6 text-white" />,
               bg: "bg-brand-green",
-              title: "Vokabel-Training",
-              desc: "Erweitere deinen Wortschatz Schritt für Schritt"
+              title: t('welcome.feat.vocab.title', 'Vokabel-Training'),
+              desc: t('welcome.feat.vocab.desc', 'Erweitere deinen Wortschatz Schritt für Schritt')
             },
             {
               icon: <SparklesIcon className="w-6 h-6 text-white" />,
               bg: "bg-brand-orange",
-              title: "Spielerisches Lernen",
-              desc: "Sammle XP, halte Streaks und erklimme die Bestenliste"
+              title: t('welcome.feat.play.title', 'Spielerisches Lernen'),
+              desc: t('welcome.feat.play.desc', 'Sammle XP, halte Streaks und erklimme die Bestenliste')
             },
             {
               icon: <AcademicCapIcon className="w-6 h-6 text-white" />,
               bg: "bg-brand-red",
-              title: "Adaptives Lernen",
-              desc: "Wiederholungen passen sich deinem Tempo an"
+              title: t('welcome.feat.adapt.title', 'Adaptives Lernen'),
+              desc: t('welcome.feat.adapt.desc', 'Wiederholungen passen sich deinem Tempo an')
             }
           ].map((feature, idx) => (
             <div key={idx} className="group relative rounded-2xl border border-gray-100 bg-white p-8 hover:shadow-lg transition-all hover:-translate-y-1">
@@ -156,3 +161,4 @@ export function WelcomeScreen() {
     </div>
   )
 }
+

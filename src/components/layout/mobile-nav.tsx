@@ -20,10 +20,14 @@ import {
     AcademicCapIcon as AcademicCapIconSolid
 } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
+
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/hooks/use-translation'
 
 export function MobileNav() {
     const pathname = usePathname()
+
+    const { t } = useTranslation()
     const { data: session } = useSession()
 
     // Hide on:
@@ -43,37 +47,37 @@ export function MobileNav() {
 
     const items = [
         {
-            name: 'Bibliothek',
+            name: t('nav.library', 'Bibliothek'),
             href: '/library',
             icon: BookOpenIcon,
             activeIcon: BookOpenIconSolid,
         },
         {
-            name: 'Bestenliste',
+            name: t('nav.leaderboard', 'Bestenliste'),
             href: '/leaderboard',
             icon: TrophyIcon,
             activeIcon: TrophyIconSolid,
         },
         {
-            name: 'Home',
+            name: t('nav.home', 'Home'),
             href: '/',
             icon: HomeIcon,
             activeIcon: HomeIconSolid,
         },
         {
-            name: 'Erfolge',
+            name: t('nav.achievements', 'Erfolge'),
             href: '/achievements',
             icon: SparklesIcon,
             activeIcon: SparklesIconSolid,
         },
         {
-            name: 'Lernraum',
+            name: t('nav.learning', 'Lernraum'),
             href: '/learning',
             icon: AcademicCapIcon,
             activeIcon: AcademicCapIconSolid,
         },
         {
-            name: 'Kursfinder',
+            name: t('nav.courseFinder', 'Kursfinder'),
             href: '/course-finder',
             icon: MagnifyingGlassCircleIcon,
             activeIcon: MagnifyingGlassCircleIconSolid,
