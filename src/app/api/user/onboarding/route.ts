@@ -45,7 +45,8 @@ export async function POST(req: Request) {
         return NextResponse.json(user)
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return new NextResponse('Invalid data', { status: 400 })
+            console.error('Onboarding validation error:', error.flatten())
+            return new NextResponse('Invalid data: ' + JSON.stringify(error.flatten()), { status: 400 })
         }
         console.error('Onboarding error:', error)
         return new NextResponse('Internal Error', { status: 500 })

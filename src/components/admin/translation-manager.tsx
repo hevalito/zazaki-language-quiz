@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateTranslation, deleteTranslation } from '@/lib/translations'
-import { translateText } from '@/lib/ai-translation'
+import { translateText, translateBatch } from '@/lib/ai-translation'
 import { SparklesIcon } from '@heroicons/react/24/outline'
 
 interface Language {
@@ -69,7 +69,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
 
         setTranslating(targetLang)
         try {
-            const { translatedText, error } = await translateText(sourceText, targetLangName, 'German')
+            const { translatedText, error } = await translateText(sourceText, targetLangName)
             if (error) {
                 alert(error)
                 return
@@ -80,6 +80,56 @@ export function TranslationManager({ initialTranslations, languages }: Translati
         } catch (e) {
             console.error(e)
             alert('Translation failed')
+        } finally {
+            setTranslating(null)
+        }
+    }
+
+    const handleBatchTranslate = async (targetLang: string, targetLangName: string) => {
+        // 1. Identify missing keys
+        const missingItems = initialTranslations
+            .filter(t => {
+                const vals = t.values as Record<string, string>
+                const hasSource = !!vals['de']
+                const isMissingTarget = !vals[targetLang] || !vals[targetLang].trim()
+                return hasSource && isMissingTarget
+            })
+            .map(t => ({
+                key: t.key,
+                sourceText: (t.values as Record<string, string>)['de']
+            }))
+
+        if (missingItems.length === 0) {
+            alert(`No missing translations found for ${targetLangName}.`)
+            return
+        }
+
+        if (!confirm(`Found ${missingItems.length} missing translations for ${targetLangName}. Auto-translate them with AI?`)) {
+            return
+        }
+
+        setTranslating(targetLang)
+        try {
+            // 2. Call Batch API
+            const results = await translateBatch(missingItems, targetLangName, 'German')
+
+            // 3. Update DB and UI
+            let updateCount = 0
+            for (const [key, translatedText] of Object.entries(results)) {
+                if (translatedText) {
+                    // Update DB with the new value, merging with existing values derived from current state
+                    const currentT = initialTranslations.find(t => t.key === key)
+                    const currentValues = currentT ? (currentT.values as Record<string, string>) : {}
+                    await updateTranslation(key, { ...currentValues, [targetLang]: translatedText })
+                    updateCount++
+                }
+            }
+
+            alert(`Successfully translated ${updateCount} items!`)
+            router.refresh()
+        } catch (e) {
+            console.error(e)
+            alert('Batch translation failed')
         } finally {
             setTranslating(null)
         }
@@ -129,6 +179,34 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                             {languages.map(lang => (
                                 <th key={lang.code} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {lang.name} ({lang.code})
+                                    {lang.code !== 'de' && (
+                                        <button
+                                            onClick={() => handleBatchTranslate(lang.code, lang.name)}
+                                            disabled={!!translating}
+                                            className="ml-2 inline-flex items-center p-1 text-indigo-100 hover:text-white bg-indigo-500 rounded-full disabled:opacity-50 disabled:bg-gray-400"
+                                            title="Auto-fill missing with AI"
+                                        >
+                                            {translating === lang.code ? (
+                                                <span className="animate-spin text-xs">⏳</span>
+                                            ) : (
+                                                <SparklesIcon className="w-3 h-3" />
+                                            )}
+                                        </button>
+                                    )}
+                                    {lang.code !== 'de' && (
+                                        <button
+                                            onClick={() => handleBatchTranslate(lang.code, lang.name)}
+                                            disabled={!!translating}
+                                            className="ml-2 inline-flex items-center p-1 text-indigo-100 hover:text-white bg-indigo-500 rounded-full disabled:opacity-50 disabled:bg-gray-400"
+                                            title="Auto-fill missing with AI"
+                                        >
+                                            {translating === lang.code ? (
+                                                <span className="animate-spin text-xs">⏳</span>
+                                            ) : (
+                                                <SparklesIcon className="w-3 h-3" />
+                                            )}
+                                        </button>
+                                    )}
                                 </th>
                             ))}
                             <th className="px-6 py-3 text-right">Actions</th>

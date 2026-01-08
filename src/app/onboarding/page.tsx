@@ -12,6 +12,7 @@ export default function OnboardingPage() {
     const { update } = useSession()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
+    const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({})
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -23,6 +24,7 @@ export default function OnboardingPage() {
         e.preventDefault()
         setIsLoading(true)
         setError('')
+        setValidationErrors({})
 
         try {
             const res = await fetch('/api/user/onboarding', {
@@ -32,7 +34,8 @@ export default function OnboardingPage() {
             })
 
             if (!res.ok) {
-                throw new Error('Failed to save profile')
+                const errorText = await res.text()
+                throw new Error(errorText || 'Failed to save profile')
             }
 
             // Update session to reflect new data
@@ -47,7 +50,27 @@ export default function OnboardingPage() {
             router.push('/')
             router.refresh()
         } catch (err) {
-            setError(t('common.error', 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.'))
+            console.error(err) // Log it for visibility
+            const msg = err instanceof Error ? err.message : ''
+
+            // Check for server-side Zod JSON error
+            if (msg.startsWith('Invalid data: ')) {
+                try {
+                    const jsonStr = msg.replace('Invalid data: ', '')
+                    const zodError = JSON.parse(jsonStr)
+                    if (zodError.fieldErrors) {
+                        setValidationErrors(zodError.fieldErrors)
+                        return // Skip generic error
+                    }
+                } catch (e) {
+                    console.error('Failed to parse validation error', e)
+                }
+                setError(t('common.error.validation', 'Bitte überprüfe deine Eingaben.'))
+            } else if (msg.includes('Nickname')) {
+                setError(msg)
+            } else {
+                setError(t('common.error', 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.'))
+            }
         } finally {
             setIsLoading(false)
         }
@@ -86,11 +109,15 @@ export default function OnboardingPage() {
                                     name="firstName"
                                     type="text"
                                     required
+                                    minLength={2}
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                     placeholder="Max"
                                     value={formData.firstName}
                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                 />
+                                {validationErrors.firstName && (
+                                    <p className="text-red-500 text-xs mt-1">{validationErrors.firstName[0]}</p>
+                                )}
                             </div>
                             <div>
                                 <label htmlFor="lastName" className="block text-sm font-bold text-gray-700 mb-1 font-sans">
@@ -101,11 +128,15 @@ export default function OnboardingPage() {
                                     name="lastName"
                                     type="text"
                                     required
+                                    minLength={2}
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                     placeholder="Mustermann"
                                     value={formData.lastName}
                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                 />
+                                {validationErrors.lastName && (
+                                    <p className="text-red-500 text-xs mt-1">{validationErrors.lastName[0]}</p>
+                                )}
                             </div>
                         </div>
                         <p className="text-xs text-gray-500 italic text-center">
@@ -121,11 +152,15 @@ export default function OnboardingPage() {
                                 name="nickname"
                                 type="text"
                                 required
+                                minLength={2}
                                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                 placeholder="z.B. ZazakîMeister24"
                                 value={formData.nickname}
                                 onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             />
+                            {validationErrors.nickname && (
+                                <p className="text-red-500 text-xs mt-1">{validationErrors.nickname[0]}</p>
+                            )}
                             <p className="mt-1 text-xs text-gray-500">
                                 {t('settings.nickname.hint', 'Dieser Name wird auf der Bestenliste angezeigt.')}
                             </p>
