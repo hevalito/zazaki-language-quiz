@@ -14,7 +14,8 @@ import {
   BookOpenIcon,
   SparklesIcon,
   CheckIcon,
-  MapIcon
+  MapIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid, SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
@@ -386,6 +387,16 @@ export function HomeScreen() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <button
+            onClick={() => window.location.href = '/learning'}
+            className="card-interactive text-center group"
+          >
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+              <AcademicCapIcon className="w-6 h-6 text-green-700" />
+            </div>
+            <h4 className="font-bold text-gray-900 mb-1 font-serif">Lernraum</h4>
+            <p className="text-sm text-gray-600">Trainiere deine Fehler</p>
+          </button>
           <button
             onClick={() => window.location.href = '/library'}
             className="card-interactive text-center group"

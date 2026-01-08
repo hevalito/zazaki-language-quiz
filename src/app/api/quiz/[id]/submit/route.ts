@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { isSameBerlinDay, getBerlinDateString } from '@/lib/date-utils'
 import { getSystemSettings } from '@/lib/settings'
+import { updateSpacedRepetition } from '@/lib/spaced-repetition'
+
 
 export async function POST(
   request: NextRequest,
@@ -103,6 +105,7 @@ export async function POST(
         isCorrect = answer.isCorrect
         pointsEarned = answer.pointsEarned
         totalScore += pointsEarned
+
 
         // Update spaced repetition (if not done already)
         await updateSpacedRepetition(session.user.id, question.id, isCorrect)
@@ -288,72 +291,5 @@ export async function POST(
   }
 }
 
-async function updateSpacedRepetition(userId: string, questionId: string, isCorrect: boolean) {
-  try {
-    const existingItem = await prisma.spacedItem.findUnique({
-      where: {
-        userId_questionId: {
-          userId,
-          questionId
-        }
-      }
-    })
-
-    if (existingItem) {
-      // Update existing spaced repetition item using SM-2 algorithm
-      const quality = isCorrect ? 4 : 1 // Simplified quality rating
-      let { easiness, interval, repetition } = existingItem
-
-      if (quality >= 3) {
-        if (repetition === 0) {
-          interval = 1
-        } else if (repetition === 1) {
-          interval = 6
-        } else {
-          interval = Math.round(interval * easiness)
-        }
-        repetition += 1
-      } else {
-        repetition = 0
-        interval = 1
-      }
-
-      easiness = easiness + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
-      if (easiness < 1.3) easiness = 1.3
-
-      const dueDate = new Date()
-      dueDate.setDate(dueDate.getDate() + interval)
-
-      await prisma.spacedItem.update({
-        where: { id: existingItem.id },
-        data: {
-          easiness,
-          interval,
-          repetition,
-          dueDate,
-          lastReview: new Date()
-        }
-      })
-    } else {
-      // Create new spaced repetition item
-      const dueDate = new Date()
-      dueDate.setDate(dueDate.getDate() + (isCorrect ? 1 : 0))
-
-      await prisma.spacedItem.create({
-        data: {
-          userId,
-          questionId,
-          easiness: 2.5,
-          interval: isCorrect ? 1 : 0,
-          repetition: isCorrect ? 1 : 0,
-          dueDate,
-          lastReview: new Date()
-        }
-      })
-    }
-  } catch (error) {
-    console.error('Error updating spaced repetition:', error)
-  }
-}
 
 

@@ -8,14 +8,16 @@ import {
     TrophyIcon,
     SparklesIcon,
     MagnifyingGlassCircleIcon,
-    HomeIcon
+    HomeIcon,
+    AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import {
     BookOpenIcon as BookOpenIconSolid,
     TrophyIcon as TrophyIconSolid,
     SparklesIcon as SparklesIconSolid,
     MagnifyingGlassCircleIcon as MagnifyingGlassCircleIconSolid,
-    HomeIcon as HomeIconSolid
+    HomeIcon as HomeIconSolid,
+    AcademicCapIcon as AcademicCapIconSolid
 } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -63,6 +65,12 @@ export function MobileNav() {
             href: '/achievements',
             icon: SparklesIcon,
             activeIcon: SparklesIconSolid,
+        },
+        {
+            name: 'Lernraum',
+            href: '/learning',
+            icon: AcademicCapIcon,
+            activeIcon: AcademicCapIconSolid,
         },
         {
             name: 'Kursfinder',
