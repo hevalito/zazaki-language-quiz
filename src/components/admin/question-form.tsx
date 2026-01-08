@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { LanguageTabs } from './language-tabs'
 import { getLanguages } from '@/lib/translations'
+import { translateBatch } from '@/lib/ai-translation'
+import { SparklesIcon } from '@heroicons/react/24/outline'
 
 interface QuestionFormProps {
     quizId?: string | null
@@ -114,6 +116,65 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
         }
     }, [formData.type, languages])
 
+    const [translating, setTranslating] = useState(false)
+
+    const handleAutoTranslate = async (targetLang: string) => {
+        // Collect source texts (German)
+        const itemsToTranslate = []
+
+        // 1. Prompt
+        const promptDe = formData.prompt['de']
+        if (promptDe && promptDe.trim()) {
+            itemsToTranslate.push({ key: 'prompt', sourceText: promptDe })
+        }
+
+        // 2. Choices
+        formData.choices.forEach((choice: any, index: number) => {
+            const labelDe = choice.label['de']
+            if (labelDe && labelDe.trim()) {
+                itemsToTranslate.push({ key: `choice_${index}`, sourceText: labelDe })
+            }
+        })
+
+        if (itemsToTranslate.length === 0) {
+            alert('Please enter German content first.')
+            return
+        }
+
+        if (!confirm(`Translate ${itemsToTranslate.length} fields from German to ${targetLang}? This will overwrite existing ${targetLang} content.`)) {
+            return
+        }
+
+        setTranslating(true)
+        try {
+            const targetLangName = languages.find(l => l.code === targetLang)?.name || targetLang
+            const results = await translateBatch(itemsToTranslate, targetLangName, 'German')
+
+            // Apply results back to state
+            const newFormData = { ...formData }
+
+            if (results['prompt']) {
+                newFormData.prompt = { ...newFormData.prompt, [targetLang]: results['prompt'] }
+            }
+
+            const newChoices = [...newFormData.choices]
+            newChoices.forEach((choice: any, index: number) => {
+                if (results[`choice_${index}`]) {
+                    choice.label = { ...choice.label, [targetLang]: results[`choice_${index}`] }
+                }
+            })
+            newFormData.choices = newChoices
+
+            setFormData(newFormData)
+            // alert('Translation complete!')
+        } catch (error) {
+            console.error(error)
+            alert('Translation failed')
+        } finally {
+            setTranslating(false)
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
@@ -181,6 +242,23 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                         <LanguageTabs languages={languages}>
                             {(lang) => (
                                 <div className="space-y-6">
+                                    {lang !== 'de' && (
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleAutoTranslate(lang)}
+                                                disabled={translating}
+                                                className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+                                            >
+                                                {translating ? (
+                                                    <span className="mr-1 animate-spin">⏳</span>
+                                                ) : (
+                                                    <SparklesIcon className="h-4 w-4 mr-1" />
+                                                )}
+                                                Auto-Translate this tab from German
+                                            </button>
+                                        </div>
+                                    )}
                                     {/* Prompt */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">

@@ -193,20 +193,6 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                                             )}
                                         </button>
                                     )}
-                                    {lang.code !== 'de' && (
-                                        <button
-                                            onClick={() => handleBatchTranslate(lang.code, lang.name)}
-                                            disabled={!!translating}
-                                            className="ml-2 inline-flex items-center p-1 text-indigo-100 hover:text-white bg-indigo-500 rounded-full disabled:opacity-50 disabled:bg-gray-400"
-                                            title="Auto-fill missing with AI"
-                                        >
-                                            {translating === lang.code ? (
-                                                <span className="animate-spin text-xs">⏳</span>
-                                            ) : (
-                                                <SparklesIcon className="w-3 h-3" />
-                                            )}
-                                        </button>
-                                    )}
                                 </th>
                             ))}
                             <th className="px-6 py-3 text-right">Actions</th>

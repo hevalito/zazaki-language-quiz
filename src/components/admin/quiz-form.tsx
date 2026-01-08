@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { LanguageTabs } from './language-tabs'
 import { getLanguages } from '@/lib/translations'
+import { translateBatch } from '@/lib/ai-translation'
+import { SparklesIcon } from '@heroicons/react/24/outline'
 
 interface QuizFormProps {
     initialData?: any
@@ -67,7 +69,57 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
             }))
         }
         load()
+        load()
     }, [])
+
+    const [translating, setTranslating] = useState(false)
+
+    const handleAutoTranslate = async (targetLang: string) => {
+        // Collect source texts (German)
+        const itemsToTranslate = []
+
+        const titleDe = formData.title['de']
+        if (titleDe && titleDe.trim()) {
+            itemsToTranslate.push({ key: 'title', sourceText: titleDe })
+        }
+
+        const descDe = formData.description['de']
+        if (descDe && descDe.trim()) {
+            itemsToTranslate.push({ key: 'description', sourceText: descDe })
+        }
+
+        if (itemsToTranslate.length === 0) {
+            alert('Please enter German content first.')
+            return
+        }
+
+        if (!confirm(`Translate fields from German to ${targetLang}? This will overwrite existing ${targetLang} content.`)) {
+            return
+        }
+
+        setTranslating(true)
+        try {
+            const targetLangName = languages.find(l => l.code === targetLang)?.name || targetLang
+            const results = await translateBatch(itemsToTranslate, targetLangName, 'German')
+
+            // Apply results back to state
+            const newFormData = { ...formData }
+
+            if (results['title']) {
+                newFormData.title = { ...newFormData.title, [targetLang]: results['title'] }
+            }
+            if (results['description']) {
+                newFormData.description = { ...newFormData.description, [targetLang]: results['description'] }
+            }
+
+            setFormData(newFormData)
+        } catch (error) {
+            console.error(error)
+            alert('Translation failed')
+        } finally {
+            setTranslating(false)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         // ... (existing submit logic)
@@ -154,6 +206,23 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                         <LanguageTabs languages={languages}>
                             {(lang) => (
                                 <div className="space-y-6">
+                                    {lang !== 'de' && (
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleAutoTranslate(lang)}
+                                                disabled={translating}
+                                                className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+                                            >
+                                                {translating ? (
+                                                    <span className="mr-1 animate-spin">⏳</span>
+                                                ) : (
+                                                    <SparklesIcon className="h-4 w-4 mr-1" />
+                                                )}
+                                                Auto-Translate this tab from German
+                                            </button>
+                                        </div>
+                                    )}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">
                                             Title ({languages.find(l => l.code === lang)?.name || lang})
