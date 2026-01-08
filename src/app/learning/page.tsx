@@ -222,7 +222,7 @@ export default function LearningRoomPage() {
                                 </div>
                                 <div className="flex-1">
                                     <h3 className={`font-bold text-lg mb-1 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                                        {isCorrect ? 'Richtig!' : 'Leider falsch'}
+                                        {isCorrect ? 'Raşt o! - Richtig!' : 'Çi heyf! - Leider falsch!'}
                                     </h3>
 
                                     {explanation && (
