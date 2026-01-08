@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateTranslation, deleteTranslation } from '@/lib/translations'
+import { translateText } from '@/lib/ai-translation'
+import { SparklesIcon } from '@heroicons/react/24/outline'
 
 interface Language {
     code: string
@@ -26,6 +28,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
     const [editValues, setEditValues] = useState<Record<string, string>>({})
     const [newKey, setNewKey] = useState('')
     const [filter, setFilter] = useState('')
+    const [translating, setTranslating] = useState<string | null>(null) // langCode being translated
 
     const handleEdit = (t: Translation) => {
         setEditingKey(t.key)
@@ -55,6 +58,31 @@ export function TranslationManager({ initialTranslations, languages }: Translati
         if (!confirm('Are you sure you want to delete this key?')) return;
         await deleteTranslation(key)
         router.refresh()
+    }
+
+    const handleAiTranslate = async (targetLang: string, targetLangName: string) => {
+        const sourceText = editValues['de'] || ''
+        if (!sourceText) {
+            alert('Please enter German source text first.')
+            return
+        }
+
+        setTranslating(targetLang)
+        try {
+            const { translatedText, error } = await translateText(sourceText, targetLangName, 'German')
+            if (error) {
+                alert(error)
+                return
+            }
+            if (translatedText) {
+                setEditValues(prev => ({ ...prev, [targetLang]: translatedText }))
+            }
+        } catch (e) {
+            console.error(e)
+            alert('Translation failed')
+        } finally {
+            setTranslating(null)
+        }
     }
 
     const filteredTranslations = initialTranslations.filter(t =>
@@ -115,12 +143,29 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                                 {languages.map(lang => (
                                     <td key={lang.code} className="px-6 py-4 text-sm text-gray-500">
                                         {editingKey === t.key ? (
-                                            <textarea
-                                                className="w-full border rounded p-1 text-sm h-full min-h-[40px]"
-                                                value={editValues[lang.code] || ''}
-                                                onChange={(e) => setEditValues({ ...editValues, [lang.code]: e.target.value })}
-                                                placeholder={`Value for ${lang.code}`}
-                                            />
+                                            <div className="relative">
+                                                <textarea
+                                                    className="w-full border rounded p-1 text-sm h-full min-h-[60px] pr-8"
+                                                    value={editValues[lang.code] || ''}
+                                                    onChange={(e) => setEditValues({ ...editValues, [lang.code]: e.target.value })}
+                                                    placeholder={`Value for ${lang.code}`}
+                                                />
+                                                {lang.code !== 'de' && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleAiTranslate(lang.code, lang.name)}
+                                                        disabled={translating === lang.code}
+                                                        className="absolute top-2 right-2 text-indigo-400 hover:text-indigo-600 disabled:opacity-50"
+                                                        title="AI Translate from German"
+                                                    >
+                                                        {translating === lang.code ? (
+                                                            <span className="animate-spin">⏳</span>
+                                                        ) : (
+                                                            <SparklesIcon className="w-4 h-4" />
+                                                        )}
+                                                    </button>
+                                                )}
+                                            </div>
                                         ) : (
                                             <span className="block max-w-xs truncate" title={(t.values as any)[lang.code]}>
                                                 {(t.values as any)[lang.code] || <span className="text-gray-300 italic">-</span>}
