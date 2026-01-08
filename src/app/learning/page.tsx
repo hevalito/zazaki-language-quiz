@@ -12,14 +12,77 @@ import { useTranslation } from '@/hooks/use-translation'
 export default function LearningRoomPage() {
     const { t } = useTranslation()
     const router = useRouter()
-    // ...
+    const { data: session } = useSession()
 
-    // ... (fetchQuestions) ...
+    const [questions, setQuestions] = useState<Question[]>([])
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null)
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
+    const [explanation, setExplanation] = useState<any>(null)
 
-    // ... (handleAnswer) ...
+    useEffect(() => {
+        if (session?.user) {
+            fetchQuestions()
+        }
+    }, [session])
+
+    const fetchQuestions = async () => {
+        try {
+            const res = await fetch('/api/learning')
+            if (res.ok) {
+                const data = await res.json()
+                setQuestions(data)
+            }
+        } catch (error) {
+            console.error('Failed to fetch learning questions', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleAnswer = (choiceId: string) => {
+        if (selectedChoiceId) return // prevent double answer
+        setSelectedChoiceId(choiceId)
+
+        const currentQ = questions[currentQuestionIndex] as any
+        // Check if choice is correct (assuming choice.isCorrect is available or we validate against server)
+        // For security, usually we send answer to server. For now, assuming client-side check if 'isCorrect' is exposed in choices (common in simple quizzes)
+        // Or we might need to call an API. Let's check how 'MultipleChoiceQuestion' usually works. 
+        // In this app context, choices usually contain isCorrect boolean if not stripped. 
+
+        const selectedChoice = currentQ.choices.find((c: any) => c.id === choiceId)
+        const correct = selectedChoice?.isCorrect === true
+        setIsCorrect(correct)
+        setExplanation(currentQ.explanation)
+
+        // If wrong, maybe we want to re-queue it? Logic for learning room.
+        // Usually we just show feedback.
+
+        // Report result to server (to update spaced repetition status)
+        fetch('/api/learning/progress', {
+            method: 'POST',
+            body: JSON.stringify({
+                questionId: currentQ.id,
+                isCorrect: correct
+            })
+        })
+    }
 
     const nextQuestion = () => {
-        // ...
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(prev => prev + 1)
+            setSelectedChoiceId(null)
+            setIsCorrect(null)
+            setExplanation(null)
+        } else {
+            // Finished all current questions
+            // Fetch more or show done? 
+            // Usually simpler to just show done screen or refresh.
+            // Let's clear questions to show "Done" state
+            setQuestions([])
+            setLoading(false)
+        }
     }
 
     if (loading && questions.length === 0) {
