@@ -31,7 +31,14 @@ export default function LeaderboardPage() {
             const res = await fetch(`/api/leaderboard?timeFrame=${timeFrame}`)
             if (res.ok) {
                 const data = await res.json()
-                setEntries(data)
+                if (data.leaderboard && Array.isArray(data.leaderboard)) {
+                    setEntries(data.leaderboard)
+                } else if (Array.isArray(data)) {
+                    // Backwards compatibility if API changes
+                    setEntries(data)
+                } else {
+                    setEntries([])
+                }
             }
         } catch (error) {
             console.error('Failed to fetch leaderboard', error)
