@@ -5,6 +5,15 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { MagnifyingGlassIcon, TrashIcon, PencilIcon, CheckIcon, XMarkIcon, BellIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
+import { AdminPage, AdminPageHeader, AdminPageContent } from '@/components/admin/page-layout'
 
 type User = {
     id: string
@@ -113,144 +122,146 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-            </div>
+        <AdminPage>
+            <AdminPageHeader
+                title="User Management"
+            />
 
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-grow max-w-md">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+            <AdminPageContent>
+                {/* Filters */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="relative flex-grow max-w-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                            placeholder="Search users..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </div>
-                    <input
-                        type="text"
-                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                        placeholder="Search users..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <div>
+                        <select
+                            value={roleFilter}
+                            onChange={(e) => setRoleFilter(e.target.value as any)}
+                            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+                        >
+                            <option value="ALL">All Roles</option>
+                            <option value="ADMIN">Admins</option>
+                            <option value="STUDENT">Students</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <select
-                        value={roleFilter}
-                        onChange={(e) => setRoleFilter(e.target.value as any)}
-                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
-                    >
-                        <option value="ALL">All Roles</option>
-                        <option value="ADMIN">Admins</option>
-                        <option value="STUDENT">Students</option>
-                    </select>
-                </div>
-            </div>
 
-            {/* Users Table */}
-            <div className="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stats</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {isLoading ? (
-                            [...Array(5)].map((_, i) => (
-                                <tr key={i} className="animate-pulse">
-                                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-3/4"></div></td>
-                                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-1/2"></div></td>
-                                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-1/2"></div></td>
-                                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-1/2"></div></td>
-                                    <td className="px-6 py-4"></td>
-                                </tr>
-                            ))
-                        ) : users?.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                    No users found matching your search.
-                                </td>
-                            </tr>
-                        ) : (
-                            users?.map((user) => (
-                                <tr key={user.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            <div className="h-10 w-10 flex-shrink-0 relative rounded-full overflow-hidden bg-gray-100">
-                                                {user.image ? (
-                                                    <Image src={user.image} alt="" fill className="object-cover" />
-                                                ) : (
-                                                    <div className="flex items-center justify-center h-full w-full text-gray-400">
-                                                        <span className="text-xl font-bold">{getUserDisplayName(user)[0].toUpperCase()}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {getUserDisplayName(user)}
-                                                    {(user._count?.pushSubscriptions ?? 0) > 0 && (
-                                                        <span className="ml-2 text-primary-600" title="Web Push Enabled">
-                                                            <BellIcon className="w-4 h-4 inline" />
-                                                        </span>
+                {/* Users Table */}
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>User</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Stats</TableHead>
+                                <TableHead>Activity</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {isLoading ? (
+                                [...Array(5)].map((_, i) => (
+                                    <TableRow key={i} className="animate-pulse">
+                                        <TableCell><div className="h-4 bg-gray-200 rounded w-3/4"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                ))
+                            ) : users?.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="py-12 text-center text-gray-500">
+                                        No users found matching your search.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                users?.map((user) => (
+                                    <TableRow key={user.id}>
+                                        <TableCell>
+                                            <div className="flex items-center">
+                                                <div className="h-10 w-10 flex-shrink-0 relative rounded-full overflow-hidden bg-gray-100">
+                                                    {user.image ? (
+                                                        <Image src={user.image} alt="" fill className="object-cover" />
+                                                    ) : (
+                                                        <div className="flex items-center justify-center h-full w-full text-gray-400">
+                                                            <span className="text-xl font-bold">{getUserDisplayName(user)[0].toUpperCase()}</span>
+                                                        </div>
                                                     )}
                                                 </div>
-                                                <div className="text-sm text-gray-500">{user.email}</div>
+                                                <div className="ml-4">
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {getUserDisplayName(user)}
+                                                        {(user._count?.pushSubscriptions ?? 0) > 0 && (
+                                                            <span className="ml-2 text-primary-600" title="Web Push Enabled">
+                                                                <BellIcon className="w-4 h-4 inline" />
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500">{user.email}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isAdmin
-                                            ? 'bg-purple-100 text-purple-800'
-                                            : 'bg-green-100 text-green-800'
-                                            }`}
-                                        >
-                                            {user.isAdmin ? 'Admin' : 'Student'}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">Level {user.currentLevel || 'A1'}</div>
-                                        <div className="text-sm text-gray-500">{user.totalXP || 0} XP</div>
-                                        {/* @ts-ignore */}
-                                        {user.courseFinderData?.result?.dialect && (
-                                            <div className="mt-1">
-                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                                                    {/* @ts-ignore */}
-                                                    {user.courseFinderData.result.dialect}
-                                                </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isAdmin
+                                                ? 'bg-purple-100 text-purple-800'
+                                                : 'bg-green-100 text-green-800'
+                                                }`}
+                                            >
+                                                {user.isAdmin ? 'Admin' : 'Student'}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="text-sm text-gray-900">Level {user.currentLevel || 'A1'}</div>
+                                            <div className="text-sm text-gray-500">{user.totalXP || 0} XP</div>
+                                            {/* @ts-ignore */}
+                                            {user.courseFinderData?.result?.dialect && (
+                                                <div className="mt-1">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {/* @ts-ignore */}
+                                                        {user.courseFinderData.result.dialect}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="text-sm text-gray-900">Joined {new Date(user.createdAt).toLocaleDateString()}</div>
+                                            <div className="text-sm text-gray-500">
+                                                Last Active: {user.lastActiveDate ? new Date(user.lastActiveDate).toLocaleDateString() : 'Never'}
                                             </div>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">Joined {new Date(user.createdAt).toLocaleDateString()}</div>
-                                        <div className="text-sm text-gray-500">
-                                            Last Active: {user.lastActiveDate ? new Date(user.lastActiveDate).toLocaleDateString() : 'Never'}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button
-                                            onClick={() => setEditingUser(user)}
-                                            className="text-primary-600 hover:text-primary-900 mr-4"
-                                            title="Edit User"
-                                        >
-                                            <PencilIcon className="h-5 w-5" />
-                                        </button>
-                                        <button
-                                            onClick={() => confirmDelete(user)}
-                                            className="text-red-600 hover:text-red-900"
-                                            title="Delete User"
-                                        >
-                                            <TrashIcon className="h-5 w-5" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <button
+                                                onClick={() => setEditingUser(user)}
+                                                className="text-primary-600 hover:text-primary-900 mr-4"
+                                                title="Edit User"
+                                            >
+                                                <PencilIcon className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                onClick={() => confirmDelete(user)}
+                                                className="text-red-600 hover:text-red-900"
+                                                title="Delete User"
+                                            >
+                                                <TrashIcon className="h-5 w-5" />
+                                            </button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            </AdminPageContent>
 
             {/* Edit User Modal */}
             {editingUser && (
@@ -365,8 +376,9 @@ export default function AdminUsersPage() {
                         </div>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </AdminPage>
     )
 }
 function ResetUserBadgesButton({ userId }: { userId: string }) {

@@ -2,6 +2,14 @@
 
 import { useState } from 'react'
 import { PlusIcon, PencilSquareIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
 
 interface QuestionListProps {
     quizId?: string
@@ -50,64 +58,83 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
                 </div>
             )}
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                <ul role="list" className="divide-y divide-gray-200">
-                    {sortedQuestions.map((question, index) => (
-                        <li key={question.id}>
-                            <div className="px-4 py-4 flex items-center justify-between sm:px-6">
-                                <div>
-                                    <span className="text-sm text-gray-500 font-mono mr-2">#{index + 1}</span>
-                                    <span className="text-sm font-medium text-gray-900">{getPrompt(question.prompt)}</span>
-                                    <div className="mt-1 flex gap-2">
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-12">#</TableHead>
+                            <TableHead>Question</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Points</TableHead>
+                            {onReorder && <TableHead>Order</TableHead>}
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {sortedQuestions.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={onReorder ? 6 : 5} className="text-center py-6 text-gray-500">
+                                    No questions yet. Add one to get started.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            sortedQuestions.map((question, index) => (
+                                <TableRow key={question.id}>
+                                    <TableCell className="font-mono text-gray-500">{index + 1}</TableCell>
+                                    <TableCell className="font-medium text-gray-900">
+                                        {getPrompt(question.prompt)}
+                                    </TableCell>
+                                    <TableCell>
                                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                             {question.type}
                                         </span>
+                                    </TableCell>
+                                    <TableCell>
                                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
                                             {question.points} pts
                                         </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center space-x-2">
+                                    </TableCell>
                                     {onReorder && (
-                                        <div className="flex flex-col mr-2">
+                                        <TableCell>
+                                            <div className="flex flex-col">
+                                                <button
+                                                    onClick={() => onReorder(question.id, 'up')}
+                                                    disabled={index === 0}
+                                                    className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => onReorder(question.id, 'down')}
+                                                    disabled={index === sortedQuestions.length - 1}
+                                                    className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                                </button>
+                                            </div>
+                                        </TableCell>
+                                    )}
+                                    <TableCell className="text-right">
+                                        <div className="flex items-center justify-end space-x-2">
                                             <button
-                                                onClick={() => onReorder(question.id, 'up')}
-                                                disabled={index === 0}
-                                                className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                onClick={() => onEdit(question)}
+                                                className="p-1 text-gray-400 hover:text-gray-500"
                                             >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                                                <PencilSquareIcon className="h-5 w-5" />
                                             </button>
                                             <button
-                                                onClick={() => onReorder(question.id, 'down')}
-                                                disabled={index === sortedQuestions.length - 1}
-                                                className="text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                onClick={() => onDelete(question.id)}
+                                                className="p-1 text-red-400 hover:text-red-500"
                                             >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                                <TrashIcon className="h-5 w-5" />
                                             </button>
                                         </div>
-                                    )}
-                                    <button
-                                        onClick={() => onEdit(question)}
-                                        className="p-1 text-gray-400 hover:text-gray-500"
-                                    >
-                                        <PencilSquareIcon className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => onDelete(question.id)}
-                                        className="p-1 text-red-400 hover:text-red-500"
-                                    >
-                                        <TrashIcon className="h-5 w-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                    {questions.length === 0 && (
-                        <li className="px-4 py-6 text-center text-gray-500 text-sm">
-                            No questions yet. Add one to get started.
-                        </li>
-                    )}
-                </ul>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
             </div>
         </div>
     )

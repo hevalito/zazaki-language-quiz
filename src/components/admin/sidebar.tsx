@@ -24,7 +24,7 @@ const navigation = [
     { name: 'Users', href: '/admin/users', icon: UsersIcon },
     { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
     { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
-    { name: 'Settings', href: '/admin/settings/notifications', icon: Cog6ToothIcon },
+    { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
 ]
 
 interface AdminSidebarProps {

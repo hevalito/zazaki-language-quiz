@@ -9,6 +9,7 @@ import {
   PlusIcon,
   ArrowRightIcon
 } from '@heroicons/react/24/outline'
+import { AdminPage, AdminPageContent } from '@/components/admin/page-layout'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,124 +42,126 @@ export default async function AdminDashboard() {
   ])
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
-            Dashboard
-          </h1>
-          <p className="text-gray-500 mt-2 font-medium">Manage your learning platform efficiently.</p>
-        </div>
-        <div className="text-sm text-gray-400 font-mono">
-          v{process.env.NEXT_PUBLIC_APP_VERSION}
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Learners"
-          value={userCount}
-          icon={UserGroupIcon}
-          color="blue"
-        />
-        <StatCard
-          title="Active Courses"
-          value={courseCount}
-          icon={BookOpenIcon}
-          color="indigo"
-        />
-        <StatCard
-          title="Questions Bank"
-          value={questionCount}
-          icon={QuestionMarkCircleIcon}
-          color="purple"
-        />
-        <StatCard
-          title="Total Attempts"
-          value={attemptCount}
-          icon={ChartBarIcon}
-          color="emerald"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Feed: Recent Activity */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-              <ClockIcon className="w-5 h-5 mr-2 text-gray-400" />
-              Recent Activity
-            </h2>
-            <div className="space-y-8">
-              {recentAttempts.length > 0 ? (
-                recentAttempts.map((attempt) => (
-                  <ActivityItem key={attempt.id} attempt={attempt} />
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-400 text-sm">No recent activity found.</p>
-                </div>
-              )}
-            </div>
-            <div className="mt-8 pt-6 border-t border-gray-50">
-              <a href="/admin/users" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center group">
-                View all user activity
-                <ArrowRightIcon className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </div>
+    <AdminPage>
+      <AdminPageContent>
+        {/* Header */}
+        <div className="flex justify-between items-end">
+          <div>
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+              Dashboard
+            </h1>
+            <p className="text-gray-500 mt-2 font-medium">Manage your learning platform efficiently.</p>
+          </div>
+          <div className="text-sm text-gray-400 font-mono">
+            v{process.env.NEXT_PUBLIC_APP_VERSION}
           </div>
         </div>
 
-        {/* Sidebar: Quick Actions & New Users */}
-        <div className="space-y-6">
-          {/* Quick Actions */}
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg p-6 text-white overflow-hidden relative">
-            <div className="relative z-10">
-              <h2 className="text-lg font-bold mb-6 flex items-center text-gray-100">
-                <BoltIcon className="w-5 h-5 mr-2 text-yellow-400" />
-                Quick Actions
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Learners"
+            value={userCount}
+            icon={UserGroupIcon}
+            color="blue"
+          />
+          <StatCard
+            title="Active Courses"
+            value={courseCount}
+            icon={BookOpenIcon}
+            color="indigo"
+          />
+          <StatCard
+            title="Questions Bank"
+            value={questionCount}
+            icon={QuestionMarkCircleIcon}
+            color="purple"
+          />
+          <StatCard
+            title="Total Attempts"
+            value={attemptCount}
+            icon={ChartBarIcon}
+            color="emerald"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Feed: Recent Activity */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                <ClockIcon className="w-5 h-5 mr-2 text-gray-400" />
+                Recent Activity
               </h2>
-              <div className="space-y-3">
-                <ActionButton href="/admin/courses/new" label="Create New Course" />
-                <ActionButton href="/admin/quizzes/new" label="Draft New Quiz" />
-                <ActionButton href="/admin/questions" label="Manage Question Bank" />
-                <ActionButton href="/admin/daily-quiz" label="Manage Daily Quiz" />
+              <div className="space-y-8">
+                {recentAttempts.length > 0 ? (
+                  recentAttempts.map((attempt) => (
+                    <ActivityItem key={attempt.id} attempt={attempt} />
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400 text-sm">No recent activity found.</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-8 pt-6 border-t border-gray-50">
+                <a href="/admin/users" className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center group">
+                  View all user activity
+                  <ArrowRightIcon className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </a>
               </div>
             </div>
-            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
           </div>
 
-          {/* Recent Users */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-              <UserGroupIcon className="w-5 h-5 mr-2 text-gray-400" />
-              Newest Members
-            </h2>
-            <div className="space-y-4">
-              {recentUsers.map((user) => (
-                <div key={user.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-100">
-                    {(user.nickname || user.name || user.firstName || 'U')[0]?.toUpperCase()}
-                  </div>
-                  <div className="ml-3 truncate flex-1">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{user.nickname || user.name || user.firstName || 'Anonymous'}</p>
-                    <p className="text-xs text-gray-400 truncate">{user.email}</p>
-                  </div>
-                  <span className="text-xs text-gray-300 font-mono">
-                    {new Date(user.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
-                  </span>
+          {/* Sidebar: Quick Actions & New Users */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg p-6 text-white overflow-hidden relative">
+              <div className="relative z-10">
+                <h2 className="text-lg font-bold mb-6 flex items-center text-gray-100">
+                  <BoltIcon className="w-5 h-5 mr-2 text-yellow-400" />
+                  Quick Actions
+                </h2>
+                <div className="space-y-3">
+                  <ActionButton href="/admin/courses/new" label="Create New Course" />
+                  <ActionButton href="/admin/quizzes/new" label="Draft New Quiz" />
+                  <ActionButton href="/admin/questions" label="Manage Question Bank" />
+                  <ActionButton href="/admin/daily-quiz" label="Manage Daily Quiz" />
                 </div>
-              ))}
-              {recentUsers.length === 0 && (
-                <p className="text-gray-400 text-sm">No users yet.</p>
-              )}
+              </div>
+              <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+            </div>
+
+            {/* Recent Users */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <UserGroupIcon className="w-5 h-5 mr-2 text-gray-400" />
+                Newest Members
+              </h2>
+              <div className="space-y-4">
+                {recentUsers.map((user) => (
+                  <div key={user.id} className="flex items-center p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-100">
+                      {(user.nickname || user.name || user.firstName || 'U')[0]?.toUpperCase()}
+                    </div>
+                    <div className="ml-3 truncate flex-1">
+                      <p className="text-sm font-semibold text-gray-900 truncate">{user.nickname || user.name || user.firstName || 'Anonymous'}</p>
+                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                    </div>
+                    <span className="text-xs text-gray-300 font-mono">
+                      {new Date(user.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
+                    </span>
+                  </div>
+                ))}
+                {recentUsers.length === 0 && (
+                  <p className="text-gray-400 text-sm">No users yet.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </AdminPageContent>
+    </AdminPage>
   )
 }
 
