@@ -190,6 +190,16 @@ export default function LearningRoomPage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     {/* Question Card */}
                     <div className="p-6">
+                        {/* Quiz Origin Source */}
+                        {(currentQuestion as any).quiz?.title && (
+                            <div className="mb-6 flex justify-center">
+                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                    <BookOpenIcon className="w-3.5 h-3.5 mr-1.5" />
+                                    Aus: {((currentQuestion as any).quiz.title.de || (currentQuestion as any).quiz.title.en)}
+                                </span>
+                            </div>
+                        )}
+
                         <MultipleChoiceQuestion
                             question={currentQuestion}
                             choices={currentQuestion.choices || []} // Provide choices from included data

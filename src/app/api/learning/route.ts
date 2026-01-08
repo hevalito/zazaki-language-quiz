@@ -29,7 +29,12 @@ export async function GET(request: Request) {
             include: {
                 question: {
                     include: {
-                        choices: true
+                        choices: true,
+                        quiz: {
+                            select: {
+                                title: true
+                            }
+                        }
                     }
                 }
             },
@@ -43,15 +48,21 @@ export async function GET(request: Request) {
         let questions: any[] = []
 
         if (dueSpacedItems.length > 0) {
-            questions = dueSpacedItems.map(item => ({
-                ...item.question,
-                _spacedItem: {
-                    id: item.id,
-                    easiness: item.easiness,
-                    interval: item.interval,
-                    repetition: item.repetition
+            questions = dueSpacedItems.map(item => {
+                // Shuffle choices for better learning effect
+                const shuffledChoices = [...item.question.choices].sort(() => Math.random() - 0.5)
+
+                return {
+                    ...item.question,
+                    choices: shuffledChoices,
+                    _spacedItem: {
+                        id: item.id,
+                        easiness: item.easiness,
+                        interval: item.interval,
+                        repetition: item.repetition
+                    }
                 }
-            }))
+            })
         } else {
             // MIX IT UP: If no due items, return an empty list? 
             // User requested "mix in some other questions". 
