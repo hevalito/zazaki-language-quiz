@@ -1,6 +1,8 @@
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
+import { SETTINGS_CACHE_TAG } from '@/lib/settings'
 
 // Helper to check admin status
 async function isAdmin() {
@@ -54,6 +56,8 @@ export async function POST(req: Request) {
                 })
             )
         )
+
+        revalidateTag(SETTINGS_CACHE_TAG)
 
         return NextResponse.json({ success: true })
     } catch (error) {

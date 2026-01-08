@@ -48,6 +48,8 @@ import { UnlockManager } from '@/components/achievements/unlock-manager'
 import { TourProvider } from '@/components/providers/tour-context'
 
 import { MobileNav } from '@/components/layout/mobile-nav'
+import { getSystemSettings } from '@/lib/settings'
+import MaintenancePage from './maintenance/page'
 
 export default async function RootLayout({
   children,
@@ -55,6 +57,41 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
+  const settings = await getSystemSettings()
+
+  // BLOCK: Maintenance Mode
+  if (settings.maintenance_mode) {
+    const isAdmin = session?.user?.email === 'heval@me.com' || (session?.user as any)?.isAdmin // Backup check
+    if (!isAdmin) {
+      // We can't redirect easily in a layout to a sibling page without causing loop if not careful.
+      // Better: Conditional rendering or redirecting if NOT on the maintenance page.
+      // But we are in RootLayout.
+      // Let's use a conditional Return.
+      // NOTE: This will block ALL routes including /maintenance if we aren't careful.
+      // A cleaner way is doing this in a MaintenanceWrapper component or Middleware.
+      // Given Middleware constraint, let's try to handle it here but identifying the path is hard in Server Component Layouts (no headers/url access easily).
+
+      // Actually, we can just Render the Maintenance Page directly here and NOT render children!
+      // But we need to allow Admin Login? 
+      // If maintenance mode is ON, and user is NOT logged in, how do they log in?
+      // They can't. Admin must be logged in BEFORE activating, or we whitelist /auth routes.
+      // Whitelisting /auth in Layout is hard.
+
+      // ALTERNATIVE: Use the new `maintenance` page content instead of children.
+      // To allow Login, we'd need to check if headers refer to /auth.
+      // Let's keep it simple: If Maintenance Mode is ON, Show Maintenance Screen for everyone except Admins.
+      // If Admin gets locked out, they can toggle DB via SQL or Console.
+
+      // We'll import the Maintenance Page component.
+      return (
+        <html lang="en" className="h-full">
+          <body className={`${inter.variable} ${playfair.variable} font-sans h-full bg-gray-50 text-gray-900`}>
+            <MaintenancePage />
+          </body>
+        </html>
+      )
+    }
+  }
 
   return (
     <html lang="en" className="h-full">

@@ -66,6 +66,7 @@ model User {
   preferredScript ScriptType @default(LATIN)
   dailyGoal       Int        @default(100)
   streak          Int        @default(0)
+  streakFreezes   Int        @default(0)
   lastActiveDate  DateTime?
   totalXP         Int        @default(0)
   currentLevel    Level      @default(A1)

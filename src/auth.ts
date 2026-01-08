@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { ZazakiMagicLinkEmail } from "@/components/emails/magic-link-email"
 import { authConfig } from "./auth.config"
 import { Resend } from "resend"
+import { getSystemSettings } from "@/lib/settings"
 
 const resend = new Resend(process.env.AUTH_RESEND_KEY)
 
@@ -60,6 +61,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email }
           });
+
+          // BLOCK: Registration logic
+          const settings = await getSystemSettings()
+          if (!settings.registration_enabled && !existingUser) {
+            // Block new signups
+            // Returning false triggers standard AccessDenied
+            return false
+          }
 
           if (existingUser) {
             // Handle Admin Flagging (Legacy/Hardcoded)

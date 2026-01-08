@@ -3,6 +3,7 @@ import { checkBadges } from '@/lib/gamification'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { isSameBerlinDay, getBerlinDateString } from '@/lib/date-utils'
+import { getSystemSettings } from '@/lib/settings'
 
 export async function POST(
   request: NextRequest,
@@ -116,7 +117,13 @@ export async function POST(
       })
     }
 
-    const xpEarned = (hasEarnedXpBefore || forceZeroXP) ? 0 : totalScore
+    const settings = await getSystemSettings()
+    let xpEarned = (hasEarnedXpBefore || forceZeroXP) ? 0 : totalScore
+
+    // Apply Global Multiplier
+    if (xpEarned > 0 && settings.global_xp_multiplier > 1) {
+      xpEarned = Math.round(xpEarned * settings.global_xp_multiplier)
+    }
 
     // Update the attempt to COMPLETE it
     await prisma.attempt.update({
@@ -143,7 +150,7 @@ export async function POST(
     // 1. Fetch current user state for streak
     const currentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { streak: true, lastActiveDate: true }
+      select: { streak: true, lastActiveDate: true, streakFreezes: true }
     })
 
     if (currentUser) {
@@ -153,6 +160,7 @@ export async function POST(
         : null
 
       let newStreak = currentUser.streak
+      let diffDays = 0
 
       if (todayStr !== lastActiveStr) {
         // It's a different day. Check if it's consecutive.
@@ -177,12 +185,55 @@ export async function POST(
           const d2 = new Date(lastActiveStr)
           // Diff in milliseconds
           const diffTime = Math.abs(d1.getTime() - d2.getTime())
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+          diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
           if (diffDays === 1) {
             newStreak += 1
           } else {
-            newStreak = 1 // Broken streak
+            // Broken streak Logic
+            // Check for Streak Freezes
+            if (currentUser.streakFreezes > 0) {
+              // Consume freeze, KEEP streak (do not increment, do not reset)
+              // Or typically, does it keep it at current? Yes.
+              // We preserve the streak. We do NOT increment it because they missed a day.
+              // We check if it is worth incrementing? No, they missed yesterday.
+              // So we just update lastActiveDate to today, consume freeze, and maybe keep streak same?
+              // Actually, if I play TODAY, and I missed YESTERDAY, and I have a freeze:
+              // The freeze covers YESTERDAY. So my streak should implicitly continue?
+              // Commonly: Streak is preserved (e.g. 5 days), freeze used. 
+              // If I play today, does it become 6?
+              // If the freeze "filled" the gap, yes.
+              // Let's go with: Consume freeze, decrement freezes, INCREMENT streak (as if gap was filled).
+              // OR: Consume freeze, Keep streak same. This is safer/simpler to explain. "Freeze saved your streak".
+
+              // Decision: Consume freeze, Preserve Streak (no increment or reset). 
+              // Wait, if I play today, I should get credit for today?
+              // But I missed yesterday.
+              // Let's Keep Streak AS IS (saved), and since I played today, I start a new day?
+              // If I have 10 days. Missed yesterday. Have freeze.
+              // Play today.
+              // Result: 10 days. (Freeze saved the 10). +1 for today? = 11?
+              // If we assume the freeze "retroactively" filled yesterday, then yes +1.
+              // Let's implement: Decrement Freeze, Keep Streak same? 
+              // Actually, simplest: newStreak = currentUser.streak (Saved!) 
+              // But we want to reward today's activity?
+              // Let's just reset to 1 if no freeze, or Keep if freeze.
+
+              // Update: Complication - we are checking `diffDays`. If diff is 2 days (missed 1 day), we can use freeze.
+              // If diff is 30 days, we shouldn't use 29 freezes :D
+              // Let's only use freeze if diffDays == 2 (missed exactly one day).
+
+              if (diffDays === 2) {
+                newStreak = currentUser.streak + 1 // You kept it alive!
+                // We need to decrement streakFreezes in the update below
+              } else {
+                newStreak = 1 // Too many days missed or no freezes?
+                // Wait, we need to check if we have enough freezes?
+                // Let's simplify: Streak Freezer only saves you if you miss ONE day usually.
+              }
+            } else {
+              newStreak = 1 // Broken streak
+            }
           }
         } else {
           newStreak = 1 // First ever activity
@@ -194,6 +245,9 @@ export async function POST(
           data: {
             streak: newStreak,
             lastActiveDate: new Date(),
+            streakFreezes: (newStreak > 1 && diffDays === 2 && currentUser.streakFreezes > 0)
+              ? { decrement: 1 }
+              : undefined,
             totalXP: xpEarned > 0 ? { increment: xpEarned } : undefined
           }
         })
