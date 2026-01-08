@@ -40,7 +40,13 @@ export default function LearningRoomPage() {
             const res = await fetch('/api/learning')
             if (res.ok) {
                 const data = await res.json()
-                setQuestions(data)
+                // API returns { questions: [], count: number }
+                if (Array.isArray(data)) {
+                    // Backward compatibility if API changes back
+                    setQuestions(data)
+                } else {
+                    setQuestions(data.questions || [])
+                }
             }
         } catch (error) {
             console.error('Failed to fetch learning questions', error)
@@ -187,11 +193,13 @@ export default function LearningRoomPage() {
                     {/* Question Card */}
                     <div className="p-6">
                         {/* Quiz Origin Source */}
-                        {(currentQuestion as any).quiz?.title && (
+                        {/* Quiz Origin Source */}
+                        {(currentQuestion as any)?.quiz?.title && (
                             <div className="mb-6 flex justify-center">
                                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                                     <BookOpenIcon className="w-3.5 h-3.5 mr-1.5" />
-                                    {t('learning.origin', 'Aus:')} {((currentQuestion as any).quiz.title.de || (currentQuestion as any).quiz.title.en)}
+                                    {/* Handle potentially localized title */}
+                                    {t('learning.origin', 'Aus:')} {((currentQuestion as any).quiz.title?.de || (currentQuestion as any).quiz.title?.en || (currentQuestion as any).quiz.title || 'Quiz')}
                                 </span>
                             </div>
                         )}
