@@ -16,13 +16,47 @@ import { useTranslation } from '@/hooks/use-translation'
 export default function LeaderboardPage() {
     const { t } = useTranslation()
     const router = useRouter()
-    // ...
+    const { data: session } = useSession()
+    const [timeFrame, setTimeFrame] = useState<'weekly' | 'all_time'>('weekly')
+    const [loading, setLoading] = useState(true)
+    const [entries, setEntries] = useState<any[]>([])
 
-    // ... (fetchLeaderboard) ...
+    useEffect(() => {
+        fetchLeaderboard()
+    }, [timeFrame])
 
-    // ... (getRankStyle) ...
+    const fetchLeaderboard = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch(`/api/leaderboard?timeFrame=${timeFrame}`)
+            if (res.ok) {
+                const data = await res.json()
+                setEntries(data)
+            }
+        } catch (error) {
+            console.error('Failed to fetch leaderboard', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-    // ... (getRankIcon) ...
+    const getRankStyle = (rank: number) => {
+        switch (rank) {
+            case 1: return 'border-yellow-400 bg-yellow-50 text-yellow-600'
+            case 2: return 'border-gray-300 bg-gray-50 text-gray-600'
+            case 3: return 'border-orange-300 bg-orange-50 text-orange-600'
+            default: return 'border-transparent text-gray-400 font-medium'
+        }
+    }
+
+    const getRankIcon = (rank: number) => {
+        switch (rank) {
+            case 1: return <span className="text-lg">🥇</span>
+            case 2: return <span className="text-lg">🥈</span>
+            case 3: return <span className="text-lg">🥉</span>
+            default: return <span className="text-sm">#{rank}</span>
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
