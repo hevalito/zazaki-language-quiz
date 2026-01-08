@@ -29,7 +29,7 @@ function replaceVariables(template: string, variables: Record<string, any>): str
     return result
 }
 
-async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/') {
+async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/', type: string) {
     if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
         console.log('VAPID keys missing')
         return
@@ -46,10 +46,12 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
         title,
         body,
         url,
-        actions: [{ action: 'open', title: 'Öffnen' }]
+        actions: [{ action: 'open', title: 'Start' }]
     })
 
     let success = 0
+    let failed = 0
+
     await Promise.all(subscriptions.map(sub =>
         webPush.sendNotification({
             endpoint: sub.endpoint,
@@ -57,12 +59,29 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
         }, payload)
             .then(() => success++)
             .catch(async (err: any) => {
+                failed++
                 if (err.statusCode === 410 || err.statusCode === 404) {
                     await prisma.pushSubscription.delete({ where: { id: sub.id } })
                 }
             })
     ))
-    console.log(`Sent ${success} notifications.`)
+    console.log(`Sent ${success} notifications (${failed} failed).`)
+
+    try {
+        await prisma.notificationHistory.create({
+            data: {
+                title,
+                body,
+                url,
+                type,
+                sentCount: success,
+                failedCount: failed,
+                sentByUserId: null
+            }
+        })
+    } catch (e) {
+        console.error('Failed to log notification history:', e)
+    }
 }
 
 // --- Jobs ---
@@ -108,7 +127,7 @@ async function runDailyChallenge() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Neues Quiz!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush([sub], title, body, '/daily')
+        await sendPush([sub], title, body, '/daily', 'DAILY_CHALLENGE')
     }
 }
 
@@ -146,7 +165,7 @@ async function runStreakSaver() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Achtung!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush(user.pushSubscriptions, title, body, '/daily')
+        await sendPush(user.pushSubscriptions, title, body, '/daily', 'STREAK_SAVER')
     }
 }
 
@@ -187,7 +206,7 @@ async function runInactivityRescue() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Wir vermissen dich!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush(user.pushSubscriptions, title, body, '/')
+        await sendPush(user.pushSubscriptions, title, body, '/', 'INACTIVITY_RESCUE')
     }
 }
 
