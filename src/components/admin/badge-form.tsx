@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
@@ -14,31 +14,52 @@ interface BadgeFormProps {
     isEditing?: boolean
 }
 
+import { getLanguages } from '@/lib/translations'
+
+// ...
+
 export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+    const [languages, setLanguages] = useState<any[]>([])
     const [formData, setFormData] = useState({
         code: initialData?.code || '',
-        title: {
-            en: initialData?.title?.en || '',
-            de: initialData?.title?.de || ''
-        },
-        description: {
-            en: initialData?.description?.en || '',
-            de: initialData?.description?.de || ''
-        },
+        title: initialData?.title || {},
+        description: initialData?.description || {},
         iconUrl: initialData?.iconUrl || '🏆',
         imageUrl: initialData?.imageUrl || '',
         iconType: initialData?.imageUrl ? 'image' : 'emoji',
-        conditionLabel: {
-            en: initialData?.conditionLabel?.en || '',
-            de: initialData?.conditionLabel?.de || ''
-        },
+        conditionLabel: initialData?.conditionLabel || {},
         criteriaType: initialData?.criteria?.type || 'lesson_completion',
         criteriaValue: initialData?.criteria?.level || initialData?.criteria?.value || initialData?.criteria?.count || 1,
         isActive: initialData?.isActive ?? true
     })
+
+    useEffect(() => {
+        getLanguages().then(langs => {
+            setLanguages(langs)
+            // Ensure keys exist for all langs
+            setFormData(prev => {
+                const newTitle = { ...prev.title }
+                const newDesc = { ...prev.description }
+                const newLabel = { ...prev.conditionLabel }
+
+                langs.forEach((l: any) => {
+                    if (!newTitle[l.code]) newTitle[l.code] = ''
+                    if (!newDesc[l.code]) newDesc[l.code] = ''
+                    if (!newLabel[l.code]) newLabel[l.code] = ''
+                })
+
+                return {
+                    ...prev,
+                    title: newTitle,
+                    description: newDesc,
+                    conditionLabel: newLabel
+                }
+            })
+        })
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -172,64 +193,69 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
 
                         {/* Language Specific Content */}
                         <div className="sm:col-span-6">
-                            <LanguageTabs>
-                                {(lang) => (
-                                    <div className="space-y-6">
-                                        {/* Title */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">
-                                                Title ({lang === 'de' ? 'German' : 'English'})
-                                            </label>
-                                            <input
-                                                type="text"
-                                                required={lang === 'de'}
-                                                value={formData.title[lang]}
-                                                onChange={e => setFormData({
-                                                    ...formData,
-                                                    title: { ...formData.title, [lang]: e.target.value }
-                                                })}
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                            />
-                                        </div>
+                            {languages.length > 0 && (
+                                <LanguageTabs languages={languages}>
+                                    {(lang) => {
+                                        const langName = languages.find(l => l.code === lang)?.name || lang
+                                        return (
+                                            <div className="space-y-6">
+                                                {/* Title */}
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Title ({langName})
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        required={lang === 'de'}
+                                                        value={formData.title[lang] || ''}
+                                                        onChange={e => setFormData({
+                                                            ...formData,
+                                                            title: { ...formData.title, [lang]: e.target.value }
+                                                        })}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    />
+                                                </div>
 
-                                        {/* Description */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">
-                                                Description ({lang === 'de' ? 'German' : 'English'})
-                                            </label>
-                                            <textarea
-                                                rows={2}
-                                                value={formData.description[lang]}
-                                                onChange={e => setFormData({
-                                                    ...formData,
-                                                    description: { ...formData.description, [lang]: e.target.value }
-                                                })}
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                            />
-                                        </div>
+                                                {/* Description */}
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Description ({langName})
+                                                    </label>
+                                                    <textarea
+                                                        rows={2}
+                                                        value={formData.description[lang] || ''}
+                                                        onChange={e => setFormData({
+                                                            ...formData,
+                                                            description: { ...formData.description, [lang]: e.target.value }
+                                                        })}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    />
+                                                </div>
 
-                                        {/* Condition Label */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">
-                                                Condition Label ({lang === 'de' ? 'German' : 'English'})
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={formData.conditionLabel[lang]}
-                                                onChange={e => setFormData({
-                                                    ...formData,
-                                                    conditionLabel: { ...formData.conditionLabel, [lang]: e.target.value }
-                                                })}
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                                placeholder={lang === 'de' ? 'z.B. 1000 XP' : 'e.g. 1000 XP'}
-                                            />
-                                            <p className="mt-1 text-xs text-gray-500">
-                                                Shown in bold to describe the requirement.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-                            </LanguageTabs>
+                                                {/* Condition Label */}
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Condition Label ({langName})
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.conditionLabel[lang] || ''}
+                                                        onChange={e => setFormData({
+                                                            ...formData,
+                                                            conditionLabel: { ...formData.conditionLabel, [lang]: e.target.value }
+                                                        })}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                        placeholder={lang === 'de' ? 'z.B. 1000 XP' : 'e.g. 1000 XP'}
+                                                    />
+                                                    <p className="mt-1 text-xs text-gray-500">
+                                                        Shown in bold to describe the requirement.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )
+                                    }}
+                                </LanguageTabs>
+                            )}
                         </div>
 
                         {/* Criteria Type */}

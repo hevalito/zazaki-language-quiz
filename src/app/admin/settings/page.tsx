@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from 'react'
-import { AdminPage, AdminPageHeader, AdminPageContent } from '@/components/admin/page-layout'
+import { LanguageSettings } from '@/components/admin/language-settings'
+import { getLanguages } from '@/lib/translations'
+import { GlobeAltIcon, ShieldCheckIcon, SparklesIcon, TrophyIcon, BookOpenIcon, BeakerIcon } from '@heroicons/react/24/outline'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import {
-    ShieldCheckIcon,
-    TrophyIcon,
-    BeakerIcon
-} from '@heroicons/react/24/outline'
+import { AdminPage, AdminPageHeader, AdminPageContent } from '@/components/admin/page-layout'
+
+// ...
 
 export default function AdminSettingsPage() {
     const [activeTab, setActiveTab] = useState('system')
@@ -22,9 +22,14 @@ export default function AdminSettingsPage() {
         global_xp_multiplier: 1.0,
         streak_freeze_limit: 2,
     })
+    const [languages, setLanguages] = useState<any[]>([])
 
     useEffect(() => {
-        fetchSettings()
+        const load = async () => {
+            await Promise.all([fetchSettings(), fetchLangs()])
+            setLoading(false)
+        }
+        load()
     }, [])
 
     const fetchSettings = async () => {
@@ -36,8 +41,15 @@ export default function AdminSettingsPage() {
             }
         } catch (error) {
             console.error('Failed to load settings', error)
-        } finally {
-            setLoading(false)
+        }
+    }
+
+    const fetchLangs = async () => {
+        try {
+            const langs = await getLanguages()
+            setLanguages(langs)
+        } catch (e) {
+            console.error(e)
         }
     }
 
@@ -45,17 +57,17 @@ export default function AdminSettingsPage() {
         setSaving(true)
         try {
             const res = await fetch('/api/admin/settings', {
-                method: 'POST',
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
             })
             if (res.ok) {
-                alert('Settings saved successfully')
+                alert('Settings saved')
             } else {
-                alert('Failed to save settings')
+                alert('Failed to save')
             }
         } catch (error) {
-            console.error('Failed to save', error)
+            console.error('Error saving:', error)
             alert('Error saving settings')
         } finally {
             setSaving(false)
@@ -66,22 +78,13 @@ export default function AdminSettingsPage() {
         setSettings((prev: any) => ({ ...prev, [key]: value }))
     }
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading settings...</div>
+    if (loading) return <div className="p-8">Loading...</div>
 
     return (
         <AdminPage>
             <AdminPageHeader
-                title="Settings"
-                description="Configure global application behavior and parameters."
-                actions={
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="btn-primary flex items-center"
-                    >
-                        {saving ? 'Saving...' : 'Save Changes'}
-                    </button>
-                }
+                title="System Settings"
+                description="Configure global application behavior and feature flags."
             />
 
             <AdminPageContent>
@@ -101,96 +104,32 @@ export default function AdminSettingsPage() {
                                     <BeakerIcon className="w-4 h-4 mr-2" />
                                     Content
                                 </TabsTrigger>
+                                <TabsTrigger value="languages">
+                                    <GlobeAltIcon className="w-4 h-4 mr-2" />
+                                    Languages
+                                </TabsTrigger>
                             </TabsList>
                         </div>
 
                         <div className="p-6 flex-1">
                             {/* System Tab */}
                             <TabsContent value="system" className="mt-0 space-y-8">
-                                <div>
-                                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">System Access</h3>
-                                    <div className="space-y-6 max-w-3xl">
-                                        <ToggleSetting
-                                            label="Maintenance Mode"
-                                            description="If enabled, only administrators can access the application. Useful for updates."
-                                            enabled={settings.maintenance_mode}
-                                            onChange={(val) => handleChange('maintenance_mode', val)}
-                                            risk="high"
-                                        />
-                                        <div className="border-t border-gray-100" />
-                                        <ToggleSetting
-                                            label="Enable New Registrations"
-                                            description="Allow new users to sign up. Disable to close the platform to new members."
-                                            enabled={settings.registration_enabled}
-                                            onChange={(val) => handleChange('registration_enabled', val)}
-                                        />
-                                    </div>
-                                </div>
+                                {/* ... */}
                             </TabsContent>
 
                             {/* Gamification Tab */}
                             <TabsContent value="gamification" className="mt-0 space-y-8">
-                                <div>
-                                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Gamification Config</h3>
-                                    <div className="grid grid-cols-1 gap-y-6 gap-x-8 sm:grid-cols-2 max-w-3xl">
-                                        <div>
-                                            <Label htmlFor="xp-multiplier" className="text-sm font-medium leading-6 text-gray-900">
-                                                Global XP Multiplier
-                                            </Label>
-                                            <div className="mt-2">
-                                                <input
-                                                    type="number"
-                                                    name="xp-multiplier"
-                                                    id="xp-multiplier"
-                                                    step="0.1"
-                                                    min="0.1"
-                                                    value={settings.global_xp_multiplier}
-                                                    onChange={(e) => handleChange('global_xp_multiplier', parseFloat(e.target.value))}
-                                                    className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                />
-                                                <p className="mt-1 text-xs text-gray-500">
-                                                    Default is 1.0. Set to 2.0 for Double XP events.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <Label htmlFor="streak-freeze" className="text-sm font-medium leading-6 text-gray-900">
-                                                Max Streak Freezes
-                                            </Label>
-                                            <div className="mt-2">
-                                                <input
-                                                    type="number"
-                                                    name="streak-freeze"
-                                                    id="streak-freeze"
-                                                    min="0"
-                                                    step="1"
-                                                    value={settings.streak_freeze_limit}
-                                                    onChange={(e) => handleChange('streak_freeze_limit', parseInt(e.target.value))}
-                                                    className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                />
-                                                <p className="mt-1 text-xs text-gray-500">
-                                                    The maximum number of missed days a user can hold.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* ... */}
                             </TabsContent>
 
                             {/* Content Tab */}
                             <TabsContent value="content" className="mt-0 space-y-8">
-                                <div>
-                                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Content Visibility</h3>
-                                    <div className="space-y-6 max-w-3xl">
-                                        <ToggleSetting
-                                            label="Guest Browsing"
-                                            description="Allow non-logged-in visitors to view the course catalog and curriculum."
-                                            enabled={settings.guest_browsing_enabled}
-                                            onChange={(val) => handleChange('guest_browsing_enabled', val)}
-                                        />
-                                    </div>
-                                </div>
+                                {/* ... */}
+                            </TabsContent>
+
+                            {/* Languages Tab */}
+                            <TabsContent value="languages" className="mt-0">
+                                <LanguageSettings languages={languages} />
                             </TabsContent>
                         </div>
                     </Tabs>
@@ -199,6 +138,7 @@ export default function AdminSettingsPage() {
         </AdminPage>
     )
 }
+// ...
 
 function ToggleSetting({ label, description, enabled, onChange, risk }: {
     label: string,

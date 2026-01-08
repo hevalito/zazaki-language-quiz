@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { LanguageTabs } from './language-tabs'
+import { getLanguages } from '@/lib/translations'
 
 interface QuizFormProps {
     initialData?: any
@@ -23,16 +24,11 @@ interface Lesson {
 export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [languages, setLanguages] = useState<any[]>([])
     const [lessons, setLessons] = useState<Lesson[]>([])
-    const [formData, setFormData] = useState({
-        title: {
-            en: initialData?.title?.en || '',
-            de: initialData?.title?.de || ''
-        },
-        description: {
-            en: initialData?.description?.en || '',
-            de: initialData?.description?.de || ''
-        },
+    const [formData, setFormData] = useState<any>({
+        title: {},
+        description: {},
         lessonId: initialData?.lessonId || '',
         order: initialData?.order || 0,
         isPublished: initialData?.isPublished ?? false,
@@ -41,17 +37,40 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
     })
 
     useEffect(() => {
-        const fetchLessons = async () => {
-            const res = await fetch('/api/admin/lessons')
-            if (res.ok) {
-                const data = await res.json()
-                setLessons(data)
+        const load = async () => {
+            const [langs, lessonsRes] = await Promise.all([
+                getLanguages(),
+                fetch('/api/admin/lessons')
+            ])
+
+            setLanguages(langs)
+
+            if (lessonsRes.ok) {
+                setLessons(await lessonsRes.json())
             }
+
+            // Init dynamic fields
+            const initialTitle = initialData?.title || {}
+            const initialDesc = initialData?.description || {}
+            const preparedTitle: any = {}
+            const preparedDesc: any = {}
+
+            langs.forEach(l => {
+                preparedTitle[l.code] = initialTitle[l.code] || ''
+                preparedDesc[l.code] = initialDesc[l.code] || ''
+            })
+
+            setFormData((prev: any) => ({
+                ...prev,
+                title: preparedTitle,
+                description: preparedDesc
+            }))
         }
-        fetchLessons()
+        load()
     }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
+        // ... (existing submit logic)
         e.preventDefault()
         setLoading(true)
 
@@ -67,7 +86,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                     randomizeAnswers: formData.randomizeAnswers
                 }
             }
-
+            // ...
             const url = isEditing
                 ? `/api/admin/quizzes/${initialData.id}`
                 : '/api/admin/quizzes'
@@ -131,41 +150,43 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
 
                 {/* Language Specific Content */}
                 <div className="sm:col-span-6">
-                    <LanguageTabs>
-                        {(lang) => (
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Title ({lang === 'de' ? 'German' : 'English'})
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required={lang === 'de'}
-                                        value={formData.title[lang]}
-                                        onChange={e => setFormData({
-                                            ...formData,
-                                            title: { ...formData.title, [lang]: e.target.value }
-                                        })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                    />
+                    {languages.length > 0 && (
+                        <LanguageTabs languages={languages}>
+                            {(lang) => (
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Title ({languages.find(l => l.code === lang)?.name || lang})
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required={lang === 'de'}
+                                            value={formData.title[lang] || ''}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                title: { ...formData.title, [lang]: e.target.value }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Description ({languages.find(l => l.code === lang)?.name || lang})
+                                        </label>
+                                        <textarea
+                                            rows={2}
+                                            value={formData.description[lang] || ''}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                description: { ...formData.description, [lang]: e.target.value }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Description ({lang === 'de' ? 'German' : 'English'})
-                                    </label>
-                                    <textarea
-                                        rows={2}
-                                        value={formData.description[lang]}
-                                        onChange={e => setFormData({
-                                            ...formData,
-                                            description: { ...formData.description, [lang]: e.target.value }
-                                        })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </LanguageTabs>
+                            )}
+                        </LanguageTabs>
+                    )}
                 </div>
 
                 {/* Published Status */}

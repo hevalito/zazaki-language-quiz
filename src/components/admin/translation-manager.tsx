@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { updateTranslation, addLanguage, deleteTranslation } from '@/lib/translations'
+import { updateTranslation, deleteTranslation } from '@/lib/translations'
 
 interface Language {
     code: string
@@ -27,11 +27,6 @@ export function TranslationManager({ initialTranslations, languages }: Translati
     const [newKey, setNewKey] = useState('')
     const [filter, setFilter] = useState('')
 
-    // New Language State
-    const [newLangCode, setNewLangCode] = useState('')
-    const [newLangName, setNewLangName] = useState('')
-    const [isAddingLang, setIsAddingLang] = useState(false)
-
     const handleEdit = (t: Translation) => {
         setEditingKey(t.key)
         setEditValues(t.values as Record<string, string> || {})
@@ -53,15 +48,6 @@ export function TranslationManager({ initialTranslations, languages }: Translati
         if (!newKey.trim()) return
         await updateTranslation(newKey, { de: newKey }) // Default DE value to key
         setNewKey('')
-        router.refresh()
-    }
-
-    const handleAddLanguage = async () => {
-        if (!newLangCode || !newLangName) return
-        await addLanguage(newLangCode, newLangName)
-        setNewLangCode('')
-        setNewLangName('')
-        setIsAddingLang(false)
         router.refresh()
     }
 
@@ -104,38 +90,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                         </button>
                     </div>
                 </div>
-
-                <button
-                    onClick={() => setIsAddingLang(!isAddingLang)}
-                    className="text-sm text-gray-600 hover:text-gray-900 underline"
-                >
-                    {isAddingLang ? 'Cancel' : 'Manage Languages'}
-                </button>
             </div>
-
-            {/* Add Language Form */}
-            {isAddingLang && (
-                <div className="bg-gray-50 p-4 rounded border flex gap-4 items-center">
-                    <input
-                        placeholder="Code (e.g. 'fr')"
-                        value={newLangCode}
-                        onChange={e => setNewLangCode(e.target.value)}
-                        className="border rounded px-2 py-1 w-24"
-                    />
-                    <input
-                        placeholder="Name (e.g. 'French')"
-                        value={newLangName}
-                        onChange={e => setNewLangName(e.target.value)}
-                        className="border rounded px-2 py-1"
-                    />
-                    <button
-                        onClick={handleAddLanguage}
-                        className="bg-green-600 text-white px-3 py-1 rounded text-sm"
-                    >
-                        Add Language
-                    </button>
-                </div>
-            )}
 
             {/* Translations Table */}
             <div className="overflow-x-auto border rounded-lg shadow">

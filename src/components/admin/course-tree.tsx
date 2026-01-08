@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PlusIcon, PencilSquareIcon, TrashIcon, ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { LanguageTabs } from './language-tabs'
+import { getLanguages } from '@/lib/translations'
 
 interface CourseTreeProps {
     courseId: string
@@ -16,6 +17,11 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [modalType, setModalType] = useState<'CHAPTER' | 'LESSON'>('CHAPTER')
     const [parentNodeId, setParentNodeId] = useState<string | null>(null)
+    const [languages, setLanguages] = useState<any[]>([])
+
+    useEffect(() => {
+        getLanguages().then(setLanguages)
+    }, [])
 
     const toggleChapter = (id: string) => {
         const newExpanded = new Set(expandedChapters)
@@ -46,6 +52,15 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
         }
     }
 
+    const getTitle = (title: any) => {
+        return languages.length > 0 ? (title?.[languages[0].code] || 'Untitled') : (title?.de || 'Untitled')
+    }
+
+    const getFullTitle = (title: any) => {
+        // Show DE / EN or just DE or whatever logic
+        return `${title?.de || ''} ${title?.en ? `/ ${title.en}` : ''}`
+    }
+
     return (
         <div className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-center mb-6">
@@ -70,7 +85,7 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
                                     <ChevronRightIcon className="h-5 w-5 text-gray-400 mr-2" />
                                 )}
                                 <span className="font-medium text-gray-900">
-                                    {chapter.title?.en || 'Untitled'} / {chapter.title?.de || 'Untitled'}
+                                    {getFullTitle(chapter.title)}
                                 </span>
                                 <span className="ml-2 px-2 py-0.5 rounded text-xs bg-gray-200 text-gray-600">
                                     {chapter.lessons?.length || 0} lessons
@@ -105,7 +120,7 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
                                     <div key={lesson.id} className="pl-12 pr-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50">
                                         <div>
                                             <span className="text-sm text-gray-900">
-                                                {lesson.title?.en || 'Untitled'} / {lesson.title?.de || 'Untitled'}
+                                                {getFullTitle(lesson.title)}
                                             </span>
                                             {lesson.isPublished && (
                                                 <span className="ml-2 text-xs text-green-600 font-medium">Published</span>
@@ -143,6 +158,7 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
                     type={modalType}
                     parentId={parentNodeId}
                     initialData={editingNode}
+                    languages={languages}
                     onClose={() => setIsModalOpen(false)}
                     onSave={() => {
                         setIsModalOpen(false)
@@ -154,19 +170,41 @@ export function CourseTree({ courseId, chapters, onUpdate }: CourseTreeProps) {
     )
 }
 
-function NodeModal({ type, parentId, initialData, onClose, onSave }: any) {
-    const [formData, setFormData] = useState({
-        title: {
-            en: initialData?.title?.en || '',
-            de: initialData?.title?.de || ''
-        },
-        description: {
-            en: initialData?.description?.en || '',
-            de: initialData?.description?.de || ''
-        },
+function NodeModal({ type, parentId, initialData, languages, onClose, onSave }: any) {
+    const [formData, setFormData] = useState<any>({
+        title: {},
+        description: {},
         order: initialData?.order || 0,
         isPublished: initialData?.isPublished || false
     })
+
+    useEffect(() => {
+        // Init dynamic fields
+        const initialTitle = initialData?.title || {}
+        const initialDesc = initialData?.description || {}
+        const preparedTitle: any = {}
+        const preparedDesc: any = {}
+
+        if (languages.length > 0) {
+            languages.forEach((l: any) => {
+                preparedTitle[l.code] = initialTitle[l.code] || ''
+                preparedDesc[l.code] = initialDesc[l.code] || ''
+            })
+            setFormData((prev: any) => ({
+                ...prev,
+                title: preparedTitle,
+                description: preparedDesc
+            }))
+        } else {
+            // Fallback if languages not loaded yet or empty (should ideally wait)
+            setFormData((prev: any) => ({
+                ...prev,
+                title: initialTitle,
+                description: initialDesc
+            }))
+        }
+
+    }, [initialData, languages])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -198,26 +236,48 @@ function NodeModal({ type, parentId, initialData, onClose, onSave }: any) {
                 </h3>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <LanguageTabs>
-                        {(lang) => (
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Title ({lang === 'de' ? 'German' : 'English'})
-                                </label>
-                                <input
-                                    type="text"
-                                    required={lang === 'de'} // Only German is strictly required as per primary lang policy
-                                    value={formData.title[lang]}
-                                    onChange={e => setFormData({
-                                        ...formData,
-                                        title: { ...formData.title, [lang]: e.target.value }
-                                    })}
-                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
-                                    placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
-                                />
-                            </div>
-                        )}
-                    </LanguageTabs>
+                    {languages.length > 0 && (
+                        <LanguageTabs languages={languages}>
+                            {(lang) => (
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Title ({languages.find((l: any) => l.code === lang)?.name || lang})
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required={lang === 'de'} // Only German is strictly required as per primary lang policy
+                                            value={formData.title[lang] || ''}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                title: { ...formData.title, [lang]: e.target.value }
+                                            })}
+                                            className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                            placeholder={lang === 'de' ? 'Titel eingeben...' : `Enter title (${lang})...`}
+                                        />
+                                    </div>
+                                    {type === 'CHAPTER' && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">
+                                                Description ({languages.find((l: any) => l.code === lang)?.name || lang})
+                                            </label>
+                                            <textarea
+                                                rows={2}
+                                                value={formData.description[lang] || ''}
+                                                onChange={e => setFormData({
+                                                    ...formData,
+                                                    description: { ...formData.description, [lang]: e.target.value }
+                                                })}
+                                                className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                                placeholder={lang === 'de' ? 'Beschreibung eingeben...' : 'Enter description...'}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </LanguageTabs>
+                    )}
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Order</label>
                         <input

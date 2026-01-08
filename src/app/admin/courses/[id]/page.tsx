@@ -4,33 +4,48 @@ import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { CourseTree } from '@/components/admin/course-tree'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { LanguageTabs } from '@/components/admin/language-tabs'
+import { getLanguages } from '@/lib/translations'
 
 export default function EditCoursePage(props: { params: Promise<{ id: string }> }) {
     const params = use(props.params)
     const router = useRouter()
     const [course, setCourse] = useState<any>(null)
     const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        fetchCourse()
-    }, [])
+    const [languages, setLanguages] = useState<any[]>([])
 
     const fetchCourse = async () => {
         try {
-            const res = await fetch(`/api/admin/courses/${params.id}`)
-            if (res.ok) {
-                const data = await res.json()
-                setCourse(data)
+            const [langs, courseRes] = await Promise.all([
+                getLanguages(),
+                fetch(`/api/admin/courses/${params.id}`)
+            ])
+
+            setLanguages(langs)
+
+            if (courseRes.ok) {
+                const data = await courseRes.json()
+                // Init empty keys if missing
+                const preparedTitle = data.title || {}
+                langs.forEach(l => {
+                    if (!preparedTitle[l.code]) preparedTitle[l.code] = ''
+                })
+                setCourse({ ...data, title: preparedTitle })
             } else {
                 alert('Failed to load course')
                 router.push('/admin/courses')
             }
         } catch (error) {
-            console.error('Error:', error)
+            console.error('Error loading course:', error)
         } finally {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        fetchCourse()
+    }, [])
+
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -77,24 +92,29 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                     ))}
                                 </select>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Title (EN)</label>
-                                <input
-                                    type="text"
-                                    value={course.title?.en || ''}
-                                    onChange={e => setCourse({ ...course, title: { ...course.title, en: e.target.value } })}
-                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Title (DE)</label>
-                                <input
-                                    type="text"
-                                    value={course.title?.de || ''}
-                                    onChange={e => setCourse({ ...course, title: { ...course.title, de: e.target.value } })}
-                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
-                                />
-                            </div>
+
+                            {languages.length > 0 && (
+                                <LanguageTabs languages={languages}>
+                                    {(lang) => (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700">
+                                                Title ({languages.find(l => l.code === lang)?.name || lang})
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required={lang === 'de'}
+                                                value={course.title[lang] || ''}
+                                                onChange={e => setCourse({
+                                                    ...course,
+                                                    title: { ...course.title, [lang]: e.target.value }
+                                                })}
+                                                className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                            />
+                                        </div>
+                                    )}
+                                </LanguageTabs>
+                            )}
+
                             <div className="flex items-center">
                                 <input
                                     type="checkbox"

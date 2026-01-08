@@ -7,34 +7,40 @@ import { useRouter } from 'next/navigation'
 import { LanguageTabs } from '@/components/admin/language-tabs'
 import { AdminPage, AdminPageHeader, AdminPageContent } from '@/components/admin/page-layout'
 
+import { getLanguages } from '@/lib/translations'
+
 export default function AdminCoursesPage() {
     const router = useRouter()
     const [courses, setCourses] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
-    const [newCourse, setNewCourse] = useState({
-        title: { en: '', de: '' },
+    const [languages, setLanguages] = useState<any[]>([])
+    const [newCourse, setNewCourse] = useState<{
+        title: Record<string, string>,
+        level: string,
+        description: Record<string, string>
+    }>({
+        title: {},
         level: 'A1',
-        description: { en: '', de: '' }
+        description: {}
     })
 
     useEffect(() => {
-        fetchCourses()
-    }, [])
+        const load = async () => {
+            const [langs, coursesRes] = await Promise.all([
+                getLanguages(),
+                fetch('/api/admin/courses')
+            ])
+            setLanguages(langs)
 
-    const fetchCourses = async () => {
-        try {
-            const res = await fetch('/api/admin/courses')
-            if (res.ok) {
-                const data = await res.json()
+            if (coursesRes.ok) {
+                const data = await coursesRes.json()
                 setCourses(data)
             }
-        } catch (error) {
-            console.error('Error fetching courses:', error)
-        } finally {
             setLoading(false)
         }
-    }
+        load()
+    }, [])
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -73,6 +79,7 @@ export default function AdminCoursesPage() {
         }
     }
 
+
     if (loading) return <div className="p-8">Loading...</div>
 
     return (
@@ -82,7 +89,21 @@ export default function AdminCoursesPage() {
                 description="Manage learning paths and content hierarchy"
                 actions={
                     <button
-                        onClick={() => setIsCreating(true)}
+                        onClick={() => {
+                            // Initialize with empty strings for all languages
+                            const initialTitles: Record<string, string> = {}
+                            const initialDescs: Record<string, string> = {}
+                            languages.forEach(l => {
+                                initialTitles[l.code] = ''
+                                initialDescs[l.code] = ''
+                            })
+                            setNewCourse({
+                                title: initialTitles,
+                                level: 'A1',
+                                description: initialDescs
+                            })
+                            setIsCreating(true)
+                        }}
                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
                     >
                         <PlusIcon className="h-5 w-5 mr-2" />
@@ -92,33 +113,33 @@ export default function AdminCoursesPage() {
             />
 
             <AdminPageContent>
-
-
                 {isCreating && (
                     <div className="mb-8 bg-white p-6 rounded-lg shadow border border-gray-200">
                         <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
                         <form onSubmit={handleCreate} className="space-y-4">
                             <div className="col-span-2">
-                                <LanguageTabs>
-                                    {(lang) => (
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">
-                                                Title ({lang === 'de' ? 'German' : 'English'})
-                                            </label>
-                                            <input
-                                                type="text"
-                                                required={lang === 'de'}
-                                                value={newCourse.title[lang]}
-                                                onChange={e => setNewCourse({
-                                                    ...newCourse,
-                                                    title: { ...newCourse.title, [lang]: e.target.value }
-                                                })}
-                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                                placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
-                                            />
-                                        </div>
-                                    )}
-                                </LanguageTabs>
+                                {languages.length > 0 && (
+                                    <LanguageTabs languages={languages}>
+                                        {(lang) => (
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Title ({lang === 'de' ? 'German' : 'English'})
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required={lang === 'de'}
+                                                    value={newCourse.title[lang]}
+                                                    onChange={e => setNewCourse({
+                                                        ...newCourse,
+                                                        title: { ...newCourse.title, [lang]: e.target.value }
+                                                    })}
+                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
+                                                />
+                                            </div>
+                                        )}
+                                    </LanguageTabs>
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Level</label>

@@ -89,3 +89,23 @@ export async function deleteTranslation(key: string) {
     await prisma.translation.delete({ where: { key } })
     revalidatePath('/admin/translations')
 }
+
+// Server Action: Delete a language
+export async function deleteLanguage(code: string) {
+    // Prevent deleting 'de' logic can be handled in UI or here
+    if (code === 'de') throw new Error('Cannot delete default language')
+    await prisma.language.delete({ where: { code } })
+    revalidatePath('/admin/translations')
+    revalidatePath('/admin/settings')
+}
+
+// Server Action: Toggle language active status
+export async function toggleLanguageStatus(code: string, isActive: boolean) {
+    if (code === 'de' && !isActive) throw new Error('Cannot disable default language')
+    await prisma.language.update({
+        where: { code },
+        data: { isActive }
+    })
+    revalidatePath('/admin/translations')
+    revalidatePath('/admin/settings')
+}
