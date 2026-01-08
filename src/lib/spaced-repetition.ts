@@ -13,7 +13,7 @@ export interface SpacedRepetitionItem {
   interval: number    // Days until next review
   repetition: number  // Number of successful repetitions
   dueDate: Date
-  lastReview?: Date
+  lastReview?: Date | null
 }
 
 export interface ReviewResult {
