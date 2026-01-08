@@ -196,12 +196,6 @@ export default function LearningRoomPage() {
                             onAnswer={handleAnswer}
                             selectedChoiceId={selectedChoiceId || undefined}
                             showResult={isCorrect !== null}
-                            userAnswer={selectedChoiceId ? {
-                                // Mock basic answer object for display styling
-                                questionId: currentQuestion.id,
-                                choiceId: selectedChoiceId,
-                                isCorrect: isCorrect || false
-                            } as any : undefined}
                         />
                     </div>
 
