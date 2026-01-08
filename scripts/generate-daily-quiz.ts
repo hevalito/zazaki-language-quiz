@@ -60,52 +60,91 @@ async function main() {
                 }
             }
 
+
             // --- Web Push Notifications ---
             if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-                console.log('Sending push notifications...')
-                try {
-                    const webPush = await import('web-push')
-                    webPush.setVapidDetails(
-                        process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
-                        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-                        process.env.VAPID_PRIVATE_KEY
-                    )
+                console.log('Checking push configuration...')
 
-                    const subscriptions = await prisma.pushSubscription.findMany()
-                    console.log(`Found ${subscriptions.length} subscriptions.`)
+                // Check Global Switch
+                const globalEnabled = await prisma.systemSetting.findUnique({ where: { key: 'push_global_enabled' } })
+                if (globalEnabled && globalEnabled.value === false) {
+                    console.log('Global push notifications disabled. Skipping.')
+                } else {
+                    // Check Daily Switch
+                    const dailyEnabled = await prisma.systemSetting.findUnique({ where: { key: 'push_daily_challenge_enabled' } })
 
-                    const notificationPayload = JSON.stringify({
-                        title: 'Neues tägliches Quiz! 🧠',
-                        body: 'Dein tägliches Zazakî-Quiz ist bereit. Schaffst du es heute?',
-                        url: '/daily', // Assuming /daily redirects or is the page
-                        actions: [
-                            { action: 'open', title: 'Jetzt spielen' }
-                        ]
-                    })
+                    if (dailyEnabled && dailyEnabled.value === false) {
+                        console.log('Daily challenge push disabled. Skipping.')
+                    } else {
+                        console.log('Sending push notifications...')
+                        try {
+                            // Get Template
+                            const templateSetting = await prisma.systemSetting.findUnique({ where: { key: 'push_template_daily_challenge' } })
+                            const template = (templateSetting?.value as string) || 'Neues tägliches Quiz! 🧠\nDein tägliches Zazakî-Quiz ist bereit. Schaffst du es heute?'
 
-                    const promises = subscriptions.map((sub: any) =>
-                        webPush.sendNotification({
-                            endpoint: sub.endpoint,
-                            keys: {
-                                p256dh: sub.p256dh,
-                                auth: sub.auth
-                            }
-                        }, notificationPayload)
-                            .catch((err: any) => {
-                                if (err.statusCode === 410 || err.statusCode === 404) {
-                                    // Subscription expired or removed
-                                    console.log('Removing expired subscription for user', sub.userId)
-                                    return prisma.pushSubscription.delete({ where: { id: sub.id } })
-                                }
-                                console.error('Error sending push:', err)
+                            const webPush = await import('web-push')
+                            webPush.setVapidDetails(
+                                process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
+                                process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+                                process.env.VAPID_PRIVATE_KEY
+                            )
+
+                            const subscriptions = await prisma.pushSubscription.findMany({
+                                include: { user: true }
                             })
-                    )
+                            console.log(`Found ${subscriptions.length} subscriptions.`)
 
-                    await Promise.all(promises)
-                    console.log('Push notifications sent.')
+                            let successCount = 0;
 
-                } catch (pushError) {
-                    console.error('Failed to send push notifications:', pushError)
+                            const promises = subscriptions.map((sub: any) => {
+                                // Variable replacement logic 
+                                let body = template
+                                const name = sub.user?.nickname || sub.user?.name || 'Champion'
+                                body = body.replace(/{username}/g, name)
+
+                                // Split title/body if newline present, otherwise use default title
+                                let title = 'Neues tägliches Quiz! 🧠'
+                                let msg = body
+
+                                // Simple heuristic: if template has newline, first line is title
+                                if (body.includes('\n')) {
+                                    const parts = body.split('\n')
+                                    title = parts[0]
+                                    msg = parts.slice(1).join('\n')
+                                }
+
+                                const notificationPayload = JSON.stringify({
+                                    title,
+                                    body: msg,
+                                    url: '/daily',
+                                    actions: [
+                                        { action: 'open', title: 'Jetzt spielen' }
+                                    ]
+                                })
+
+                                return webPush.sendNotification({
+                                    endpoint: sub.endpoint,
+                                    keys: {
+                                        p256dh: sub.p256dh,
+                                        auth: sub.auth
+                                    }
+                                }, notificationPayload)
+                                    .then(() => { successCount++ })
+                                    .catch((err: any) => {
+                                        if (err.statusCode === 410 || err.statusCode === 404) {
+                                            return prisma.pushSubscription.delete({ where: { id: sub.id } })
+                                        }
+                                        console.error('Error sending push:', err)
+                                    })
+                            })
+
+                            await Promise.all(promises)
+                            console.log(`Push notifications sent (${successCount} successful).`)
+
+                        } catch (pushError) {
+                            console.error('Failed to send push notifications:', pushError)
+                        }
+                    }
                 }
             } else {
                 console.log('VAPID keys missing, skipping push notifications.')

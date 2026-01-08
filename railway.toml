@@ -12,6 +12,6 @@ startCommand = "npm start"
 [[services]]
 name = "zazaki-quiz-cron"
 buildCommand = "npx prisma generate"
-startCommand = "npm run cron:daily"
-cronSchedule = "0 8 * * *"
+startCommand = "npm run cron:unified"
+cronSchedule = "0 * * * *"
 restartPolicyType = "NEVER"

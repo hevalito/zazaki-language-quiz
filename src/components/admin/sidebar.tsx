@@ -11,7 +11,8 @@ import {
     XMarkIcon,
     QuestionMarkCircleIcon,
     CalendarIcon,
-    PaperAirplaneIcon
+    PaperAirplaneIcon,
+    Cog6ToothIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -23,6 +24,7 @@ const navigation = [
     { name: 'Users', href: '/admin/users', icon: UsersIcon },
     { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
     { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
+    { name: 'Settings', href: '/admin/settings/notifications', icon: Cog6ToothIcon },
 ]
 
 interface AdminSidebarProps {

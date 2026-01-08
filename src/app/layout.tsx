@@ -41,6 +41,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: 'cover',
 }
 
 import { UnlockManager } from '@/components/achievements/unlock-manager'
