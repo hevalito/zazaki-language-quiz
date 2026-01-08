@@ -9,8 +9,10 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import confetti from 'canvas-confetti'
 import Image from 'next/image'
+import { useTranslation } from '@/hooks/use-translation'
 
 export default function CourseFinderWizard() {
+    const { t } = useTranslation()
     const router = useRouter()
     const { data: session } = useSession()
     const [currentNodeId, setCurrentNodeId] = useState<string>('n1')
@@ -165,12 +167,12 @@ export default function CourseFinderWizard() {
                         <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 animate-bounce-subtle">
                             <CheckBadgeIcon className="w-10 h-10" />
                         </div>
-                        <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">Ergebnis gespeichert!</h3>
+                        <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">{t('courseFinder.success.title', 'Ergebnis gespeichert!')}</h3>
                         <p className="text-gray-600 max-w-md mx-auto mb-8 text-lg">
-                            Wir haben dir eine E-Mail mit deinem Ergebnis und einem Link zum Anmelden gesendet.
+                            {t('courseFinder.success.message', 'Wir haben dir eine E-Mail mit deinem Ergebnis und einem Link zum Anmelden gesendet.')}
                         </p>
                         <p className="text-sm text-gray-400">
-                            Bitte überprüfe dein Postfach ({email}).
+                            {t('courseFinder.success.checkMail', 'Bitte überprüfe dein Postfach')} ({email}).
                         </p>
                     </div>
                 </div>
@@ -184,9 +186,9 @@ export default function CourseFinderWizard() {
                         <ArrowPathIcon className="w-6 h-6 rotate-180" /> {/* Back Icon */}
                     </button>
 
-                    <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2">Fast geschafft!</h2>
+                    <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2">{t('courseFinder.email.title', 'Fast geschafft!')}</h2>
                     <p className="text-gray-600 mb-8 max-w-sm mx-auto">
-                        Gib deine E-Mail-Adresse ein, um dein persönliches Kursergebnis zu speichern und direkt loszulegen.
+                        {t('courseFinder.email.subtitle', 'Gib deine E-Mail-Adresse ein, um dein persönliches Kursergebnis zu speichern und direkt loszulegen.')}
                     </p>
 
                     <form onSubmit={handleGuestSubmit} className="w-full max-w-md space-y-4">
@@ -206,12 +208,12 @@ export default function CourseFinderWizard() {
                             {saving ? (
                                 <ArrowPathIcon className="w-6 h-6 animate-spin" />
                             ) : (
-                                'Ergebnis ansehen'
+                                t('courseFinder.email.submit', 'Ergebnis ansehen')
                             )}
                         </button>
                     </form>
                     <p className="text-xs text-gray-400 mt-6 max-w-xs">
-                        Mit dem Klick auf "Ergebnis ansehen" stimmst du unseren Nutzungsbedingungen zu.
+                        {t('courseFinder.email.disclaimer', 'Mit dem Klick auf "Ergebnis ansehen" stimmst du unseren Nutzungsbedingungen zu.')}
                     </p>
                 </div>
             </div>
@@ -242,7 +244,7 @@ export default function CourseFinderWizard() {
                             return (
                                 <span key={nodeId} className="text-xs font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded-full flex items-center">
                                     <CheckBadgeIcon className="w-3 h-3 mr-1" />
-                                    {idx === 0 ? 'Start' : '...'}
+                                    {idx === 0 ? t('common.start', 'Start') : '...'}
                                 </span>
                             )
                         })}
@@ -265,9 +267,9 @@ export default function CourseFinderWizard() {
                                     <SparklesIcon className="absolute inset-0 w-10 h-10 text-primary-500 m-auto animate-pulse" />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 animate-pulse">
-                                    Ergebnis wird berechnet...
+                                    {t('courseFinder.calculating.title', 'Ergebnis wird berechnet...')}
                                 </h3>
-                                <p className="text-gray-500 mt-2">Wir suchen den perfekten Kurs für dich.</p>
+                                <p className="text-gray-500 mt-2">{t('courseFinder.calculating.subtitle', 'Wir suchen den perfekten Kurs für dich.')}</p>
                             </motion.div>
                         ) : (
                             <motion.div
@@ -299,13 +301,13 @@ export default function CourseFinderWizard() {
                                         </div>
 
                                         <div>
-                                            <h2 className="text-sm font-bold tracking-widest text-primary-600 uppercase mb-2">Dein Ergebnis</h2>
+                                            <h2 className="text-sm font-bold tracking-widest text-primary-600 uppercase mb-2">{t('courseFinder.result.yourResult', 'Dein Ergebnis')}</h2>
                                             <h3 className="text-4xl font-serif font-bold text-gray-900 mb-4">
-                                                {currentNode.result?.recommendation}
+                                                {t(currentNode.result?.recommendation || '', currentNode.result?.recommendation)}
                                             </h3>
                                             <p className="text-gray-500 font-sans max-w-md mx-auto leading-relaxed">
-                                                Wir haben basierend auf deinen Antworten den perfekten Kurs für dich gefunden.
-                                                {currentNode.result?.dialect && ` Dein Fokus liegt auf dem ${currentNode.result.dialect} Dialekt.`}
+                                                {t('courseFinder.result.explanation', 'Wir haben basierend auf deinen Antworten den perfekten Kurs für dich gefunden.')}
+                                                {currentNode.result?.dialect && ` ${t('courseFinder.result.focus', 'Dein Fokus liegt auf dem')} ${t(currentNode.result.dialect, currentNode.result.dialect)} ${t('courseFinder.result.dialectSuffix', 'Dialekt')}.`}
                                             </p>
                                         </div>
 
@@ -315,7 +317,7 @@ export default function CourseFinderWizard() {
                                                 disabled={saving}
                                                 className="w-full sm:w-auto px-10 py-4 bg-primary-500 text-gray-900 rounded-2xl font-bold text-lg hover:bg-primary-400 transition-all shadow-xl shadow-primary-500/20 hover:-translate-y-1 flex items-center justify-center mx-auto"
                                             >
-                                                {saving ? 'Wird gespeichert...' : 'Zurück zur Übersicht'}
+                                                {saving ? t('common.saving', 'Wird gespeichert...') : t('courseFinder.result.backToOverview', 'Zurück zur Übersicht')}
                                                 {!saving && <ArrowRightIcon className="w-5 h-5 ml-2" />}
                                             </button>
                                         </div>
@@ -324,13 +326,13 @@ export default function CourseFinderWizard() {
                                     <div className="space-y-10">
                                         <div className="space-y-4">
                                             <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight">
-                                                {currentNode.text}
+                                                {t(currentNode.text, currentNode.text)}
                                             </h2>
 
                                             {/* Description Text */}
                                             {currentNode.description && (
                                                 <p className="text-lg text-gray-600 font-medium bg-gray-50 p-4 rounded-xl border border-gray-100 inline-block">
-                                                    {currentNode.description}
+                                                    {t(currentNode.description, currentNode.description)}
                                                 </p>
                                             )}
 
@@ -354,7 +356,7 @@ export default function CourseFinderWizard() {
                                                     onClick={() => handleOptionClick(option.nextId)}
                                                     className="group w-full p-5 text-left bg-white border-2 border-gray-100 hover:border-primary-500 hover:bg-primary-50/30 rounded-2xl transition-all font-medium text-lg text-gray-700 hover:text-gray-900 flex justify-between items-center shadow-sm hover:shadow-md"
                                                 >
-                                                    <span>{option.label}</span>
+                                                    <span>{t(option.label, option.label)}</span>
                                                     <div className="w-8 h-8 rounded-full bg-gray-100 group-hover:bg-primary-500 flex items-center justify-center transition-colors">
                                                         <ArrowRightIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-900" />
                                                     </div>
@@ -375,7 +377,7 @@ export default function CourseFinderWizard() {
                             onClick={handleBack}
                             className="text-gray-400 hover:text-gray-600 text-sm font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors uppercase tracking-wider"
                         >
-                            Zurück
+                            {t('common.back', 'Zurück')}
                         </button>
                     ) : (
                         <div></div>
@@ -390,7 +392,7 @@ export default function CourseFinderWizard() {
                             className="text-gray-400 hover:text-gray-600 text-sm font-bold flex items-center px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors uppercase tracking-wider"
                         >
                             <ArrowPathIcon className="w-4 h-4 mr-2" />
-                            Neustart
+                            {t('common.restart', 'Neustart')}
                         </button>
                     )}
                 </div>

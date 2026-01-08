@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { useTranslation } from '@/hooks/use-translation'
 
 export default function OnboardingPage() {
+    const { t } = useTranslation()
     const router = useRouter()
     const { update } = useSession()
     const [isLoading, setIsLoading] = useState(false)
@@ -45,7 +47,7 @@ export default function OnboardingPage() {
             router.push('/')
             router.refresh()
         } catch (err) {
-            setError('Ein Fehler ist aufgetreten. Bitte versuche es erneut.')
+            setError(t('common.error', 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.'))
         } finally {
             setIsLoading(false)
         }
@@ -65,10 +67,10 @@ export default function OnboardingPage() {
                         />
                     </div>
                     <h2 className="mt-2 text-center text-3xl font-serif font-bold text-gray-900">
-                        Willkommen bei Zazakî!
+                        {t('onboarding.title', 'Willkommen bei Zazakî!')}
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 max-w-sm">
-                        Um dein Zertifikat später personalisieren zu können, benötigen wir deinen Namen.
+                        {t('onboarding.subtitle', 'Um dein Zertifikat später personalisieren zu können, benötigen wir deinen Namen.')}
                     </p>
                 </div>
 
@@ -77,7 +79,7 @@ export default function OnboardingPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label htmlFor="firstName" className="block text-sm font-bold text-gray-700 mb-1 font-sans">
-                                    Vorname
+                                    {t('settings.firstName', 'Vorname')}
                                 </label>
                                 <input
                                     id="firstName"
@@ -92,7 +94,7 @@ export default function OnboardingPage() {
                             </div>
                             <div>
                                 <label htmlFor="lastName" className="block text-sm font-bold text-gray-700 mb-1 font-sans">
-                                    Nachname
+                                    {t('settings.lastName', 'Nachname')}
                                 </label>
                                 <input
                                     id="lastName"
@@ -107,12 +109,12 @@ export default function OnboardingPage() {
                             </div>
                         </div>
                         <p className="text-xs text-gray-500 italic text-center">
-                            * Dein echter Name wird <strong>niemals öffentlich</strong> angezeigt. Er dient nur für deine Urkunden.
+                            * {t('onboarding.privacy_note', 'Dein echter Name wird <strong>niemals öffentlich</strong> angezeigt. Er dient nur für deine Urkunden.')}
                         </p>
 
                         <div className="pt-2">
                             <label htmlFor="nickname" className="block text-sm font-bold text-gray-700 mb-1 font-sans">
-                                Nickname (Öffentlich)
+                                {t('onboarding.nickname', 'Nickname (Öffentlich)')}
                             </label>
                             <input
                                 id="nickname"
@@ -125,7 +127,7 @@ export default function OnboardingPage() {
                                 onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             />
                             <p className="mt-1 text-xs text-gray-500">
-                                Dieser Name wird auf der Bestenliste angezeigt.
+                                {t('settings.nickname.hint', 'Dieser Name wird auf der Bestenliste angezeigt.')}
                             </p>
                         </div>
                     </div>
@@ -141,7 +143,7 @@ export default function OnboardingPage() {
                         disabled={isLoading}
                         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-gray-900 bg-primary-500 hover:bg-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
                     >
-                        {isLoading ? 'Speichern...' : 'Profil erstellen & Loslegen'}
+                        {isLoading ? t('common.saving', 'Speichern...') : t('onboarding.submit', 'Profil erstellen & Loslegen')}
                     </button>
                 </form>
             </div>

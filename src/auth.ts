@@ -84,16 +84,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const cfData = existingUser.courseFinderData as any
             if (cfData?.resultEmailPending && cfData?.result) {
               const { CourseFinderResultEmail } = await import("@/components/emails/course-finder-result-email")
+              const { getDictionary } = await import("@/lib/translations")
+              const dictionary = await getDictionary('de') // Default to German for email context
               const dashboardUrl = `${process.env.NEXTAUTH_URL}/dashboard`
+
+              // Translate recommendation & dialect if keys exist
+              // The keys are stored in cfData.result.recommendation / .dialect
+              // We check dictionary, fallback to key/value itself
+              const t = (key: string) => dictionary[key] || key
+
+              const translatedRecommendation = t(cfData.result.recommendation)
+              const translatedDialect = t(cfData.result.dialect)
 
               await resend.emails.send({
                 from: "Zazakî Academy <updates@zazakiacademy.com>",
                 to: user.email,
-                subject: `Dein Zazakî-Kurs Ergebnis: ${cfData.result.recommendation}`,
+                subject: `Dein Zazakî-Kurs Ergebnis: ${translatedRecommendation}`,
                 react: CourseFinderResultEmail({
-                  name: existingUser.firstName || existingUser.name || undefined, // undefined lets component handle fallback if we want, or we pass undefined
-                  dialect: cfData.result.dialect,
-                  recommendation: cfData.result.recommendation,
+                  name: existingUser.firstName || existingUser.name || undefined,
+                  dialect: translatedDialect,
+                  recommendation: translatedRecommendation,
                   dashboardUrl,
                 })
               })

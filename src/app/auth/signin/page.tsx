@@ -4,8 +4,10 @@ import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import { useTranslation } from '@/hooks/use-translation'
 
 function SignInPage() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
@@ -41,10 +43,10 @@ function SignInPage() {
             />
           </div>
           <h2 className="text-3xl font-serif font-bold text-center text-gray-900">
-            Anmelden
+            {t('auth.signin.title', 'Anmelden')}
           </h2>
           <p className="mt-2 text-center text-gray-600 font-sans">
-            Starte deine Zazakî-Lernreise
+            {t('auth.signin.subtitle', 'Starte deine Zazakî-Lernreise')}
           </p>
         </div>
 
@@ -54,10 +56,10 @@ function SignInPage() {
             <div className="mb-6 p-4 bg-brand-red/10 border border-brand-red/20 rounded-xl flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-brand-red shrink-0" />
               <p className="text-sm font-medium text-brand-red">
-                {error === 'Configuration' && 'Konfigurationsfehler.'}
-                {error === 'AccessDenied' && 'Zugriff verweigert.'}
-                {error === 'Verification' && 'Link abgelaufen oder bereits verwendet.'}
-                {!['Configuration', 'AccessDenied', 'Verification'].includes(error) && 'Anmeldung fehlgeschlagen.'}
+                {error === 'Configuration' && t('auth.error.configuration', 'Konfigurationsfehler.')}
+                {error === 'AccessDenied' && t('auth.error.accessDenied', 'Zugriff verweigert.')}
+                {error === 'Verification' && t('auth.error.verification', 'Link abgelaufen oder bereits verwendet.')}
+                {!['Configuration', 'AccessDenied', 'Verification'].includes(error) && t('auth.error.default', 'Anmeldung fehlgeschlagen.')}
               </p>
             </div>
           )}
@@ -69,22 +71,24 @@ function SignInPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">E-Mail prüfen!</h3>
+              <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">{t('auth.checkEmail.title', 'E-Mail prüfen!')}</h3>
               <p className="text-gray-600 mb-6">
-                Wir haben einen Magic Link an <span className="font-semibold text-gray-900">{email}</span> gesendet.
+                {t('auth.checkEmail.sent', 'Wir haben einen Magic Link an')}{' '}
+                <span className="font-semibold text-gray-900">{email}</span>{' '}
+                {t('auth.checkEmail.sentSuffix', 'gesendet.')}
               </p>
               <button
                 onClick={() => setSubmitted(false)}
                 className="text-sm text-primary-600 hover:text-primary-700 font-medium"
               >
-                Andere E-Mail verwenden
+                {t('auth.useAnotherEmail', 'Andere E-Mail verwenden')}
               </button>
             </div>
           ) : (
             <form onSubmit={handleEmailSignIn} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 font-sans mb-2">
-                  E-Mail Adresse
+                  {t('auth.email.label', 'E-Mail Adresse')}
                 </label>
                 <div className="mt-1">
                   <input
@@ -113,7 +117,7 @@ function SignInPage() {
                   disabled={loading}
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-gray-900 bg-primary-500 hover:bg-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
                 >
-                  {loading ? 'Sende...' : 'Magic Link senden'}
+                  {loading ? t('common.sending', 'Sende...') : t('auth.sendLink', 'Magic Link senden')}
                 </button>
               </div>
             </form>

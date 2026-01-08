@@ -7,32 +7,46 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 
-export const metadata: Metadata = {
-  title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
-  description: 'Effektives Vokabel-Lernen, herausfordernde Quizze und spielerischer Fortschritt. Übe Kostenlos. Werde jeden Tag ein bisschen besser.',
-  metadataBase: new URL('https://quiz.zazakiacademy.com'),
-  manifest: '/manifest.json',
-  openGraph: {
-    title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
-    description: 'Der moderne Weg, Zazakî zu lernen. Kostenlos, effektiv und mit Spaß.',
-    url: 'https://quiz.zazakiacademy.com',
-    siteName: 'Zazakî Academy',
-    locale: 'de_DE',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Zazakî Quiz - Lerne Zazakî spielerisch',
-    description: 'Effektives Vokabel-Lernen und Gamification.',
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Zazakî',
-  },
-  formatDetection: {
-    telephone: false,
-  },
+// Dynamic Metadata
+export async function generateMetadata(): Promise<Metadata> {
+  const { getDictionary } = await import('@/lib/translations')
+  const dictionary = await getDictionary('de')
+  const t = (key: string, defaultValue: string) => dictionary[key] || defaultValue
+
+  const title = t('meta.title', 'Zazakî Quiz - Lerne Zazakî spielerisch')
+  const description = t('meta.desc', 'Effektives Vokabel-Lernen, herausfordernde Quizze und spielerischer Fortschritt. Übe Kostenlos. Werde jeden Tag ein bisschen besser.')
+  const ogTitle = t('meta.og.title', 'Zazakî Quiz - Lerne Zazakî spielerisch')
+  const ogDesc = t('meta.og.desc', 'Der moderne Weg, Zazakî zu lernen. Kostenlos, effektiv und mit Spaß.')
+  const twitterDesc = t('meta.twitter.desc', 'Effektives Vokabel-Lernen und Gamification.')
+  const pwaTitle = t('meta.pwa.title', 'Zazakî')
+
+  return {
+    title,
+    description,
+    metadataBase: new URL('https://quiz.zazakiacademy.com'),
+    manifest: '/manifest.json',
+    openGraph: {
+      title: ogTitle,
+      description: ogDesc,
+      url: 'https://quiz.zazakiacademy.com',
+      siteName: 'Zazakî Academy',
+      locale: 'de_DE',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: ogTitle,
+      description: twitterDesc,
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: pwaTitle,
+    },
+    formatDetection: {
+      telephone: false,
+    },
+  }
 }
 
 export const viewport: Viewport = {

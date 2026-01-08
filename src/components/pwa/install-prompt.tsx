@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react'
 import { pwaInstallHandler } from 'pwa-install-handler'
 import { XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline'
+import { useTranslation } from '@/hooks/use-translation'
 
 interface InstallPromptProps {
     attemptCount: number
 }
 
 export function InstallPrompt({ attemptCount }: InstallPromptProps) {
+    const { t } = useTranslation()
     const [canInstall, setCanInstall] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const [isInstalled, setIsInstalled] = useState(false)
@@ -59,10 +61,10 @@ export function InstallPrompt({ attemptCount }: InstallPromptProps) {
                 <div className="flex-1 mr-4">
                     <h4 className="font-bold text-gray-900 flex items-center">
                         <ArrowDownTrayIcon className="w-5 h-5 text-brand-orange mr-2" />
-                        App installieren
+                        {t('pwa.install.title', 'App installieren')}
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
-                        Installiere Zazakî Quiz für schnellen Zugriff und Offline-Modus!
+                        {t('pwa.install.desc', 'Installiere Zazakî Quiz für schnellen Zugriff und Offline-Modus!')}
                     </p>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -76,7 +78,7 @@ export function InstallPrompt({ attemptCount }: InstallPromptProps) {
                         onClick={handleInstall}
                         className="btn-primary py-2 px-4 shadow-lg shadow-brand-orange/20"
                     >
-                        Installieren
+                        {t('pwa.install.button', 'Installieren')}
                     </button>
                 </div>
             </div>

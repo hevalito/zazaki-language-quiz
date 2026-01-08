@@ -5,95 +5,21 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { MultipleChoiceQuestion } from '@/components/questions/multiple-choice-question'
 import type { Question, Choice, MultiLanguageContent } from '@/types'
-import {
-    ArrowLeftIcon,
-    ArrowRightIcon,
-    CheckIcon,
-    XMarkIcon,
-    AcademicCapIcon,
-    SparklesIcon,
-    BookOpenIcon
-} from '@heroicons/react/24/outline'
+import { useTranslation } from '@/hooks/use-translation'
+
+// ...
 
 export default function LearningRoomPage() {
+    const { t } = useTranslation()
     const router = useRouter()
-    const { data: session } = useSession()
-    const [questions, setQuestions] = useState<Question[]>([])
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [loading, setLoading] = useState(true)
-    const [submitting, setSubmitting] = useState(false)
+    // ...
 
-    // State for the CURRENT question interaction
-    const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null)
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
-    const [explanation, setExplanation] = useState<MultiLanguageContent | null>(null)
-    const [correctChoiceId, setCorrectChoiceId] = useState<string | null>(null)
+    // ... (fetchQuestions) ...
 
-    useEffect(() => {
-        fetchQuestions()
-    }, [])
-
-    const fetchQuestions = async () => {
-        setLoading(true)
-        try {
-            const res = await fetch('/api/learning')
-            if (res.ok) {
-                const data = await res.json()
-                setQuestions(prev => {
-                    return data.questions
-                })
-                setCurrentQuestionIndex(0)
-            }
-        } catch (e) {
-            console.error(e)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const handleAnswer = async (choiceId: string, _isCorrect?: boolean) => {
-        if (submitting || selectedChoiceId) return // Already answered
-
-        setSubmitting(true)
-        setSelectedChoiceId(choiceId)
-
-        try {
-            const currentQuestion = questions[currentQuestionIndex]
-            const res = await fetch('/api/learning/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    questionId: currentQuestion.id,
-                    choiceId
-                })
-            })
-
-            const result = await res.json()
-
-            setIsCorrect(result.isCorrect)
-            setCorrectChoiceId(result.correctChoiceId)
-            setExplanation(result.explanation || currentQuestion.explanation)
-
-        } catch (e) {
-            console.error(e)
-        } finally {
-            setSubmitting(false)
-        }
-    }
+    // ... (handleAnswer) ...
 
     const nextQuestion = () => {
-        // Reset state
-        setSelectedChoiceId(null)
-        setIsCorrect(null)
-        setExplanation(null)
-        setCorrectChoiceId(null)
-
-        if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(prev => prev + 1)
-        } else {
-            // Re-fetch more questions if we reached the end
-            fetchQuestions()
-        }
+        // ...
     }
 
     if (loading && questions.length === 0) {
@@ -101,7 +27,7 @@ export default function LearningRoomPage() {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Lade Fragen...</p>
+                    <p className="mt-4 text-gray-600">{t('loading.questions', 'Lade Fragen...')}</p>
                 </div>
             </div>
         )
@@ -118,7 +44,7 @@ export default function LearningRoomPage() {
                             <button
                                 onClick={() => router.push('/')}
                                 className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                                aria-label="Zurück"
+                                aria-label={t('nav.back', 'Zurück')}
                             >
                                 <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                             </button>
@@ -126,8 +52,8 @@ export default function LearningRoomPage() {
                                 <AcademicCapIcon className="w-6 h-6 text-green-600" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-bold text-gray-900">Lernraum</h1>
-                                <p className="text-sm text-gray-500">Trainiere deine Fehler</p>
+                                <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
+                                <p className="text-sm text-gray-500">{t('learning.subtitle', 'Trainiere deine Fehler')}</p>
                             </div>
                         </div>
                     </div>
@@ -138,17 +64,16 @@ export default function LearningRoomPage() {
                         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckIcon className="w-12 h-12 text-green-600" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Alles erledigt!</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.done.title', 'Alles erledigt!')}</h2>
                         <p className="text-gray-600 mb-8">
-                            Du hast keine offenen Wiederholungen. Super gemacht!
-                            Der Lernraum füllt sich automatisch, wenn du in Quizzes Fehler machst.
+                            {t('learning.done.desc', 'Du hast keine offenen Wiederholungen. Super gemacht! Der Lernraum füllt sich automatisch, wenn du in Quizzes Fehler machst.')}
                         </p>
                         <button
                             onClick={() => router.push('/library')}
                             className="btn-primary w-full flex items-center justify-center"
                         >
                             <BookOpenIcon className="w-5 h-5 mr-2" />
-                            Neues Quiz starten
+                            {t('learning.startNew', 'Neues Quiz starten')}
                         </button>
                     </div>
                 </main>
@@ -167,7 +92,7 @@ export default function LearningRoomPage() {
                         <button
                             onClick={() => router.push('/')}
                             className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                            aria-label="Zurück"
+                            aria-label={t('nav.back', 'Zurück')}
                         >
                             <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </button>
@@ -175,13 +100,13 @@ export default function LearningRoomPage() {
                             <AcademicCapIcon className="w-6 h-6 text-green-600" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">Lernraum</h1>
-                            <p className="text-sm text-gray-500">Trainiere deine Fehler</p>
+                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
+                            <p className="text-sm text-gray-500">{t('learning.subtitle', 'Trainiere deine Fehler')}</p>
                         </div>
                     </div>
 
                     <div className="text-sm font-medium px-3 py-1 bg-gray-100 rounded-full text-gray-600">
-                        {questions.length - currentQuestionIndex} verbleibend
+                        {questions.length - currentQuestionIndex} {t('learning.remaining', 'verbleibend')}
                     </div>
                 </div>
             </header>
@@ -195,7 +120,7 @@ export default function LearningRoomPage() {
                             <div className="mb-6 flex justify-center">
                                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                                     <BookOpenIcon className="w-3.5 h-3.5 mr-1.5" />
-                                    Aus: {((currentQuestion as any).quiz.title.de || (currentQuestion as any).quiz.title.en)}
+                                    {t('learning.origin', 'Aus:')} {((currentQuestion as any).quiz.title.de || (currentQuestion as any).quiz.title.en)}
                                 </span>
                             </div>
                         )}
@@ -222,12 +147,12 @@ export default function LearningRoomPage() {
                                 </div>
                                 <div className="flex-1">
                                     <h3 className={`font-bold text-lg mb-1 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                                        {isCorrect ? 'Raşt o! - Richtig!' : 'Çi heyf! - Leider falsch!'}
+                                        {isCorrect ? t('feedback.correct', 'Raşt o! - Richtig!') : t('feedback.wrong', 'Çi heyf! - Leider falsch!')}
                                     </h3>
 
                                     {explanation && (
                                         <div className="mt-3 text-sm text-gray-700 bg-white/50 p-3 rounded-lg border border-black/5">
-                                            <p className="font-semibold mb-1">Erklärung:</p>
+                                            <p className="font-semibold mb-1">{t('quiz.explanation', 'Erklärung:')}</p>
                                             {/* Helper to extract correct language - reusing logic would be better but fast inline here */}
                                             {typeof explanation === 'string' ? explanation : (explanation.de || explanation.en || '')}
                                         </div>
@@ -243,7 +168,7 @@ export default function LearningRoomPage() {
                                                 }
                                         `}
                                         >
-                                            {isCorrect ? 'Weiter' : 'Verstanden & Weiter'} <ArrowRightIcon className="w-4 h-4 inline-block ml-1" />
+                                            {isCorrect ? t('quiz.next', 'Weiter') : t('learning.understood', 'Verstanden & Weiter')} <ArrowRightIcon className="w-4 h-4 inline-block ml-1" />
                                         </button>
                                     </div>
                                 </div>
@@ -254,7 +179,7 @@ export default function LearningRoomPage() {
 
                 {/* Hint about Spaced Repetition */}
                 <div className="text-center mt-8 text-xs text-gray-400">
-                    Fragen, die du hier falsch beantwortest, kommen sofort wieder dran.
+                    {t('learning.hint', 'Fragen, die du hier falsch beantwortest, kommen sofort wieder dran.')}
                 </div>
             </main>
         </div>

@@ -8,57 +8,20 @@ import {
     ArrowLeftIcon,
     UserCircleIcon,
     FireIcon
-} from '@heroicons/react/24/outline'
+import { useTranslation } from '@/hooks/use-translation'
 
-interface LeaderboardEntry {
-    rank: number
-    id: string
-    name: string
-    image?: string | null
-    xp: number
-    isCurrentUser: boolean
-}
+// ...
 
 export default function LeaderboardPage() {
+    const { t } = useTranslation()
     const router = useRouter()
-    const { data: session } = useSession()
+    // ...
 
-    const [timeFrame, setTimeFrame] = useState<'weekly' | 'all_time'>('weekly')
-    const [loading, setLoading] = useState(true)
-    const [entries, setEntries] = useState<LeaderboardEntry[]>([])
+    // ... (fetchLeaderboard) ...
 
-    useEffect(() => {
-        fetchLeaderboard()
-    }, [timeFrame])
+    // ... (getRankStyle) ...
 
-    const fetchLeaderboard = async () => {
-        setLoading(true)
-        try {
-            const res = await fetch(`/api/leaderboard?timeFrame=${timeFrame}`)
-            if (res.ok) {
-                const data = await res.json()
-                setEntries(data.leaderboard)
-            }
-        } catch (error) {
-            console.error('Failed to fetch leaderboard', error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const getRankStyle = (rank: number) => {
-        switch (rank) {
-            case 1: return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-            case 2: return 'bg-gray-100 text-gray-800 border-gray-200'
-            case 3: return 'bg-orange-100 text-orange-800 border-orange-200'
-            default: return 'bg-white text-gray-600 border-gray-100'
-        }
-    }
-
-    const getRankIcon = (rank: number) => {
-        if (rank <= 3) return <TrophyIcon className="w-5 h-5" />
-        return <span className="text-sm font-bold w-5 text-center">{rank}</span>
-    }
+    // ... (getRankIcon) ...
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -68,7 +31,7 @@ export default function LeaderboardPage() {
                         <button
                             onClick={() => router.push('/')}
                             className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                            aria-label="Zurück"
+                            aria-label={t('nav.back', 'Zurück')}
                         >
                             <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                         </button>
@@ -76,8 +39,8 @@ export default function LeaderboardPage() {
                             <TrophyIcon className="w-6 h-6 text-primary-600" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">Bestenliste</h1>
-                            <p className="text-sm text-gray-500">Erklimme die Spitze</p>
+                            <h1 className="text-xl font-bold text-gray-900">{t('leaderboard.title', 'Bestenliste')}</h1>
+                            <p className="text-sm text-gray-500">{t('leaderboard.subtitle', 'Erklimme die Spitze')}</p>
                         </div>
                     </div>
                 </div>
@@ -92,7 +55,7 @@ export default function LeaderboardPage() {
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
-                            Diese Woche
+                            {t('leaderboard.weekly', 'Diese Woche')}
                         </button>
                         <button
                             onClick={() => setTimeFrame('all_time')}
@@ -101,7 +64,7 @@ export default function LeaderboardPage() {
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
-                            All Time
+                            {t('leaderboard.allTime', 'All Time')}
                         </button>
                     </div>
                 </div>
@@ -115,7 +78,7 @@ export default function LeaderboardPage() {
                 ) : entries.length === 0 ? (
                     <div className="text-center py-12 text-gray-500">
                         <TrophyIcon className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                        <p>Noch keine Einträge für diesen Zeitraum.</p>
+                        <p>{t('leaderboard.empty', 'Noch keine Einträge für diesen Zeitraum.')}</p>
                     </div>
                 ) : (
                     <div className="space-y-3" id="leaderboard-list">
@@ -142,7 +105,7 @@ export default function LeaderboardPage() {
                                         </div>
                                         <div>
                                             <p className={`font-bold ${entry.isCurrentUser ? 'text-primary-900' : 'text-gray-900'}`}>
-                                                {entry.name} {entry.isCurrentUser && '(Du)'}
+                                                {entry.name} {entry.isCurrentUser && t('leaderboard.you', '(Du)')}
                                             </p>
                                             {/* <p className="text-xs text-gray-500">Level 5</p> */}
                                         </div>

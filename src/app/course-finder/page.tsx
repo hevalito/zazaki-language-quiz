@@ -1,13 +1,18 @@
-import CourseFinderWizard from '@/components/course-finder/wizard'
-import { Metadata } from 'next'
-import Image from 'next/image'
+"use client"
 
-export const metadata: Metadata = {
-    title: 'Kursfinder | Zazakî Academy',
-    description: 'Finde den passenden Zazakî-Sprachkurs für deinen Dialekt und deine Vorkenntnisse.',
-}
+import CourseFinderWizard from '@/components/course-finder/wizard'
+import Image from 'next/image'
+import { useTranslation } from '@/hooks/use-translation'
+
+// Note: Metadata is not supported in client components.
+// We should move metadata to a separate layout or use a server wrapper if needed.
+// For now, I will remove the export since this is a page.tsx that needs to use hooks.
+// Or effectively, I can wrap the content in a client component and keep this as server component.
+// But to keep it simple and consistent with other pages that switched to use client for translation hooks:
 
 export default function CourseFinderPage() {
+    const { t } = useTranslation()
+
     return (
         <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center p-4">
             {/* Background Decoration */}
@@ -27,15 +32,16 @@ export default function CourseFinderPage() {
                         />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-tight mb-4">
-                        Finde deinen <span className="text-primary-600 relative inline-block">
-                            Weg
+                        {t('courseFinder.title', 'Finde deinen')}{' '}
+                        <span className="text-primary-600 relative inline-block">
+                            {t('courseFinder.way', 'Weg')}
                             <svg className="absolute w-full h-2 -bottom-1 left-0 text-primary-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
                                 <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                             </svg>
                         </span>
                     </h1>
                     <p className="text-lg text-gray-600 max-w-lg mx-auto font-sans leading-relaxed">
-                        Beantworte uns ein paar Fragen zu deiner Herkunft und Erfahrung. Wir zeigen dir den idealen Einstieg in die Zazakî-Sprache.
+                        {t('courseFinder.subtitle', 'Beantworte uns ein paar Fragen zu deiner Herkunft und Erfahrung. Wir zeigen dir den idealen Einstieg in die Zazakî-Sprache.')}
                     </p>
                 </div>
 
@@ -43,7 +49,7 @@ export default function CourseFinderPage() {
 
                 <div className="text-center mt-8">
                     <a href="/" className="text-sm font-bold text-gray-400 hover:text-primary-600 transition-colors uppercase tracking-widest">
-                        Zurück zur Startseite
+                        {t('common.backToHome', 'Zurück zur Startseite')}
                     </a>
                 </div>
             </div>
