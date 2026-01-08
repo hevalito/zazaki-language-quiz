@@ -46,6 +46,7 @@ export const viewport: Viewport = {
 
 import { UnlockManager } from '@/components/achievements/unlock-manager'
 import { TourProvider } from '@/components/providers/tour-context'
+import { ChangelogModal } from '@/components/features/changelog-modal'
 
 import { MobileNav } from '@/components/layout/mobile-nav'
 import { getSystemSettings } from '@/lib/settings'
@@ -102,6 +103,7 @@ export default async function RootLayout({
             <div className="min-h-full pb-20 md:pb-0">
               {children}
             </div>
+            <ChangelogModal />
             <MobileNav />
           </TourProvider>
         </Providers>
