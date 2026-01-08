@@ -98,6 +98,7 @@ export function MobileNav() {
                         <Link
                             key={item.name}
                             href={item.href}
+                            id={item.href === '/learning' ? 'tour-learning-room-mobile' : undefined}
                             className="relative flex flex-col items-center justify-center w-full h-full text-xs font-medium transition-colors duration-200 outline-none select-none touch-manipulation group"
                         >
                             {isActive && (

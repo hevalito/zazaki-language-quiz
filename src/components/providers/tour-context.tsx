@@ -87,6 +87,22 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
                 }
             },
 
+
+            // LEARNING ROOM
+            {
+                element: '#tour-learning-room-nav',
+                popover: {
+                    title: 'Lernraum',
+                    description: 'Der intelligenteste Ort für dich. Hier wiederholen wir Fehler, die du in Quizzen gemacht hast. Perfekt zum Üben!',
+                    side: 'top',
+                    // On mobile, the ID might be different or hidden. Driver.js handles visibility checks.
+                    // If element is not visible, it skips? Or we can provide alternative?
+                    // For Simplicity, we target the desktop grid ID, but we should double check if we want to target mobile too?
+                    // Mobile Nav is sticky bottom. Driver might struggle with fixed position elements sometimes.
+                    // Let's stick to the main grid for the tour as it's cleaner.
+                }
+            },
+
             // LEADERBOARD NAVIGATION
             {
                 element: '#tour-leaderboard-nav',

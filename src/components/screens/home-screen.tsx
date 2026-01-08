@@ -388,6 +388,7 @@ export function HomeScreen() {
         {/* Quick Actions */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <button
+            id="tour-learning-room-nav"
             onClick={() => window.location.href = '/learning'}
             className="card-interactive text-center group"
           >
