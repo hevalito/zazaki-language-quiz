@@ -1,12 +1,12 @@
 {
   "name": "zazaki-quiz",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Modern mobile-first Zazaki (Kurdish) language learning quiz application",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "prisma migrate deploy && tsx scripts/sync-translations.ts && next start",
+    "start": "prisma migrate deploy && npx tsx scripts/sync-translations.ts && next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "db:generate": "prisma generate",
@@ -63,8 +63,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
-    "pdf-parse": "^2.4.5",
-    "tsx": "^4.19.2"
+    "pdf-parse": "^2.4.5"
   },
   "keywords": [
     "zazaki",
