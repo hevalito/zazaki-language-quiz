@@ -114,23 +114,112 @@ export default function AdminSettingsPage() {
                         <div className="p-6 flex-1">
                             {/* System Tab */}
                             <TabsContent value="system" className="mt-0 space-y-8">
-                                {/* ... */}
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Instance Controls</h3>
+                                    <div className="space-y-6">
+                                        <ToggleSetting
+                                            label="Maintenance Mode"
+                                            description="Prevent non-admin users from accessing the application."
+                                            enabled={settings.maintenance_mode}
+                                            onChange={(val) => handleChange('maintenance_mode', val)}
+                                            risk="high"
+                                        />
+                                        <ToggleSetting
+                                            label="Registration Enabled"
+                                            description="Allow new users to sign up. Existing users can still log in."
+                                            enabled={settings.registration_enabled}
+                                            onChange={(val) => handleChange('registration_enabled', val)}
+                                        />
+                                        <ToggleSetting
+                                            label="Guest Browsing"
+                                            description="Allow users to browse content without an account."
+                                            enabled={settings.guest_browsing_enabled}
+                                            onChange={(val) => handleChange('guest_browsing_enabled', val)}
+                                        />
+                                    </div>
+                                </div>
                             </TabsContent>
 
                             {/* Gamification Tab */}
                             <TabsContent value="gamification" className="mt-0 space-y-8">
-                                {/* ... */}
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Economy & Progression</h3>
+                                    <div className="grid grid-cols-1 gap-6 max-w-xl">
+                                        <div>
+                                            <Label htmlFor="xp-multiplier">Global XP Multiplier</Label>
+                                            <div className="mt-1 flex items-center space-x-2">
+                                                <input
+                                                    type="number"
+                                                    id="xp-multiplier"
+                                                    step="0.1"
+                                                    min="0.1"
+                                                    max="10.0"
+                                                    value={settings.global_xp_multiplier}
+                                                    onChange={(e) => handleChange('global_xp_multiplier', parseFloat(e.target.value))}
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                />
+                                                <span className="text-sm text-gray-500">x</span>
+                                            </div>
+                                            <p className="mt-1 text-sm text-gray-500">
+                                                Multiplies all XP earned by users. Useful for special events.
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor="streak-freeze-limit">Streak Freeze Limit</Label>
+                                            <input
+                                                type="number"
+                                                id="streak-freeze-limit"
+                                                min="0"
+                                                max="10"
+                                                value={settings.streak_freeze_limit}
+                                                onChange={(e) => handleChange('streak_freeze_limit', parseInt(e.target.value))}
+                                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            />
+                                            <p className="mt-1 text-sm text-gray-500">
+                                                Maximum number of streak freezes a user can hold at once.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </TabsContent>
 
                             {/* Content Tab */}
                             <TabsContent value="content" className="mt-0 space-y-8">
-                                {/* ... */}
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Content Utilities</h3>
+                                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                        <div className="flex">
+                                            <div className="flex-shrink-0">
+                                                <SparklesIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+                                            </div>
+                                            <div className="ml-3">
+                                                <p className="text-sm text-yellow-700">
+                                                    More granular content settings will control the Course Finder logic and default fallbacks.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </TabsContent>
 
                             {/* Languages Tab */}
                             <TabsContent value="languages" className="mt-0">
                                 <LanguageSettings languages={languages} />
                             </TabsContent>
+
+                            {/* Save Button Footer */}
+                            {activeTab !== 'languages' && (
+                                <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={saving}
+                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                                    >
+                                        {saving ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </Tabs>
                 </div>
