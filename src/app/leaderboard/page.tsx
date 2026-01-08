@@ -8,6 +8,7 @@ import {
     ArrowLeftIcon,
     UserCircleIcon,
     FireIcon
+} from '@heroicons/react/24/outline'
 import { useTranslation } from '@/hooks/use-translation'
 
 // ...
