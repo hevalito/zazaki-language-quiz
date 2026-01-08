@@ -6,6 +6,14 @@ import { useSession } from 'next-auth/react'
 import { MultipleChoiceQuestion } from '@/components/questions/multiple-choice-question'
 import type { Question, Choice, MultiLanguageContent } from '@/types'
 import { useTranslation } from '@/hooks/use-translation'
+import {
+    ArrowLeftIcon,
+    AcademicCapIcon,
+    CheckIcon,
+    BookOpenIcon,
+    XMarkIcon,
+    ArrowRightIcon
+} from '@heroicons/react/24/outline'
 
 // ...
 
