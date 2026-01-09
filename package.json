@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "prisma migrate deploy && npx tsx scripts/sync-translations.ts && next start",
+    "start": "prisma migrate deploy && npx tsx scripts/sync-translations.ts && npx tsx scripts/backfill-activity.ts && next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "db:generate": "prisma generate",
