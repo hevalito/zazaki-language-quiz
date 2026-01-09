@@ -13,84 +13,148 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        // 1. Fetch ALL spaced items for this user that are due
-        // We fetch logic-side because "due" depends on date comparison which is easier in JS/App logic 
-        // or simple LessThanOrEqual query.
+        const userId = session.user.id
         const now = new Date()
 
-        // Fetch items due before NOW
-        // Order by repetition ASC (New mistakes/items first), then dueDate
-        const dueSpacedItems = await prisma.spacedItem.findMany({
+        // --- THE MIX RECIPE ---
+        // Target Session Size: 20
+        // 1. Active/Mistakes: ~60% (12 items) -> Stage < 3 OR Due
+        // 2. Fresh/New: ~30% (6 items) -> Not seen yet
+        // 3. Stable/Review: ~10% (2 items) -> Stage >= 3
+
+        // 1. Fetch Active Items (Mistakes & Due)
+        const activeItems = await prisma.spacedItem.findMany({
             where: {
-                userId: session.user.id,
-                dueDate: {
-                    lte: now
-                }
+                userId,
+                OR: [
+                    { stage: { lt: 3 } }, // Mistakes/Unstable
+                    { dueDate: { lte: now } } // Due items
+                ]
             },
             include: {
                 question: {
                     include: {
                         choices: true,
-                        quiz: {
-                            select: {
-                                title: true
-                            }
-                        }
+                        quiz: { select: { title: true } }
                     }
                 }
             },
             orderBy: [
-                { repetition: 'asc' }, // Failures/New items first (repetition 0)
-                { dueDate: 'asc' }     // Then by most overdue
+                { repetition: 'asc' }, // Prioritize new mistakes
+                { dueDate: 'asc' }
             ],
-            take: 20 // Batch size
+            take: 12
         })
 
-        let questions: any[] = []
-
-        if (dueSpacedItems.length > 0) {
-            questions = dueSpacedItems.map(item => {
-                // Shuffle choices for better learning effect
-                const shuffledChoices = [...item.question.choices].sort(() => Math.random() - 0.5)
-
-                return {
-                    ...item.question,
-                    choices: shuffledChoices,
-                    _spacedItem: {
-                        id: item.id,
-                        easiness: item.easiness,
-                        interval: item.interval,
-                        repetition: item.repetition
+        // 2. Fetch Stable Items (Confidence Boosters) - Only if we have some
+        const stableItems = await prisma.spacedItem.findMany({
+            where: {
+                userId,
+                stage: { gte: 3 },
+                dueDate: { gt: now } // Not due yet, but good for review
+            },
+            include: {
+                question: {
+                    include: {
+                        choices: true,
+                        quiz: { select: { title: true } }
                     }
                 }
+            },
+            take: 2
+        })
+
+        // 3. Fetch Fresh Items (New Content)
+        // We need items that have NO SpacedItem for this user
+        const freshQuestions = await prisma.question.findMany({
+            where: {
+                spacedItems: {
+                    none: {
+                        userId
+                    }
+                }
+            },
+            include: {
+                choices: true,
+                quiz: { select: { title: true } }
+            },
+            take: 6
+        })
+
+        // Combine and Formulate the Session
+        let combinedQuestions: any[] = []
+
+        // Helper to format item
+        const formatItem = (q: any, spacedItem?: any) => ({
+            ...q,
+            choices: [...q.choices].sort(() => Math.random() - 0.5), // Shuffle choices
+            _spacedItem: spacedItem ? {
+                id: spacedItem.id,
+                easiness: spacedItem.easiness,
+                interval: spacedItem.interval,
+                repetition: spacedItem.repetition,
+                stage: spacedItem.stage // Include stage for debugging/UI
+            } : undefined
+        })
+
+        // Add Active
+        activeItems.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+
+        // Add Stable
+        stableItems.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+
+        // Add Fresh
+        freshQuestions.forEach(q => combinedQuestions.push(formatItem(q)))
+
+        // FALLBACK: If total < 10, try to pull more Fresh items to fill up
+        if (combinedQuestions.length < 10) {
+            const moreFresh = await prisma.question.findMany({
+                where: {
+                    spacedItems: { none: { userId } },
+                    id: { notIn: freshQuestions.map(q => q.id) } // Exclude already picked
+                },
+                include: { choices: true, quiz: { select: { title: true } } },
+                take: 20 - combinedQuestions.length
             })
-        } else {
-            // MIX IT UP: If no due items, return an empty list? 
-            // User requested "mix in some other questions". 
-            // BUT also said "The learning room will be empty as long as you didn't answer any quizzes".
-            // Let's stick to strict mistakes/due items for now as per "Learning room is individual... adapting to answers".
-            // If empty, return success/empty state.
-            questions = []
+            moreFresh.forEach(q => combinedQuestions.push(formatItem(q)))
         }
 
-        // Shuffle questions slightly? No, priority order is good. 
-        // But maybe detailed sort? We used DB orderBy, which is good.
+        // FALLBACK 2: If still low (no fresh content left?), pull more Stable/Review
+        if (combinedQuestions.length < 5) {
+            const moreStable = await prisma.spacedItem.findMany({
+                where: {
+                    userId,
+                    id: { notIn: [...activeItems, ...stableItems].map(i => i.id) }
+                },
+                include: { question: { include: { choices: true, quiz: { select: { title: true } } } } },
+                take: 20 - combinedQuestions.length
+            })
+            moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+        }
+
+        // Shuffle the final mix so the user doesn't know what "type" is coming
+        const finalQuestions = combinedQuestions.sort(() => Math.random() - 0.5)
 
         // Log Session Start
         const activity = await logActivity(
-            session.user.id,
+            userId,
             'LEARNING_SESSION_STARTED',
             {
-                totalQuestions: questions.length,
+                totalQuestions: finalQuestions.length,
                 answered: 0,
-                correct: 0
+                correct: 0,
+                mix: {
+                    active: activeItems.length,
+                    stable: stableItems.length,
+                    fresh: freshQuestions.length
+                }
             },
             'IN_PROGRESS'
         )
 
         return NextResponse.json({
-            questions,
-            count: questions.length,
+            questions: finalQuestions,
+            count: finalQuestions.length,
             activityId: activity?.id
         })
 

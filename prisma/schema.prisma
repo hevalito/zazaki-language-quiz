@@ -291,9 +291,10 @@ model SpacedItem {
   id         String    @id @default(cuid())
   userId     String
   questionId String
-  easiness   Float     @default(2.5) // SM-2 algorithm
+  easiness   Float     @default(2.5) // SM-2 algorithm (Keeping for reference/fallback)
   interval   Int       @default(1) // days
   repetition Int       @default(0)
+  stage      Int       @default(0) // New: 0-5 learning stage
   dueDate    DateTime  @default(now())
   lastReview DateTime?
   createdAt  DateTime  @default(now())

@@ -1,143 +1,119 @@
 /**
- * Spaced Repetition Algorithm (SM-2 based)
+ * Spaced Repetition Algorithm (Stage-Based)
  * 
- * This implements a simplified version of the SM-2 algorithm for spaced repetition learning.
- * The algorithm adjusts the interval between reviews based on how well the user performed.
+ * Implements a stage-based learning system:
+ * Stages: 0 (Unknown) -> 1 -> 2 -> 3 -> 4 -> 5 (Mastered)
+ * Intervals: 0, 1, 3, 7, 21, 60 days
  */
 
 export interface SpacedRepetitionItem {
   id: string
   userId: string
   questionId: string
-  easiness: number    // Easiness factor (1.3 - 2.5+)
+  easiness: number    // Legacy SM-2 support
   interval: number    // Days until next review
-  repetition: number  // Number of successful repetitions
+  repetition: number  // Total repetitions
+  stage: number       // Current learning stage (0-5)
   dueDate: Date
   lastReview?: Date | null
 }
 
 export interface ReviewResult {
-  quality: number // 0-5 scale (0=total blackout, 5=perfect response)
-  responseTime?: number // milliseconds
+  isCorrect: boolean
 }
 
 export interface UpdatedSpacedItem {
   easiness: number
   interval: number
   repetition: number
+  stage: number
   dueDate: Date
 }
 
+// Stage intervals in days. Index = Stage.
+// Stage 0: 0 days (Immediate/Same Session)
+// Stage 1: 1 day
+// Stage 2: 3 days
+// Stage 3: 7 days
+// Stage 4: 21 days
+// Stage 5: 60 days
+const STAGE_INTERVALS = [0, 1, 3, 7, 21, 60]
+
 /**
- * Calculate the next review parameters based on the SM-2 algorithm
+ * Calculate the next review parameters based on Stage Logic
  */
 export function calculateNextReview(
   item: SpacedRepetitionItem,
   result: ReviewResult
 ): UpdatedSpacedItem {
-  const { quality } = result
-  let { easiness, interval, repetition } = item
+  const { isCorrect } = result
+  let { stage, repetition, easiness } = item
 
-  // Quality must be between 0 and 5
-  const q = Math.max(0, Math.min(5, quality))
+  let newStage = stage
 
-  // If quality < 3, reset repetition count and set interval to 0 (Immediate Retry)
-  if (q < 3) {
-    repetition = 0
-    interval = 0
+  if (isCorrect) {
+    // Promotion: Move up one stage, cap at 5
+    newStage = Math.min(5, stage + 1)
   } else {
-    // Successful review
-    if (repetition === 0) {
-      interval = 1
-    } else if (repetition === 1) {
-      interval = 3 // Bumped slightly for second success
-    } else {
-      interval = Math.round(interval * easiness)
-    }
-    repetition += 1
+    // Demotion: Drop 2 stages (Significant penalty), cap at 0
+    newStage = Math.max(0, stage - 2)
   }
 
-  // Update easiness factor
-  easiness = easiness + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-
-  // Ensure easiness doesn't go below 1.3
-  easiness = Math.max(1.3, easiness)
+  // Determine new interval based on stage
+  const interval = STAGE_INTERVALS[newStage]
 
   // Calculate due date
   const dueDate = new Date()
-  dueDate.setDate(dueDate.getDate() + interval)
+  if (interval === 0) {
+    // Due immediately (keep date as now)
+  } else {
+    dueDate.setDate(dueDate.getDate() + interval)
+  }
 
   return {
-    easiness,
+    easiness, // Unchanged, legacy
     interval,
-    repetition,
+    repetition: repetition + 1,
+    stage: newStage,
     dueDate
   }
 }
 
 /**
- * Convert answer correctness to quality score
- */
-export function answerToQuality(
-  isCorrect: boolean,
-  responseTime?: number,
-  timeLimit?: number
-): number {
-  if (!isCorrect) {
-    return 1 // Wrong answer, but not total blackout (0)
-  }
-
-  // Base quality for correct answer
-  let quality = 4
-
-  // Adjust based on response time if available
-  if (responseTime && timeLimit) {
-    const timeRatio = responseTime / (timeLimit * 1000) // Convert to seconds
-
-    if (timeRatio <= 0.3) {
-      quality = 5 // Very fast, perfect response
-    } else if (timeRatio <= 0.6) {
-      quality = 4 // Good response time
-    } else if (timeRatio <= 0.9) {
-      quality = 3 // Acceptable response time
-    } else {
-      quality = 3 // Slow but correct
-    }
-  }
-
-  return quality
-}
-
-/**
- * Get items that are due for review
+ * Get items that are currently active/due
  */
 export function getDueItems(items: SpacedRepetitionItem[]): SpacedRepetitionItem[] {
   const now = new Date()
-  return items.filter(item => item.dueDate <= now)
+  return items.filter(item => item.dueDate <= now || item.stage < 3)
 }
 
 /**
- * Sort items by priority (most overdue first, then by difficulty)
+ * Sort items by priority for the Learning Room
+ * Priority:
+ * 1. Active Errors (Stage 0) & Overdue items
+ * 2. Unstable items (Stage 1-2)
+ * 3. Stable items (Stage 3+)
  */
 export function sortByPriority(items: SpacedRepetitionItem[]): SpacedRepetitionItem[] {
   const now = new Date()
 
   return items.sort((a, b) => {
-    // Calculate how overdue each item is (in days)
+    // 1. Overdue Score (Days Overdue)
     const aOverdue = Math.max(0, (now.getTime() - a.dueDate.getTime()) / (1000 * 60 * 60 * 24))
     const bOverdue = Math.max(0, (now.getTime() - b.dueDate.getTime()) / (1000 * 60 * 60 * 24))
 
-    // If both are overdue, prioritize the more overdue one
-    if (aOverdue > 0 && bOverdue > 0) {
-      return bOverdue - aOverdue
+    // If something is VERY overdue (e.g. 7+ days), prioritize it heavily
+    if (aOverdue > 7 && bOverdue <= 7) return -1
+    if (bOverdue > 7 && aOverdue <= 7) return 1
+
+    // 2. Stage Priority (Lower stage = Higher priority)
+    // We want to clear Stage 0 (mistakes) first
+    if (a.stage !== b.stage) {
+      return a.stage - b.stage
     }
 
-    // If only one is overdue, prioritize it
-    if (aOverdue > 0) return -1
-    if (bOverdue > 0) return 1
-
-    // If neither is overdue, prioritize by difficulty (lower easiness = harder)
-    return a.easiness - b.easiness
+    // 3. Within same stage, prioritize most overdue
+    return bOverdue - aOverdue
   })
 }
 
@@ -146,46 +122,23 @@ export function sortByPriority(items: SpacedRepetitionItem[]): SpacedRepetitionI
  */
 export function createSpacedItem(
   userId: string,
-  questionId: string
+  questionId: string,
+  initialStage: number = 0
 ): Omit<SpacedRepetitionItem, 'id'> {
   const now = new Date()
+  const interval = STAGE_INTERVALS[Math.min(5, Math.max(0, initialStage))]
+
+  const dueDate = new Date()
+  dueDate.setDate(dueDate.getDate() + interval)
 
   return {
     userId,
     questionId,
-    easiness: 2.5, // Default easiness factor
-    interval: 0,   // Start with 0 (immediately due) if created
-    repetition: 0, // No successful repetitions yet
-    dueDate: now,  // Due immediately for first review
-  }
-}
-
-/**
- * Calculate study session recommendations
- */
-export function getStudyRecommendations(items: SpacedRepetitionItem[]) {
-  const now = new Date()
-  const dueItems = getDueItems(items)
-  const overdueItems = dueItems.filter(item => item.dueDate < now)
-
-  // Calculate average difficulty of due items
-  const avgDifficulty = dueItems.length > 0
-    ? dueItems.reduce((sum, item) => sum + (3.0 - item.easiness), 0) / dueItems.length
-    : 0
-
-  // Recommend session size based on overdue items and difficulty
-  let recommendedSessionSize = Math.min(20, Math.max(5, dueItems.length))
-
-  if (overdueItems.length > 10) {
-    recommendedSessionSize = Math.min(30, overdueItems.length)
-  }
-
-  return {
-    dueCount: dueItems.length,
-    overdueCount: overdueItems.length,
-    recommendedSessionSize,
-    avgDifficulty,
-    prioritizedItems: sortByPriority(dueItems).slice(0, recommendedSessionSize)
+    easiness: 2.5,
+    interval,
+    repetition: 0,
+    stage: initialStage,
+    dueDate,
   }
 }
 
@@ -203,12 +156,7 @@ export async function updateSpacedRepetition(userId: string, questionId: string,
     })
 
     if (existingItem) {
-      // Update existing spaced repetition item using SM-2 algorithm
-      // Quality: 3-5 is Passing. <3 is Failing.
-      // We map "Correct" to 4, "Incorrect" to 1.
-      const quality = isCorrect ? 4 : 1
-
-      const update = calculateNextReview(existingItem, { quality })
+      const update = calculateNextReview(existingItem, { isCorrect })
 
       await prisma.spacedItem.update({
         where: { id: existingItem.id },
@@ -216,26 +164,22 @@ export async function updateSpacedRepetition(userId: string, questionId: string,
           easiness: update.easiness,
           interval: update.interval,
           repetition: update.repetition,
+          stage: update.stage,
           dueDate: update.dueDate,
           lastReview: new Date()
         }
       })
     } else {
-      // Create new spaced repetition item
-      // If WRONG on first try: Interval = 0 (Immediate).
-      // If CORRECT on first try: Interval = 1 (Tomorrow).
-      const interval = isCorrect ? 1 : 0
-      const dueDate = new Date()
-      dueDate.setDate(dueDate.getDate() + interval)
+      // New Item:
+      // Correct -> Stage 1 (1 day interval)
+      // Incorrect -> Stage 0 (Immediate retry)
+      const newStage = isCorrect ? 1 : 0
+      const newItem = createSpacedItem(userId, questionId, newStage)
 
       await prisma.spacedItem.create({
         data: {
-          userId,
-          questionId,
-          easiness: 2.5,
-          interval,
-          repetition: isCorrect ? 1 : 0,
-          dueDate,
+          ...newItem,
+          repetition: 1, // First attempt
           lastReview: new Date()
         }
       })
@@ -244,4 +188,3 @@ export async function updateSpacedRepetition(userId: string, questionId: string,
     console.error('Error updating spaced repetition:', error)
   }
 }
-
