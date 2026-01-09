@@ -12,7 +12,8 @@ import {
   CheckIcon,
   ClockIcon,
   TrophyIcon,
-  BellIcon
+  BellIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import { useWebPush } from '@/hooks/use-web-push'
 import { useTranslation } from '@/hooks/use-translation'
@@ -447,19 +448,29 @@ export default function QuizPage() {
               })}
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex flex-col space-y-3">
               <button
-                onClick={() => router.push('/')}
-                className="flex-1 btn-secondary"
+                onClick={() => router.push('/learning')}
+                className="w-full btn-primary flex items-center justify-center space-x-2 py-3"
               >
-                {t('quiz.backHome', 'Zurück zur Startseite')}
+                <AcademicCapIcon className="w-5 h-5" />
+                <span>{t('quiz.continueLearning', 'Weiter im Lernraum')}</span>
               </button>
-              <button
-                onClick={handleRestart}
-                className="flex-1 btn-primary"
-              >
-                {t('quiz.restart', 'Quiz wiederholen')}
-              </button>
+
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                <button
+                  onClick={handleRestart}
+                  className="flex-1 btn-secondary"
+                >
+                  {t('quiz.restart', 'Quiz wiederholen')}
+                </button>
+                <button
+                  onClick={() => router.push('/library')}
+                  className="flex-1 text-gray-500 hover:text-gray-700 py-2 text-sm font-medium"
+                >
+                  {t('quiz.backLibrary', 'Zurück zur Bibliothek')}
+                </button>
+              </div>
             </div>
           </div>
         </div>
