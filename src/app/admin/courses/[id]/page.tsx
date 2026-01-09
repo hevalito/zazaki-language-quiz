@@ -13,6 +13,7 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
     const [course, setCourse] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [dialects, setDialects] = useState<any[]>([])
+    const [languages, setLanguages] = useState<any[]>([])
 
     const fetchCourse = async () => {
         try {
