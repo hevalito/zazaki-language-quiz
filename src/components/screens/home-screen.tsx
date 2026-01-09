@@ -436,24 +436,18 @@ export function HomeScreen() {
           <button
             id="tour-learning-room-nav"
             onClick={() => window.location.href = '/learning'}
-            className="card-interactive text-center group"
+            className="card-interactive text-center group relative"
           >
+            <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse z-10">
+              {t('common.new', 'Neu!')}
+            </div>
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
               <AcademicCapIcon className="w-6 h-6 text-green-700" />
             </div>
             <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.learning', 'Lernraum')}</h4>
             <p className="text-sm text-gray-600">{t('quick.learningDesc', 'Trainiere deine Fehler')}</p>
           </button>
-          <button
-            onClick={() => window.location.href = '/library'}
-            className="card-interactive text-center group"
-          >
-            <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-200 transition-colors">
-              <BookOpenIcon className="w-6 h-6 text-indigo-700" />
-            </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.library', 'Bibliothek')}</h4>
-            <p className="text-sm text-gray-600">{t('quick.libraryDesc', 'Alle Quizze')}</p>
-          </button>
+
           <button
             id="tour-leaderboard-nav"
             onClick={() => window.location.href = '/leaderboard'}
