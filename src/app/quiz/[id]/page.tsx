@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useUnlockStore } from '@/lib/store/unlock-store'
@@ -83,6 +83,40 @@ export default function QuizPage() {
   const [submitting, setSubmitting] = useState(false)
   const [questionStartTime, setQuestionStartTime] = useState(Date.now())
 
+  const [activityId, setActivityId] = useState<string | null>(null)
+  const activityIdRef = useRef<string | null>(null)
+
+  // Sync ref
+  useEffect(() => {
+    activityIdRef.current = activityId
+  }, [activityId])
+
+  // Cleanup on unmount / page exit
+  useEffect(() => {
+    return () => {
+      const currentActivityId = activityIdRef.current
+      // Only close if we haven't submitted (because submiiting handles completion)
+      // But wait, if we submitted, the component unmounts too? 
+      // Actually submitQuiz -> setShowResult. The component doesn't unmount until we navigate away.
+      // If we navigate away AFTER result, the activity is already COMPLETED.
+      // The API checks status, so redundant 'finish' call is fine (idempotent).
+
+      if (currentActivityId) {
+        const data = JSON.stringify({ activityId: currentActivityId })
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/quiz/finish', data)
+        } else {
+          fetch('/api/quiz/finish', {
+            method: 'POST',
+            body: data,
+            keepalive: true,
+            headers: { 'Content-Type': 'application/json' }
+          }).catch(console.error)
+        }
+      }
+    }
+  }, [])
+
   useEffect(() => {
     if (params.id) {
       fetchQuiz(params.id as string)
@@ -136,6 +170,21 @@ export default function QuizPage() {
           setAnswers(restoredAnswers)
         } else {
           setAnswers([])
+        }
+
+        // Helper to extract activityId from metadata
+        const extractActivityId = (attempt: any) => {
+          // Try metadata object or fallback if it's potentially nested/stringified
+          if (!attempt?.metadata) return null
+          const meta = typeof attempt.metadata === 'string'
+            ? JSON.parse(attempt.metadata)
+            : attempt.metadata
+          return meta.activityId
+        }
+
+        const currentActivityId = extractActivityId(data.activeAttempt)
+        if (currentActivityId) {
+          setActivityId(currentActivityId)
         }
 
         // Find first unanswered question to resume

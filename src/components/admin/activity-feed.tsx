@@ -299,7 +299,12 @@ export function ActivityFeed() {
                 {activities.map((activity) => {
                     const config = getActivityConfig(activity.type)
                     const Icon = config.icon
-                    const isLive = activity.status === 'STARTED' || activity.status === 'IN_PROGRESS'
+
+                    // Logic for "Live" activities:
+                    // Must be 'STARTED' or 'IN_PROGRESS'
+                    // AND updated within the last 2 hours. Older than that are likely stale/abandoned.
+                    const isStale = (new Date().getTime() - new Date(activity.updatedAt || activity.createdAt).getTime()) > 2 * 60 * 60 * 1000
+                    const isLive = !isStale && (activity.status === 'STARTED' || activity.status === 'IN_PROGRESS')
 
                     return (
                         <div
@@ -330,6 +335,11 @@ export function ActivityFeed() {
                                     {isLive && (
                                         <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 animate-pulse">
                                             LIVE
+                                        </span>
+                                    )}
+                                    {isStale && (activity.status === 'STARTED' || activity.status === 'IN_PROGRESS') && (
+                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                            ABANDONED
                                         </span>
                                     )}
                                 </div>
