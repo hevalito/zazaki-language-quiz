@@ -81,7 +81,7 @@ async function main() {
                     metadata: {
                         badgeId: ub.badgeId,
                         badgeTitle: ub.badge.title, // Can be object or string
-                        badgeIcon: ub.badge.icon
+                        badgeIcon: ub.badge.iconUrl
                     },
                     createdAt: ub.earnedAt
                 }
