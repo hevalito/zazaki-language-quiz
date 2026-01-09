@@ -22,7 +22,22 @@ export async function GET(request: Request) {
         // 2. Fresh/New: ~30% (6 items) -> Not seen yet
         // 3. Stable/Review: ~10% (2 items) -> Stage >= 3
 
+        // Fetch Quizzes the user has actually attempted
+        // ("Only questions from daily quizzes and quizzes the user has taken")
+        const attempts = await prisma.attempt.findMany({
+            where: { userId },
+            select: { quizId: true },
+            distinct: ['quizId']
+        })
+        const attemptedQuizIds = attempts.map(a => a.quizId)
+
+        // If user has NEVER taken a quiz, the room handles it naturally:
+        // - Active/Stable might exist if seeded elsewhere (unlikely)
+        // - Fresh/Fallback will returns empty because quizId in [] is empty
+        // Result: Empty room, which is correct behavior for a new user.
+
         // 1. Fetch Active Items (Mistakes & Due)
+        // These are inherently "touched" because they have a SpacedItem record
         const activeItems = await prisma.spacedItem.findMany({
             where: {
                 userId,
@@ -65,9 +80,12 @@ export async function GET(request: Request) {
         })
 
         // 3. Fetch Fresh Items (New Content)
-        // We need items that have NO SpacedItem for this user
+        // MUST be from quizzes the user has taken (e.g. skipped questions or added later)
+        // Cannot be random pool questions.
         const freshQuestions = await prisma.question.findMany({
             where: {
+                // Only from attempted quizzes
+                quizId: { in: attemptedQuizIds },
                 spacedItems: {
                     none: {
                         userId
@@ -107,9 +125,11 @@ export async function GET(request: Request) {
         freshQuestions.forEach(q => combinedQuestions.push(formatItem(q)))
 
         // FALLBACK: If total < 10, try to pull more Fresh items to fill up
+        // STILL restricted to attempted quizzes
         if (combinedQuestions.length < 10) {
             const moreFresh = await prisma.question.findMany({
                 where: {
+                    quizId: { in: attemptedQuizIds },
                     spacedItems: { none: { userId } },
                     id: { notIn: freshQuestions.map(q => q.id) } // Exclude already picked
                 },
@@ -119,7 +139,7 @@ export async function GET(request: Request) {
             moreFresh.forEach(q => combinedQuestions.push(formatItem(q)))
         }
 
-        // FALLBACK 2: If still low (no fresh content left?), pull more Stable/Review
+        // FALLBACK 2: If still low, more Stable (Review ahead of time)
         if (combinedQuestions.length < 5) {
             const moreStable = await prisma.spacedItem.findMany({
                 where: {
