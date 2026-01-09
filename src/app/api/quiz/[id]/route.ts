@@ -69,6 +69,21 @@ export async function GET(
     })
 
     if (!attempt) {
+      // --- QUIZ CLEANUP ---
+      // If we are creating a NEW attempt, it means any previous "STARTED" quiz activity is stale.
+      // Mark them as completed/abandoned to clean up the stream.
+      await prisma.activity.updateMany({
+        where: {
+          userId: session.user.id,
+          type: 'QUIZ_STARTED',
+          status: 'STARTED'
+        },
+        data: {
+          status: 'COMPLETED',
+          updatedAt: new Date()
+        }
+      })
+
       attempt = await prisma.attempt.create({
         data: {
           userId: session.user.id,

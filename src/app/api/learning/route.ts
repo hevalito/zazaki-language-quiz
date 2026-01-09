@@ -16,6 +16,22 @@ export async function GET(request: Request) {
         const userId = session.user.id
         const now = new Date()
 
+        // --- SESSION CLEANUP ---
+        // Ensure only one "Live" session exists. Mark any old IN_PROGRESS sessions as COMPLETED.
+        await prisma.activity.updateMany({
+            where: {
+                userId,
+                type: 'LEARNING_SESSION_STARTED',
+                status: 'IN_PROGRESS'
+            },
+            data: {
+                status: 'COMPLETED', // Use COMPLETED as ABANDONED isn't in enum without migration
+                updatedAt: now
+                // We can't update metadata easily with updateMany in Prisma without raw query or iterating, 
+                // but checking `status` is enough for the activity stream.
+            }
+        })
+
         // --- THE MIX RECIPE ---
         // Target Session Size: 20
         // 1. Active/Mistakes: ~60% (12 items) -> Stage < 3 OR Due

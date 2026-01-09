@@ -67,6 +67,32 @@ export default function LearningRoomPage() {
         activityIdRef.current = activityId
     }, [activityId])
 
+    // Heartbeat Loop
+    useEffect(() => {
+        if (!activityId) return
+
+        const heartbeat = async () => {
+            try {
+                const res = await fetch('/api/learning/heartbeat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ activityId })
+                })
+
+                if (res.status === 410) {
+                    // Session gone (likely opened in another tab)
+                    // Optional: could alert user or auto-redirect
+                    console.warn('Session expired or accepted elsewhere')
+                }
+            } catch (err) {
+                console.error('Heartbeat failed', err)
+            }
+        }
+
+        const interval = setInterval(heartbeat, 30000) // 30s
+        return () => clearInterval(interval)
+    }, [activityId])
+
     const fetchQuestions = async () => {
         try {
             const res = await fetch('/api/learning')
