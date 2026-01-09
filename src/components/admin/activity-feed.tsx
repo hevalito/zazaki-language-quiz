@@ -120,6 +120,15 @@ export function ActivityFeed() {
         }
     }
 
+    const getLocalizedText = (text: any) => {
+        if (!text) return ''
+        if (typeof text === 'string') return text
+        if (typeof text === 'object') {
+            return text['de'] || text['en'] || Object.values(text)[0] || ''
+        }
+        return ''
+    }
+
     const renderMetadata = (activity: Activity) => {
         const { type, metadata } = activity
         if (!metadata) return null
@@ -128,7 +137,7 @@ export function ActivityFeed() {
             case 'QUIZ_COMPLETED':
                 return (
                     <div className="mt-2 text-sm text-gray-600 bg-white bg-opacity-50 rounded p-2 border border-gray-100">
-                        <p className="font-semibold text-gray-900">{metadata.quizTitle || 'Unknown Quiz'}</p>
+                        <p className="font-semibold text-gray-900">{getLocalizedText(metadata.quizTitle) || 'Unknown Quiz'}</p>
                         <div className="flex space-x-3 mt-1 text-xs">
                             <span>Score: <b>{metadata.score}</b></span>
                             <span>Points: <b>{metadata.percentage}%</b></span>
@@ -138,7 +147,7 @@ export function ActivityFeed() {
             case 'BADGE_EARNED':
                 return (
                     <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        🏆 {metadata.badgeTitle || 'Unknown Badge'}
+                        🏆 {getLocalizedText(metadata.badgeTitle) || 'Unknown Badge'}
                     </div>
                 )
             case 'LEARNING_PRACTICE':
