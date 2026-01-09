@@ -26,9 +26,7 @@ export async function GET(request: Request) {
             },
             data: {
                 status: 'COMPLETED', // Use COMPLETED as ABANDONED isn't in enum without migration
-                updatedAt: now
-                // We can't update metadata easily with updateMany in Prisma without raw query or iterating, 
-                // but checking `status` is enough for the activity stream.
+                // updatedAt: now  <-- REMOVED: Do not bump timestamp to avoid moving to top of stream
             }
         })
 

@@ -79,8 +79,8 @@ export async function GET(
           status: 'STARTED'
         },
         data: {
-          status: 'COMPLETED',
-          updatedAt: new Date()
+          status: 'COMPLETED'
+          // updatedAt: new Date() <-- REMOVED: Do not bump timestamp
         }
       })
 
