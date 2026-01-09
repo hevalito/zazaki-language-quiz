@@ -14,6 +14,7 @@ export default function AdminCoursesPage() {
     const [courses, setCourses] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [isCreating, setIsCreating] = useState(false)
+    const [dialects, setDialects] = useState<any[]>([])
     const [languages, setLanguages] = useState<any[]>([])
     const [newCourse, setNewCourse] = useState<{
         title: Record<string, string>,
@@ -29,11 +30,24 @@ export default function AdminCoursesPage() {
 
     useEffect(() => {
         const load = async () => {
-            const [langs, coursesRes] = await Promise.all([
+            const [langs, coursesRes, settingsRes] = await Promise.all([
                 getLanguages(),
-                fetch('/api/admin/courses')
+                fetch('/api/admin/courses'),
+                fetch('/api/admin/settings')
             ])
             setLanguages(langs)
+
+            if (settingsRes.ok) {
+                const settings = await settingsRes.json()
+                if (settings.supported_dialects) {
+                    setDialects(settings.supported_dialects)
+                } else {
+                    setDialects([
+                        { code: 'standard', label: 'Standard' },
+                        { code: 'zazaki-dimli', label: 'Dersim' }
+                    ])
+                }
+            }
 
             if (coursesRes.ok) {
                 const data = await coursesRes.json()
@@ -45,6 +59,7 @@ export default function AdminCoursesPage() {
     }, [])
 
     const handleCreate = async (e: React.FormEvent) => {
+        // ... (existing code)
         e.preventDefault()
         try {
             const res = await fetch('/api/admin/courses', {
@@ -65,6 +80,7 @@ export default function AdminCoursesPage() {
     }
 
     const handleDelete = async (id: string) => {
+        // ... (existing code)
         if (!confirm('Are you sure? This will delete all chapters and lessons in this course.')) return
 
         try {
@@ -86,6 +102,7 @@ export default function AdminCoursesPage() {
 
     return (
         <AdminPage>
+            {/* ... header ... */}
             <AdminPageHeader
                 title="Courses"
                 description="Manage learning paths and content hierarchy"
@@ -102,7 +119,7 @@ export default function AdminCoursesPage() {
                             setNewCourse({
                                 title: initialTitles,
                                 level: 'A1',
-                                dialectCode: 'standard',
+                                dialectCode: dialects[0]?.code || 'standard',
                                 description: initialDescs
                             })
                             setIsCreating(true)
@@ -164,9 +181,14 @@ export default function AdminCoursesPage() {
                                         onChange={e => setNewCourse({ ...newCourse, dialectCode: e.target.value })}
                                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                                     >
-                                        <option value="standard">Standard</option>
-                                        <option value="zazaki-dimli">Dersim (zazaki-dimli)</option>
-                                        <option value="zazaki-kirmanc">Bingöl (zazaki-kirmanc)</option>
+                                        {dialects.length > 0 ? dialects.map(d => (
+                                            <option key={d.code} value={d.code}>{d.label}</option>
+                                        )) : (
+                                            <>
+                                                <option value="standard">Standard</option>
+                                                <option value="zazaki-dimli">Dersim</option>
+                                            </>
+                                        )}
                                     </select>
                                 </div>
                             </div>

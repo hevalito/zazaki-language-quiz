@@ -12,16 +12,29 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
     const router = useRouter()
     const [course, setCourse] = useState<any>(null)
     const [loading, setLoading] = useState(true)
-    const [languages, setLanguages] = useState<any[]>([])
+    const [dialects, setDialects] = useState<any[]>([])
 
     const fetchCourse = async () => {
         try {
-            const [langs, courseRes] = await Promise.all([
+            const [langs, courseRes, settingsRes] = await Promise.all([
                 getLanguages(),
-                fetch(`/api/admin/courses/${params.id}`)
+                fetch(`/api/admin/courses/${params.id}`),
+                fetch('/api/admin/settings')
             ])
 
             setLanguages(langs)
+
+            if (settingsRes.ok) {
+                const settings = await settingsRes.json()
+                if (settings.supported_dialects) {
+                    setDialects(settings.supported_dialects)
+                } else {
+                    setDialects([
+                        { code: 'standard', label: 'Standard' },
+                        { code: 'zazaki-dimli', label: 'Dersim' }
+                    ])
+                }
+            }
 
             if (courseRes.ok) {
                 const data = await courseRes.json()
@@ -80,6 +93,23 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                     <div className="bg-white shadow rounded-lg p-6 sticky top-6">
                         <h2 className="text-xl font-bold mb-4">Course Settings</h2>
                         <form onSubmit={handleUpdate} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Dialect/Category</label>
+                                <select
+                                    value={course.dialectCode || 'standard'}
+                                    onChange={e => setCourse({ ...course, dialectCode: e.target.value })}
+                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                >
+                                    {dialects.length > 0 ? dialects.map(d => (
+                                        <option key={d.code} value={d.code}>{d.label}</option>
+                                    )) : (
+                                        <>
+                                            <option value="standard">Standard</option>
+                                            <option value="zazaki-dimli">Dersim</option>
+                                        </>
+                                    )}
+                                </select>
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Level</label>
                                 <select

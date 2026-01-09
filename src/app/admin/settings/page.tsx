@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { LanguageSettings } from '@/components/admin/language-settings'
 import { getLanguages } from '@/lib/translations'
-import { GlobeAltIcon, ShieldCheckIcon, SparklesIcon, TrophyIcon, BookOpenIcon, BeakerIcon } from '@heroicons/react/24/outline'
+import { GlobeAltIcon, ShieldCheckIcon, SparklesIcon, TrophyIcon, BookOpenIcon, BeakerIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -21,6 +21,10 @@ export default function AdminSettingsPage() {
         guest_browsing_enabled: true,
         global_xp_multiplier: 1.0,
         streak_freeze_limit: 2,
+        supported_dialects: [
+            { code: 'standard', label: 'Standard' },
+            { code: 'zazaki-dimli', label: 'Dersim' }
+        ]
     })
     const [languages, setLanguages] = useState<any[]>([])
 
@@ -188,15 +192,65 @@ export default function AdminSettingsPage() {
                             <TabsContent value="content" className="mt-0 space-y-8">
                                 <div>
                                     <h3 className="text-lg font-medium text-gray-900 mb-4">Content Utilities</h3>
-                                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                                        <div className="flex">
-                                            <div className="flex-shrink-0">
-                                                <SparklesIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
-                                            </div>
-                                            <div className="ml-3">
-                                                <p className="text-sm text-yellow-700">
-                                                    More granular content settings will control the Course Finder logic and default fallbacks.
-                                                </p>
+
+                                    <div className="space-y-6">
+                                        <div>
+                                            <Label>Supported Dialects & Categories</Label>
+                                            <p className="text-sm text-gray-500 mb-4">
+                                                Define the dialects or categories available for courses.
+                                            </p>
+
+                                            <div className="bg-gray-50 rounded-md p-4 space-y-3">
+                                                {(settings.supported_dialects || []).map((dialect: any, index: number) => (
+                                                    <div key={index} className="flex gap-3">
+                                                        <div className="flex-1">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Code (e.g. zazaki-dimli)"
+                                                                value={dialect.code}
+                                                                onChange={(e) => {
+                                                                    const newDialects = [...(settings.supported_dialects || [])]
+                                                                    newDialects[index].code = e.target.value
+                                                                    handleChange('supported_dialects', newDialects)
+                                                                }}
+                                                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                            />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Label (e.g. Dersim)"
+                                                                value={dialect.label}
+                                                                onChange={(e) => {
+                                                                    const newDialects = [...(settings.supported_dialects || [])]
+                                                                    newDialects[index].label = e.target.value
+                                                                    handleChange('supported_dialects', newDialects)
+                                                                }}
+                                                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            onClick={() => {
+                                                                const newDialects = settings.supported_dialects.filter((_: any, i: number) => i !== index)
+                                                                handleChange('supported_dialects', newDialects)
+                                                            }}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                                        >
+                                                            <TrashIcon className="w-5 h-5" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+
+                                                <button
+                                                    onClick={() => {
+                                                        const newDialects = [...(settings.supported_dialects || []), { code: '', label: '' }]
+                                                        handleChange('supported_dialects', newDialects)
+                                                    }}
+                                                    className="flex items-center text-sm text-blue-600 font-medium hover:text-blue-700"
+                                                >
+                                                    <PlusIcon className="w-4 h-4 mr-1" />
+                                                    Add Dialect
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
