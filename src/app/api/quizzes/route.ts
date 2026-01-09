@@ -48,8 +48,10 @@ export async function GET(request: Request) {
                 title: true,
                 course: {
                   select: {
+                    id: true,
                     title: true,
-                    level: true
+                    level: true,
+                    dialectCode: true
                   }
                 }
               }

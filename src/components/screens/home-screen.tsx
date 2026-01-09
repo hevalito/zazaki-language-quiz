@@ -314,12 +314,53 @@ export function HomeScreen() {
                   return dateB - dateA // Descending
                 })
 
-                const lastActiveLevel = sortedCompleted[0]?.lesson?.chapter?.course?.level || userProgress?.currentLevel || 'A1'
+                const lastActiveQuiz = sortedCompleted[0]
+                const lastActiveLevel = lastActiveQuiz?.lesson?.chapter?.course?.level || userProgress?.currentLevel || 'A1'
+                const lastActiveDialect = lastActiveQuiz?.lesson?.chapter?.course?.dialectCode
 
-                // Strategy A: Find first uncompleted in the SAME level
-                recommendedQuiz = uncompletedQuizzes.find((q: any) => q.lesson?.chapter?.course?.level === lastActiveLevel)
+                // Helper to order levels
+                const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                const getNextLevel = (current: string) => {
+                  const idx = levelOrder.indexOf(current)
+                  return idx !== -1 && idx < levelOrder.length - 1 ? levelOrder[idx + 1] : null
+                }
 
-                // Strategy B: If none, find first uncompleted in ANY level (trusting the API order or just taking the next available)
+                // Strategy 1: Sticky Context (Same Dialect, Same Level)
+                // If the user was working on Dersim A1, give them the next Dersim A1 quiz
+                if (lastActiveDialect) {
+                  recommendedQuiz = uncompletedQuizzes.find((q: any) =>
+                    q.lesson?.chapter?.course?.dialectCode === lastActiveDialect &&
+                    q.lesson?.chapter?.course?.level === lastActiveLevel
+                  )
+                }
+
+                // Strategy 2: Sticky Progression (Same Dialect, Next Level)
+                // If no more Dersim A1, look for Dersim A2
+                if (!recommendedQuiz && lastActiveDialect) {
+                  const nextLevel = getNextLevel(lastActiveLevel)
+                  if (nextLevel) {
+                    recommendedQuiz = uncompletedQuizzes.find((q: any) =>
+                      q.lesson?.chapter?.course?.dialectCode === lastActiveDialect &&
+                      q.lesson?.chapter?.course?.level === nextLevel
+                    )
+                  }
+                }
+
+                // Strategy 3: Sticky Fallback (Same Dialect, Any Higher Level)
+                // If no Dersim A2, look for any Dersim > current level
+                if (!recommendedQuiz && lastActiveDialect) {
+                  recommendedQuiz = uncompletedQuizzes.find((q: any) =>
+                    q.lesson?.chapter?.course?.dialectCode === lastActiveDialect &&
+                    levelOrder.indexOf(q.lesson?.chapter?.course?.level) >= levelOrder.indexOf(lastActiveLevel)
+                  )
+                }
+
+                // Strategy 4: Fallback to old behavior (Same Level, Any Dialect)
+                if (!recommendedQuiz) {
+                  recommendedQuiz = uncompletedQuizzes.find((q: any) => q.lesson?.chapter?.course?.level === lastActiveLevel)
+                }
+
+                // Strategy 5: Absolute Fallback
                 if (!recommendedQuiz) {
                   recommendedQuiz = uncompletedQuizzes[0]
                 }

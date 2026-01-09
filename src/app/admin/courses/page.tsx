@@ -18,10 +18,12 @@ export default function AdminCoursesPage() {
     const [newCourse, setNewCourse] = useState<{
         title: Record<string, string>,
         level: string,
+        dialectCode: string,
         description: Record<string, string>
     }>({
         title: {},
         level: 'A1',
+        dialectCode: 'standard',
         description: {}
     })
 
@@ -141,17 +143,31 @@ export default function AdminCoursesPage() {
                                     </LanguageTabs>
                                 )}
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Level</label>
-                                <select
-                                    value={newCourse.level}
-                                    onChange={e => setNewCourse({ ...newCourse, level: e.target.value })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                >
-                                    {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
-                                        <option key={level} value={level}>{level}</option>
-                                    ))}
-                                </select>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Level</label>
+                                    <select
+                                        value={newCourse.level}
+                                        onChange={e => setNewCourse({ ...newCourse, level: e.target.value })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                    >
+                                        {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                                            <option key={level} value={level}>{level}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Dialect/Category</label>
+                                    <select
+                                        value={newCourse.dialectCode}
+                                        onChange={e => setNewCourse({ ...newCourse, dialectCode: e.target.value })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                    >
+                                        <option value="standard">Standard</option>
+                                        <option value="zazaki-dimli">Dersim (zazaki-dimli)</option>
+                                        <option value="zazaki-kirmanc">Bingöl (zazaki-kirmanc)</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="flex justify-end gap-3">
                                 <button
@@ -184,7 +200,12 @@ export default function AdminCoursesPage() {
                                             </div>
                                             <div className="ml-4">
                                                 <h3 className="text-lg font-medium text-blue-600 truncate">{course.title?.en} / {course.title?.de}</h3>
-                                                <p className="text-sm text-gray-500">{course._count?.chapters || 0} Chapters</p>
+                                                <p className="text-sm text-gray-500">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 mr-2">
+                                                        {course.dialectCode || 'standard'}
+                                                    </span>
+                                                    {course._count?.chapters || 0} Chapters
+                                                </p>
                                             </div>
                                         </div>
                                         <div>
