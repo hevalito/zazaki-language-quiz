@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { MultipleChoiceQuestion } from '@/components/questions/multiple-choice-question'
@@ -30,12 +30,42 @@ export default function LearningRoomPage() {
     const [explanation, setExplanation] = useState<any>(null)
 
     const [activityId, setActivityId] = useState<string | null>(null)
+    const activityIdRef = useRef<string | null>(null)
 
     useEffect(() => {
         if (session?.user) {
             fetchQuestions()
         }
     }, [session])
+
+    // Cleanup on unmount / navigation
+    useEffect(() => {
+        return () => {
+            const currentActivityId = activityIdRef.current
+            if (currentActivityId) {
+                const data = JSON.stringify({ activityId: currentActivityId })
+                // Use beacon if available (more reliable for unload)
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('/api/learning/finish', data)
+                } else {
+                    // Fallback to fetch with keepalive
+                    fetch('/api/learning/finish', {
+                        method: 'POST',
+                        body: data,
+                        keepalive: true,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).catch(console.error)
+                }
+            }
+        }
+    }, [])
+
+    // Sync ref
+    useEffect(() => {
+        activityIdRef.current = activityId
+    }, [activityId])
 
     const fetchQuestions = async () => {
         try {
@@ -87,9 +117,18 @@ export default function LearningRoomPage() {
             setExplanation(null)
         } else {
             // Finished all current questions
-            // Fetch more or show done? 
-            // Usually simpler to just show done screen or refresh.
-            // Let's clear questions to show "Done" state
+            // Explicitly finish the session so it marks as COMPLETED immediately
+            if (activityId) {
+                fetch('/api/learning/finish', {
+                    method: 'POST',
+                    body: JSON.stringify({ activityId }),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                // Clear activityId so cleanup doesn't try to close it again (though idempotent is fine)
+                setActivityId(null)
+                activityIdRef.current = null
+            }
+
             setQuestions([])
             setLoading(false)
         }
