@@ -8,8 +8,11 @@ import {
     TrophyIcon,
     FireIcon,
     UserIcon,
-    ArrowPathIcon
+    ArrowPathIcon,
+    ChartBarIcon
 } from '@heroicons/react/24/outline'
+import { formatDistanceToNow } from 'date-fns'
+import { de } from 'date-fns/locale'
 
 type Activity = {
     id: string
@@ -63,113 +66,198 @@ export function ActivityFeed() {
         fetchActivities(nextPage)
     }
 
-    const getActivityIcon = (type: string) => {
+    const getActivityConfig = (type: string) => {
         switch (type) {
-            case 'QUIZ_COMPLETED': return <CheckCircleIcon className="w-5 h-5 text-green-600" />
-            case 'LEARNING_PRACTICE': return <AcademicCapIcon className="w-5 h-5 text-indigo-600" />
-            case 'BADGE_EARNED': return <TrophyIcon className="w-5 h-5 text-yellow-600" />
-            case 'STREAK_FROZEN': return <FireIcon className="w-5 h-5 text-orange-600" />
-            case 'SIGN_IN': return <UserIcon className="w-5 h-5 text-blue-600" />
-            default: return <ClockIcon className="w-5 h-5 text-gray-400" />
+            case 'QUIZ_COMPLETED':
+                return {
+                    icon: CheckCircleIcon,
+                    bg: 'bg-green-100',
+                    text: 'text-green-700',
+                    border: 'border-green-200'
+                }
+            case 'LEARNING_PRACTICE':
+                return {
+                    icon: AcademicCapIcon,
+                    bg: 'bg-indigo-100',
+                    text: 'text-indigo-700',
+                    border: 'border-indigo-200'
+                }
+            case 'BADGE_EARNED':
+                return {
+                    icon: TrophyIcon,
+                    bg: 'bg-yellow-100',
+                    text: 'text-yellow-700',
+                    border: 'border-yellow-200'
+                }
+            case 'STREAK_FROZEN':
+                return {
+                    icon: FireIcon,
+                    bg: 'bg-orange-100',
+                    text: 'text-orange-700',
+                    border: 'border-orange-200'
+                }
+            case 'SIGN_IN':
+                return {
+                    icon: UserIcon,
+                    bg: 'bg-blue-100',
+                    text: 'text-blue-700',
+                    border: 'border-blue-200'
+                }
+            case 'LEVEL_UP':
+                return {
+                    icon: ChartBarIcon,
+                    bg: 'bg-purple-100',
+                    text: 'text-purple-700',
+                    border: 'border-purple-200'
+                }
+            default:
+                return {
+                    icon: ClockIcon,
+                    bg: 'bg-gray-100',
+                    text: 'text-gray-700',
+                    border: 'border-gray-200'
+                }
         }
     }
 
-    const getActivityContent = (activity: Activity) => {
+    const renderMetadata = (activity: Activity) => {
         const { type, metadata } = activity
+        if (!metadata) return null
+
         switch (type) {
             case 'QUIZ_COMPLETED':
                 return (
-                    <div>
-                        <span className="font-medium text-gray-900">completed a quiz</span>
-                        <div className="text-sm text-gray-600 mt-0.5">
-                            "{metadata?.quizTitle || 'Unknown Quiz'}" • {metadata?.score} XP ({metadata?.percentage}%)
-                        </div>
-                    </div>
-                )
-            case 'LEARNING_PRACTICE':
-                return (
-                    <div>
-                        <span className="font-medium text-gray-900">practiced in Learning Room</span>
-                        <div className="text-sm text-gray-600 mt-0.5">
-                            {metadata?.isCorrect ? 'Correctly answered' : 'Missed'} a question
-                            {metadata?.questionType && <span className="text-gray-400"> ({metadata.questionType})</span>}
+                    <div className="mt-2 text-sm text-gray-600 bg-white bg-opacity-50 rounded p-2 border border-gray-100">
+                        <p className="font-semibold text-gray-900">{metadata.quizTitle || 'Unknown Quiz'}</p>
+                        <div className="flex space-x-3 mt-1 text-xs">
+                            <span>Score: <b>{metadata.score}</b></span>
+                            <span>Points: <b>{metadata.percentage}%</b></span>
                         </div>
                     </div>
                 )
             case 'BADGE_EARNED':
                 return (
-                    <div>
-                        <span className="font-medium text-gray-900">earned a badge!</span>
-                        <div className="text-sm text-yellow-600 mt-0.5 font-medium">
-                            🏆 {metadata?.badgeTitle || 'Unknown Badge'}
-                        </div>
+                    <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        🏆 {metadata.badgeTitle || 'Unknown Badge'}
                     </div>
                 )
-            case 'STREAK_FROZEN':
+            case 'LEARNING_PRACTICE':
                 return (
-                    <div>
-                        <span className="font-medium text-gray-900">used a Streak Freeze</span>
-                        <div className="text-sm text-gray-600 mt-0.5">
-                            Kept their streak alive!
-                        </div>
+                    <div className="mt-1 text-sm text-gray-500">
+                        {metadata.isCorrect ? (
+                            <span className="text-green-600 font-medium">Correctly answered</span>
+                        ) : (
+                            <span className="text-red-500 font-medium">Missed</span>
+                        )}
+                        {' '}a <b>{metadata.questionType?.toLowerCase().replace('_', ' ')}</b> question
+                    </div>
+                )
+            case 'LEVEL_UP':
+                return (
+                    <div className="mt-2 text-sm text-purple-700 font-medium">
+                        Leveled up from {metadata.from} to {metadata.to}! 🎉
                     </div>
                 )
             default:
-                return (
-                    <span className="text-gray-600">performed an action ({type})</span>
-                )
+                // Render any extra key-values nicely
+                return Object.keys(metadata).length > 0 ? (
+                    <div className="mt-2 text-xs text-gray-500 font-mono bg-gray-50 p-1 rounded">
+                        {JSON.stringify(metadata).slice(0, 100)}
+                    </div>
+                ) : null
+        }
+    }
+
+    const renderActionText = (type: string) => {
+        switch (type) {
+            case 'QUIZ_COMPLETED': return 'completed a quiz'
+            case 'LEARNING_PRACTICE': return 'practiced'
+            case 'BADGE_EARNED': return 'earned a badge'
+            case 'STREAK_FROZEN': return 'used a streak freeze'
+            case 'SIGN_IN': return 'signed in'
+            case 'LEVEL_UP': return 'reached a new level'
+            default: return 'performed an action'
         }
     }
 
     return (
         <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <ul role="list" className="divide-y divide-gray-100">
-                    {activities.map((activity) => (
-                        <li key={activity.id} className="p-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-start space-x-3">
-                                <div className="flex-shrink-0 mt-1">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100">
-                                        {getActivityIcon(activity.type)}
-                                    </div>
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="text-sm">
-                                        <div className="font-medium text-gray-900">
-                                            {activity.user.nickname || activity.user.name || activity.user.email}
-                                        </div>
-                                        {getActivityContent(activity)}
-                                    </div>
-                                    <div className="mt-1 text-xs text-gray-400">
-                                        {new Date(activity.createdAt).toLocaleString('de-DE')}
-                                    </div>
-                                </div>
+            {!loading && activities.length > 0 && (
+                <div className="text-sm text-gray-500 mb-4 text-right">
+                    Total events: {total}
+                </div>
+            )}
+
+            <div className="space-y-4">
+                {activities.map((activity) => {
+                    const config = getActivityConfig(activity.type)
+                    const Icon = config.icon
+
+                    return (
+                        <div
+                            key={activity.id}
+                            className="relative flex items-start space-x-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-gray-300"
+                        >
+                            {/* Icon column */}
+                            <div className="flex-shrink-0">
+                                <span className={`inline-flex items-center justify-center h-10 w-10 rounded-full ${config.bg} ${config.border} border`}>
+                                    <Icon className={`h-6 w-6 ${config.text}`} aria-hidden="true" />
+                                </span>
                             </div>
-                        </li>
-                    ))}
-                    {activities.length === 0 && !loading && (
-                        <li className="p-8 text-center text-gray-500">
-                            No activity found yet.
-                        </li>
-                    )}
-                </ul>
+
+                            {/* Main Content */}
+                            <div className="flex-1 min-w-0">
+                                <div className="text-sm font-medium text-gray-900">
+                                    <span className="text-gray-900 font-bold">
+                                        {activity.user.nickname || activity.user.name || 'User'}
+                                    </span>
+                                    {' '}
+                                    <span className="text-gray-500 font-normal">
+                                        {renderActionText(activity.type)}
+                                    </span>
+                                </div>
+
+                                {renderMetadata(activity)}
+                            </div>
+
+                            {/* Time */}
+                            <div className="flex-shrink-0 text-right text-xs text-gray-400 whitespace-nowrap ml-2">
+                                {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true, locale: de })}
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
 
-            {hasMore && (
-                <div className="flex justify-center">
+            {loading && (
+                <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="animate-pulse flex items-start space-x-3 bg-white p-4 rounded-lg border border-gray-100">
+                            <div className="rounded-full bg-gray-200 h-10 w-10"></div>
+                            <div className="flex-1 space-y-2 py-1">
+                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {!loading && activities.length === 0 && (
+                <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+                    <ClockIcon className="mx-auto h-12 w-12 text-gray-300" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">No activity yet</h3>
+                    <p className="mt-1 text-sm text-gray-500">Events will appear here as users interact with the app.</p>
+                </div>
+            )}
+
+            {hasMore && !loading && activities.length > 0 && (
+                <div className="flex justify-center pt-4">
                     <button
                         onClick={loadMore}
-                        disabled={loading}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
-                        {loading ? (
-                            <>
-                                <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-4 w-4" />
-                                Loading...
-                            </>
-                        ) : (
-                            'Load More'
-                        )}
+                        Load More
                     </button>
                 </div>
             )}
