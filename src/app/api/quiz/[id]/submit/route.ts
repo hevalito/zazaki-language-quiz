@@ -274,13 +274,21 @@ export async function POST(
     }
 
     // Log Activity
-    await logActivity(session.user.id, 'QUIZ_COMPLETED', {
-      quizId: quiz.id,
-      quizTitle: quiz.title,
-      score: totalScore,
-      maxScore,
-      xpEarned
-    })
+    const activityId = (attempt.metadata as any)?.activityId
+
+    await logActivity(
+      session.user.id,
+      'QUIZ_COMPLETED',
+      {
+        quizId: quiz.id,
+        quizTitle: quiz.title,
+        score: totalScore,
+        maxScore,
+        xpEarned
+      },
+      'COMPLETED',
+      activityId
+    )
 
     if (newBadges.length > 0) {
       for (const badge of newBadges) {

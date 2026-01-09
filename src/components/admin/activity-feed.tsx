@@ -17,8 +17,10 @@ import { de } from 'date-fns/locale'
 type Activity = {
     id: string
     type: string
+    status: 'STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED'
     metadata: any
     createdAt: string
+    updatedAt: string
     user: {
         id: string
         name: string | null
@@ -35,16 +37,31 @@ export function ActivityFeed() {
     const [hasMore, setHasMore] = useState(true)
     const [total, setTotal] = useState(0)
 
-    const fetchActivities = async (pageNum: number, reset = false) => {
-        setLoading(true)
+    // Filters
+    const [filterType, setFilterType] = useState<string>('')
+    const [filterUser, setFilterUser] = useState<string | null>(null) // UserId
+
+    const fetchActivities = async (pageNum: number, reset = false, background = false) => {
+        if (!background) setLoading(true)
         try {
-            const res = await fetch(`/api/admin/activity?page=${pageNum}&limit=20`)
+            const params = new URLSearchParams()
+            params.append('page', pageNum.toString())
+            params.append('limit', '20')
+            if (filterType) params.append('type', filterType)
+            if (filterUser) params.append('userId', filterUser)
+
+            const res = await fetch(`/api/admin/activity?${params.toString()}`)
             const data = await res.json()
 
             if (reset) {
                 setActivities(data.activities)
             } else {
-                setActivities(prev => [...prev, ...data.activities])
+                setActivities(prev => {
+                    // Smart merge? Or just append?
+                    // For pagination, append is standard.
+                    // For polling (reset=true), we replace.
+                    return [...prev, ...data.activities]
+                })
             }
 
             setTotal(data.meta.total)
@@ -52,13 +69,26 @@ export function ActivityFeed() {
         } catch (error) {
             console.error(error)
         } finally {
-            setLoading(false)
+            if (!background) setLoading(false)
         }
     }
 
+    // Initial Load + Filter Changes
     useEffect(() => {
+        setPage(1)
         fetchActivities(1, true)
-    }, [])
+    }, [filterType, filterUser])
+
+    // Polling (Real-time updates)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Only poll if on first page to avoid scroll jumps/confusion
+            if (page === 1) {
+                fetchActivities(1, true, true)
+            }
+        }, 5000) // 5 seconds
+        return () => clearInterval(interval)
+    }, [page, filterType, filterUser])
 
     const loadMore = () => {
         const nextPage = page + 1
@@ -103,6 +133,20 @@ export function ActivityFeed() {
                     text: 'text-blue-700',
                     border: 'border-blue-200'
                 }
+            case 'QUIZ_STARTED':
+                return {
+                    icon: ClockIcon,
+                    bg: 'bg-yellow-50',
+                    text: 'text-yellow-600',
+                    border: 'border-yellow-100'
+                }
+            case 'LEARNING_SESSION_STARTED':
+                return {
+                    icon: AcademicCapIcon,
+                    bg: 'bg-indigo-50',
+                    text: 'text-indigo-600',
+                    border: 'border-indigo-100'
+                }
             case 'LEVEL_UP':
                 return {
                     icon: ChartBarIcon,
@@ -144,6 +188,28 @@ export function ActivityFeed() {
                         </div>
                     </div>
                 )
+            case 'QUIZ_STARTED':
+                return (
+                    <div className="mt-2 text-sm text-gray-500 italic">
+                        Started quiz: <b>{getLocalizedText(metadata.quizTitle)}</b>...
+                    </div>
+                )
+            case 'LEARNING_SESSION_STARTED':
+                return (
+                    <div className="mt-2 text-sm text-gray-600 bg-indigo-50 rounded p-2 border border-indigo-100">
+                        <p className="font-semibold text-indigo-900">Learning Session</p>
+                        <div className="flex space-x-3 mt-1 text-xs">
+                            <span>Progress: <b>{metadata.answered || 0} / {metadata.totalQuestions || '?'}</b></span>
+                            <span>Correct: <b>{metadata.correct || 0}</b></span>
+                        </div>
+                        <div className="mt-1 h-1 w-full bg-indigo-200 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-indigo-500 transition-all duration-500"
+                                style={{ width: `${Math.round(((metadata.answered || 0) / (metadata.totalQuestions || 1)) * 100)}%` }}
+                            />
+                        </div>
+                    </div>
+                )
             case 'BADGE_EARNED':
                 return (
                     <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -180,6 +246,8 @@ export function ActivityFeed() {
     const renderActionText = (type: string) => {
         switch (type) {
             case 'QUIZ_COMPLETED': return 'completed a quiz'
+            case 'QUIZ_STARTED': return 'started a quiz'
+            case 'LEARNING_SESSION_STARTED': return 'is practicing in Learning Room'
             case 'LEARNING_PRACTICE': return 'practiced'
             case 'BADGE_EARNED': return 'earned a badge'
             case 'STREAK_FROZEN': return 'used a streak freeze'
@@ -191,21 +259,52 @@ export function ActivityFeed() {
 
     return (
         <div className="space-y-6">
-            {!loading && activities.length > 0 && (
-                <div className="text-sm text-gray-500 mb-4 text-right">
-                    Total events: {total}
+            {/* Filter Bar */}
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 bg-white p-4 rounded-lg border border-gray-100 shadow-sm">
+                <select
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                    className="block w-full sm:w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                    <option value="">All Activity Types</option>
+                    <option value="QUIZ_COMPLETED">Quiz Completed</option>
+                    <option value="QUIZ_STARTED">Quiz Started</option>
+                    <option value="LEARNING_SESSION_STARTED">Learning Session</option>
+                    <option value="BADGE_EARNED">Badge Earned</option>
+                    <option value="LEVEL_UP">Level Up</option>
+                    <option value="SIGN_IN">Sign In</option>
+                    <option value="STREAK_FROZEN">Streak Freeze</option>
+                </select>
+
+                {filterUser && (
+                    <div className="flex items-center bg-indigo-50 text-indigo-700 px-3 py-2 rounded-md text-sm">
+                        <UserIcon className="w-4 h-4 mr-2" />
+                        <span>User: {filterUser.slice(0, 8)}...</span>
+                        <button
+                            onClick={() => setFilterUser(null)}
+                            className="ml-2 bg-transparent hover:bg-indigo-200 rounded-full p-1"
+                        >
+                            <ArrowPathIcon className="w-3 h-3" />
+                        </button>
+                    </div>
+                )}
+
+                <div className="flex-1 text-right text-sm text-gray-500 flex items-center justify-end">
+                    {loading && <ArrowPathIcon className="w-4 h-4 animate-spin mr-2" />}
+                    <span>Live Updates ({total} total)</span>
                 </div>
-            )}
+            </div>
 
             <div className="space-y-4">
                 {activities.map((activity) => {
                     const config = getActivityConfig(activity.type)
                     const Icon = config.icon
+                    const isLive = activity.status === 'STARTED' || activity.status === 'IN_PROGRESS'
 
                     return (
                         <div
                             key={activity.id}
-                            className="relative flex items-start space-x-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100 transition-all hover:shadow-md hover:border-gray-300"
+                            className={`relative flex items-start space-x-3 bg-white p-4 rounded-lg shadow-sm border transition-all hover:shadow-md ${isLive ? 'border-l-4 border-l-green-500 animate-pulse-slow' : 'border-gray-100 hover:border-gray-300'}`}
                         >
                             {/* Icon column */}
                             <div className="flex-shrink-0">
@@ -217,13 +316,22 @@ export function ActivityFeed() {
                             {/* Main Content */}
                             <div className="flex-1 min-w-0">
                                 <div className="text-sm font-medium text-gray-900">
-                                    <span className="text-gray-900 font-bold">
+                                    <button
+                                        onClick={() => setFilterUser(activity.user.id)}
+                                        className="text-gray-900 font-bold hover:underline hover:text-indigo-600 text-left"
+                                        title="Filter by this user"
+                                    >
                                         {activity.user.nickname || activity.user.name || 'User'}
-                                    </span>
+                                    </button>
                                     {' '}
                                     <span className="text-gray-500 font-normal">
                                         {renderActionText(activity.type)}
                                     </span>
+                                    {isLive && (
+                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 animate-pulse">
+                                            LIVE
+                                        </span>
+                                    )}
                                 </div>
 
                                 {renderMetadata(activity)}
@@ -231,7 +339,7 @@ export function ActivityFeed() {
 
                             {/* Time */}
                             <div className="flex-shrink-0 text-right text-xs text-gray-400 whitespace-nowrap ml-2">
-                                {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true, locale: de })}
+                                {formatDistanceToNow(new Date(activity.updatedAt || activity.createdAt), { addSuffix: true, locale: de })}
                             </div>
                         </div>
                     )

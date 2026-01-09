@@ -29,6 +29,8 @@ export default function LearningRoomPage() {
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
     const [explanation, setExplanation] = useState<any>(null)
 
+    const [activityId, setActivityId] = useState<string | null>(null)
+
     useEffect(() => {
         if (session?.user) {
             fetchQuestions()
@@ -40,9 +42,10 @@ export default function LearningRoomPage() {
             const res = await fetch('/api/learning')
             if (res.ok) {
                 const data = await res.json()
+                if (data.activityId) setActivityId(data.activityId)
+
                 // API returns { questions: [], count: number }
                 if (Array.isArray(data)) {
-                    // Backward compatibility if API changes back
                     setQuestions(data)
                 } else {
                     setQuestions(data.questions || [])
@@ -55,30 +58,23 @@ export default function LearningRoomPage() {
         }
     }
 
-    const handleAnswer = (choiceId: string) => {
+    const handleAnswer = async (choiceId: string) => {
         if (selectedChoiceId) return // prevent double answer
         setSelectedChoiceId(choiceId)
 
         const currentQ = questions[currentQuestionIndex] as any
-        // Check if choice is correct (assuming choice.isCorrect is available or we validate against server)
-        // For security, usually we send answer to server. For now, assuming client-side check if 'isCorrect' is exposed in choices (common in simple quizzes)
-        // Or we might need to call an API. Let's check how 'MultipleChoiceQuestion' usually works. 
-        // In this app context, choices usually contain isCorrect boolean if not stripped. 
-
         const selectedChoice = currentQ.choices.find((c: any) => c.id === choiceId)
         const correct = selectedChoice?.isCorrect === true
         setIsCorrect(correct)
         setExplanation(currentQ.explanation)
 
-        // If wrong, maybe we want to re-queue it? Logic for learning room.
-        // Usually we just show feedback.
-
-        // Report result to server (to update spaced repetition status)
-        fetch('/api/learning/progress', {
+        // Submit to server
+        await fetch('/api/learning/submit', {
             method: 'POST',
             body: JSON.stringify({
                 questionId: currentQ.id,
-                isCorrect: correct
+                choiceId,
+                activityId
             })
         })
     }

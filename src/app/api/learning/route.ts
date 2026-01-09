@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { getDueItems, sortByPriority } from '@/lib/spaced-repetition'
 import { Question } from '@prisma/client'
+import { logActivity } from '@/lib/activity'
 
 export async function GET(request: Request) {
     try {
@@ -75,9 +76,22 @@ export async function GET(request: Request) {
         // Shuffle questions slightly? No, priority order is good. 
         // But maybe detailed sort? We used DB orderBy, which is good.
 
+        // Log Session Start
+        const activity = await logActivity(
+            session.user.id,
+            'LEARNING_SESSION_STARTED',
+            {
+                totalQuestions: questions.length,
+                answered: 0,
+                correct: 0
+            },
+            'IN_PROGRESS'
+        )
+
         return NextResponse.json({
             questions,
-            count: questions.length
+            count: questions.length,
+            activityId: activity?.id
         })
 
     } catch (error) {

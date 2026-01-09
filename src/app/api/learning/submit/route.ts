@@ -12,7 +12,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        const { questionId, choiceId } = await request.json()
+        const { questionId, choiceId, activityId } = await request.json()
 
         // 1. Validate Answer
         const question = await prisma.question.findUnique({
@@ -30,12 +30,30 @@ export async function POST(request: Request) {
         // 2. Update Spaced Repetition Logic (The Core of Learning Room)
         await updateSpacedRepetition(session.user.id, questionId, isCorrect)
 
-        // 3. Log Activity
-        await logActivity(session.user.id, 'LEARNING_PRACTICE', {
-            questionId,
-            isCorrect,
-            questionType: question.type
-        })
+        // 3. Log Activity (Aggregate if session exists, otherwise individual)
+        if (activityId) {
+            const sessionActivity = await prisma.activity.findUnique({ where: { id: activityId } })
+            if (sessionActivity && sessionActivity.metadata) {
+                const meta = sessionActivity.metadata as any
+                const answered = (meta.answered || 0) + 1
+                const correct = (meta.correct || 0) + (isCorrect ? 1 : 0)
+
+                await logActivity(
+                    session.user.id,
+                    'LEARNING_SESSION_STARTED',
+                    { ...meta, answered, correct },
+                    'IN_PROGRESS',
+                    activityId
+                )
+            }
+        } else {
+            // Fallback for individual logging
+            await logActivity(session.user.id, 'LEARNING_PRACTICE', {
+                questionId,
+                isCorrect,
+                questionType: question.type
+            })
+        }
 
         // 4. Return result + Explanation (CRITICAL for learning)
         // NO XP Awarded.

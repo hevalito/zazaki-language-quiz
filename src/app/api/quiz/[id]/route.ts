@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
+import { logActivity } from '@/lib/activity'
 
 export async function GET(
   request: Request,
@@ -77,6 +78,25 @@ export async function GET(
           answers: true
         }
       })
+
+      // Log START activity
+      const activity = await logActivity(
+        session.user.id,
+        'QUIZ_STARTED',
+        {
+          quizId: quiz.id,
+          quizTitle: quiz.title,
+          attemptId: attempt.id
+        },
+        'STARTED'
+      )
+
+      if (activity) {
+        await prisma.attempt.update({
+          where: { id: attempt.id },
+          data: { metadata: { activityId: activity.id } }
+        })
+      }
     }
 
     return NextResponse.json({

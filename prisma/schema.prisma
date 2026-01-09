@@ -450,6 +450,8 @@ model Activity {
   type      ActivityType
   metadata  Json? // Flexible storage for event details
   createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt @default(now())
+  status    ActivityStatus @default(COMPLETED)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -457,9 +459,18 @@ model Activity {
   @@index([createdAt])
 }
 
+enum ActivityStatus {
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
 enum ActivityType {
   QUIZ_COMPLETED
+  QUIZ_STARTED // Added for start tracking
   LEARNING_PRACTICE
+  LEARNING_SESSION_STARTED // Added for start tracking
   BADGE_EARNED
   SIGN_IN
   STREAK_FROZEN

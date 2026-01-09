@@ -22,9 +22,22 @@ export async function GET(request: Request) {
         const page = parseInt(searchParams.get('page') || '1')
         const limit = parseInt(searchParams.get('limit') || '50')
         const userId = searchParams.get('userId')
+        const type = searchParams.get('type')
+        const status = searchParams.get('status')
+        const dateFrom = searchParams.get('dateFrom')
+        const dateTo = searchParams.get('dateTo')
         const skip = (page - 1) * limit
 
-        const where = userId ? { userId } : {}
+        const where: any = {}
+        if (userId) where.userId = userId
+        if (type) where.type = type
+        if (status) where.status = status
+
+        if (dateFrom || dateTo) {
+            where.createdAt = {}
+            if (dateFrom) where.createdAt.gte = new Date(dateFrom)
+            if (dateTo) where.createdAt.lte = new Date(dateTo)
+        }
 
         const [activities, total] = await Promise.all([
             prisma.activity.findMany({
@@ -41,7 +54,7 @@ export async function GET(request: Request) {
                     }
                 },
                 orderBy: {
-                    createdAt: 'desc'
+                    updatedAt: 'desc' // Sort by last update to show completions at top
                 },
                 skip,
                 take: limit
