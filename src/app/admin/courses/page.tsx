@@ -102,6 +102,7 @@ export default function AdminCoursesPage() {
                             setNewCourse({
                                 title: initialTitles,
                                 level: 'A1',
+                                dialectCode: 'standard',
                                 description: initialDescs
                             })
                             setIsCreating(true)
