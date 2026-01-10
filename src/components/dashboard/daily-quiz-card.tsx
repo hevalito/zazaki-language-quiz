@@ -105,31 +105,31 @@ export function DailyQuizCard() {
     // State 2: Waiting (Completed or Not Generated)
     return (
         <div className="card bg-gray-50 border-gray-200 opacity-90">
-            <div className="flex items-center justify-between">
-                <div>
+            <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
                     <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-gray-500 font-bold uppercase text-xs tracking-wider">{t('daily.context.title', 'Daily Challenge')}</span>
+                        <span className="text-gray-500 font-bold uppercase text-xs tracking-wider truncate">{t('daily.context.title', 'Daily Challenge')}</span>
                         {status.completed && (
-                            <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                            <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full whitespace-nowrap">
                                 <CheckCircleIcon className="w-3 h-3 mr-1" />
-                                <span className="md:hidden">{t('daily.status.completedShort', 'Abgeschlossen')}</span>
+                                <span className="md:hidden">{t('daily.status.completedShort', 'Fertig')}</span>
                                 <span className="hidden md:inline">{t('daily.status.completed', 'Für heute abgeschlossen')}</span>
                             </span>
                         )}
                     </div>
-                    <div className="flex items-center text-gray-400">
-                        <ClockIcon className="w-5 h-5 mr-2" />
-                        <span className="font-mono text-lg font-medium">{timeLeft || t('daily.status.loading', 'Lade...')}</span>
-                        <span className="text-xs ml-2 text-gray-400">{t('daily.status.next', 'bis zum nächsten Quiz')}</span>
+                    <div className="flex items-center text-gray-400 flex-wrap sm:flex-nowrap">
+                        <ClockIcon className="w-5 h-5 mr-2 shrink-0" />
+                        <span className="font-mono text-lg font-medium tabular-nums whitespace-nowrap">{timeLeft || t('daily.status.loading', '...')}</span>
+                        <span className="text-xs ml-2 text-gray-400 truncate">{t('daily.status.next', 'Wartezeit')}</span>
                     </div>
                 </div>
-                {/* History Link? */}
-                <div className="text-right">
+                {/* History Link */}
+                <div className="text-right shrink-0">
                     <button
                         onClick={(e) => { e.stopPropagation(); router.push('/library?tab=daily') }}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium underline whitespace-nowrap"
                     >
-                        {t('daily.archive.link', 'Archiv ansehen')}
+                        {t('daily.archive.link', 'Archiv')}
                     </button>
                 </div>
             </div>
