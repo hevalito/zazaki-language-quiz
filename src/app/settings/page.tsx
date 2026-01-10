@@ -81,7 +81,7 @@ export default function SettingsPage() {
             })
             if (res.ok) {
                 const data = await res.json()
-                await update({ image: data.url }) // Update session
+                await update({ user: { image: data.url } }) // Update session
                 router.refresh()
             }
         } catch (error) {
@@ -109,7 +109,7 @@ export default function SettingsPage() {
                 setSuccess(true)
                 // Update session if needed
                 if (data.name !== session?.user?.name) {
-                    await update({ name: data.name })
+                    await update({ user: { name: data.name } })
                 }
                 setTimeout(() => setSuccess(false), 3000)
             } else {
