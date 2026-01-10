@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
-import path from 'path'
-import fs from 'fs'
-import { writeFile } from 'fs/promises'
+import { getStorage } from '@/lib/storage'
 
 export async function POST(req: NextRequest) {
     try {
@@ -30,26 +28,17 @@ export async function POST(req: NextRequest) {
             return new NextResponse('File size too large. Max 5MB.', { status: 400 })
         }
 
-        // 4. Save File
+        // 4. Save File via Storage Provider
         const buffer = Buffer.from(await file.arrayBuffer())
-        const uploadDir = path.join(process.cwd(), 'uploads')
-
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true })
-        }
-
         const timestamp = Date.now()
         let ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
         if (!['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) ext = 'jpg'
 
-        // Use a generic prefix so we can reuse this endpoint for other admin uploads if needed
         const filename = `admin-upload-${timestamp}.${ext}`
-        const filePath = path.join(uploadDir, filename)
 
-        await writeFile(filePath, buffer)
+        // This returns the public URL path
+        const publicUrl = await getStorage().upload(buffer, filename, file.type)
 
-        // 5. Return URL
-        const publicUrl = `/api/uploads/${filename}`
         return NextResponse.json({ url: publicUrl })
 
     } catch (error) {
