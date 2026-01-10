@@ -116,10 +116,13 @@ export function MultipleChoiceQuestion({
 
         {question.imageUrl && (
           <div className="mb-4">
-            import Image from 'next/image'
-
-          // ... (existing imports, but since replace_file_content targets a chunk, I'll just add the component usage and rely on another operation for import if needed, or include the import at top if I can target the top too. I can't target two places in one replace_file_content call. 
-          // I will use multi_replace for this file.)
+            <Image
+              src={question.imageUrl}
+              alt="Question image"
+              width={600}
+              height={400}
+              className="mx-auto w-auto h-auto max-w-full max-h-[400px] rounded-lg object-contain"
+            />
           </div>
         )}
       </div>
