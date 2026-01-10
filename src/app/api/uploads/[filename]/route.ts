@@ -45,7 +45,7 @@ export async function GET(
 
         let responseBody: BodyInit
         if (fileData instanceof Buffer) {
-            responseBody = fileData
+            responseBody = fileData as unknown as BodyInit
         } else if (fileData instanceof Readable) {
             responseBody = nodeToWebStream(fileData) as unknown as BodyInit
         } else {
