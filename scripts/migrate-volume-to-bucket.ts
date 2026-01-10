@@ -2,13 +2,6 @@
 import { S3Client, PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { readdir, readFile, stat } from 'fs/promises';
 import path from 'path';
-import mime from 'mime'; // You might need to install 'mime' or 'mime-types' if not present, checking dependencies... 
-// Wait, package.json didn't show 'mime', but it is a common one. 
-// If not present, I can infer from extension or assume octet-stream/image types manually like in the route.
-// Actually, let's stick to the manual infer logic from the route to avoid adding deps if possible, or just add it.
-// The user prompt said: "Upload with correct ContentType (mime)". 
-// Let's implement a simple helper or use what's available. 
-// Checking the routes again, they manually mapped extensions. I will replicate that map for consistency and zero-dep.
 
 const S3_ENDPOINT = process.env.S3_ENDPOINT;
 const S3_BUCKET = process.env.S3_BUCKET;
