@@ -73,9 +73,15 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                 iconUrl: formData.iconType === 'emoji' ? formData.iconUrl : null,
                 imageUrl: formData.iconType === 'image' ? formData.imageUrl : null,
                 conditionLabel: formData.conditionLabel,
-                criteria: formData.criteriaType === 'level_reached'
-                    ? { type: 'level_reached', level: formData.criteriaValue }
-                    : { type: formData.criteriaType, count: Number(formData.criteriaValue) },
+                criteria: (() => {
+                    switch (formData.criteriaType) {
+                        case 'level_reached': return { type: 'level_reached', level: formData.criteriaValue }
+                        case 'profile_filled': return { type: 'profile_filled', fields: formData.criteriaValue } // Array
+                        case 'time_of_day': return { type: 'time_of_day', ...(formData.criteriaValue as any) } // startHour, endHour
+                        case 'speed_demon': return { type: 'speed_demon', ...(formData.criteriaValue as any) } // maxSeconds, minScore
+                        default: return { type: formData.criteriaType, count: Number(formData.criteriaValue) }
+                    }
+                })(),
                 isActive: formData.isActive
             }
 
@@ -263,7 +269,15 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                             <label className="block text-sm font-medium text-gray-700">Criteria Type</label>
                             <select
                                 value={formData.criteriaType}
-                                onChange={e => setFormData({ ...formData, criteriaType: e.target.value })}
+                                onChange={e => {
+                                    // Reset default value based on type
+                                    let newVal: any = 1
+                                    if (e.target.value === 'profile_filled') newVal = ['avatarUrl']
+                                    if (e.target.value === 'time_of_day') newVal = { startHour: 5, endHour: 9 }
+                                    if (e.target.value === 'speed_demon') newVal = { maxSeconds: 30, minScore: 100 }
+
+                                    setFormData({ ...formData, criteriaType: e.target.value, criteriaValue: newVal })
+                                }}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                             >
                                 <option value="lesson_completion">Lesson Completion</option>
@@ -272,41 +286,140 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                 <option value="level_reached">Level Reached</option>
                                 <option value="total_quizzes">Total Quizzes</option>
                                 <option value="perfect_score_streak">Perfect Score Streak</option>
+                                <option value="profile_filled">Profile Filled</option>
+                                <option value="learning_sessions">Learning Sessions</option>
+                                <option value="speed_demon">Speed Demon</option>
+                                <option value="time_of_day">Time of Day (Early/Late)</option>
                             </select>
                         </div>
 
-                        {/* Criteria Value */}
-                        {formData.criteriaType === 'level_reached' ? (
-                            <div className="sm:col-span-3">
-                                <label className="block text-sm font-medium text-gray-700">Required Level</label>
-                                <select
-                                    value={formData.criteriaValue}
-                                    onChange={e => setFormData({ ...formData, criteriaValue: e.target.value as any })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                >
-                                    <option value="A1">A1 - Beginner</option>
-                                    <option value="A2">A2 - Elementary</option>
-                                    <option value="B1">B1 - Intermediate</option>
-                                    <option value="B2">B2 - Upper Intermediate</option>
-                                    <option value="C1">C1 - Advanced</option>
-                                    <option value="C2">C2 - Mastery</option>
-                                </select>
-                            </div>
-                        ) : (
-                            <div className="sm:col-span-3">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    {formData.criteriaType === 'total_xp' ? 'XP Needed' :
-                                        formData.criteriaType === 'streak' ? 'Days Streak' :
-                                            'Count'}
-                                </label>
-                                <input
-                                    type="number"
-                                    value={formData.criteriaValue}
-                                    onChange={e => setFormData({ ...formData, criteriaValue: Number(e.target.value) })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                />
-                            </div>
-                        )}
+                        {/* Criteria Value - Dynamic Formatting */}
+                        <div className="sm:col-span-6 bg-gray-50 p-4 rounded-md border border-gray-200">
+                            {formData.criteriaType === 'level_reached' ? (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Required Level</label>
+                                    <select
+                                        value={formData.criteriaValue}
+                                        onChange={e => setFormData({ ...formData, criteriaValue: e.target.value as any })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white"
+                                    >
+                                        <option value="A1">A1 - Beginner</option>
+                                        <option value="A2">A2 - Elementary</option>
+                                        <option value="B1">B1 - Intermediate</option>
+                                        <option value="B2">B2 - Upper Intermediate</option>
+                                        <option value="C1">C1 - Advanced</option>
+                                        <option value="C2">C2 - Mastery</option>
+                                    </select>
+                                </div>
+                            ) : formData.criteriaType === 'profile_filled' ? (
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-medium text-gray-700">Fields Required</label>
+                                    <p className="text-xs text-gray-500 mb-2">Select fields that must be populated to earn this badge.</p>
+
+                                    {['avatarUrl', 'firstName', 'lastName', 'nickname', 'dailyGoal'].map((field) => {
+                                        const current = Array.isArray(formData.criteriaValue) ? formData.criteriaValue : []
+                                        return (
+                                            <label key={field} className="flex items-center space-x-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={current.includes(field)}
+                                                    onChange={e => {
+                                                        const newArr = e.target.checked
+                                                            ? [...current, field]
+                                                            : current.filter((f: string) => f !== field)
+                                                        setFormData({ ...formData, criteriaValue: newArr })
+                                                    }}
+                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                />
+                                                <span className="text-sm text-gray-700">
+                                                    {field === 'avatarUrl' ? 'Profile Picture' :
+                                                        field === 'dailyGoal' ? 'Daily Goal Set' :
+                                                            field.charAt(0).toUpperCase() + field.slice(1)}
+                                                </span>
+                                            </label>
+                                        )
+                                    })}
+                                </div>
+                            ) : formData.criteriaType === 'time_of_day' ? (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Start Hour (0-23)</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="23"
+                                            value={(formData.criteriaValue as any)?.startHour ?? 5}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                criteriaValue: { ...(formData.criteriaValue as any), startHour: Number(e.target.value) }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">End Hour (0-23)</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="23"
+                                            value={(formData.criteriaValue as any)?.endHour ?? 9}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                criteriaValue: { ...(formData.criteriaValue as any), endHour: Number(e.target.value) }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
+                                    <p className="col-span-2 text-xs text-gray-500">
+                                        For "Night Owl", you can set Start: 22 and End: 4 (crosses midnight).
+                                    </p>
+                                </div>
+                            ) : formData.criteriaType === 'speed_demon' ? (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Max Time (Seconds)</label>
+                                        <input
+                                            type="number"
+                                            value={(formData.criteriaValue as any)?.maxSeconds ?? 30}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                criteriaValue: { ...(formData.criteriaValue as any), maxSeconds: Number(e.target.value) }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Min Score (%)</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={(formData.criteriaValue as any)?.minScore ?? 100}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                criteriaValue: { ...(formData.criteriaValue as any), minScore: Number(e.target.value) }
+                                            })}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        {formData.criteriaType === 'total_xp' ? 'XP Needed' :
+                                            formData.criteriaType === 'learning_sessions' ? 'Completed Sessions Count' :
+                                                formData.criteriaType === 'streak' ? 'Days Streak' :
+                                                    'Count'}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={typeof formData.criteriaValue === 'number' ? formData.criteriaValue : 1}
+                                        onChange={e => setFormData({ ...formData, criteriaValue: Number(e.target.value) })}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                    />
+                                </div>
+                            )}
+                        </div>
 
                         {/* Active Status */}
                         <div className="sm:col-span-6">

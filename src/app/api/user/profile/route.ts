@@ -59,6 +59,13 @@ export async function GET() {
     }
 }
 
+// ...
+import { checkBadges } from '@/lib/gamification'
+import { logActivity } from '@/lib/activity'
+import { ActivityType } from '@prisma/client'
+
+// ... existing imports
+
 export async function PUT(request: Request) {
     try {
         const session = await auth()
@@ -85,7 +92,19 @@ export async function PUT(request: Request) {
             }
         })
 
-        return NextResponse.json(updatedUser)
+        // Log Activity for extended auditing
+        await logActivity(session.user.id, ActivityType.PROFILE_UPDATED, {
+            fields: Object.keys(body).filter(k => body[k] !== undefined)
+        })
+
+        // Check for "Profile Completed" achievements
+        const badgeResult = await checkBadges(session.user.id)
+
+        // Return user AND new badges if any
+        return NextResponse.json({
+            ...updatedUser,
+            newBadges: badgeResult.newBadges
+        })
     } catch (error) {
         console.error('Error updating profile:', error)
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

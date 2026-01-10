@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { updateSpacedRepetition } from '@/lib/spaced-repetition'
 import { logActivity } from '@/lib/activity'
+import { checkBadges } from '@/lib/gamification'
 
 export async function POST(request: Request) {
     try {
@@ -58,10 +59,15 @@ export async function POST(request: Request) {
         // 4. Return result + Explanation (CRITICAL for learning)
         // NO XP Awarded.
 
+        // Check for "Learning" achievements (if counting individual questions or sessions)
+        // Note: Real "Session" completion might need a separate trigger, but we check here just in case.
+        const badgeResult = await checkBadges(session.user.id)
+
         return NextResponse.json({
             isCorrect,
             correctChoiceId: question.choices.find(c => c.isCorrect)?.id,
-            explanation: question.explanation
+            explanation: question.explanation,
+            newBadges: badgeResult.newBadges
         })
 
     } catch (error) {

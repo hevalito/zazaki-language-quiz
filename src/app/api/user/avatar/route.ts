@@ -3,6 +3,13 @@ import { prisma } from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import { getStorage } from '@/lib/storage'
 
+// ...
+import { checkBadges } from '@/lib/gamification'
+import { logActivity } from '@/lib/activity'
+import { ActivityType } from '@prisma/client'
+
+// ... existing imports
+
 export async function POST(req: NextRequest) {
     try {
         const session = await auth()
@@ -48,7 +55,16 @@ export async function POST(req: NextRequest) {
             data: { image: publicUrl }
         })
 
-        return NextResponse.json({ url: publicUrl })
+        // Log Avatar Update
+        await logActivity(session.user.id, ActivityType.PROFILE_UPDATED, { type: 'avatar_upload' })
+
+        // Check Badges
+        const badgeResult = await checkBadges(session.user.id)
+
+        return NextResponse.json({
+            url: publicUrl,
+            newBadges: badgeResult.newBadges
+        })
 
     } catch (error) {
         console.error('Error uploading avatar:', error)

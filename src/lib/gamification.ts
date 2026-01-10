@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma"
+// ... existing imports
+import { ActivityType } from "@prisma/client"
 
 export interface BadgeCheckResult {
     newBadges: any[] // Full Badge Objects
@@ -14,6 +15,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
             include: {
                 badges: true, // Already owned badges
                 attempts: true, // Quiz history
+                activities: true, // Activity history for things like learning sessions
             }
         })
 
@@ -33,6 +35,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
             let isEarned = false
 
             switch (criteria.type) {
+                // ... existing cases ...
                 case 'streak':
                     if (user.streak >= (criteria.count || 0)) {
                         isEarned = true
@@ -58,11 +61,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'total_quizzes':
                     // Check total number of COMPLETED attempts
-                    // Learning Room sessions do NOT create attempts, so this is safe.
-                    // But "Started" quizzes do create attempts that might be abandoned.
-                    // We must check for completion.
                     const completedAttempts = user.attempts.filter(a => a.completedAt != null)
-
                     if (completedAttempts.length >= (criteria.count || 1)) {
                         isEarned = true
                     }
@@ -76,7 +75,6 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                     let streak = 0
                     for (const attempt of sortedAttempts) {
-                        // Check if perfect score (e.g. 100%)
                         if (attempt.maxScore > 0 && attempt.score >= attempt.maxScore) {
                             streak++
                         } else {
@@ -90,6 +88,80 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'lesson_completion':
                     if (criteria.count === 1 && user.attempts.length > 0) {
+                        isEarned = true
+                    }
+                    break
+
+                // --- NEW ACHIEVEMENT TYPES ---
+
+                case 'profile_filled':
+                    // Check if specific fields are populated
+                    // criteria.fields can be an array of strings e.g. ["avatarUrl", "firstName"]
+                    const fieldsToCheck = criteria.fields || ['avatarUrl']
+                    const allFieldsDriven = fieldsToCheck.every((field: string) => {
+                        // Special handling for avatarUrl vs image (NextAuth default)
+                        if (field === 'avatarUrl') {
+                            return (user.image && user.image.length > 0) || (user.avatarUrl && user.avatarUrl.length > 0)
+                        }
+                        return (user as any)[field] && (user as any)[field].toString().length > 0
+                    })
+
+                    if (allFieldsDriven) {
+                        isEarned = true
+                    }
+                    break
+
+                case 'learning_sessions':
+                    // Count completed learning sessions
+                    const learningSessions = user.activities.filter(a =>
+                        a.type === ActivityType.LEARNING_PRACTICE &&
+                        a.status === 'COMPLETED'
+                    )
+                    if (learningSessions.length >= (criteria.count || 1)) {
+                        isEarned = true
+                    }
+                    break
+
+                case 'speed_demon':
+                    // Check if ANY attempt meets the speed criteria
+                    // criteria.maxSeconds: max time in seconds
+                    // criteria.minScore: optional, minimum score percentage (0-100) default 100
+                    const maxSeconds = criteria.maxSeconds || 30
+                    const minScorePercent = criteria.minScore || 100
+
+                    const fastAttempt = user.attempts.some(a => {
+                        if (!a.completedAt) return false
+                        const timeInSeconds = a.timeSpent || 0
+                        const scorePercent = (a.score / a.maxScore) * 100
+                        return timeInSeconds <= maxSeconds && scorePercent >= minScorePercent
+                    })
+
+                    if (fastAttempt) {
+                        isEarned = true
+                    }
+                    break
+
+                case 'time_of_day':
+                    // Check if ANY attempt was completed within the time window
+                    // criteria.startHour: 0-23
+                    // criteria.endHour: 0-23
+                    const startHour = criteria.startHour ?? 5 // Default 5 AM
+                    const endHour = criteria.endHour ?? 9     // Default 9 AM
+
+                    const timedAttempt = user.attempts.some(a => {
+                        if (!a.completedAt) return false
+                        const date = new Date(a.completedAt)
+                        const hour = date.getHours()
+                        // Handle crossing midnight e.g. 23 to 02
+                        if (startHour <= endHour) {
+                            return hour >= startHour && hour < endHour
+                        } else {
+                            // Night owl case: 22 to 04
+                            return hour >= startHour || hour < endHour
+                        }
+                    })
+
+                    if (timedAttempt) {
                         isEarned = true
                     }
                     break

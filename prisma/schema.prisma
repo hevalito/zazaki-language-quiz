@@ -476,4 +476,5 @@ enum ActivityType {
   SIGN_IN
   STREAK_FROZEN
   LEVEL_UP
+  PROFILE_UPDATED // Added for achievement tracking
 }
