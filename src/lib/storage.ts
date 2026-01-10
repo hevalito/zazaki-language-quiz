@@ -126,7 +126,12 @@ class S3Storage implements StorageProvider {
                 console.error('S3 Get Error:', e)
             }
             // Fallback to volume if not found (during migration)
-            console.log(`S3 miss for ${objectKey}, checking fallback...`)
+            console.log(`S3 miss for ${objectKey}. Fallback invoked (Legacy Volume).`)
+
+            if (process.env.DISABLE_VOLUME_FALLBACK === 'true') {
+                return null
+            }
+
             return this.fallback.get(key)
         }
         return null
