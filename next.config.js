@@ -157,11 +157,22 @@ const nextConfig = {
         ]
       },
       {
-        source: '/api/(.*)',
+        // Disable caching for standard API routes (data), but exclude uploads
+        source: '/api/((?!uploads).*)',
         headers: [
           {
             key: 'Cache-Control',
             value: 'no-store, max-age=0'
+          }
+        ]
+      },
+      {
+        // Enable long-term caching for uploaded files served via API
+        source: '/api/uploads/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
           }
         ]
       }
