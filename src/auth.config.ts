@@ -38,12 +38,13 @@ export const authConfig = {
             // Handle session updates (e.g. after onboarding)
             if (trigger === "update" && session) {
                 if (session.user) {
-                    token.nickname = session.user.nickname
-                    token.firstName = session.user.firstName
-                    token.lastName = session.user.lastName
-                    token.preferredScript = session.user.preferredScript
-                    token.dailyGoal = session.user.dailyGoal
-                    token.picture = session.user.image
+                    // Only update fields if they are present in the update payload
+                    if (session.user.nickname !== undefined) token.nickname = session.user.nickname
+                    if (session.user.firstName !== undefined) token.firstName = session.user.firstName
+                    if (session.user.lastName !== undefined) token.lastName = session.user.lastName
+                    if (session.user.preferredScript !== undefined) token.preferredScript = session.user.preferredScript
+                    if (session.user.dailyGoal !== undefined) token.dailyGoal = session.user.dailyGoal
+                    if (session.user.image !== undefined) token.picture = session.user.image
                 }
             }
             return token
