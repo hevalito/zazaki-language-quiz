@@ -30,8 +30,13 @@ function replaceVariables(template: string, variables: Record<string, any>): str
 }
 
 async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/', type: string) {
-    if (!process.env.VAPID_PRIVATE_KEY || !process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-        console.log('VAPID keys missing')
+    const publicVapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+    const privateVapid = process.env.VAPID_PRIVATE_KEY
+
+    if (!publicVapid || !privateVapid) {
+        console.error('VAPID keys missing:')
+        if (!publicVapid) console.error('- Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY')
+        if (!privateVapid) console.error('- Missing VAPID_PRIVATE_KEY')
         return
     }
 
@@ -93,7 +98,7 @@ async function runDailyChallenge() {
     // The library function generateDailyQuiz checks if one exists for today
     try {
         const result = await generateDailyQuiz()
-        console.log('Daily Quiz Generation:', result.message)
+        console.log('Daily Quiz Generation:', result.message || 'Success')
     } catch (e) {
         console.error('Error generating quiz:', e)
     }
