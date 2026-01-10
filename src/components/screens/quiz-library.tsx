@@ -109,6 +109,9 @@ export function QuizLibrary() {
             </header>
 
             <div className="container mx-auto px-4 py-6">
+                {/* Feature CTAs */}
+                {/* Content */}
+
                 {/* Search */}
                 <div className="relative mb-6">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

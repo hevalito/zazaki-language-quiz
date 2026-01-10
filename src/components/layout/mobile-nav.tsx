@@ -4,19 +4,17 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import {
+    HomeIcon,
     BookOpenIcon,
     TrophyIcon,
-    SparklesIcon,
-    MagnifyingGlassCircleIcon,
-    HomeIcon,
+    UserIcon,
     AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import {
+    HomeIcon as HomeIconSolid,
     BookOpenIcon as BookOpenIconSolid,
     TrophyIcon as TrophyIconSolid,
-    SparklesIcon as SparklesIconSolid,
-    MagnifyingGlassCircleIcon as MagnifyingGlassCircleIconSolid,
-    HomeIcon as HomeIconSolid,
+    UserIcon as UserIconSolid,
     AcademicCapIcon as AcademicCapIconSolid
 } from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion'
@@ -47,28 +45,16 @@ export function MobileNav() {
 
     const items = [
         {
-            name: t('nav.library', 'Bibliothek'),
-            href: '/library',
-            icon: BookOpenIcon,
-            activeIcon: BookOpenIconSolid,
-        },
-        {
-            name: t('nav.leaderboard', 'Bestenliste'),
-            href: '/leaderboard',
-            icon: TrophyIcon,
-            activeIcon: TrophyIconSolid,
-        },
-        {
             name: t('nav.home', 'Home'),
             href: '/',
             icon: HomeIcon,
             activeIcon: HomeIconSolid,
         },
         {
-            name: t('nav.achievements', 'Erfolge'),
-            href: '/achievements',
-            icon: SparklesIcon,
-            activeIcon: SparklesIconSolid,
+            name: t('nav.library', 'Üben'),
+            href: '/library',
+            icon: BookOpenIcon,
+            activeIcon: BookOpenIconSolid,
         },
         {
             name: t('nav.learning', 'Lernraum'),
@@ -77,10 +63,16 @@ export function MobileNav() {
             activeIcon: AcademicCapIconSolid,
         },
         {
-            name: t('nav.courseFinder', 'Kursfinder'),
-            href: '/course-finder',
-            icon: MagnifyingGlassCircleIcon,
-            activeIcon: MagnifyingGlassCircleIconSolid,
+            name: t('nav.leaderboard', 'Bestenliste'),
+            href: '/leaderboard',
+            icon: TrophyIcon,
+            activeIcon: TrophyIconSolid,
+        },
+        {
+            name: t('nav.profile', 'Profil'),
+            href: '/profile',
+            icon: UserIcon,
+            activeIcon: UserIconSolid,
         },
     ]
 
