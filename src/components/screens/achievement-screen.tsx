@@ -5,6 +5,7 @@ import { LockClosedIcon } from '@heroicons/react/24/outline'
 import { SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 
 import { useTranslation, useTranslationContext } from '@/hooks/use-translation'
@@ -117,9 +118,11 @@ export function AchievementScreen() {
                                             {/* Bloom/Blur effect container */}
                                             <div className={`absolute inset-0 rounded-full overflow-hidden ${!badge.isEarned ? 'grayscale brightness-50 contrast-125' : ''}`}>
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
+                                                <Image
                                                     src={(badge as any).imageUrl}
                                                     alt={getLocalizedContent(badge.title)}
+                                                    width={48}
+                                                    height={48}
                                                     className={`w-full h-full object-cover ${!badge.isEarned ? 'blur-sm scale-110' : ''}`}
                                                 />
                                             </div>
@@ -132,9 +135,11 @@ export function AchievementScreen() {
                                         </div>
                                     ) : (badge as any).iconUrl && ((badge as any).iconUrl.startsWith('http') || (badge as any).iconUrl.startsWith('/')) ? (
                                         // eslint-disable-next-line @next/next/no-img-element
-                                        <img
+                                        <Image
                                             src={(badge as any).iconUrl}
                                             alt={getLocalizedContent(badge.title)}
+                                            width={32}
+                                            height={32}
                                             className={`w-8 h-8 object-contain ${!badge.isEarned && 'grayscale opacity-50'}`}
                                         />
                                     ) : (badge as any).iconUrl ? (

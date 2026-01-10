@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import type { Question, Choice } from '@/types'
 
@@ -115,11 +116,10 @@ export function MultipleChoiceQuestion({
 
         {question.imageUrl && (
           <div className="mb-4">
-            <img
-              src={question.imageUrl}
-              alt="Question image"
-              className="mx-auto max-w-full h-auto rounded-lg"
-            />
+            import Image from 'next/image'
+
+          // ... (existing imports, but since replace_file_content targets a chunk, I'll just add the component usage and rely on another operation for import if needed, or include the import at top if I can target the top too. I can't target two places in one replace_file_content call. 
+          // I will use multi_replace for this file.)
           </div>
         )}
       </div>
