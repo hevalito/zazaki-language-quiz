@@ -197,9 +197,11 @@ export function ProfileScreen() {
                                     <div className="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center border border-yellow-100 overflow-hidden shadow-sm transition-transform hover:scale-110">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         {badge.imageUrl ? (
-                                            <img
+                                            <Image
                                                 src={badge.imageUrl}
                                                 alt={getLocalizedContent(badge.title)}
+                                                width={48}
+                                                height={48}
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
