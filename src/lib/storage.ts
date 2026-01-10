@@ -41,19 +41,19 @@ class VolumeStorage implements StorageProvider {
         await writeFile(filePath, file)
 
         // Return public URL path
-        return \`/api/uploads/\${cleanFilename}\`
+        return `/api/uploads/${cleanFilename}`
     }
 
     async get(filename: string): Promise<ReadableStream | Buffer | null> {
-         // Handle potential "uploads/" prefix if passed as key
-         const cleanFilename = path.basename(filename)
-         const filePath = path.join(this.uploadDir, cleanFilename)
+        // Handle potential "uploads/" prefix if passed as key
+        const cleanFilename = path.basename(filename)
+        const filePath = path.join(this.uploadDir, cleanFilename)
 
-         if (!fs.existsSync(filePath)) return null
+        if (!fs.existsSync(filePath)) return null
 
-         // Returning Buffer for simplicity with FS, though Stream is better for large files. 
-         // fs.readFileSync is what was used before.
-         return fs.readFileSync(filePath)
+        // Returning Buffer for simplicity with FS, though Stream is better for large files. 
+        // fs.readFileSync is what was used before.
+        return fs.readFileSync(filePath)
     }
 
     async exists(filename: string): Promise<boolean> {
@@ -88,9 +88,9 @@ class S3Storage implements StorageProvider {
         // However, the prompt says "Store only the object key in DB (e.g. uploads/user/abc.png)". 
         // Current app stores full URL or filename. 
         // The admin upload route stores `filename` locally and returns ` / api / uploads / filename`.
-        
+
         // Let's standardise on the key being `uploads / ${ filename } ` in the bucket.
-        const objectKey = key.startsWith('uploads/') ? key : \`uploads/\${key}\`
+        const objectKey = key.startsWith('uploads/') ? key : `uploads/${key}`
 
         await this.client.send(new PutObjectCommand({
             Bucket: this.bucket,
@@ -103,37 +103,37 @@ class S3Storage implements StorageProvider {
         // Return the proxy URL that matches the old behavior
         // The key is uploads/foo.jpg -> we want /api/uploads/foo.jpg
         const filename = path.basename(key)
-        return \`/api/uploads/\${filename}\`
+        return `/api/uploads/${filename}`
     }
 
     async get(key: string): Promise<ReadableStream | Buffer | null> {
-         const objectKey = key.startsWith('uploads/') ? key : \`uploads/\${key}\`
+        const objectKey = key.startsWith('uploads/') ? key : `uploads/${key}`
 
-         try {
-             // Try S3 first
-             const response = await this.client.send(new GetObjectCommand({
-                 Bucket: this.bucket,
-                 Key: objectKey
-             }))
+        try {
+            // Try S3 first
+            const response = await this.client.send(new GetObjectCommand({
+                Bucket: this.bucket,
+                Key: objectKey
+            }))
 
-             if (response.Body) {
-                 // Convert web stream to readable stream if needed, or return as is.
-                 // AWS SDK v3 returns a stream.
-                 return response.Body as unknown as ReadableStream
-             }
-         } catch (e: any) {
-             if (e.name !== 'NoSuchKey' && e.name !== 'NotFound') {
-                 console.error('S3 Get Error:', e)
-             }
-             // Fallback to volume if not found (during migration)
-             console.log(\`S3 miss for \${objectKey}, checking fallback...\`)
-             return this.fallback.get(key)
-         }
-         return null
+            if (response.Body) {
+                // Convert web stream to readable stream if needed, or return as is.
+                // AWS SDK v3 returns a stream.
+                return response.Body as unknown as ReadableStream
+            }
+        } catch (e: any) {
+            if (e.name !== 'NoSuchKey' && e.name !== 'NotFound') {
+                console.error('S3 Get Error:', e)
+            }
+            // Fallback to volume if not found (during migration)
+            console.log(`S3 miss for ${objectKey}, checking fallback...`)
+            return this.fallback.get(key)
+        }
+        return null
     }
 
     async exists(key: string): Promise<boolean> {
-        const objectKey = key.startsWith('uploads/') ? key : \`uploads/\${key}\`
+        const objectKey = key.startsWith('uploads/') ? key : `uploads/${key}`
         try {
             await this.client.send(new HeadObjectCommand({
                 Bucket: this.bucket,
