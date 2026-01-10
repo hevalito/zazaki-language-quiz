@@ -53,9 +53,9 @@ export default function SettingsPage() {
                     lastName: data.lastName || '',
                     nickname: data.nickname || '',
                     dailyGoal: data.dailyGoal || 50,
-                    notifyDaily: data.settings?.notifyDaily ?? false,
-                    notifyFeatures: data.settings?.notifyFeatures ?? true,
-                    notifyWeekly: data.settings?.notifyWeekly ?? false,
+                    notifyDaily: data.notifyDaily ?? false,
+                    notifyFeatures: data.notifyFeatures ?? true,
+                    notifyWeekly: data.notifyWeekly ?? false,
                     courseFinderData: data.courseFinderData || null
                 })
             }
