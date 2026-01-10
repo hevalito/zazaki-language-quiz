@@ -43,8 +43,8 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
     const webPush = await import('web-push')
     webPush.setVapidDetails(
         process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-        process.env.VAPID_PRIVATE_KEY
+        publicVapid,
+        privateVapid
     )
 
     const payload = JSON.stringify({
