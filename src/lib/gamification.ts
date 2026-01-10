@@ -26,7 +26,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
         })
 
         // 2. Identify unearned badges
-        const earnedBadgeIds = new Set(user.badges.map(ub => ub.badgeId))
+        const earnedBadgeIds = new Set(user.badges.map((ub: { badgeId: string }) => ub.badgeId))
         const potentialBadges = allBadges.filter(b => !earnedBadgeIds.has(b.id))
 
         // 3. Check Criteria for each unearned badge
