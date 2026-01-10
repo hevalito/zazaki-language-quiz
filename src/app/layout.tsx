@@ -66,6 +66,7 @@ import { TranslationProvider } from '@/components/providers/translation-provider
 import { getDictionary } from '@/lib/translations'
 
 import { MobileNav } from '@/components/layout/mobile-nav'
+import { DesktopNav } from '@/components/layout/desktop-nav'
 import { getSystemSettings } from '@/lib/settings'
 import MaintenancePage from './maintenance/page'
 
@@ -100,7 +101,10 @@ export default async function RootLayout({
             <UnlockManager />
             <TourProvider>
               <div className="min-h-full pb-20 md:pb-0">
-                {children}
+                <DesktopNav />
+                <div className="md:pl-64 h-full transition-all duration-300">
+                  {children}
+                </div>
               </div>
               <ChangelogModal />
               <MobileNav />

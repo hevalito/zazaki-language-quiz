@@ -9,7 +9,6 @@ import {
   TrophyIcon,
   PlayIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
   ArrowRightIcon,
   BookOpenIcon,
   SparklesIcon,
@@ -18,6 +17,7 @@ import {
   AcademicCapIcon
 } from '@heroicons/react/24/outline'
 import { FireIcon as FireIconSolid, SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
+import { UserNavToggle } from '@/components/layout/user-nav-toggle'
 import { DailyQuizCard } from '@/components/dashboard/daily-quiz-card'
 
 
@@ -196,14 +196,7 @@ export function HomeScreen() {
                 <span className="text-sm font-bold text-gray-900 font-sans">{userProgress?.achievementCount || 0}</span>
               </div>
 
-              {/* Settings */}
-              <button
-                onClick={() => window.location.href = '/settings'}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Einstellungen"
-              >
-                <Cog6ToothIcon className="w-6 h-6 text-gray-600" />
-              </button>
+              <UserNavToggle />
             </div>
           </div>
         </div>
