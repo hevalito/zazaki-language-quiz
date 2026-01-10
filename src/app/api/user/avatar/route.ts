@@ -1,9 +1,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
-import path from 'path'
-import fs from 'fs'
-import { writeFile } from 'fs/promises'
+import { getStorage } from '@/lib/storage'
 
 export async function POST(req: NextRequest) {
     try {
@@ -33,12 +31,6 @@ export async function POST(req: NextRequest) {
 
         const buffer = Buffer.from(await file.arrayBuffer())
 
-        // Ensure uploads directory exists
-        const uploadDir = path.join(process.cwd(), 'uploads')
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true })
-        }
-
         // Generate safe unique filename
         const timestamp = Date.now()
         // clean extension
@@ -46,14 +38,9 @@ export async function POST(req: NextRequest) {
         const safeExt = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext) ? ext : 'jpg'
 
         const filename = `avatar-${session.user.id}-${timestamp}.${safeExt}`
-        const filePath = path.join(uploadDir, filename)
 
-        // Write file to disk
-        await writeFile(filePath, buffer)
-
-        // Construct public URL
-        // We assume the app is hosted at root, so relative path works
-        const publicUrl = `/api/uploads/${filename}`
+        // Upload to S3 (or Volume fallback)
+        const publicUrl = await getStorage().upload(buffer, filename, file.type)
 
         // Update user profile
         await prisma.user.update({
