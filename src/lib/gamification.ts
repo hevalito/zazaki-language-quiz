@@ -57,8 +57,13 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                     break
 
                 case 'total_quizzes':
-                    // Check total number of attempts
-                    if (user.attempts.length >= (criteria.count || 1)) {
+                    // Check total number of COMPLETED attempts
+                    // Learning Room sessions do NOT create attempts, so this is safe.
+                    // But "Started" quizzes do create attempts that might be abandoned.
+                    // We must check for completion.
+                    const completedAttempts = user.attempts.filter(a => a.completedAt != null)
+
+                    if (completedAttempts.length >= (criteria.count || 1)) {
                         isEarned = true
                     }
                     break

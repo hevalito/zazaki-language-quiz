@@ -32,7 +32,16 @@ export async function GET() {
         // 3. Fetch full user stats for progress calc
         const user = await prisma.user.findUnique({
             where: { id: session.user.id },
-            select: { totalXP: true, streak: true, currentLevel: true }
+            select: {
+                totalXP: true,
+                streak: true,
+                currentLevel: true,
+                attempts: {
+                    select: {
+                        completedAt: true // Only need completion status
+                    }
+                }
+            }
         })
 
         if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
@@ -61,6 +70,13 @@ export async function GET() {
                         target = criteria.count || 0
                         current = user.streak
                         displayProgress = `${current} / ${target} Days`
+                        break
+                    case 'total_quizzes':
+                        target = criteria.count || 0
+                        // Count only COMPLETED attempts
+                        const validAttempts = (user as any).attempts?.filter((a: any) => a.completedAt) || []
+                        current = validAttempts.length
+                        displayProgress = `${current} / ${target}`
                         break
                     case 'level_reached':
                         const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
