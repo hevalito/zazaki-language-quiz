@@ -27,7 +27,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
         // 2. Identify unearned badges
         const earnedBadgeIds = new Set(user.badges.map((ub: { badgeId: string }) => ub.badgeId))
-        const potentialBadges = allBadges.filter(b => !earnedBadgeIds.has(b.id))
+        const potentialBadges = allBadges.filter((b: { id: string }) => !earnedBadgeIds.has(b.id))
 
         // 3. Check Criteria for each unearned badge
         for (const badge of potentialBadges) {
@@ -61,7 +61,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'total_quizzes':
                     // Check total number of COMPLETED attempts
-                    const completedAttempts = user.attempts.filter(a => a.completedAt != null)
+                    const completedAttempts = user.attempts.filter((a: { completedAt: Date | null }) => a.completedAt != null)
                     if (completedAttempts.length >= (criteria.count || 1)) {
                         isEarned = true
                     }
@@ -113,7 +113,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'learning_sessions':
                     // Count completed learning sessions
-                    const learningSessions = user.activities.filter(a =>
+                    const learningSessions = user.activities.filter((a: { type: ActivityType, status: string }) =>
                         a.type === ActivityType.LEARNING_PRACTICE &&
                         a.status === 'COMPLETED'
                     )
@@ -129,7 +129,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                     const maxSeconds = criteria.maxSeconds || 30
                     const minScorePercent = criteria.minScore || 100
 
-                    const fastAttempt = user.attempts.some(a => {
+                    const fastAttempt = user.attempts.some((a: any) => {
                         if (!a.completedAt) return false
                         const timeInSeconds = a.timeSpent || 0
                         const scorePercent = (a.score / a.maxScore) * 100
@@ -148,7 +148,7 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                     const startHour = criteria.startHour ?? 5 // Default 5 AM
                     const endHour = criteria.endHour ?? 9     // Default 9 AM
 
-                    const timedAttempt = user.attempts.some(a => {
+                    const timedAttempt = user.attempts.some((a: { completedAt: Date | null }) => {
                         if (!a.completedAt) return false
                         const date = new Date(a.completedAt)
                         const hour = date.getHours()
