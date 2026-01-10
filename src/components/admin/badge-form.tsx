@@ -508,7 +508,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                             </div>
                             <div className="text-right">
                                 <span className="text-gray-500">Target:</span>
-                                <span className="ml-1 font-medium text-gray-900">{formData.criteriaValue}</span>
+                                <span className="ml-1 font-medium text-gray-900">
+                                    {typeof formData.criteriaValue === 'object'
+                                        ? JSON.stringify(formData.criteriaValue)
+                                        : formData.criteriaValue}
+                                </span>
                             </div>
                         </div>
                     </div>
