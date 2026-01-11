@@ -174,7 +174,7 @@ export function ProfileScreen() {
                                         <span>{profile?.totalXp || 0} XP</span>
                                     </div>
                                     {/* Global Mastery Stat */}
-                                    <div className="flex items-center text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100" title="Global Mastery">
+                                    <div className="flex items-center text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100" title={t('stats.mastery', 'Mastery')}>
                                         <SparklesIconSolid className="w-3.5 h-3.5 mr-1 text-yellow-500" />
                                         <span>{masteryStats?.masteryPercentage || 0}%</span>
                                     </div>
