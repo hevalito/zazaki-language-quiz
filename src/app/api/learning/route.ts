@@ -18,6 +18,48 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url)
         const action = searchParams.get('action')
 
+        // --- STATS AGGREGATION LOGIC (For Global Mastery Score) ---
+        if (action === 'stats') {
+            const allItems = await prisma.spacedItem.findMany({
+                where: { userId },
+                select: { stage: true }
+            })
+
+            const totalItems = allItems.length
+            if (totalItems === 0) {
+                return NextResponse.json({
+                    masteryPercentage: 0,
+                    totalXP: 0,
+                    totalItems: 0,
+                    breakdown: { locked: 0, learning: 0, review: 0, mastered: 0 }
+                })
+            }
+
+            // Calculate Aggregate Stats
+            // Mastery = (Sum of Stages) / (Total Items * 5) * 100
+            // This represents the "health" of the user's crystallized knowledge.
+            const totalStageSum = allItems.reduce((acc, item) => acc + item.stage, 0)
+            const maxPossibleScore = totalItems * 5
+            const masteryPercentage = (totalStageSum / maxPossibleScore) * 100
+
+            // Breakdown for future visualizations if needed
+            const breakdown = {
+                locked: 0, // Not really tracked in SpacedItem unless we fetch all Questions
+                learning: allItems.filter(i => i.stage > 0 && i.stage < 3).length,
+                review: allItems.filter(i => i.stage >= 3 && i.stage < 5).length,
+                mastered: allItems.filter(i => i.stage === 5).length,
+                // Items at stage 0 are technically "New" or "Forgot"
+                new: allItems.filter(i => i.stage === 0).length
+            }
+
+            return NextResponse.json({
+                masteryPercentage: Number(masteryPercentage.toFixed(1)),
+                totalXP: totalStageSum,
+                totalItems,
+                breakdown
+            })
+        }
+
         // 1. Check for Active Session
         const activeSession = await prisma.activity.findFirst({
             where: {

@@ -15,6 +15,7 @@ import {
     LockClosedIcon
 } from '@heroicons/react/24/outline'
 import { SparklesIcon as SparklesIconSolid } from '@heroicons/react/24/solid'
+import { useMastery } from '@/hooks/use-mastery'
 import { useTranslation, useTranslationContext } from '@/hooks/use-translation'
 
 interface Badge {
@@ -40,6 +41,7 @@ export function ProfileScreen() {
     const { locale } = useTranslationContext()
     const router = useRouter()
     const { data: session } = useSession()
+    const { stats: masteryStats } = useMastery()
 
     const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -154,6 +156,9 @@ export function ProfileScreen() {
                         )}
                         <p className="text-sm text-gray-500 truncate">{session?.user?.email}</p>
 
+
+
+                        // ... inside render ...
                         {/* Stats Row */}
                         <div className="flex items-center space-x-3 mt-3">
                             {loading ? (
@@ -167,6 +172,11 @@ export function ProfileScreen() {
                                     <div className="flex items-center text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100" title={t('stats.xp', 'XP')}>
                                         <BoltIcon className="w-3.5 h-3.5 mr-1" />
                                         <span>{profile?.totalXp || 0} XP</span>
+                                    </div>
+                                    {/* Global Mastery Stat */}
+                                    <div className="flex items-center text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100" title="Global Mastery">
+                                        <SparklesIconSolid className="w-3.5 h-3.5 mr-1 text-yellow-500" />
+                                        <span>{masteryStats?.masteryPercentage || 0}%</span>
                                     </div>
                                 </>
                             )}

@@ -41,6 +41,53 @@ interface UserProgress {
 }
 
 import confetti from 'canvas-confetti'
+import { KnowledgeCore } from '@/components/learning/knowledge-core'
+import { useMastery } from '@/hooks/use-mastery'
+
+function KnowledgeCoreCard() {
+  const { stats, isLoading } = useMastery()
+  const router = useRouter()
+
+  // Only show if we have some data or are loading
+  // If stats is 0 items, maybe hide? Or show empty state? Show always to encourage.
+
+  return (
+    <div
+      onClick={() => router.push('/learning')}
+      className="card bg-gray-900 text-white cursor-pointer group relative overflow-hidden flex items-center justify-between p-6"
+      id="tour-mastery"
+    >
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/30 transition-colors"></div>
+
+      <div className="relative z-10">
+        <div className="flex items-center space-x-2 mb-1">
+          <span className="text-blue-300 font-bold uppercase text-xs tracking-wider">Total Knowledge</span>
+        </div>
+        <h3 className="text-xl font-bold font-serif text-white">
+          {stats?.totalItems ? 'Dein Wissensschatz' : 'Starte deine Reise'}
+        </h3>
+        <p className="text-gray-400 text-sm mt-1">
+          {stats?.totalItems
+            ? `${stats.masteryPercentage}% gemeistert`
+            : 'Lerne deine ersten Wörter'}
+        </p>
+        <div className="mt-4 flex items-center text-blue-300 text-sm font-bold group-hover:text-blue-200 transition-colors">
+          Trainieren <ArrowRightIcon className="w-4 h-4 ml-1" />
+        </div>
+      </div>
+
+      <div className="relative z-10 group-hover:scale-110 transition-transform duration-500">
+        <KnowledgeCore
+          percentage={stats?.masteryPercentage || 0}
+          size="sm"
+          animate={true}
+          showLabel={false}
+        />
+      </div>
+    </div>
+  )
+}
 
 export function HomeScreen() {
   const { data: session } = useSession()
@@ -275,6 +322,9 @@ export function HomeScreen() {
 
         {/* Daily Progress */}
         {/* ... (previous card ends) ... */}
+
+        {/* --- GLOBAL MASTERY SNAPSHOT --- */}
+        <KnowledgeCoreCard />
 
         {/* Daily Challenge */}
         <div id="tour-daily-challenge">

@@ -16,6 +16,8 @@ import {
     PlayIcon,
     HomeIcon
 } from '@heroicons/react/24/outline'
+import { KnowledgeCore } from '@/components/learning/knowledge-core'
+import { useMastery } from '@/hooks/use-mastery'
 
 type ViewState = 'loading' | 'start' | 'learning' | 'summary'
 
@@ -221,6 +223,13 @@ export default function LearningRoomPage() {
         )
     }
 
+    // ... imports
+
+
+    // ... inside component
+
+    const { stats, refresh: refreshStats } = useMastery()
+
     // 1. START SCREEN
     if (viewState === 'start') {
         return (
@@ -235,18 +244,23 @@ export default function LearningRoomPage() {
                         </div>
                     </div>
                 </header>
-                <main className="flex-1 flex items-center justify-center p-4">
+                <main className="flex-1 flex flex-col items-center justify-center p-4">
+                    <div className="mb-8 scale-110">
+                        <KnowledgeCore
+                            percentage={stats?.masteryPercentage || 0}
+                            size="xl"
+                            animate={true}
+                        />
+                    </div>
+
                     <div className="text-center max-w-md mx-auto">
-                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <AcademicCapIcon className="w-12 h-12 text-green-600" />
-                        </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
                         <p className="text-gray-600 mb-8">
                             {t('learning.start.desc', 'Der Lernraum wiederholt deine Fehler und festigt dein Wissen. Wir haben neue Übungen für dich vorbereitet.')}
                         </p>
                         <button
                             onClick={startNewSession}
-                            className="btn-primary w-full flex items-center justify-center text-lg py-3"
+                            className="btn-primary w-full flex items-center justify-center text-lg py-3 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                         >
                             <PlayIcon className="w-6 h-6 mr-2" />
                             {t('learning.start_btn', 'Sitzung starten')}
@@ -259,6 +273,10 @@ export default function LearningRoomPage() {
 
     // 2. SUMMARY (DONE) SCREEN
     if (viewState === 'summary') {
+        // Trigger a refresh of stats when entering summary to show growth
+        // Use logic to show delta if possible, for now just show updated core
+        useEffect(() => { refreshStats() }, [])
+
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col">
                 <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
@@ -271,18 +289,30 @@ export default function LearningRoomPage() {
                         </div>
                     </div>
                 </header>
-                <main className="flex-1 flex items-center justify-center p-4">
+                <main className="flex-1 flex flex-col items-center justify-center p-4">
+                    {/* The Dopamine Core */}
+                    <div className="mb-8">
+                        <KnowledgeCore
+                            percentage={stats?.masteryPercentage || 0}
+                            size="lg"
+                            animate={true}
+                        />
+                        <div className="text-center mt-2 text-green-600 font-bold animate-pulse">
+                            {t('learning.updated', 'Wissen aktualisiert!')}
+                        </div>
+                    </div>
+
                     <div className="text-center max-w-md mx-auto">
-                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <CheckIcon className="w-12 h-12 text-green-600" />
+                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <CheckIcon className="w-8 h-8 text-green-600" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.done.title', 'Klasse!')}</h2>
                         <p className="text-gray-600 mb-8">
-                            {t('learning.done.desc', 'Du hast diese Runde erfolgreich beendet. Willst du direkt weiterlernen oder eine Pause machen?')}
+                            {t('learning.done.desc', 'Du hast diese Runde erfolgreich beendet.')}
                         </p>
                         <div className="space-y-3">
                             <button
-                                onClick={startNewSession} // Loops back to start fresh
+                                onClick={startNewSession}
                                 className="btn-primary w-full flex items-center justify-center"
                             >
                                 <ArrowRightIcon className="w-5 h-5 mr-2" />
