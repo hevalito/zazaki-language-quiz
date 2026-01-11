@@ -102,7 +102,7 @@ export default async function RootLayout({
             <UnlockManager />
             <TourProvider>
               <div className="min-h-full pb-20 md:pb-0">
-                <SidebarLayout version={pkg.version}>
+                <SidebarLayout version={pkg.version} isAuthenticated={!!session}>
                   {children}
                 </SidebarLayout>
               </div>

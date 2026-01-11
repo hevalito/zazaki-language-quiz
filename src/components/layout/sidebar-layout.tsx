@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { DesktopNav } from './desktop-nav'
 import { cn } from '@/lib/utils'
 
-export function SidebarLayout({ children, version }: { children: React.ReactNode, version?: string }) {
+export function SidebarLayout({ children, version, isAuthenticated }: { children: React.ReactNode, version?: string, isAuthenticated?: boolean }) {
     // Initialize with false, but try to read from localStorage on mount
     const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -19,6 +19,10 @@ export function SidebarLayout({ children, version }: { children: React.ReactNode
         const newState = !isCollapsed
         setIsCollapsed(newState)
         localStorage.setItem('sidebar_collapsed', String(newState))
+    }
+
+    if (!isAuthenticated) {
+        return <div className="min-h-full">{children}</div>
     }
 
     return (
