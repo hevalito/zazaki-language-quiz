@@ -112,6 +112,10 @@ export default function LearningRoomPage() {
                     setQuestions(data.questions)
                     setActivityId(data.activityId)
                     setCurrentQuestionIndex(0)
+                    // Reset answer state for the first question of the new batch
+                    setSelectedChoiceId(null)
+                    setIsCorrect(null)
+                    setExplanation(null)
                     setViewState('learning')
                 } else {
                     // Truly empty (nothing to learn)
