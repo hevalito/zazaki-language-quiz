@@ -32,7 +32,9 @@ export async function GET() {
                 courseFinderData: true, // Include Course Finder Data
                 notifyDaily: true,
                 notifyFeatures: true,
-                notifyWeekly: true
+                notifyWeekly: true,
+                totalXP: true,
+                currentLevel: true
             }
         })
 

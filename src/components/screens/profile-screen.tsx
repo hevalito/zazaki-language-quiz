@@ -80,7 +80,7 @@ export function ProfileScreen() {
                     lastName: data.lastName || '',
                     nickname: data.nickname || '',
                     streak: data.streak || 0,
-                    totalXp: data.totalXp || 0,
+                    totalXp: data.totalXP || 0,
                     level: data.level || 1
                 })
             }
@@ -150,15 +150,16 @@ export function ProfileScreen() {
                         {loading ? (
                             <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
                         ) : (
-                            <h2 className="text-xl font-bold text-gray-900 truncate">
-                                {displayName}
-                            </h2>
+                            <div>
+                                <h2 className="text-xl font-bold text-gray-900 truncate">
+                                    {displayName}
+                                </h2>
+                                {profile?.nickname && profile.nickname !== displayName && (
+                                    <p className="text-sm font-medium text-gray-500">@{profile.nickname}</p>
+                                )}
+                            </div>
                         )}
-                        <p className="text-sm text-gray-500 truncate">{session?.user?.email}</p>
-
-
-
-                        // ... inside render ...
+                        <p className="text-sm text-gray-400 truncate">{session?.user?.email}</p>
                         {/* Stats Row */}
                         <div className="flex items-center space-x-3 mt-3">
                             {loading ? (
