@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { calculateUserStreak } from '@/lib/streak-calc'
+import { checkBadges } from '@/lib/gamification'
+import { logActivity } from '@/lib/activity'
+import { ActivityType } from '@prisma/client'
 
 export async function GET() {
     try {
@@ -54,7 +57,15 @@ export async function GET() {
             user.streak = calculatedStreak
         }
 
-        return NextResponse.json(user)
+        // Retroactive Badge Check
+        // This ensures existing users get badges for things they already did (like profile setup)
+        const badgeResult = await checkBadges(session.user.id)
+
+        // Return user AND new badges if any
+        return NextResponse.json({
+            ...user,
+            newBadges: badgeResult.newBadges
+        })
     } catch (error) {
         console.error('Error fetching profile:', error)
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -62,10 +73,6 @@ export async function GET() {
 }
 
 // ...
-import { checkBadges } from '@/lib/gamification'
-import { logActivity } from '@/lib/activity'
-import { ActivityType } from '@prisma/client'
-
 // ... existing imports
 
 export async function PUT(request: Request) {
