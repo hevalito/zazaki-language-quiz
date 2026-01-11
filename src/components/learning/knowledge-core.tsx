@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { SparklesIcon } from '@heroicons/react/24/solid'
+import { useTranslation } from '@/hooks/use-translation'
 
 interface KnowledgeCoreProps {
     percentage: number
@@ -19,6 +20,7 @@ export function KnowledgeCore({
     showLabel = true,
     onClick
 }: KnowledgeCoreProps) {
+    const { t } = useTranslation()
     const [displayValue, setDisplayValue] = useState(0)
 
     // Calculate dimensions based on size
@@ -137,7 +139,7 @@ export function KnowledgeCore({
                 <div className="mt-4 text-center">
                     <span className="text-sm font-medium text-gray-500 uppercase tracking-wider flex items-center justify-center gap-1">
                         <SparklesIcon className="w-4 h-4 text-yellow-500" />
-                        Total Knowledge
+                        {t('mastery.total', 'Total Knowledge')}
                     </span>
                 </div>
             )}

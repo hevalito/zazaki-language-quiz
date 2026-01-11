@@ -45,6 +45,7 @@ import { KnowledgeCore } from '@/components/learning/knowledge-core'
 import { useMastery } from '@/hooks/use-mastery'
 
 function KnowledgeCoreCard() {
+  const { t } = useTranslation()
   const { stats, isLoading } = useMastery()
   const router = useRouter()
 
@@ -62,18 +63,18 @@ function KnowledgeCoreCard() {
 
       <div className="relative z-10">
         <div className="flex items-center space-x-2 mb-1">
-          <span className="text-blue-300 font-bold uppercase text-xs tracking-wider">Total Knowledge</span>
+          <span className="text-blue-300 font-bold uppercase text-xs tracking-wider">{t('mastery.total', 'Total Knowledge')}</span>
         </div>
         <h3 className="text-xl font-bold font-serif text-white">
-          {stats?.totalItems ? 'Dein Wissensschatz' : 'Starte deine Reise'}
+          {stats?.totalItems ? t('mastery.title', 'Dein Wissensschatz') : t('mastery.start_title', 'Starte deine Reise')}
         </h3>
         <p className="text-gray-400 text-sm mt-1">
           {stats?.totalItems
-            ? `${stats.masteryPercentage}% gemeistert`
-            : 'Lerne deine ersten Wörter'}
+            ? t('mastery.progress', '{{percent}}% gemeistert').replace('{{percent}}', stats.masteryPercentage.toString())
+            : t('mastery.start_desc', 'Lerne deine ersten Wörter')}
         </p>
         <div className="mt-4 flex items-center text-blue-300 text-sm font-bold group-hover:text-blue-200 transition-colors">
-          Trainieren <ArrowRightIcon className="w-4 h-4 ml-1" />
+          {t('mastery.train', 'Trainieren')} <ArrowRightIcon className="w-4 h-4 ml-1" />
         </div>
       </div>
 
