@@ -37,7 +37,7 @@ export default function LearningRoomPage() {
     const activityIdRef = useRef<string | null>(null)
 
     // Global Mastery Hook (Must be at top level)
-    const { stats, refresh: refreshStats } = useMastery()
+    const { stats, refresh: refreshStats, isLoading: isMasteryLoading } = useMastery()
 
     // Initial Load - Check for Active Session
     useEffect(() => {
@@ -131,7 +131,12 @@ export default function LearningRoomPage() {
                     setViewState('learning')
                 } else {
                     // Truly empty (nothing to learn)
-                    setViewState('summary')
+                    // If user has 0 total items, showing summary is confusing. Go to start (which will show empty state).
+                    if (stats && stats.totalItems === 0) {
+                        setViewState('start')
+                    } else {
+                        setViewState('summary')
+                    }
                 }
             }
         } catch (error) {
@@ -262,17 +267,40 @@ export default function LearningRoomPage() {
                     </div>
 
                     <div className="text-center max-w-md mx-auto">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
-                        <p className="text-gray-600 mb-8">
-                            {t('learning.start.desc', 'Der Lernraum wiederholt deine Fehler und festigt dein Wissen. Wir haben neue Übungen für dich vorbereitet.')}
-                        </p>
-                        <button
-                            onClick={startNewSession}
-                            className="btn-primary w-full flex items-center justify-center text-lg py-3 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-                        >
-                            <PlayIcon className="w-6 h-6 mr-2" />
-                            {t('learning.start_btn', 'Sitzung starten')}
-                        </button>
+                        {isMasteryLoading ? (
+                            <div className="flex flex-col items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mb-4"></div>
+                                <p className="text-gray-500 text-sm">{t('loading.stats', 'Lade Wissensstand...')}</p>
+                            </div>
+                        ) : stats && stats.totalItems === 0 ? (
+                            <>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.empty.title', 'Dein Wissensschatz ist leer')}</h2>
+                                <p className="text-gray-600 mb-8">
+                                    {t('learning.empty.desc', 'Du hast noch keine Vokabeln gesammelt. Mach ein paar Quizze, um deinen Wissensschatz zu füllen!')}
+                                </p>
+                                <button
+                                    onClick={() => router.push('/library')}
+                                    className="btn-primary w-full flex items-center justify-center text-lg py-3 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                                >
+                                    <BookOpenIcon className="w-6 h-6 mr-2" />
+                                    {t('learning.goto_library', 'Zu den Übungen')}
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
+                                <p className="text-gray-600 mb-8">
+                                    {t('learning.start.desc', 'Der Lernraum wiederholt deine Fehler und festigt dein Wissen. Wir haben neue Übungen für dich vorbereitet.')}
+                                </p>
+                                <button
+                                    onClick={startNewSession}
+                                    className="btn-primary w-full flex items-center justify-center text-lg py-3 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                                >
+                                    <PlayIcon className="w-6 h-6 mr-2" />
+                                    {t('learning.start_btn', 'Sitzung starten')}
+                                </button>
+                            </>
+                        )}
                     </div>
                 </main>
             </div>
