@@ -56,18 +56,21 @@ export function DesktopNav({ version = '2.5.0', isCollapsed = false, onToggle }:
             href: '/learning',
             icon: AcademicCapIcon,
             activeIcon: AcademicCapIconSolid,
+            tourId: 'tour-learning-room-nav'
         },
         {
             name: t('nav.leaderboard', 'Bestenliste'),
             href: '/leaderboard',
             icon: TrophyIcon,
             activeIcon: TrophyIconSolid,
+            tourId: 'tour-leaderboard-nav'
         },
         {
             name: t('nav.profile', 'Profil'),
             href: '/profile',
             icon: UserIcon,
             activeIcon: UserIconSolid,
+            tourId: 'tour-profile-nav'
         },
     ]
 
@@ -129,6 +132,7 @@ export function DesktopNav({ version = '2.5.0', isCollapsed = false, onToggle }:
                             key={item.name}
                             href={item.href}
                             title={isCollapsed ? item.name : undefined}
+                            id={item.tourId}
                             className={cn(
                                 "group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 relative",
                                 isActive

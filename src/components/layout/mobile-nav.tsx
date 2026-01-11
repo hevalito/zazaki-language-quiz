@@ -61,18 +61,21 @@ export function MobileNav() {
             href: '/learning',
             icon: AcademicCapIcon,
             activeIcon: AcademicCapIconSolid,
+            tourId: 'tour-learning-room-nav'
         },
         {
             name: t('nav.leaderboard', 'Bestenliste'),
             href: '/leaderboard',
             icon: TrophyIcon,
             activeIcon: TrophyIconSolid,
+            tourId: 'tour-leaderboard-nav'
         },
         {
             name: t('nav.profile', 'Profil'),
             href: '/profile',
             icon: UserIcon,
             activeIcon: UserIconSolid,
+            tourId: 'tour-profile-nav'
         },
     ]
 
@@ -94,7 +97,7 @@ export function MobileNav() {
                         <Link
                             key={item.name}
                             href={item.href}
-                            id={item.href === '/learning' ? 'tour-learning-room-mobile' : undefined}
+                            id={item.tourId}
                             className="relative flex flex-col items-center justify-center w-full h-full text-xs font-medium transition-colors duration-200 outline-none select-none touch-manipulation group"
                         >
                             {isActive && (

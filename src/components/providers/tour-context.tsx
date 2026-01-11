@@ -112,7 +112,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
                     side: 'top',
                     onNextClick: () => {
                         router.push('/leaderboard')
-                        localStorage.setItem('zazaki-tour-index', '5')
+                        localStorage.setItem('zazaki-tour-index', '6')
                     }
                 },
                 nextRoute: '/leaderboard'
@@ -137,7 +137,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
                     side: 'bottom',
                     onNextClick: () => {
                         router.push('/achievements')
-                        localStorage.setItem('zazaki-tour-index', '7')
+                        localStorage.setItem('zazaki-tour-index', '8')
                     }
                 },
                 nextRoute: '/achievements'
@@ -162,7 +162,7 @@ export function TourProvider({ children }: { children: React.ReactNode }) {
                     side: 'bottom',
                     onNextClick: () => {
                         router.push('/settings')
-                        localStorage.setItem('zazaki-tour-index', '9')
+                        localStorage.setItem('zazaki-tour-index', '10')
                     }
                 },
                 nextRoute: '/settings'
