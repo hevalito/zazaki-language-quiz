@@ -1,3 +1,5 @@
+import { isSameBerlinDay } from "./date-utils"
+
 // ... existing imports
 import { ActivityType } from "@prisma/client"
 
@@ -14,7 +16,9 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
             where: { id: userId },
             include: {
                 badges: true, // Already owned badges
-                attempts: true, // Quiz history
+                attempts: {
+                    include: { quiz: true }
+                }, // Quiz history with Quiz details for Daily check
                 activities: true, // Activity history for things like learning sessions
             }
         })
@@ -61,8 +65,19 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'total_quizzes':
                     // Check total number of COMPLETED attempts
-                    const completedAttempts = user.attempts.filter((a: { completedAt: Date | null }) => a.completedAt != null)
-                    if (completedAttempts.length >= (criteria.count || 1)) {
+                    // Strict Rule: Daily Quizzes only count if completed ON the day they were created (Berlin Time)
+                    const validAttempts = user.attempts.filter((a: any) => {
+                        if (!a.completedAt) return false
+
+                        // If it's a Daily Quiz, check the date
+                        if (a.quiz?.type === 'DAILY' && a.quiz?.date) {
+                            return isSameBerlinDay(new Date(a.completedAt), new Date(a.quiz.date))
+                        }
+
+                        return true
+                    })
+
+                    if (validAttempts.length >= (criteria.count || 1)) {
                         isEarned = true
                     }
                     break
