@@ -13,20 +13,48 @@ import {
     CalendarIcon,
     PaperAirplaneIcon,
     Cog6ToothIcon,
-    LanguageIcon
+    LanguageIcon,
+    ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline'
+import useSWR from 'swr'
 
-const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: HomeIcon },
-    { name: 'Courses', href: '/admin/courses', icon: AcademicCapIcon },
-    { name: 'Quizzes', href: '/admin/quizzes', icon: ClipboardDocumentListIcon },
-    { name: 'Daily Quiz', href: '/admin/daily-quiz', icon: CalendarIcon },
-    { name: 'Questions', href: '/admin/questions', icon: QuestionMarkCircleIcon },
-    { name: 'Users', href: '/admin/users', icon: UsersIcon },
-    { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
-    { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
-    { name: 'Translations', href: '/admin/translations', icon: LanguageIcon },
-    { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
+const navigationGroups = [
+    {
+        title: '',
+        items: [
+            { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+        ]
+    },
+    {
+        title: 'Content',
+        items: [
+            { name: 'Courses', href: '/admin/courses', icon: AcademicCapIcon },
+            { name: 'Quizzes', href: '/admin/quizzes', icon: ClipboardDocumentListIcon },
+            { name: 'Questions', href: '/admin/questions', icon: QuestionMarkCircleIcon },
+            { name: 'Translations', href: '/admin/translations', icon: LanguageIcon },
+        ]
+    },
+    {
+        title: 'Engagement',
+        items: [
+            { name: 'Daily Quiz', href: '/admin/daily-quiz', icon: CalendarIcon },
+            { name: 'Achievements', href: '/admin/achievements', icon: TrophyIcon },
+            { name: 'Push Broadcast', href: '/admin/push', icon: PaperAirplaneIcon },
+        ]
+    },
+    {
+        title: 'Support & Users',
+        items: [
+            { name: 'Users', href: '/admin/users', icon: UsersIcon },
+            { name: 'Feedback', href: '/admin/feedback', icon: ChatBubbleLeftRightIcon, badge: 'openFeedbackCount' },
+        ]
+    },
+    {
+        title: 'System',
+        items: [
+            { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
+        ]
+    }
 ]
 
 interface AdminSidebarProps {
@@ -38,8 +66,11 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
+const fetcher = (url: string) => fetch(url).then(r => r.json())
+
 export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
     const pathname = usePathname()
+    const { data: stats } = useSWR('/api/admin/stats', fetcher, { refreshInterval: 30000 })
 
     return (
         <>
@@ -77,33 +108,23 @@ export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
                         </div>
 
                         {/* Navigation */}
-                        <nav className="mt-5 flex-1 space-y-1 px-2">
-                            {navigation.map((item) => {
-                                const isActive = pathname === item.href
-                                return (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        onClick={() => setOpen(false)} // Close on mobile navigation
-                                        className={classNames(
-                                            isActive
-                                                ? 'bg-primary-50 text-brand-orange border-r-4 border-brand-orange'
-                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                                            'group flex items-center px-2 py-3 text-sm font-medium rounded-r-none rounded-l-md transition-all duration-200'
-                                        )}
-                                    >
-                                        <item.icon
-                                            className={classNames(
-                                                isActive ? 'text-brand-orange' : 'text-gray-400 group-hover:text-gray-500',
-                                                'mr-3 h-6 w-6 flex-shrink-0'
-                                            )}
-                                            aria-hidden="true"
-                                        />
-                                        {item.name}
-                                    </Link>
-                                )
-                            })}
-                        </nav>
+                        {/* Navigation Groups */}
+                        <div className="flex-1 px-2 space-y-6">
+                            {navigationGroups.map((group) => (
+                                <div key={group.title}>
+                                    {group.title && (
+                                        <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                                            {group.title}
+                                        </h3>
+                                    )}
+                                    <div className="space-y-1">
+                                        {group.items.map((item) => (
+                                            <NavItem key={item.name} item={item} pathname={pathname} setOpen={setOpen} stats={stats} />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Footer / User Info could go here */}
@@ -121,5 +142,37 @@ export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
                 </div>
             </div>
         </>
+    )
+}
+
+function NavItem({ item, pathname, setOpen, stats }: any) {
+    const isActive = pathname === item.href
+    const badgeCount = item.badge && stats ? stats[item.badge] : 0
+
+    return (
+        <Link
+            href={item.href}
+            onClick={() => setOpen(false)}
+            className={classNames(
+                isActive
+                    ? 'bg-primary-50 text-brand-orange border-r-4 border-brand-orange'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                'group flex items-center px-2 py-2 text-sm font-medium rounded-r-none rounded-l-md transition-all duration-200'
+            )}
+        >
+            <item.icon
+                className={classNames(
+                    isActive ? 'text-brand-orange' : 'text-gray-400 group-hover:text-gray-500',
+                    'mr-3 h-5 w-5 flex-shrink-0'
+                )}
+                aria-hidden="true"
+            />
+            <span className="flex-1">{item.name}</span>
+            {badgeCount > 0 && (
+                <span className="ml-2 inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
+                    {badgeCount}
+                </span>
+            )}
+        </Link>
     )
 }

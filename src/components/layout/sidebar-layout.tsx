@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { DesktopNav } from './desktop-nav'
 import { cn } from '@/lib/utils'
+import { FeedbackWidget } from '@/components/features/feedback/feedback-widget'
 
 export function SidebarLayout({ children, version, isAuthenticated }: { children: React.ReactNode, version?: string, isAuthenticated?: boolean }) {
     // Initialize with false, but try to read from localStorage on mount
@@ -40,6 +41,9 @@ export function SidebarLayout({ children, version, isAuthenticated }: { children
             >
                 {children}
             </div>
+
+            {/* Global Feedback Trigger */}
+            <FeedbackWidget />
         </div>
     )
 }
