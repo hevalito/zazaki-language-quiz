@@ -32,7 +32,13 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
         iconType: initialData?.imageUrl ? 'image' : 'emoji',
         conditionLabel: initialData?.conditionLabel || {},
         criteriaType: initialData?.criteria?.type || 'lesson_completion',
-        criteriaValue: initialData?.criteria?.level || initialData?.criteria?.value || initialData?.criteria?.count || 1,
+        criteriaValue: initialData?.criteria?.level ||
+            initialData?.criteria?.value ||
+            initialData?.criteria?.count ||
+            initialData?.criteria?.fields ||
+            (initialData?.criteria?.type === 'time_of_day' ? { startHour: initialData.criteria.startHour, endHour: initialData.criteria.endHour } : undefined) ||
+            (initialData?.criteria?.type === 'speed_demon' ? { maxSeconds: initialData.criteria.maxSeconds, minScore: initialData.criteria.minScore } : undefined) ||
+            1,
         isActive: initialData?.isActive ?? true
     })
 

@@ -111,14 +111,23 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
 
                 case 'profile_filled':
                     // Check if specific fields are populated
-                    // criteria.fields can be an array of strings e.g. ["avatarUrl", "firstName"]
-                    const fieldsToCheck = criteria.fields || ['avatarUrl']
+                    let fieldsToCheck = criteria.fields || ['avatarUrl']
+
+                    // Defensive: Ensure array
+                    if (!Array.isArray(fieldsToCheck)) {
+                        // Attempt to rescue single value
+                        fieldsToCheck = [fieldsToCheck]
+                    }
+
                     const allFieldsDriven = fieldsToCheck.every((field: string) => {
                         // Special handling for avatarUrl vs image (NextAuth default)
                         if (field === 'avatarUrl') {
                             return (user.image && user.image.length > 0) || (user.avatarUrl && user.avatarUrl.length > 0)
                         }
-                        return (user as any)[field] && (user as any)[field].toString().length > 0
+
+                        // Robust check for values (allow 0, deny null/undefined/empty string)
+                        const val = (user as any)[field]
+                        return val !== null && val !== undefined && val.toString().trim().length > 0
                     })
 
                     if (allFieldsDriven) {
