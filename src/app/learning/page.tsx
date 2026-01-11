@@ -46,6 +46,13 @@ export default function LearningRoomPage() {
         }
     }, [session])
 
+    // Refresh stats when entering summary view
+    useEffect(() => {
+        if (viewState === 'summary') {
+            refreshStats()
+        }
+    }, [viewState])
+
     // Cleanup on unmount / navigation
     useEffect(() => {
         return () => {
@@ -276,7 +283,6 @@ export default function LearningRoomPage() {
     if (viewState === 'summary') {
         // Trigger a refresh of stats when entering summary to show growth
         // Use logic to show delta if possible, for now just show updated core
-        useEffect(() => { refreshStats() }, [])
 
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col">
