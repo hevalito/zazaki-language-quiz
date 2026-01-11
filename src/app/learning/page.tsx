@@ -20,13 +20,20 @@ import { KnowledgeCore } from '@/components/learning/knowledge-core'
 import { useMastery } from '@/hooks/use-mastery'
 
 type ViewState = 'loading' | 'start' | 'learning' | 'summary'
+import { LearningOnboardingModal } from '@/components/learning/learning-onboarding-modal'
 
 export default function LearningRoomPage() {
-    const { t } = useTranslation()
-    const router = useRouter()
     const { data: session } = useSession()
+    const router = useRouter()
+    const { t } = useTranslation()
 
-    const [viewState, setViewState] = useState<ViewState>('loading')
+    // viewState: loading -> start -> learning -> summary
+    const [viewState, setViewState] = useState<'loading' | 'start' | 'learning' | 'summary'>('loading')
+
+    // Onboarding State
+    const [showOnboarding, setShowOnboarding] = useState(false)
+
+    // ... (questions state etc)
     const [questions, setQuestions] = useState<Question[]>([])
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null)
@@ -43,8 +50,20 @@ export default function LearningRoomPage() {
     useEffect(() => {
         if (session?.user) {
             checkActiveSession()
+
+            // Check Onboarding
+            const hasSeenOnboarding = localStorage.getItem('zazaki-learning-onboarding-seen')
+            if (!hasSeenOnboarding) {
+                // Small delay to ensure smooth entrance
+                setTimeout(() => setShowOnboarding(true), 500)
+            }
         }
     }, [session])
+
+    const handleOnboardingClose = () => {
+        setShowOnboarding(false)
+        localStorage.setItem('zazaki-learning-onboarding-seen', 'true')
+    }
 
     // Refresh stats when entering summary view
     useEffect(() => {
@@ -302,6 +321,11 @@ export default function LearningRoomPage() {
                             </>
                         )}
                     </div>
+
+                    <LearningOnboardingModal
+                        isOpen={showOnboarding}
+                        onClose={handleOnboardingClose}
+                    />
                 </main>
             </div>
         )
