@@ -38,11 +38,13 @@ export async function POST(request: Request) {
                 const meta = sessionActivity.metadata as any
                 const answered = (meta.answered || 0) + 1
                 const correct = (meta.correct || 0) + (isCorrect ? 1 : 0)
+                // Persistence: Track which questions were answered
+                const answeredIds = [...(meta.answeredIds || []), questionId]
 
                 await logActivity(
                     session.user.id,
                     'LEARNING_SESSION_STARTED',
-                    { ...meta, answered, correct },
+                    { ...meta, answered, correct, answeredIds },
                     'IN_PROGRESS',
                     activityId
                 )

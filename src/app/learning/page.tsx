@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { MultipleChoiceQuestion } from '@/components/questions/multiple-choice-question'
-import type { Question, Choice, MultiLanguageContent } from '@/types'
+import type { Question } from '@/types'
 import { useTranslation } from '@/hooks/use-translation'
 import {
     ArrowLeftIcon,
@@ -12,19 +12,21 @@ import {
     CheckIcon,
     BookOpenIcon,
     XMarkIcon,
-    ArrowRightIcon
+    ArrowRightIcon,
+    PlayIcon,
+    HomeIcon
 } from '@heroicons/react/24/outline'
 
-// ...
+type ViewState = 'loading' | 'start' | 'learning' | 'summary'
 
 export default function LearningRoomPage() {
     const { t } = useTranslation()
     const router = useRouter()
     const { data: session } = useSession()
 
+    const [viewState, setViewState] = useState<ViewState>('loading')
     const [questions, setQuestions] = useState<Question[]>([])
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [loading, setLoading] = useState(true)
     const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null)
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null)
     const [explanation, setExplanation] = useState<any>(null)
@@ -32,9 +34,10 @@ export default function LearningRoomPage() {
     const [activityId, setActivityId] = useState<string | null>(null)
     const activityIdRef = useRef<string | null>(null)
 
+    // Initial Load - Check for Active Session
     useEffect(() => {
         if (session?.user) {
-            fetchQuestions()
+            checkActiveSession()
         }
     }, [session])
 
@@ -42,23 +45,9 @@ export default function LearningRoomPage() {
     useEffect(() => {
         return () => {
             const currentActivityId = activityIdRef.current
-            if (currentActivityId) {
-                const data = JSON.stringify({ activityId: currentActivityId })
-                // Use beacon if available (more reliable for unload)
-                if (navigator.sendBeacon) {
-                    navigator.sendBeacon('/api/learning/finish', data)
-                } else {
-                    // Fallback to fetch with keepalive
-                    fetch('/api/learning/finish', {
-                        method: 'POST',
-                        body: data,
-                        keepalive: true,
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }).catch(console.error)
-                }
-            }
+            // We NO LONGER auto-close on unmount to allow persistence.
+            // Only if we wanted to explicit abandon, but "Pause" is better.
+            // Keeping the Ref sync just in case we add "Pause" logic later.
         }
     }, [])
 
@@ -67,23 +56,17 @@ export default function LearningRoomPage() {
         activityIdRef.current = activityId
     }, [activityId])
 
-    // Heartbeat Loop
+    // Heartbeat Loop (Optional now since we persist, but good for "Live" status)
     useEffect(() => {
-        if (!activityId) return
+        if (!activityId || viewState !== 'learning') return
 
         const heartbeat = async () => {
             try {
-                const res = await fetch('/api/learning/heartbeat', {
+                await fetch('/api/learning/heartbeat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ activityId })
                 })
-
-                if (res.status === 410) {
-                    // Session gone (likely opened in another tab)
-                    // Optional: could alert user or auto-redirect
-                    console.warn('Session expired or accepted elsewhere')
-                }
             } catch (err) {
                 console.error('Heartbeat failed', err)
             }
@@ -91,26 +74,53 @@ export default function LearningRoomPage() {
 
         const interval = setInterval(heartbeat, 30000) // 30s
         return () => clearInterval(interval)
-    }, [activityId])
+    }, [activityId, viewState])
 
-    const fetchQuestions = async () => {
+    const checkActiveSession = async () => {
         try {
-            const res = await fetch('/api/learning')
+            setViewState('loading')
+            const res = await fetch('/api/learning') // Default: No action = Check active
             if (res.ok) {
                 const data = await res.json()
-                if (data.activityId) setActivityId(data.activityId)
 
-                // API returns { questions: [], count: number }
-                if (Array.isArray(data)) {
-                    setQuestions(data)
+                // If we get questions back, it means we are RESUMING
+                if (data.questions && data.questions.length > 0) {
+                    setQuestions(data.questions)
+                    setActivityId(data.activityId)
+                    setViewState('learning')
                 } else {
-                    setQuestions(data.questions || [])
+                    // No active session found (or it was just finished/empty) -> Show START screen
+                    setViewState('start')
+                }
+            } else {
+                setViewState('start')
+            }
+        } catch (error) {
+            console.error('Failed to check session', error)
+            setViewState('start')
+        }
+    }
+
+    const startNewSession = async () => {
+        try {
+            setViewState('loading')
+            // Explicitly request NEW session
+            const res = await fetch('/api/learning?action=start')
+            if (res.ok) {
+                const data = await res.json()
+                if (data.questions && data.questions.length > 0) {
+                    setQuestions(data.questions)
+                    setActivityId(data.activityId)
+                    setCurrentQuestionIndex(0)
+                    setViewState('learning')
+                } else {
+                    // Truly empty (nothing to learn)
+                    setViewState('summary')
                 }
             }
         } catch (error) {
-            console.error('Failed to fetch learning questions', error)
-        } finally {
-            setLoading(false)
+            console.error('Failed to start session', error)
+            setViewState('start')
         }
     }
 
@@ -143,75 +153,99 @@ export default function LearningRoomPage() {
             setExplanation(null)
         } else {
             // Finished all current questions
-            // Explicitly finish the session so it marks as COMPLETED immediately
-            if (activityId) {
-                fetch('/api/learning/finish', {
-                    method: 'POST',
-                    body: JSON.stringify({ activityId }),
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                // Clear activityId so cleanup doesn't try to close it again (though idempotent is fine)
-                setActivityId(null)
-                activityIdRef.current = null
-            }
-
-            setQuestions([])
-            setLoading(false)
+            finishSession()
         }
     }
 
-    if (loading && questions.length === 0) {
+    const finishSession = () => {
+        // Explicitly close ONLY when done
+        if (activityId) {
+            fetch('/api/learning/finish', {
+                method: 'POST',
+                body: JSON.stringify({ activityId }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            setActivityId(null)
+        }
+        setViewState('summary')
+    }
+
+    // --- RENDER HELPERS ---
+
+    const getContextLabel = (q: any) => {
+        if (!q?.quiz) return 'Quiz'
+
+        try {
+            // Extract localized string helper
+            const extract = (val: any) => {
+                if (!val) return ''
+                if (typeof val === 'string') return val
+                // Prefer active locale if we had it, defaulting to DE/EN
+                return val.de || val.en || val.zazaki || ''
+            }
+
+            const quizTitle = extract(q.quiz.title)
+
+            // Deep context: Course > Lesson
+            if (q.quiz.lesson?.chapter?.course) {
+                const courseTitle = extract(q.quiz.lesson.chapter.course.title)
+                const lessonTitle = extract(q.quiz.lesson.title)
+                return `${courseTitle} • ${lessonTitle}`
+            }
+
+            // Fallback for Daily or misc quizzes
+            if (q.quiz.type === 'DAILY') {
+                return t('learning.daily_context', 'Tägliches Training')
+            }
+
+            return quizTitle
+        } catch (e) {
+            return 'Quiz'
+        }
+    }
+
+    // --- VIEWS ---
+
+    if (viewState === 'loading') {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">{t('loading.questions', 'Lade Fragen...')}</p>
+                    <p className="mt-4 text-gray-600">{t('loading.wait', 'Einen Moment...')}</p>
                 </div>
             </div>
         )
     }
 
-    // EMPTY STATE
-    if (questions.length === 0 && !loading) {
+    // 1. START SCREEN
+    if (viewState === 'start') {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col">
-                {/* Header matching Library */}
                 <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
                     <div className="container mx-auto px-4 py-4">
                         <div className="flex items-center space-x-3">
-                            <button
-                                onClick={() => router.push('/')}
-                                className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-                                aria-label={t('nav.back', 'Zurück')}
-                            >
+                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
                                 <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
                             </button>
-                            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                <AcademicCapIcon className="w-6 h-6 text-green-600" />
-                            </div>
-                            <div>
-                                <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
-                                <p className="text-sm text-gray-500">{t('learning.subtitle', 'Trainiere deine Fehler')}</p>
-                            </div>
+                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
                         </div>
                     </div>
                 </header>
-
                 <main className="flex-1 flex items-center justify-center p-4">
                     <div className="text-center max-w-md mx-auto">
                         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <CheckIcon className="w-12 h-12 text-green-600" />
+                            <AcademicCapIcon className="w-12 h-12 text-green-600" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.done.title', 'Alles erledigt!')}</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
                         <p className="text-gray-600 mb-8">
-                            {t('learning.done.desc', 'Du hast keine offenen Wiederholungen. Super gemacht! Der Lernraum füllt sich automatisch, wenn du in Quizzes Fehler machst.')}
+                            {t('learning.start.desc', 'Der Lernraum wiederholt deine Fehler und festigt dein Wissen. Wir haben neue Übungen für dich vorbereitet.')}
                         </p>
                         <button
-                            onClick={() => router.push('/library')}
-                            className="btn-primary w-full flex items-center justify-center"
+                            onClick={startNewSession}
+                            className="btn-primary w-full flex items-center justify-center text-lg py-3"
                         >
-                            <BookOpenIcon className="w-5 h-5 mr-2" />
-                            {t('learning.startNew', 'Neues Quiz starten')}
+                            <PlayIcon className="w-6 h-6 mr-2" />
+                            {t('learning.start_btn', 'Sitzung starten')}
                         </button>
                     </div>
                 </main>
@@ -219,11 +253,56 @@ export default function LearningRoomPage() {
         )
     }
 
+    // 2. SUMMARY (DONE) SCREEN
+    if (viewState === 'summary') {
+        return (
+            <div className="min-h-screen bg-gray-50 flex flex-col">
+                <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+                    <div className="container mx-auto px-4 py-4">
+                        <div className="flex items-center space-x-3">
+                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <HomeIcon className="w-6 h-6 text-gray-600" />
+                            </button>
+                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
+                        </div>
+                    </div>
+                </header>
+                <main className="flex-1 flex items-center justify-center p-4">
+                    <div className="text-center max-w-md mx-auto">
+                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckIcon className="w-12 h-12 text-green-600" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.done.title', 'Klasse!')}</h2>
+                        <p className="text-gray-600 mb-8">
+                            {t('learning.done.desc', 'Du hast diese Runde erfolgreich beendet. Willst du direkt weiterlernen oder eine Pause machen?')}
+                        </p>
+                        <div className="space-y-3">
+                            <button
+                                onClick={startNewSession} // Loops back to start fresh
+                                className="btn-primary w-full flex items-center justify-center"
+                            >
+                                <ArrowRightIcon className="w-5 h-5 mr-2" />
+                                {t('learning.next_batch', 'Nächste Runde starten')}
+                            </button>
+                            <button
+                                onClick={() => router.push('/')}
+                                className="w-full py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                            >
+                                {t('learning.home', 'Zurück zur Übersicht')}
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        )
+    }
+
+    // 3. ACTIVE LEARNING
     const currentQuestion = questions[currentQuestionIndex]
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
-            {/* Header matching Library */}
+            {/* Header */}
             <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -253,21 +332,17 @@ export default function LearningRoomPage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     {/* Question Card */}
                     <div className="p-6">
-                        {/* Quiz Origin Source */}
-                        {/* Quiz Origin Source */}
-                        {(currentQuestion as any)?.quiz?.title && (
-                            <div className="mb-6 flex justify-center">
-                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                    <BookOpenIcon className="w-3.5 h-3.5 mr-1.5" />
-                                    {/* Handle potentially localized title */}
-                                    {t('learning.origin', 'Aus:')} {((currentQuestion as any).quiz.title?.de || (currentQuestion as any).quiz.title?.en || (currentQuestion as any).quiz.title || 'Quiz')}
-                                </span>
-                            </div>
-                        )}
+                        {/* Context / Origin Pill */}
+                        <div className="mb-6 flex justify-center">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100 max-w-full truncate">
+                                <BookOpenIcon className="w-3.5 h-3.5 mr-1.5 flex-shrink-0" />
+                                <span className="truncate">{getContextLabel(currentQuestion)}</span>
+                            </span>
+                        </div>
 
                         <MultipleChoiceQuestion
                             question={currentQuestion}
-                            choices={currentQuestion.choices || []} // Provide choices from included data
+                            choices={currentQuestion.choices || []}
                             onAnswer={handleAnswer}
                             selectedChoiceId={selectedChoiceId || undefined}
                             showResult={isCorrect !== null}
@@ -293,7 +368,6 @@ export default function LearningRoomPage() {
                                     {explanation && (
                                         <div className="mt-3 text-sm text-gray-700 bg-white/50 p-3 rounded-lg border border-black/5">
                                             <p className="font-semibold mb-1">{t('quiz.explanation', 'Erklärung:')}</p>
-                                            {/* Helper to extract correct language - reusing logic would be better but fast inline here */}
                                             {typeof explanation === 'string' ? explanation : (explanation.de || explanation.en || '')}
                                         </div>
                                     )}
