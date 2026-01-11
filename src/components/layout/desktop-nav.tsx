@@ -93,6 +93,7 @@ export function DesktopNav({ version = '2.5.0', isCollapsed = false, onToggle }:
                             alt="Zazakî"
                             fill
                             className="object-contain"
+                            suppressHydrationWarning
                         />
                     </div>
                     <span

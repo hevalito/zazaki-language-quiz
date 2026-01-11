@@ -36,6 +36,9 @@ export default function LearningRoomPage() {
     const [activityId, setActivityId] = useState<string | null>(null)
     const activityIdRef = useRef<string | null>(null)
 
+    // Global Mastery Hook (Must be at top level)
+    const { stats, refresh: refreshStats } = useMastery()
+
     // Initial Load - Check for Active Session
     useEffect(() => {
         if (session?.user) {
@@ -227,8 +230,6 @@ export default function LearningRoomPage() {
 
 
     // ... inside component
-
-    const { stats, refresh: refreshStats } = useMastery()
 
     // 1. START SCREEN
     if (viewState === 'start') {
