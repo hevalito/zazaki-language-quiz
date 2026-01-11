@@ -179,7 +179,7 @@ export function HomeScreen() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 ml-auto">
               {/* Streak */}
               <div className="flex items-center space-x-1 bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20">
                 {streak > 0 ? (
