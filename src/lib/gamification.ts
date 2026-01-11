@@ -141,9 +141,21 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                             fieldsToCheck = [fieldsToCheck]
                         }
 
-                        const allFieldsDriven = fieldsToCheck.every((field: string) => {
+                        const allFieldsDriven = fieldsToCheck.every((rawField: string) => {
+                            // Normalize snake_case to camelCase to match Prisma model
+                            const fieldMap: Record<string, string> = {
+                                'first_name': 'firstName',
+                                'last_name': 'lastName',
+                                'daily_goal': 'dailyGoal',
+                                'avatar_url': 'avatarUrl',
+                                'preferred_script': 'preferredScript',
+                                'current_level': 'currentLevel'
+                            }
+
+                            const field = fieldMap[rawField] || rawField
+
                             // Special handling for avatarUrl vs image (NextAuth default)
-                            if (field === 'avatarUrl') {
+                            if (field === 'avatarUrl' || field === 'image') {
                                 return (user.image && user.image.length > 0) || (user.avatarUrl && user.avatarUrl.length > 0)
                             }
 
