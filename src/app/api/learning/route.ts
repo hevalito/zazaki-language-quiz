@@ -81,11 +81,7 @@ export async function GET(request: Request) {
             const formatted = resumeQuestions.map(q => ({
                 ...q,
                 choices: [...q.choices].sort(() => Math.random() - 0.5)
-            }))
-
-            // Sort to match original order if possible, or random
-            // Since we just fetched by ID, the order is DB-dependent.
-            // Ideally we'd preserve the original shuffle from metadata, but random remaining is fine.
+            })).sort(() => Math.random() - 0.5) // SHUFFLE the resumed questions to avoid sequential order
 
             return NextResponse.json({
                 questions: formatted,
@@ -112,9 +108,13 @@ export async function GET(request: Request) {
         }
 
         // ... [Existing Mix Logic - Active/Stable/Fresh] ...
-        // Fetch Quizzes the user has actually attempted
+        // Fetch Quizzes the user has actually attempted (and engaged with!)
+        // Filter out quizzes where the user just started (Attempt created) but answered nothing.
         const attempts = await prisma.attempt.findMany({
-            where: { userId },
+            where: {
+                userId,
+                answers: { some: {} } // valid attempt must have at least one answer
+            },
             select: { quizId: true },
             distinct: ['quizId']
         })
@@ -195,10 +195,22 @@ export async function GET(request: Request) {
         })
 
         // 3. Fetch Fresh Items
-        const freshQuestions = await prisma.question.findMany({
+        // IMPROVED: Randomize selection by fetching IDs first, shuffling, then fetching detail.
+        // This prevents "clustering" where all fresh items come from the first attempted quiz.
+        const allFreshCandidateIds = await prisma.question.findMany({
             where: {
                 quizId: { in: attemptedQuizIds },
                 spacedItems: { none: { userId } }
+            },
+            select: { id: true }
+        })
+
+        // Shuffle candidate IDs
+        const shuffledFreshIds = fisherYatesShuffle(allFreshCandidateIds.map(q => q.id)).slice(0, 6)
+
+        const freshQuestions = await prisma.question.findMany({
+            where: {
+                id: { in: shuffledFreshIds }
             },
             include: {
                 choices: true,
@@ -219,15 +231,14 @@ export async function GET(request: Request) {
                         }
                     }
                 }
-            },
-            take: 6
+            }
         })
 
         let combinedQuestions: any[] = []
 
         const formatItem = (q: any, spacedItem?: any) => ({
             ...q,
-            choices: [...q.choices].sort(() => Math.random() - 0.5),
+            choices: fisherYatesShuffle([...q.choices]),
             _spacedItem: spacedItem ? {
                 id: spacedItem.id,
                 easiness: spacedItem.easiness,
@@ -243,35 +254,39 @@ export async function GET(request: Request) {
 
         // Fallbacks
         if (combinedQuestions.length < 10) {
-            const moreFresh = await prisma.question.findMany({
-                where: {
-                    quizId: { in: attemptedQuizIds },
-                    spacedItems: { none: { userId } },
-                    id: { notIn: freshQuestions.map(q => q.id) }
-                },
-                include: {
-                    choices: true,
-                    quiz: {
-                        select: {
-                            title: true,
-                            type: true,
-                            lesson: {
-                                select: {
-                                    title: true,
-                                    chapter: {
-                                        select: {
-                                            title: true,
-                                            course: { select: { title: true } }
+            // Re-use the pool of fresh IDs we already fetched, excluding the ones we already picked
+            const remainingFreshIds = allFreshCandidateIds
+                .map(q => q.id)
+                .filter(id => !shuffledFreshIds.includes(id))
+
+            const moreFreshIds = fisherYatesShuffle(remainingFreshIds).slice(0, 20 - combinedQuestions.length)
+
+            if (moreFreshIds.length > 0) {
+                const moreFresh = await prisma.question.findMany({
+                    where: { id: { in: moreFreshIds } },
+                    include: {
+                        choices: true,
+                        quiz: {
+                            select: {
+                                title: true,
+                                type: true,
+                                lesson: {
+                                    select: {
+                                        title: true,
+                                        chapter: {
+                                            select: {
+                                                title: true,
+                                                course: { select: { title: true } }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                },
-                take: 20 - combinedQuestions.length
-            })
-            moreFresh.forEach(q => combinedQuestions.push(formatItem(q)))
+                })
+                moreFresh.forEach(q => combinedQuestions.push(formatItem(q)))
+            }
         }
 
         if (combinedQuestions.length < 5) {
@@ -304,12 +319,12 @@ export async function GET(request: Request) {
                         }
                     }
                 },
-                take: 20 - combinedQuestions.length
+                take: 20 - combinedQuestions.length // simplified take, no random sort on fallback stable yet (harder to do with relations)
             })
             moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
         }
 
-        const finalQuestions = combinedQuestions.sort(() => Math.random() - 0.5)
+        const finalQuestions = fisherYatesShuffle(combinedQuestions)
         const finalQuestionIds = finalQuestions.map(q => q.id)
 
         // Log Session Start with PERSISTENCE METADATA
@@ -345,5 +360,15 @@ export async function GET(request: Request) {
             { status: 500 }
         )
     }
+}
+
+// Utility: Fisher-Yates Shuffle
+function fisherYatesShuffle<T>(array: T[]): T[] {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
 }
 
