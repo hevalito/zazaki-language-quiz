@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import { auth } from '@/auth'
+import pkg from '../../package.json'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -66,7 +67,7 @@ import { TranslationProvider } from '@/components/providers/translation-provider
 import { getDictionary } from '@/lib/translations'
 
 import { MobileNav } from '@/components/layout/mobile-nav'
-import { DesktopNav } from '@/components/layout/desktop-nav'
+import { SidebarLayout } from '@/components/layout/sidebar-layout'
 import { getSystemSettings } from '@/lib/settings'
 import MaintenancePage from './maintenance/page'
 
@@ -101,10 +102,9 @@ export default async function RootLayout({
             <UnlockManager />
             <TourProvider>
               <div className="min-h-full pb-20 md:pb-0">
-                <DesktopNav />
-                <div className="md:pl-64 h-full transition-all duration-300">
+                <SidebarLayout version={pkg.version}>
                   {children}
-                </div>
+                </SidebarLayout>
               </div>
               <ChangelogModal />
               <MobileNav />

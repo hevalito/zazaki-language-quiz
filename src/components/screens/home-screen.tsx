@@ -156,7 +156,7 @@ export function HomeScreen() {
       <header className="bg-white shadow-sm border-b border-gray-200 safe-area-top" id="tour-welcome">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 md:hidden">
               <div className="relative w-10 h-10">
                 <Image
                   src="/images/logo-icon.png"

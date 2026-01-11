@@ -7,11 +7,17 @@ import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 export function UserNavToggle() {
     const { data: session } = useSession()
 
-    // Fallback initials
-    const user = session?.user
-    const initials = user?.name
-        ? user.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
-        : user?.email?.substring(0, 2).toUpperCase() || '??'
+    // Preferred name logic: Nickname -> First Name -> Name -> Email -> 'Benutzer'
+    // Note: session.user needs to be typed or we rely on the fact that our auth.config passes these through.
+    const user = session?.user as any
+    const displayName = user?.nickname || user?.firstName || user?.name || 'Benutzer'
+
+    const initials = displayName
+        .split(' ')
+        .map((n: string) => n[0])
+        .join('')
+        .substring(0, 2)
+        .toUpperCase() || '??'
 
     return (
         <>
@@ -34,7 +40,7 @@ export function UserNavToggle() {
                 >
                     <div className="text-right hidden lg:block">
                         <p className="text-sm font-bold text-gray-900 leading-none">
-                            {user?.name || 'Benutzer'}
+                            {displayName}
                         </p>
                         <p className="text-xs text-gray-500 mt-0.5">
                             Profil anzeigen
