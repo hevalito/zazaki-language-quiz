@@ -1,6 +1,6 @@
 import { isSameBerlinDay } from "./date-utils"
 
-// ... existing imports
+import { prisma } from "@/lib/prisma"
 import { ActivityType } from "@prisma/client"
 
 export interface BadgeCheckResult {

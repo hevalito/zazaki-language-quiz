@@ -114,9 +114,9 @@ export async function PATCH(req: Request) {
         if (adminResponse) {
             const recipientEmail = feedback.user?.email || feedback.userEmail
 
-            if (recipientEmail && process.env.RESEND_API_KEY) {
+            if (recipientEmail && process.env.AUTH_RESEND_KEY) {
                 try {
-                    const resend = new Resend(process.env.RESEND_API_KEY)
+                    const resend = new Resend(process.env.AUTH_RESEND_KEY)
                     await resend.emails.send({
                         from: 'Zazaki Quiz <no-reply@zazakiacademy.com>', // Or support@...
                         to: recipientEmail,
@@ -131,8 +131,8 @@ export async function PATCH(req: Request) {
                     console.error('Failed to send feedback reply email:', emailError)
                     // Don't fail the request, just log it
                 }
-            } else if (!process.env.RESEND_API_KEY) {
-                console.warn('RESEND_API_KEY missing, skipping feedback reply email')
+            } else if (!process.env.AUTH_RESEND_KEY) {
+                console.warn('AUTH_RESEND_KEY missing, skipping feedback reply email')
             }
         }
 
