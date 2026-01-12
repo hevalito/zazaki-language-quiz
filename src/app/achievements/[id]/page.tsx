@@ -39,8 +39,8 @@ export default async function AchievementDetailPage(props: Props) {
 
     if (!badge) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-gray-500">Erfolg nicht gefunden.</p>
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+                <p className="text-gray-500 dark:text-gray-400">Erfolg nicht gefunden.</p>
             </div>
         )
     }
@@ -104,27 +104,27 @@ export default async function AchievementDetailPage(props: Props) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10 safe-area-top">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 safe-area-top transition-colors">
                 <div className="container mx-auto px-4 py-4 flex items-center">
-                    <Link href="/achievements" className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                    <Link href="/achievements" className="mr-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                        <ArrowLeftIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                     </Link>
-                    <h1 className="text-xl font-bold text-gray-900 font-serif">Erfolg-Details</h1>
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 font-serif">Erfolg-Details</h1>
                 </div>
             </header>
 
             <main className="container mx-auto px-4 py-8 max-w-lg">
-                <div className={`bg-white rounded-3xl shadow-xl overflow-hidden border ${isEarned ? 'border-brand-orange/20' : 'border-gray-200'}`}>
+                <div className={`bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border transition-colors ${isEarned ? 'border-brand-orange/20 dark:border-brand-orange/20' : 'border-gray-200 dark:border-gray-800'}`}>
 
                     {/* Banner / Header */}
-                    <div className={`h-32 relative ${isEarned ? 'bg-gradient-to-br from-brand-orange to-red-500' : 'bg-gray-200'}`}>
+                    <div className={`h-32 relative ${isEarned ? 'bg-gradient-to-br from-brand-orange to-red-500' : 'bg-gray-200 dark:bg-gray-800'}`}>
                         <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10"></div>
                     </div>
 
                     <div className="px-6 pb-8 relative">
                         {/* Icon Badge */}
-                        <div className={`w-36 h-36 mx-auto -mt-16 rounded-full border-4 border-white shadow-lg flex items-center justify-center overflow-hidden ${isEarned ? 'bg-orange-50' : 'bg-gray-100'}`}>
+                        <div className={`w-36 h-36 mx-auto -mt-16 rounded-full border-4 border-white dark:border-gray-900 shadow-lg flex items-center justify-center overflow-hidden transition-colors ${isEarned ? 'bg-orange-50 dark:bg-orange-900/20' : 'bg-gray-100 dark:bg-gray-800'}`}>
                             {badge.imageUrl ? (
                                 <div className={`relative w-full h-full ${!isEarned ? 'grayscale brightness-75 contrast-125' : ''}`}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -154,47 +154,47 @@ export default async function AchievementDetailPage(props: Props) {
                                 isEarned ? (
                                     <TrophyIconSolid className="w-16 h-16 text-brand-orange" />
                                 ) : (
-                                    <LockClosedIcon className="w-16 h-16 text-gray-400" />
+                                    <LockClosedIcon className="w-16 h-16 text-gray-400 dark:text-gray-500" />
                                 )
                             )}
                         </div>
 
                         <div className="text-center mt-4">
-                            <h2 className="text-2xl font-bold font-serif text-gray-900 mb-2">
+                            <h2 className="text-2xl font-bold font-serif text-gray-900 dark:text-gray-100 mb-2">
                                 {getTitle(badge.title)}
                             </h2>
 
                             {isEarned ? (
-                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-4">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium mb-4">
                                     <TrophyIcon className="w-4 h-4 mr-1" />
                                     Freigeschaltet
                                 </div>
                             ) : (
-                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-sm font-medium mb-4">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm font-medium mb-4">
                                     <LockClosedIcon className="w-4 h-4 mr-1" />
                                     Gesperrt
                                 </div>
                             )}
 
-                            <p className="text-gray-600 leading-relaxed mb-6">
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                                 {getDescription(badge.description)}
                             </p>
 
                             {/* Condition Label */}
                             {getConditionLabel(badge.conditionLabel) && (
-                                <div className={`mb-8 inline-flex flex-col items-center justify-center min-w-[200px] px-6 py-3 rounded-2xl border ${isEarned ? 'bg-orange-50 border-orange-100' : 'bg-gray-50 border-gray-100'}`}>
-                                    <span className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isEarned ? 'text-orange-600/70' : 'text-gray-400'}`}>
+                                <div className={`mb-8 inline-flex flex-col items-center justify-center min-w-[200px] px-6 py-3 rounded-2xl border ${isEarned ? 'bg-orange-50 dark:bg-orange-900/10 border-orange-100 dark:border-orange-500/20' : 'bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700'}`}>
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isEarned ? 'text-orange-600/70 dark:text-orange-400/70' : 'text-gray-400 dark:text-gray-500'}`}>
                                         {isEarned ? 'Geschafft' : 'Ziel'}
                                     </span>
-                                    <span className={`font-bold text-lg ${isEarned ? 'text-gray-900' : 'text-gray-800'}`}>
+                                    <span className={`font-bold text-lg ${isEarned ? 'text-gray-900 dark:text-gray-100' : 'text-gray-800 dark:text-gray-200'}`}>
                                         {getConditionLabel(badge.conditionLabel)}
                                     </span>
                                 </div>
                             )}
 
                             {isEarned && earnedAt && (
-                                <div className="flex items-center justify-center text-sm text-gray-500 bg-gray-50 rounded-lg py-3 px-4 mx-auto w-fit">
-                                    <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-400" />
+                                <div className="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 rounded-lg py-3 px-4 mx-auto w-fit">
+                                    <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-400 dark:text-gray-500" />
                                     <span>Erhalten am {earnedAt.toLocaleDateString('de-DE')}</span>
                                 </div>
                             )}
@@ -202,24 +202,24 @@ export default async function AchievementDetailPage(props: Props) {
 
                         {/* Progress Visual */}
                         {!isEarned && progressPercentage > 0 && (
-                            <div className="mt-8 pt-6 border-t border-gray-100">
+                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
                                 <div className="flex justify-between items-center mb-2">
-                                    <p className="text-sm font-bold text-gray-900">Fortschritt</p>
-                                    <span className="text-xs font-medium text-gray-500">{displayProgress}</span>
+                                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Fortschritt</p>
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{displayProgress}</span>
                                 </div>
-                                <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                                <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 overflow-hidden">
                                     <div
                                         className="bg-brand-orange h-2.5 rounded-full transition-all duration-1000 ease-out"
                                         style={{ width: `${progressPercentage}%` }}
                                     ></div>
                                 </div>
-                                <p className="text-xs text-gray-400 mt-2">Spiele weiter, um diesen Erfolg freizuschalten!</p>
+                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Spiele weiter, um diesen Erfolg freizuschalten!</p>
                             </div>
                         )}
 
                         {!isEarned && progressPercentage === 0 && (
-                            <div className="mt-8 pt-6 border-t border-gray-100">
-                                <p className="text-xs text-gray-400 mt-2 text-center">Spiele weiter, um diesen Erfolg freizuschalten!</p>
+                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
+                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 text-center">Spiele weiter, um diesen Erfolg freizuschalten!</p>
                             </div>
                         )}
 

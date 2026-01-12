@@ -54,7 +54,7 @@ export function ShareBadgeButton({ title, description, shareId }: ShareBadgeButt
                 </>
             ) : (
                 <>
-                    <ShareIcon className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+                    <ShareIcon className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white" />
                     <span>Erfolg teilen</span>
                 </>
             )}
