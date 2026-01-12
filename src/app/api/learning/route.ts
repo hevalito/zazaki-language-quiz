@@ -242,7 +242,7 @@ export async function GET(request: Request) {
                 spacedItems: { none: { userId } },
                 // STRICT RULE: Only questions the user has actually answered.
                 // This prevents pulling in unseen questions from "started" but unfinished quizzes.
-                answers: { some: { userId } }
+                answers: { some: { attempt: { userId } } }
             },
             select: { id: true }
         })
