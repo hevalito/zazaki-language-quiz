@@ -36,18 +36,18 @@ export function UserNavToggle() {
             <div className="hidden md:block">
                 <Link
                     href="/profile"
-                    className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all group"
+                    className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-all group"
                 >
                     <div className="text-right hidden lg:block">
-                        <p className="text-sm font-bold text-gray-900 leading-none">
+                        <p className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-none">
                             {displayName}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                             Profil anzeigen
                         </p>
                     </div>
 
-                    <div className="relative w-9 h-9 rounded-full overflow-hidden bg-primary-100 border border-primary-200 group-hover:border-primary-300 transition-colors flex items-center justify-center">
+                    <div className="relative w-9 h-9 rounded-full overflow-hidden bg-primary-100 dark:bg-primary-900/50 border border-primary-200 dark:border-primary-800 group-hover:border-primary-300 dark:group-hover:border-primary-700 transition-colors flex items-center justify-center">
                         {user?.image ? (
                             // Using standard img tag fallback if Next/Image behaves oddly with external auth providers, 
                             // but Next/Image is preferred if configured. We'll stick to a robust simpler approach first.
@@ -58,7 +58,7 @@ export function UserNavToggle() {
                                 className="w-full h-full object-cover"
                             />
                         ) : (
-                            <span className="text-xs font-bold text-primary-700">
+                            <span className="text-xs font-bold text-primary-700 dark:text-primary-300">
                                 {initials}
                             </span>
                         )}

@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function LibraryLoading() {
     return (
-        <div className="min-h-screen bg-gray-50 pb-12">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-12 transition-colors">
             {/* Header */}
-            <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+            <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center space-x-3">
                         <Skeleton className="w-10 h-10 rounded-full" /> {/* Back Button */}
@@ -32,7 +32,7 @@ export default function LibraryLoading() {
                 {/* Quiz Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[...Array(6)].map((_, i) => (
-                        <div key={i} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm space-y-4 h-48 flex flex-col">
+                        <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-4 border border-gray-100 dark:border-gray-800 shadow-sm space-y-4 h-48 flex flex-col transition-colors">
                             <div className="flex justify-between items-start">
                                 <div className="space-y-2 flex-1">
                                     <Skeleton className="h-5 w-3/4" />

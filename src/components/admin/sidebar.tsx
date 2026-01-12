@@ -89,14 +89,14 @@ export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
                 'fixed inset-y-0 z-50 flex w-72 flex-col transition-transform duration-300 ease-in-out lg:static lg:inset-auto lg:flex lg:w-72 lg:flex-col'
             )}>
                 {/* Sidebar Content */}
-                <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
+                <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors">
                     <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
 
                         {/* Logo Area */}
                         <div className="flex flex-shrink-0 items-center px-4 mb-5">
                             <div className="flex flex-col">
-                                <span className="text-2xl font-serif font-bold text-gray-900">Zazakî Admin</span>
-                                <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Management Console</span>
+                                <span className="text-2xl font-serif font-bold text-gray-900 dark:text-gray-100">Zazakî Admin</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold">Management Console</span>
                             </div>
                             {/* Mobile Close Button */}
                             <button
@@ -128,7 +128,7 @@ export function AdminSidebar({ open, setOpen }: AdminSidebarProps) {
                     </div>
 
                     {/* Footer / User Info could go here */}
-                    <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
+                    <div className="flex flex-shrink-0 border-t border-gray-200 dark:border-gray-800 p-4">
                         <div className="group block w-full flex-shrink-0">
                             <div className="flex items-center">
                                 <div className="ml-3">
@@ -155,8 +155,8 @@ function NavItem({ item, pathname, setOpen, stats }: any) {
             onClick={() => setOpen(false)}
             className={classNames(
                 isActive
-                    ? 'bg-primary-50 text-brand-orange border-r-4 border-brand-orange'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                    ? 'bg-primary-50 dark:bg-primary-900/10 text-brand-orange border-r-4 border-brand-orange'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
                 'group flex items-center px-2 py-2 text-sm font-medium rounded-r-none rounded-l-md transition-all duration-200'
             )}
         >

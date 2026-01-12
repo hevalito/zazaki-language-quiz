@@ -62,8 +62,8 @@ export function AchievementScreen() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center transition-colors">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 dark:border-purple-400"></div>
             </div>
         )
     }
@@ -76,23 +76,23 @@ export function AchievementScreen() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center space-x-3">
                         <Link
                             href="/"
-                            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                            className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
                             aria-label={t('nav.back', 'Zurück')}
                         >
-                            <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                            <ArrowLeftIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                         </Link>
-                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                            <SparklesIconSolid className="w-6 h-6 text-primary-600" />
+                        <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center">
+                            <SparklesIconSolid className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">{t('achievements.title', 'Erfolge')}</h1>
-                            <p className="text-sm text-gray-500">{t('achievements.subtitle', 'Sammle Trophäen')}</p>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('achievements.title', 'Erfolge')}</h1>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{t('achievements.subtitle', 'Sammle Trophäen')}</p>
                         </div>
                     </div>
                 </div>
@@ -104,13 +104,13 @@ export function AchievementScreen() {
                         <Link
                             href={`/achievements/${badge.id}`}
                             key={badge.id}
-                            className={`block bg-white rounded-xl shadow-sm border-2 p-4 transition-all hover:shadow-md hover:scale-[1.02] ${badge.isEarned
-                                ? 'border-purple-200 bg-purple-50'
-                                : 'border-gray-100 opacity-70 grayscale'
+                            className={`block bg-white dark:bg-gray-900 rounded-xl shadow-sm border-2 p-4 transition-all hover:shadow-md hover:scale-[1.02] ${badge.isEarned
+                                ? 'border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/10'
+                                : 'border-gray-100 dark:border-gray-800 opacity-70 grayscale'
                                 }`}
                         >
                             <div className="flex items-start space-x-4">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${badge.isEarned ? 'bg-purple-100' : 'bg-gray-100'
+                                <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${badge.isEarned ? 'bg-purple-100 dark:bg-purple-900/30' : 'bg-gray-100 dark:bg-gray-800'
                                     }`}>
                                     {/* Icon Logic */}
                                     {(badge as any).imageUrl ? (
@@ -148,37 +148,43 @@ export function AchievementScreen() {
                                         </span>
                                     ) : (
                                         badge.isEarned ? (
-                                            <SparklesIconSolid className="w-6 h-6 text-purple-600" />
+                                            <SparklesIconSolid className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                                         ) : (
-                                            <LockClosedIcon className="w-6 h-6 text-gray-400" />
+                                            <LockClosedIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                                         )
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className={`font-bold ${badge.isEarned ? 'text-gray-900' : 'text-gray-500'}`}>
+                                    <h3 className={`font-bold ${badge.isEarned ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'}`}>
                                         {getLocalizedContent(badge.title)}
                                     </h3>
-                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                                         {getLocalizedContent(badge.description)}
                                     </p>
 
                                     {/* Condition Label */}
                                     {getLocalizedContent(badge.conditionLabel) && (
-                                        <p className="text-xs font-bold text-gray-700 mt-2">
+                                        <p className="text-xs font-bold text-gray-700 dark:text-gray-300 mt-2">
                                             {getLocalizedContent(badge.conditionLabel)}
+                                        </p>
+                                    )}
+
+                                    {badge.isEarned && (
+                                        <p className="text-xs text-purple-600 dark:text-purple-400 mt-2 font-medium">
+                                            {t('achievements.unlockedOn', 'Freigeschaltet am')} {new Date(badge.earnedAt!).toLocaleDateString()}
                                         </p>
                                     )}
 
                                     {/* Progress Bar for Locked Items */}
                                     {!badge.isEarned && (badge as any).progress && (badge as any).progress.target > 0 && (
                                         <div className="mt-3">
-                                            <div className="flex justify-between text-[10px] text-gray-500 mb-1">
+                                            <div className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 mb-1">
                                                 <span>{t('achievements.progress', 'Fortschritt')}</span>
                                                 <span className="font-medium">{(badge as any).progress.display}</span>
                                             </div>
-                                            <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                            <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
                                                 <div
-                                                    className="bg-purple-500 h-full rounded-full opacity-60"
+                                                    className="bg-purple-500 dark:bg-purple-500 h-full rounded-full opacity-60"
                                                     style={{ width: `${Math.min(100, Math.max(0, ((badge as any).progress.current / (badge as any).progress.target) * 100))}%` }}
                                                 />
                                             </div>
@@ -193,9 +199,10 @@ export function AchievementScreen() {
                                 </div>
                             </div>
                         </Link>
-                    ))}
-                </div>
-            </div>
-        </div>
+                    ))
+                    }
+                </div >
+            </div >
+        </div >
     )
 }

@@ -95,7 +95,7 @@ export default function QuizzesAdmin() {
             <AdminPageContent>
 
                 {/* Filters & Toolbar */}
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
+                <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 mb-6 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4 transition-colors">
                     <div className="flex flex-wrap items-center gap-4">
                         <div className="flex items-center space-x-2">
                             <FunnelIcon className="w-5 h-5 text-gray-400" />
@@ -105,7 +105,7 @@ export default function QuizzesAdmin() {
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="all">Status (All)</option>
                             <option value="published">Published</option>
@@ -115,7 +115,7 @@ export default function QuizzesAdmin() {
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="all">Type (All)</option>
                             <option value="STANDARD">Standard</option>
@@ -123,19 +123,19 @@ export default function QuizzesAdmin() {
                         </select>
                     </div>
 
-                    <div className="flex items-center space-x-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 w-full md:w-auto">
-                        <span className="text-sm text-gray-500">Sort by:</span>
+                    <div className="flex items-center space-x-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700 w-full md:w-auto">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Sort by:</span>
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="updatedAt">Last Updated</option>
                             <option value="questionsCount">Question Count</option>
                         </select>
                         <button
                             onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+                            className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                             title={sortOrder === 'asc' ? "Ascending" : "Descending"}
                         >
                             {sortOrder === 'asc' ? (
@@ -147,28 +147,28 @@ export default function QuizzesAdmin() {
                     </div>
                 </div>
 
-                <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                    <ul role="list" className="divide-y divide-gray-200">
+                <div className="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-200 dark:border-gray-800 transition-colors">
+                    <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
                         {quizzes.map((quiz) => (
                             <li key={quiz.id}>
                                 <div className="px-4 py-4 flex items-center justify-between sm:px-6">
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(quiz.title)}</h3>
-                                        <p className="text-sm text-gray-500 truncate">
+                                        <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 truncate">{getTitle(quiz.title)}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                                             {quiz.lesson ? (
                                                 <>{getTitle(quiz.lesson.chapter.course.title)} / {getTitle(quiz.lesson.title)}</>
                                             ) : (
-                                                <span className={`${quiz.type === 'DAILY' ? 'text-purple-600' : 'text-orange-500'} font-medium`}>
+                                                <span className={`${quiz.type === 'DAILY' ? 'text-purple-600 dark:text-purple-400' : 'text-orange-500 dark:text-orange-400'} font-medium`}>
                                                     {quiz.type === 'DAILY' ? 'Daily Challenge' : 'Standalone / Orphaned'}
                                                 </span>
                                             )}
                                         </p>
                                         <div className="mt-2 flex items-center gap-2">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${quiz.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${quiz.isPublished ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300'
                                                 }`}>
                                                 {quiz.isPublished ? 'Published' : 'Draft'}
                                             </span>
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
                                                 {quiz._count.questions} questions
                                             </span>
                                         </div>
@@ -176,13 +176,13 @@ export default function QuizzesAdmin() {
                                     <div className="flex items-center space-x-2 ml-4">
                                         <Link
                                             href={`/admin/quizzes/${quiz.id}`}
-                                            className="p-2 text-gray-400 hover:text-gray-500"
+                                            className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
                                         >
                                             <PencilSquareIcon className="h-5 w-5" />
                                         </Link>
                                         <button
                                             onClick={() => handleDelete(quiz.id)}
-                                            className="p-2 text-red-400 hover:text-red-500"
+                                            className="p-2 text-red-400 hover:text-red-500 dark:hover:text-red-300"
                                         >
                                             <TrashIcon className="h-5 w-5" />
                                         </button>
@@ -191,7 +191,7 @@ export default function QuizzesAdmin() {
                             </li>
                         ))}
                         {quizzes.length === 0 && (
-                            <li className="px-4 py-12 text-center text-gray-500">
+                            <li className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                                 No quizzes found. Create one to get started.
                             </li>
                         )}

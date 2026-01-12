@@ -248,10 +248,10 @@ export default function LearningRoomPage() {
 
     if (viewState === 'loading') {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">{t('loading.wait', 'Einen Moment...')}</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400">{t('loading.wait', 'Einen Moment...')}</p>
                 </div>
             </div>
         )
@@ -265,14 +265,14 @@ export default function LearningRoomPage() {
     // 1. START SCREEN
     if (viewState === 'start') {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col">
-                <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+                <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                     <div className="container mx-auto px-4 py-4">
                         <div className="flex items-center space-x-3">
-                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                                <ArrowLeftIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                             </button>
-                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('learning.title', 'Lernraum')}</h1>
                         </div>
                     </div>
                 </header>
@@ -293,8 +293,8 @@ export default function LearningRoomPage() {
                             </div>
                         ) : stats && stats.totalItems === 0 ? (
                             <>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.empty.title', 'Dein Wissensschatz ist leer')}</h2>
-                                <p className="text-gray-600 mb-8">
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('learning.empty.title', 'Dein Wissensschatz ist leer')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-8">
                                     {t('learning.empty.desc', 'Du hast noch keine Vokabeln gesammelt. Mach ein paar Quizze, um deinen Wissensschatz zu füllen!')}
                                 </p>
                                 <button
@@ -307,8 +307,8 @@ export default function LearningRoomPage() {
                             </>
                         ) : (
                             <>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
-                                <p className="text-gray-600 mb-8">
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('learning.start.title', 'Bereit zum Training?')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-8">
                                     {t('learning.start.desc', 'Der Lernraum wiederholt deine Fehler und festigt dein Wissen. Wir haben neue Übungen für dich vorbereitet.')}
                                 </p>
                                 <button
@@ -337,14 +337,14 @@ export default function LearningRoomPage() {
         // Use logic to show delta if possible, for now just show updated core
 
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col">
-                <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+                <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
                     <div className="container mx-auto px-4 py-4">
                         <div className="flex items-center space-x-3">
-                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <HomeIcon className="w-6 h-6 text-gray-600" />
+                            <button onClick={() => router.push('/')} className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                                <HomeIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                             </button>
-                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('learning.title', 'Lernraum')}</h1>
                         </div>
                     </div>
                 </header>
@@ -356,17 +356,17 @@ export default function LearningRoomPage() {
                             size="lg"
                             animate={true}
                         />
-                        <div className="text-center mt-2 text-green-600 font-bold animate-pulse">
+                        <div className="text-center mt-2 text-green-600 dark:text-green-400 font-bold animate-pulse">
                             {t('learning.updated', 'Wissen aktualisiert!')}
                         </div>
                     </div>
 
                     <div className="text-center max-w-md mx-auto">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <CheckIcon className="w-8 h-8 text-green-600" />
+                        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <CheckIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('learning.done.title', 'Klasse!')}</h2>
-                        <p className="text-gray-600 mb-8">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('learning.done.title', 'Klasse!')}</h2>
+                        <p className="text-gray-600 dark:text-gray-400 mb-8">
                             {t('learning.done.desc', 'Du hast diese Runde erfolgreich beendet.')}
                         </p>
                         <div className="space-y-3">
@@ -379,7 +379,7 @@ export default function LearningRoomPage() {
                             </button>
                             <button
                                 onClick={() => router.push('/')}
-                                className="w-full py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                                className="w-full py-2.5 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             >
                                 {t('learning.home', 'Zurück zur Übersicht')}
                             </button>
@@ -394,40 +394,40 @@ export default function LearningRoomPage() {
     const currentQuestion = questions[currentQuestionIndex]
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
             {/* Header */}
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <button
                             onClick={() => router.push('/')}
-                            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                            className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
                             aria-label={t('nav.back', 'Zurück')}
                         >
-                            <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                            <ArrowLeftIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                         </button>
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <AcademicCapIcon className="w-6 h-6 text-green-600" />
+                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
+                            <AcademicCapIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">{t('learning.title', 'Lernraum')}</h1>
-                            <p className="text-sm text-gray-500">{t('learning.subtitle', 'Trainiere deine Fehler')}</p>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('learning.title', 'Lernraum')}</h1>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{t('learning.subtitle', 'Trainiere deine Fehler')}</p>
                         </div>
                     </div>
 
-                    <div className="text-sm font-medium px-3 py-1 bg-gray-100 rounded-full text-gray-600">
+                    <div className="text-sm font-medium px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300">
                         {questions.length - currentQuestionIndex} {t('learning.remaining', 'verbleibend')}
                     </div>
                 </div>
             </header>
 
             <main className="flex-1 container mx-auto max-w-2xl p-4 py-8">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
                     {/* Question Card */}
                     <div className="p-6">
                         {/* Context / Origin Pill */}
                         <div className="mb-6 flex justify-center">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100 max-w-full truncate">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800 max-w-full truncate">
                                 <BookOpenIcon className="w-3.5 h-3.5 mr-1.5 flex-shrink-0" />
                                 <span className="truncate">{getContextLabel(currentQuestion)}</span>
                             </span>
@@ -444,22 +444,22 @@ export default function LearningRoomPage() {
 
                     {/* Feedback / Explanation Section */}
                     {isCorrect !== null && (
-                        <div className={`p-6 border-t ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
+                        <div className={`p-6 border-t ${isCorrect ? 'bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'}`}>
                             <div className="flex items-start space-x-4">
-                                <div className={`p-2 rounded-full flex-shrink-0 ${isCorrect ? 'bg-green-200' : 'bg-red-200'}`}>
+                                <div className={`p-2 rounded-full flex-shrink-0 ${isCorrect ? 'bg-green-200 dark:bg-green-800/40' : 'bg-red-200 dark:bg-red-800/40'}`}>
                                     {isCorrect ? (
-                                        <CheckIcon className="w-6 h-6 text-green-700" />
+                                        <CheckIcon className="w-6 h-6 text-green-700 dark:text-green-400" />
                                     ) : (
-                                        <XMarkIcon className="w-6 h-6 text-red-700" />
+                                        <XMarkIcon className="w-6 h-6 text-red-700 dark:text-red-400" />
                                     )}
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className={`font-bold text-lg mb-1 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                                    <h3 className={`font-bold text-lg mb-1 ${isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
                                         {isCorrect ? t('feedback.correct', 'Raşt o! - Richtig!') : t('feedback.wrong', 'Çi heyf! - Leider falsch!')}
                                     </h3>
 
                                     {explanation && (
-                                        <div className="mt-3 text-sm text-gray-700 bg-white/50 p-3 rounded-lg border border-black/5">
+                                        <div className="mt-3 text-sm text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-black/20 p-3 rounded-lg border border-black/5 dark:border-white/5">
                                             <p className="font-semibold mb-1">{t('quiz.explanation', 'Erklärung:')}</p>
                                             {typeof explanation === 'string' ? explanation : (explanation.de || explanation.en || '')}
                                         </div>

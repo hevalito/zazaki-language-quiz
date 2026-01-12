@@ -199,9 +199,9 @@ export function HomeScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200 safe-area-top" id="tour-welcome">
+      <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 safe-area-top transition-colors duration-200" id="tour-welcome">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 md:hidden">
@@ -214,8 +214,8 @@ export function HomeScreen() {
                 />
               </div>
               <div>
-                <h1 className="text-xl font-serif font-bold text-gray-900 leading-tight">Zazakî Quiz</h1>
-                <p className="text-xs text-gray-500 font-sans">
+                <h1 className="text-xl font-serif font-bold text-gray-900 dark:text-gray-100 leading-tight">Zazakî Quiz</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">
                   {userProgress?.firstName
                     ? `${t('header.welcome', 'Xêr ama')}, ${userProgress.firstName}!`
                     : userProgress?.nickname
@@ -233,15 +233,15 @@ export function HomeScreen() {
                 {streak > 0 ? (
                   <FireIconSolid className="w-4 h-4 text-brand-orange" />
                 ) : (
-                  <FireIcon className="w-4 h-4 text-gray-400" />
+                  <FireIcon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                 )}
-                <span className="text-sm font-bold text-gray-900 font-sans">{streak}</span>
+                <span className="text-sm font-bold text-gray-900 dark:text-gray-100 font-sans">{streak}</span>
               </div>
 
               {/* Achievements */}
               <div className="flex items-center space-x-1 bg-purple-600/10 px-3 py-1 rounded-full border border-purple-600/20">
-                <SparklesIconSolid className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-bold text-gray-900 font-sans">{userProgress?.achievementCount || 0}</span>
+                <SparklesIconSolid className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-bold text-gray-900 dark:text-gray-100 font-sans">{userProgress?.achievementCount || 0}</span>
               </div>
 
               <UserNavToggle />
@@ -258,10 +258,10 @@ export function HomeScreen() {
 
           {/* Header Row */}
           <div className="flex items-center justify-between mb-2 relative z-10">
-            <h2 className="text-lg font-serif font-bold text-gray-900">{t('dailyGoal.title', 'Tagesziel')}</h2>
+            <h2 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100">{t('dailyGoal.title', 'Tagesziel')}</h2>
             <div className={`text-sm font-bold px-3 py-1 rounded-full border ${todayXP >= dailyGoal
-              ? 'bg-green-100 text-green-700 border-green-200'
-              : 'bg-primary-50 text-primary-700 border-primary-100'
+              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800'
+              : 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-100 dark:border-primary-800'
               }`}>
               {todayXP} / {dailyGoal} XP {t('dailyGoal.today', 'Heute')}
             </div>
@@ -269,7 +269,7 @@ export function HomeScreen() {
 
           {/* Progress Bar */}
           <div className="space-y-4 relative z-10">
-            <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+            <div className="relative h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden shadow-inner">
               <div
                 className={`absolute top-0 left-0 h-full transition-all duration-1000 ease-out rounded-full ${todayXP >= dailyGoal
                   ? 'bg-gradient-to-r from-brand-green to-emerald-400'
@@ -283,32 +283,32 @@ export function HomeScreen() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100">
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
               {/* Streak */}
               <div className="text-center group/stat">
                 <p className="text-xs text-brand-orange font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <FireIconSolid className="w-3 h-3 mr-1" />
                   {t('stats.streak', 'Streak')}
                 </p>
-                <p className="text-lg font-bold text-gray-900">{streak} <span className="text-xs font-normal text-gray-500">{t('stats.streak.days', 'Tage')}</span></p>
+                <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{streak} <span className="text-xs font-normal text-gray-500 dark:text-gray-400">{t('stats.streak.days', 'Tage')}</span></p>
               </div>
 
               {/* Goal % */}
-              <div className="text-center group/stat border-l border-r border-gray-100">
-                <p className="text-xs text-primary-600 font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
+              <div className="text-center group/stat border-l border-r border-gray-100 dark:border-gray-800">
+                <p className="text-xs text-primary-600 dark:text-primary-400 font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <TrophyIcon className="w-3 h-3 mr-1" />
                   {t('stats.goal', 'Ziel')}
                 </p>
-                <p className="text-lg font-bold text-gray-900">{Math.round(progressPercentage)}<span className="text-xs">%</span></p>
+                <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{Math.round(progressPercentage)}<span className="text-xs">%</span></p>
               </div>
 
               {/* Total XP */}
               <div className="text-center group/stat">
-                <p className="text-xs text-brand-purple font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
+                <p className="text-xs text-brand-purple dark:text-purple-400 font-bold uppercase tracking-wider mb-1 flex items-center justify-center">
                   <SparklesIcon className="w-3 h-3 mr-1" />
                   {t('stats.total', 'Gesamt')}
                 </p>
-                <p className="text-lg font-bold text-gray-900">{totalXP.toLocaleString()}</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-gray-100">{totalXP.toLocaleString()}</p>
               </div>
             </div>
 
@@ -335,7 +335,7 @@ export function HomeScreen() {
         {/* Continue Learning */}
         <div className="card" id="tour-continue-learning">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-serif font-bold text-gray-900">{t('continue.title', 'Weiterlernen')}</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100">{t('continue.title', 'Weiterlernen')}</h3>
           </div>
 
           <div className="space-y-4">
@@ -418,10 +418,10 @@ export function HomeScreen() {
                         <PlayIcon className="w-6 h-6 text-brand-green" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 font-serif text-lg">
+                        <h4 className="font-bold text-gray-900 dark:text-gray-100 font-serif text-lg">
                           {(recommendedQuiz.title as any)?.de || (recommendedQuiz.title as any)?.en || t('continue.nextQuiz', 'Nächstes Quiz')}
                         </h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {(recommendedQuiz.lesson?.chapter?.course?.title as any)?.de || 'Lerne Zazakî'}
                           <span className="mx-2">•</span>
                           <span className="text-brand-green font-bold text-xs px-2 py-0.5 bg-brand-green/10 rounded-full">
@@ -429,7 +429,7 @@ export function HomeScreen() {
                           </span>
                         </p>
                       </div>
-                      <ArrowRightIcon className="w-5 h-5 text-gray-400" />
+                      <ArrowRightIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
@@ -453,12 +453,12 @@ export function HomeScreen() {
               } else {
                 // All Caught Up State
                 return (
-                  <div className="text-center py-6 bg-green-50 rounded-xl border border-green-100 p-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <CheckIcon className="w-6 h-6 text-green-600" />
+                  <div className="text-center py-6 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-800 p-4">
+                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <CheckIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
                     </div>
-                    <h4 className="text-gray-900 font-bold mb-2">{t('continue.allDone', 'Wow! Alles erledigt.')}</h4>
-                    <p className="text-gray-600 text-sm mb-4">
+                    <h4 className="text-gray-900 dark:text-gray-100 font-bold mb-2">{t('continue.allDone', 'Wow! Alles erledigt.')}</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
                       {t('continue.allDoneDesc', 'Du hast alle verfügbaren Lektionen abgeschlossen. Sammle weitere XP mit dem täglichen Quiz!')}
                     </p>
                     <button
@@ -485,11 +485,11 @@ export function HomeScreen() {
             <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse z-10">
               {t('common.new', 'Neu!')}
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
-              <AcademicCapIcon className="w-6 h-6 text-green-700" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 dark:group-hover:bg-green-900/30 transition-colors">
+              <AcademicCapIcon className="w-6 h-6 text-green-700 dark:text-green-400" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.learning', 'Lernraum')}</h4>
-            <p className="text-sm text-gray-600">{t('quick.learningDesc', 'Trainiere deine Fehler')}</p>
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-1 font-serif">{t('quick.learning', 'Lernraum')}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('quick.learningDesc', 'Trainiere deine Fehler')}</p>
           </button>
 
           <button
@@ -497,11 +497,11 @@ export function HomeScreen() {
             onClick={() => window.location.href = '/leaderboard'}
             className="card-interactive text-center group"
           >
-            <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-200 transition-colors">
-              <TrophyIcon className="w-6 h-6 text-primary-700" />
+            <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-primary-200 dark:group-hover:bg-primary-900/30 transition-colors">
+              <TrophyIcon className="w-6 h-6 text-primary-700 dark:text-primary-400" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.leaderboard', 'Bestenliste')}</h4>
-            <p className="text-sm text-gray-600">{t('quick.leaderboardDesc', 'Erklimme die Spitze')}</p>
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-1 font-serif">{t('quick.leaderboard', 'Bestenliste')}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('quick.leaderboardDesc', 'Erklimme die Spitze')}</p>
           </button>
 
           <button
@@ -509,38 +509,38 @@ export function HomeScreen() {
             onClick={() => window.location.href = '/achievements'}
             className="card-interactive text-center group"
           >
-            <div className="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-red/20 transition-colors">
+            <div className="w-12 h-12 bg-brand-red/10 dark:bg-brand-red/20 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-brand-red/20 dark:group-hover:bg-brand-red/30 transition-colors">
               <SparklesIcon className="w-6 h-6 text-brand-red" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.achievements', 'Erfolge')}</h4>
-            <p className="text-sm text-gray-600">{t('quick.achievementsDesc', 'Sammle Trophäen')}</p>
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-1 font-serif">{t('quick.achievements', 'Erfolge')}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('quick.achievementsDesc', 'Sammle Trophäen')}</p>
           </button>
           <button
             onClick={() => window.location.href = '/course-finder'}
             className="card-interactive text-center group"
           >
-            <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-200 transition-colors">
-              <MapIcon className="w-6 h-6 text-teal-700" />
+            <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/20 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-200 dark:group-hover:bg-teal-900/30 transition-colors">
+              <MapIcon className="w-6 h-6 text-teal-700 dark:text-teal-400" />
             </div>
-            <h4 className="font-bold text-gray-900 mb-1 font-serif">{t('quick.courseFinder', 'Kursfinder')}</h4>
-            <p className="text-sm text-gray-600">{t('quick.courseFinderDesc', 'Finde den perfekten Sprachkurs')}</p>
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-1 font-serif">{t('quick.courseFinder', 'Kursfinder')}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('quick.courseFinderDesc', 'Finde den perfekten Sprachkurs')}</p>
           </button>
         </div>
 
         {/* Recent Activity */}
         {recentActivity.length > 0 && (
           <div className="card" id="tour-recent-activity">
-            <h3 className="text-lg font-serif font-bold text-gray-900 mb-4">{t('activity.title', 'Letzte Aktivitäten')}</h3>
+            <h3 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100 mb-4">{t('activity.title', 'Letzte Aktivitäten')}</h3>
             <div className="space-y-3">
               {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                <div key={activity.id} className="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800 last:border-0">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-brand-green/10 rounded-full flex items-center justify-center">
                       <span className="text-brand-green text-xs font-bold">✓</span>
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">"{(activity.title as any)?.de || (activity.title as any)?.en || 'Quiz'}" {t('activity.completed', 'abgeschlossen')}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">"{(activity.title as any)?.de || (activity.title as any)?.en || 'Quiz'}" {t('activity.completed', 'abgeschlossen')}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {new Date(activity.date).toLocaleDateString()}
                       </p>
                     </div>

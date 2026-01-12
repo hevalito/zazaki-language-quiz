@@ -26,7 +26,7 @@ export function FeedbackWidget() {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-24 right-4 z-[60] p-3 bg-white text-gray-600 rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200 group md:bottom-8 md:right-8"
+                className="fixed bottom-24 right-4 z-[60] p-3 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200 group md:bottom-8 md:right-8"
                 aria-label={t('feedback.widget.label', 'Feedback geben')}
             >
                 <ChatBubbleBottomCenterTextIcon className="w-6 h-6" />
@@ -114,7 +114,8 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden"
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-indigo-500 to-purple-600" />
 
@@ -139,7 +140,7 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                                     </p>
                                 </div>
 
-                                <div className="bg-white rounded-xl pt-4 min-h-[200px] flex flex-col justify-center">
+                                <div className="bg-white dark:bg-gray-900 rounded-xl pt-4 min-h-[200px] flex flex-col justify-center">
                                     {step === 'TYPE' ? (
                                         <div className="grid grid-cols-2 gap-4">
                                             <TypeButton
@@ -168,7 +169,7 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                                                 label={t('feedback.type.other', 'Sonstiges')}
                                                 description={t('feedback.type.other.desc', 'Allgemeines Feedback')}
                                                 onClick={() => { setType('OTHER'); setStep('DETAILS') }}
-                                                color="text-gray-600 bg-gray-50 hover:bg-gray-100 border-gray-100"
+                                                color="text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-100 dark:border-gray-700"
                                             />
                                         </div>
                                     ) : step === 'DETAILS' ? (
@@ -177,7 +178,7 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                                                 <textarea
                                                     value={message}
                                                     onChange={(e) => setMessage(e.target.value)}
-                                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none min-h-[120px] bg-gray-50 focus:bg-white transition-colors"
+                                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none min-h-[120px] bg-gray-50 dark:bg-gray-800 dark:text-gray-100 focus:bg-white dark:focus:bg-gray-900 transition-colors"
                                                     placeholder={t('feedback.form.placeholder', 'Beschreibe dein Anliegen...')}
                                                     required
                                                     autoFocus
@@ -188,7 +189,7 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                                                 <button
                                                     type="button"
                                                     onClick={() => setStep('TYPE')}
-                                                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                                                    className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                                                 >
                                                     {t('common.back', 'Zurück')}
                                                 </button>
@@ -214,13 +215,13 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                                             animate={{ scale: 1, opacity: 1 }}
                                             className="flex flex-col items-center justify-center p-8 text-center"
                                         >
-                                            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-4">
                                                 <PaperAirplaneIcon className="w-8 h-8" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                                                 {t('feedback.success.modal_title', 'Gesendet!')}
                                             </h3>
-                                            <p className="text-gray-600">
+                                            <p className="text-gray-600 dark:text-gray-400">
                                                 {t('feedback.success.modal_desc', 'Danke für deine Mithilfe. Wir kümmern uns darum.')}
                                             </p>
                                         </motion.div>

@@ -40,7 +40,7 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
                             <button
                                 onClick={onLinkExisting}
                                 type="button"
-                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-50"
+                                className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-700 text-xs font-medium rounded-full shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                             >
                                 <MagnifyingGlassIcon className="h-4 w-4 mr-1" />
                                 Link Existing
@@ -58,7 +58,7 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
                 </div>
             )}
 
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 transition-colors">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -73,24 +73,24 @@ export function QuestionList({ quizId, questions, onEdit, onDelete, onAdd, onReo
                     <TableBody>
                         {sortedQuestions.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={onReorder ? 6 : 5} className="text-center py-6 text-gray-500">
+                                <TableCell colSpan={onReorder ? 6 : 5} className="text-center py-6 text-gray-500 dark:text-gray-400">
                                     No questions yet. Add one to get started.
                                 </TableCell>
                             </TableRow>
                         ) : (
                             sortedQuestions.map((question, index) => (
-                                <TableRow key={question.id}>
-                                    <TableCell className="font-mono text-gray-500">{index + 1}</TableCell>
-                                    <TableCell className="font-medium text-gray-900">
+                                <TableRow key={question.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                    <TableCell className="font-mono text-gray-500 dark:text-gray-400">{index + 1}</TableCell>
+                                    <TableCell className="font-medium text-gray-900 dark:text-gray-100">
                                         {getPrompt(question.prompt)}
                                     </TableCell>
                                     <TableCell>
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
                                             {question.type}
                                         </span>
                                     </TableCell>
                                     <TableCell>
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
                                             {question.points} pts
                                         </span>
                                     </TableCell>

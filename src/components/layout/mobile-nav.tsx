@@ -82,7 +82,7 @@ export function MobileNav() {
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden safe-area-bottom">
             {/* Glassmorphism Background */}
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" />
+            <div className="absolute inset-0 bg-white/80 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200/50 dark:border-gray-800/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" />
 
             <nav className="relative flex justify-around items-center h-16 px-2">
                 {items.map((item) => {
@@ -111,12 +111,12 @@ export function MobileNav() {
 
                             <div className={cn(
                                 "relative p-1.5 rounded-xl transition-all duration-200 group-active:scale-95",
-                                isActive ? "text-primary-600" : "text-gray-500 hover:text-gray-700"
+                                isActive ? "text-primary-600 dark:text-primary-500" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                             )}>
                                 {isActive && (
                                     <motion.div
                                         layoutId="mobile-nav-bg"
-                                        className="absolute inset-0 bg-primary-100/50 rounded-xl"
+                                        className="absolute inset-0 bg-primary-100/50 dark:bg-primary-900/30 rounded-xl"
                                         initial={false}
                                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                     />
@@ -126,7 +126,7 @@ export function MobileNav() {
 
                             <span className={cn(
                                 "mt-0.5 text-[10px] tracking-tight transition-colors duration-200",
-                                isActive ? "text-primary-700 font-semibold" : "text-gray-500"
+                                isActive ? "text-primary-700 dark:text-primary-400 font-semibold" : "text-gray-500 dark:text-gray-500"
                             )}>
                                 {item.name}
                             </span>

@@ -91,15 +91,15 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Course Metadata */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white shadow rounded-lg p-6 sticky top-6">
-                        <h2 className="text-xl font-bold mb-4">Course Settings</h2>
+                    <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6 sticky top-6 transition-colors border border-gray-200 dark:border-gray-800">
+                        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Course Settings</h2>
                         <form onSubmit={handleUpdate} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Dialect/Category</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Dialect/Category</label>
                                 <select
                                     value={course.dialectCode || 'standard'}
                                     onChange={e => setCourse({ ...course, dialectCode: e.target.value })}
-                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                    className="mt-1 block w-full rounded border-gray-300 dark:border-gray-600 shadow-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                 >
                                     {dialects.length > 0 ? dialects.map(d => (
                                         <option key={d.code} value={d.code}>{d.label}</option>
@@ -112,11 +112,11 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Level</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Level</label>
                                 <select
                                     value={course.level}
                                     onChange={e => setCourse({ ...course, level: e.target.value })}
-                                    className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                    className="mt-1 block w-full rounded border-gray-300 dark:border-gray-600 shadow-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                 >
                                     {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
                                         <option key={level} value={level}>{level}</option>
@@ -128,7 +128,7 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                 <LanguageTabs languages={languages}>
                                     {(lang) => (
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700">
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                 Title ({languages.find(l => l.code === lang)?.name || lang})
                                             </label>
                                             <input
@@ -139,7 +139,7 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                                     ...course,
                                                     title: { ...course.title, [lang]: e.target.value }
                                                 })}
-                                                className="mt-1 block w-full rounded border-gray-300 shadow-sm p-2 border"
+                                                className="mt-1 block w-full rounded border-gray-300 dark:border-gray-600 shadow-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                             />
                                         </div>
                                     )}
@@ -151,9 +151,9 @@ export default function EditCoursePage(props: { params: Promise<{ id: string }> 
                                     type="checkbox"
                                     checked={course.isPublished}
                                     onChange={e => setCourse({ ...course, isPublished: e.target.checked })}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                    className="h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
                                 />
-                                <label className="ml-2 text-sm text-gray-700">Published</label>
+                                <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">Published</label>
                             </div>
                             <button
                                 type="submit"

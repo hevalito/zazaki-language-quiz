@@ -57,20 +57,20 @@ export function InstallPrompt({ attemptCount }: InstallPromptProps) {
 
     return (
         <div className="fixed bottom-4 left-4 right-4 z-50 animate-slide-up">
-            <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-4 flex items-center justify-between max-w-md mx-auto">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center justify-between max-w-md mx-auto">
                 <div className="flex-1 mr-4">
-                    <h4 className="font-bold text-gray-900 flex items-center">
+                    <h4 className="font-bold text-gray-900 dark:text-gray-100 flex items-center">
                         <ArrowDownTrayIcon className="w-5 h-5 text-brand-orange mr-2" />
                         {t('pwa.install.title', 'App installieren')}
                     </h4>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         {t('pwa.install.desc', 'Installiere Zazakî Quiz für schnellen Zugriff und Offline-Modus!')}
                     </p>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={handleDismiss}
-                        className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                        className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                         <XMarkIcon className="w-5 h-5" />
                     </button>

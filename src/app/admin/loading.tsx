@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AdminLoading() {
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
             {/* Sidebar Skeleton - Hidden on mobile, w-72 on Desktop */}
-            <div className="hidden lg:flex w-72 flex-col border-r border-gray-200 bg-white pt-5 pb-4">
+            <div className="hidden lg:flex w-72 flex-col border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 pt-5 pb-4 transition-colors">
                 {/* Logo Area */}
                 <div className="px-6 mb-8 mt-2">
                     <Skeleton className="h-8 w-3/4 mb-1" />
@@ -28,7 +28,7 @@ export default function AdminLoading() {
             {/* Main Content */}
             <div className="flex flex-1 flex-col">
                 {/* Header */}
-                <div className="h-16 border-b border-gray-200 bg-white flex items-center px-4 lg:px-8 justify-between">
+                <div className="h-16 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center px-4 lg:px-8 justify-between transition-colors">
                     <div className="flex items-center gap-4">
                         <Skeleton className="h-8 w-8 lg:hidden rounded-md" /> {/* Mobile Menu Trigger Placeholder */}
                         <Skeleton className="h-6 w-32 hidden sm:block" /> {/* Breadcrumb/Title */}
@@ -56,7 +56,7 @@ export default function AdminLoading() {
                         </div>
 
                         {/* Main Table/Content Area */}
-                        <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+                        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4 transition-colors">
                             <div className="flex justify-between mb-4">
                                 <Skeleton className="h-8 w-64" /> {/* Search */}
                                 <Skeleton className="h-8 w-24" /> {/* Filter */}

@@ -126,43 +126,43 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
         <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Column: Form */}
             <div className="flex-1">
-                <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+                <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-900 shadow px-4 py-5 sm:rounded-lg sm:p-6 transition-colors">
                     <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
 
                         {/* Code */}
                         <div className="sm:col-span-6">
-                            <label className="block text-sm font-medium text-gray-700">Code (Unique ID)</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Code (Unique ID)</label>
                             <input
                                 type="text"
                                 required
                                 value={formData.code}
                                 onChange={e => setFormData({ ...formData, code: e.target.value })}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                 placeholder="e.g. first_win"
                             />
                         </div>
 
                         {/* Icon Type Selection */}
                         <div className="sm:col-span-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Icon Type</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Icon Type</label>
                             <div className="flex items-center space-x-4">
                                 <label className="inline-flex items-center">
                                     <input
                                         type="radio"
                                         checked={formData.iconType === 'emoji'}
                                         onChange={() => setFormData({ ...formData, iconType: 'emoji' })}
-                                        className="form-radio text-blue-600"
+                                        className="form-radio text-blue-600 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                                     />
-                                    <span className="ml-2">Emoji</span>
+                                    <span className="ml-2 text-gray-700 dark:text-gray-300">Emoji</span>
                                 </label>
                                 <label className="inline-flex items-center">
                                     <input
                                         type="radio"
                                         checked={formData.iconType === 'image'}
                                         onChange={() => setFormData({ ...formData, iconType: 'image' })}
-                                        className="form-radio text-blue-600"
+                                        className="form-radio text-blue-600 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                                     />
-                                    <span className="ml-2">Custom Image</span>
+                                    <span className="ml-2 text-gray-700 dark:text-gray-300">Custom Image</span>
                                 </label>
                             </div>
                         </div>
@@ -170,11 +170,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         {/* Emoji Picker */}
                         {formData.iconType === 'emoji' && (
                             <div className="sm:col-span-6 relative">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Icon (Emoji)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Icon (Emoji)</label>
                                 <button
                                     type="button"
                                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                    className="inline-flex items-center justify-center w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-gray-50 bg-white text-3xl transition-colors"
+                                    className="inline-flex items-center justify-center w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-800 text-3xl transition-colors"
                                 >
                                     {formData.iconUrl || '🏆'}
                                 </button>
@@ -197,7 +197,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                     onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url }))}
                                     label="Badge Image"
                                 />
-                                <p className="mt-2 text-sm text-gray-500">
+                                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                     Recommended: Square image (1:1), PNG or JPG. Will be masked as a circle.
                                 </p>
                             </div>
@@ -213,7 +213,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                             <div className="space-y-6">
                                                 {/* Title */}
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700">
+                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                         Title ({langName})
                                                     </label>
                                                     <input
@@ -224,13 +224,13 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                             ...formData,
                                                             title: { ...formData.title, [lang]: e.target.value }
                                                         })}
-                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                                     />
                                                 </div>
 
                                                 {/* Description */}
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700">
+                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                         Description ({langName})
                                                     </label>
                                                     <textarea
@@ -240,13 +240,13 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                             ...formData,
                                                             description: { ...formData.description, [lang]: e.target.value }
                                                         })}
-                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                                     />
                                                 </div>
 
                                                 {/* Condition Label */}
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700">
+                                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                         Condition Label ({langName})
                                                     </label>
                                                     <input
@@ -256,7 +256,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                             ...formData,
                                                             conditionLabel: { ...formData.conditionLabel, [lang]: e.target.value }
                                                         })}
-                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                                         placeholder={lang === 'de' ? 'z.B. 1000 XP' : 'e.g. 1000 XP'}
                                                     />
                                                     <p className="mt-1 text-xs text-gray-500">
@@ -272,7 +272,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
 
                         {/* Criteria Type */}
                         <div className="sm:col-span-3">
-                            <label className="block text-sm font-medium text-gray-700">Criteria Type</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Criteria Type</label>
                             <select
                                 value={formData.criteriaType}
                                 onChange={e => {
@@ -284,7 +284,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
 
                                     setFormData({ ...formData, criteriaType: e.target.value, criteriaValue: newVal })
                                 }}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                             >
                                 <option value="lesson_completion">Lesson Completion</option>
                                 <option value="streak">Streak</option>
@@ -300,14 +300,14 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         </div>
 
                         {/* Criteria Value - Dynamic Formatting */}
-                        <div className="sm:col-span-6 bg-gray-50 p-4 rounded-md border border-gray-200">
+                        <div className="sm:col-span-6 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-md border border-gray-200 dark:border-gray-700">
                             {formData.criteriaType === 'level_reached' ? (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Required Level</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Required Level</label>
                                     <select
                                         value={formData.criteriaValue}
                                         onChange={e => setFormData({ ...formData, criteriaValue: e.target.value as any })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                     >
                                         <option value="A1">A1 - Beginner</option>
                                         <option value="A2">A2 - Elementary</option>
@@ -319,8 +319,8 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                 </div>
                             ) : formData.criteriaType === 'profile_filled' ? (
                                 <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">Fields Required</label>
-                                    <p className="text-xs text-gray-500 mb-2">Select fields that must be populated to earn this badge.</p>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Fields Required</label>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Select fields that must be populated to earn this badge.</p>
 
                                     {['avatarUrl', 'firstName', 'lastName', 'nickname', 'dailyGoal'].map((field) => {
                                         const current = Array.isArray(formData.criteriaValue) ? formData.criteriaValue : []
@@ -335,9 +335,9 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                             : current.filter((f: string) => f !== field)
                                                         setFormData({ ...formData, criteriaValue: newArr })
                                                     }}
-                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
                                                 />
-                                                <span className="text-sm text-gray-700">
+                                                <span className="text-sm text-gray-700 dark:text-gray-300">
                                                     {field === 'avatarUrl' ? 'Profile Picture' :
                                                         field === 'dailyGoal' ? 'Daily Goal Set' :
                                                             field.charAt(0).toUpperCase() + field.slice(1)}
@@ -349,7 +349,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                             ) : formData.criteriaType === 'time_of_day' ? (
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Start Hour (0-23)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Hour (0-23)</label>
                                         <input
                                             type="number"
                                             min="0"
@@ -359,11 +359,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                 ...formData,
                                                 criteriaValue: { ...(formData.criteriaValue as any), startHour: Number(e.target.value) }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">End Hour (0-23)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">End Hour (0-23)</label>
                                         <input
                                             type="number"
                                             min="0"
@@ -373,17 +373,17 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                 ...formData,
                                                 criteriaValue: { ...(formData.criteriaValue as any), endHour: Number(e.target.value) }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
-                                    <p className="col-span-2 text-xs text-gray-500">
+                                    <p className="col-span-2 text-xs text-gray-500 dark:text-gray-400">
                                         For "Night Owl", you can set Start: 22 and End: 4 (crosses midnight).
                                     </p>
                                 </div>
                             ) : formData.criteriaType === 'speed_demon' ? (
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Max Time (Seconds)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Max Time (Seconds)</label>
                                         <input
                                             type="number"
                                             value={(formData.criteriaValue as any)?.maxSeconds ?? 30}
@@ -391,11 +391,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                 ...formData,
                                                 criteriaValue: { ...(formData.criteriaValue as any), maxSeconds: Number(e.target.value) }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Min Score (%)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Min Score (%)</label>
                                         <input
                                             type="number"
                                             min="0"
@@ -405,13 +405,13 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                                 ...formData,
                                                 criteriaValue: { ...(formData.criteriaValue as any), minScore: Number(e.target.value) }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
                                 </div>
                             ) : (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         {formData.criteriaType === 'total_xp' ? 'XP Needed' :
                                             formData.criteriaType === 'learning_sessions' ? 'Completed Sessions Count' :
                                                 formData.criteriaType === 'streak' ? 'Days Streak' :
@@ -421,7 +421,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                         type="number"
                                         value={typeof formData.criteriaValue === 'number' ? formData.criteriaValue : 1}
                                         onChange={e => setFormData({ ...formData, criteriaValue: Number(e.target.value) })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                     />
                                 </div>
                             )}
@@ -436,12 +436,12 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                         type="checkbox"
                                         checked={formData.isActive}
                                         onChange={e => setFormData({ ...formData, isActive: e.target.checked })}
-                                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
                                     />
                                 </div>
                                 <div className="ml-3 text-sm">
-                                    <label htmlFor="isActive" className="font-medium text-gray-700">Active</label>
-                                    <p className="text-gray-500">Users can earn this badge.</p>
+                                    <label htmlFor="isActive" className="font-medium text-gray-700 dark:text-gray-300">Active</label>
+                                    <p className="text-gray-500 dark:text-gray-400">Users can earn this badge.</p>
                                 </div>
                             </div>
                         </div>
@@ -452,7 +452,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         <button
                             type="button"
                             onClick={() => router.push('/admin/achievements')}
-                            className="mr-3 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                            className="mr-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
                             Cancel
                         </button>
@@ -470,11 +470,11 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
             {/* Right Column: Live Preview */}
             <div className="w-full lg:w-96">
                 <div className="sticky top-6">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Live Preview</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Live Preview</h3>
 
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors">
                         {/* Preview Header - simulating dashboard context */}
-                        <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Achievement Unlocked
                         </div>
 
@@ -487,10 +487,10 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                                 </div>
                             </div>
 
-                            <h4 className="text-xl font-bold text-gray-900 mb-1">
+                            <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                                 {formData.title.de || formData.title.en || 'Badge Title'}
                             </h4>
-                            <p className="text-sm text-gray-500 leading-relaxed max-w-[240px]">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[240px]">
                                 {formData.description.de || formData.description.en || 'Badge description will appear here.'}
                             </p>
 
@@ -507,14 +507,14 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         </div>
 
                         {/* Technical Details Footer */}
-                        <div className="bg-gray-50 px-4 py-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
+                        <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 border-t border-gray-100 dark:border-gray-800 grid grid-cols-2 gap-2 text-xs">
                             <div>
-                                <span className="text-gray-500">Type:</span>
-                                <span className="ml-1 font-medium text-gray-900">{formData.criteriaType}</span>
+                                <span className="text-gray-500 dark:text-gray-400">Type:</span>
+                                <span className="ml-1 font-medium text-gray-900 dark:text-gray-100">{formData.criteriaType}</span>
                             </div>
                             <div className="text-right">
-                                <span className="text-gray-500">Target:</span>
-                                <span className="ml-1 font-medium text-gray-900">
+                                <span className="text-gray-500 dark:text-gray-400">Target:</span>
+                                <span className="ml-1 font-medium text-gray-900 dark:text-gray-100">
                                     {typeof formData.criteriaValue === 'object'
                                         ? JSON.stringify(formData.criteriaValue)
                                         : formData.criteriaValue}
@@ -523,7 +523,7 @@ export function BadgeForm({ initialData, isEditing = false }: BadgeFormProps) {
                         </div>
                     </div>
 
-                    <div className="mt-6 bg-blue-50 rounded-lg p-4 text-sm text-blue-700">
+                    <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-sm text-blue-700 dark:text-blue-300">
                         <strong className="block mb-1 font-medium">✨ Pro Tip</strong>
                         Use an engaging emoji and a short, motivating description to encourage users!
                     </div>

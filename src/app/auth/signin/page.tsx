@@ -29,7 +29,7 @@ function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center p-4 transition-colors">
       <div className="w-full max-w-md space-y-8">
         {/* Logo Section */}
         <div className="flex flex-col items-center">
@@ -42,16 +42,16 @@ function SignInPage() {
               priority
             />
           </div>
-          <h2 className="text-3xl font-serif font-bold text-center text-gray-900">
+          <h2 className="text-3xl font-serif font-bold text-center text-gray-900 dark:text-gray-100">
             {t('auth.signin.title', 'Anmelden')}
           </h2>
-          <p className="mt-2 text-center text-gray-600 font-sans">
+          <p className="mt-2 text-center text-gray-600 dark:text-gray-400 font-sans">
             {t('auth.signin.subtitle', 'Starte deine Zazakî-Lernreise')}
           </p>
         </div>
 
         {/* Form Section */}
-        <div className="mt-8 bg-gray-50/50 py-8 px-6 shadow-sm ring-1 ring-gray-900/5 rounded-2xl sm:px-10">
+        <div className="mt-8 bg-gray-50/50 dark:bg-gray-900/50 py-8 px-6 shadow-sm ring-1 ring-gray-900/5 dark:ring-white/10 rounded-2xl sm:px-10 transition-colors">
           {error && (
             <div className="mb-6 p-4 bg-brand-red/10 border border-brand-red/20 rounded-xl flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-brand-red shrink-0" />
@@ -71,15 +71,15 @@ function SignInPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">{t('auth.checkEmail.title', 'E-Mail prüfen!')}</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-gray-100 mb-2">{t('auth.checkEmail.title', 'E-Mail prüfen!')}</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 {t('auth.checkEmail.sent', 'Wir haben einen Magic Link an')}{' '}
-                <span className="font-semibold text-gray-900">{email}</span>{' '}
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{email}</span>{' '}
                 {t('auth.checkEmail.sentSuffix', 'gesendet.')}
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
               >
                 {t('auth.useAnotherEmail', 'Andere E-Mail verwenden')}
               </button>
@@ -87,7 +87,7 @@ function SignInPage() {
           ) : (
             <form onSubmit={handleEmailSignIn} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 font-sans mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 font-sans mb-2">
                   {t('auth.email.label', 'E-Mail Adresse')}
                 </label>
                 <div className="mt-1">
@@ -99,7 +99,7 @@ function SignInPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all sm:text-sm bg-white"
+                    className="appearance-none block w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all sm:text-sm bg-white dark:bg-gray-800 dark:text-white"
                     placeholder="name@beispiel.de"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -115,7 +115,7 @@ function SignInPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-gray-900 bg-primary-500 hover:bg-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-gray-900 dark:text-white bg-primary-500 hover:bg-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
                 >
                   {loading ? t('common.sending', 'Sende...') : t('auth.sendLink', 'Magic Link senden')}
                 </button>

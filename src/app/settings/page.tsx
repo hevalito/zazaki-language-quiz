@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useTranslation } from '@/hooks/use-translation'
 import { useWebPush } from '@/hooks/use-web-push'
+import { ThemeSelector } from '@/components/features/theme-selector'
 
 // ...
 
@@ -132,25 +133,25 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
                 <div className="container mx-auto px-4 py-4 flex items-center">
                     <button
                         onClick={() => router.push('/dashboard')}
-                        className="mr-4 text-gray-600 hover:text-gray-900"
+                        className="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                     >
                         <ArrowLeftIcon className="w-5 h-5" />
                     </button>
-                    <h1 className="text-xl font-bold text-gray-900">{t('settings.title', 'Einstellungen')}</h1>
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('settings.title', 'Einstellungen')}</h1>
                 </div>
             </header>
 
             <main className="container mx-auto px-4 py-8 max-w-2xl">
-                <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 border border-transparent dark:border-gray-800 transition-colors duration-200">
                     <div className="flex flex-col items-center justify-center mb-8">
                         <div id="tour-profile-picture" className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>
                             {/* ... (image logic) ... */}
-                            <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 overflow-hidden ring-4 ring-white shadow-sm transition-all group-hover:ring-primary-100">
+                            <div className="w-24 h-24 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-400 overflow-hidden ring-4 ring-white dark:ring-gray-800 shadow-sm transition-all group-hover:ring-primary-100 dark:group-hover:ring-primary-900/40">
                                 {loadingAvatar ? (
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
                                 ) : session?.user?.image ? (
@@ -179,13 +180,13 @@ export default function SettingsPage() {
                                 onChange={handleFileChange}
                             />
                         </div>
-                        <p className="mt-3 text-sm text-gray-500 font-medium">{t('settings.avatar.change', 'Klicken zum Ändern')}</p>
+                        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 font-medium">{t('settings.avatar.change', 'Klicken zum Ändern')}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     {t('settings.firstName', 'Vorname')}
                                 </label>
                                 <input
@@ -197,7 +198,7 @@ export default function SettingsPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     {t('settings.lastName', 'Nachname')}
                                 </label>
                                 <input
@@ -211,7 +212,7 @@ export default function SettingsPage() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('settings.nickname', 'Spitzname (Nickname)')}
                             </label>
                             <input
@@ -221,7 +222,7 @@ export default function SettingsPage() {
                                 className="input-field"
                                 placeholder={t('settings.nickname.placeholder', 'Wie sollen wir dich nennen?')}
                             />
-                            <p className="mt-1 text-xs text-gray-500">
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                                 {t('settings.nickname.hint', 'Dieser Name wird auf der Bestenliste angezeigt.')}
                             </p>
                         </div>
@@ -232,10 +233,10 @@ export default function SettingsPage() {
                         {/* @ts-ignore */}
                         {formData.courseFinderData?.result && (
                             <>
-                                <hr className="border-gray-100" />
+                                <hr className="border-gray-100 dark:border-gray-800" />
                                 <div>
-                                    <h3 className="block text-sm font-medium text-gray-700 mb-2">{t('settings.dialect.profile', 'Dein Dialekt-Profil')}</h3>
-                                    <div className="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                                    <h3 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('settings.dialect.profile', 'Dein Dialekt-Profil')}</h3>
+                                    <div className="bg-primary-50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-900/30 rounded-xl p-4">
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-xs font-bold text-primary-600 tracking-wider uppercase">{t('settings.dialect.result', 'Ergebnis')}</span>
                                             <button
@@ -247,18 +248,18 @@ export default function SettingsPage() {
                                             </button>
                                         </div>
                                         {/* @ts-ignore */}
-                                        <h4 className="text-lg font-serif font-bold text-gray-900">{formData.courseFinderData.result.dialect}</h4>
+                                        <h4 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100">{formData.courseFinderData.result.dialect}</h4>
                                         {/* @ts-ignore */}
-                                        <p className="text-sm text-gray-600 mt-1">{t('settings.dialect.recommendation', 'Empfohlener Kurs:')} {formData.courseFinderData.result.recommendation}</p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('settings.dialect.recommendation', 'Empfohlener Kurs:')} {formData.courseFinderData.result.recommendation}</p>
                                     </div>
                                 </div>
                             </>
                         )}
 
-                        <hr className="border-gray-100" />
+                        <hr className="border-gray-100 dark:border-gray-800" />
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('settings.dailyGoal', 'Tagesziel (XP)')}
                             </label>
                             <select
@@ -274,10 +275,19 @@ export default function SettingsPage() {
                             </select>
                         </div>
 
+
+
                         <hr className="border-gray-100" />
 
                         <div>
-                            <h3 className="block text-sm font-medium text-gray-700 mb-2">{t('settings.notifications', 'Benachrichtigungen')}</h3>
+                            <h3 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('settings.appearance', 'Erscheinungsbild')}</h3>
+                            <ThemeSelector />
+                        </div>
+
+                        <hr className="border-gray-100" />
+
+                        <div>
+                            <h3 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('settings.notifications', 'Benachrichtigungen')}</h3>
                             <PushNotificationToggle
                                 settings={{
                                     daily: formData.notifyDaily,
@@ -445,16 +455,16 @@ function PushNotificationToggle({ settings, onChange }: PushNotificationTogglePr
 
     return (
         <div className="space-y-4">
-            <div id="tour-notifications" className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div id="tour-notifications" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center space-x-3">
                     {isSubscribed ? (
-                        <BellIcon className="w-6 h-6 text-primary-600" />
+                        <BellIcon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                     ) : (
-                        <BellSlashIcon className="w-6 h-6 text-gray-400" />
+                        <BellSlashIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
                     )}
                     <div>
-                        <h4 className="text-sm font-medium text-gray-900">{t('push.title', 'Push-Benachrichtigungen')}</h4>
-                        <p className="text-xs text-gray-500">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">{t('push.title', 'Push-Benachrichtigungen')}</h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
                             {isSubscribed ? t('common.enabled', 'Aktiviert') : t('common.disabled', 'Deaktiviert')}
                         </p>
                     </div>
@@ -463,7 +473,7 @@ function PushNotificationToggle({ settings, onChange }: PushNotificationTogglePr
                     type="button"
                     onClick={handleToggle}
                     disabled={loading}
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${isSubscribed ? 'bg-primary-600' : 'bg-gray-200'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${isSubscribed ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-600'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}
                         `}
                 >
                     <span
@@ -481,11 +491,11 @@ function PushNotificationToggle({ settings, onChange }: PushNotificationTogglePr
                             type="checkbox"
                             checked={settings.daily}
                             onChange={(e) => onChange('notifyDaily', e.target.checked)}
-                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800 h-4 w-4 transition-colors"
                         />
                         <div>
-                            <span className="text-sm font-medium text-gray-700 block">{t('push.daily.title', 'Tägliche Erinnerung')}</span>
-                            <span className="text-xs text-gray-500">{t('push.daily.desc', 'Erinnerung an dein tägliches Quiz')}</span>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block">{t('push.daily.title', 'Tägliche Erinnerung')}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{t('push.daily.desc', 'Erinnerung an dein tägliches Quiz')}</span>
                         </div>
                     </label>
 
@@ -494,11 +504,11 @@ function PushNotificationToggle({ settings, onChange }: PushNotificationTogglePr
                             type="checkbox"
                             checked={settings.features}
                             onChange={(e) => onChange('notifyFeatures', e.target.checked)}
-                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800 h-4 w-4 transition-colors"
                         />
                         <div>
-                            <span className="text-sm font-medium text-gray-700 block">{t('push.features.title', 'Neuigkeiten & Features')}</span>
-                            <span className="text-xs text-gray-500">{t('push.features.desc', 'Infos über neue Kurse und Updates')}</span>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block">{t('push.features.title', 'Neuigkeiten & Features')}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{t('push.features.desc', 'Infos über neue Kurse und Updates')}</span>
                         </div>
                     </label>
 
@@ -507,11 +517,11 @@ function PushNotificationToggle({ settings, onChange }: PushNotificationTogglePr
                             type="checkbox"
                             checked={settings.weekly}
                             onChange={(e) => onChange('notifyWeekly', e.target.checked)}
-                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 h-4 w-4 transition-colors"
+                            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800 h-4 w-4 transition-colors"
                         />
                         <div>
-                            <span className="text-sm font-medium text-gray-700 block">{t('push.weekly.title', 'Wöchentliche Zusammenfassung')}</span>
-                            <span className="text-xs text-gray-500">{t('push.weekly.desc', 'Dein Fortschritt im Überblick')}</span>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block">{t('push.weekly.title', 'Wöchentliche Zusammenfassung')}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{t('push.weekly.desc', 'Dein Fortschritt im Überblick')}</span>
                         </div>
                     </label>
                 </div>

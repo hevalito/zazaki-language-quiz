@@ -367,10 +367,10 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading.quiz', 'Lade Quiz...')}</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">{t('loading.quiz', 'Lade Quiz...')}</p>
         </div>
       </div>
     )
@@ -378,9 +378,9 @@ export default function QuizPage() {
 
   if (!quiz) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">{t('error.quizNotFound', 'Quiz nicht gefunden')}</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('error.quizNotFound', 'Quiz nicht gefunden')}</p>
         </div>
       </div>
     )
@@ -388,31 +388,31 @@ export default function QuizPage() {
 
   if (showResult && quizResults) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-8">
         <div className="container mx-auto px-4 max-w-2xl">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrophyIcon className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrophyIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('quiz.finished', 'Quiz beendet!')}</h1>
-              <p className="text-gray-600">{successMessage}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('quiz.finished', 'Quiz beendet!')}</h1>
+              <p className="text-gray-600 dark:text-gray-400">{successMessage}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">{quizResults.score}</div>
-                <div className="text-sm text-blue-600">{t('quiz.xpTotal', 'XP (Gesamt)')}</div>
+              <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{quizResults.score}</div>
+                <div className="text-sm text-blue-600 dark:text-blue-400">{t('quiz.xpTotal', 'XP (Gesamt)')}</div>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">{quizResults.percentage}%</div>
-                <div className="text-sm text-green-600">{t('quiz.accuracy', 'Genauigkeit')}</div>
+              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">{quizResults.percentage}%</div>
+                <div className="text-sm text-green-600 dark:text-green-400">{t('quiz.accuracy', 'Genauigkeit')}</div>
               </div>
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                <div className="text-2xl font-bold text-yellow-600">
+              <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                   {quizResults.xpEarned ?? 0}
                 </div>
-                <div className="text-sm text-yellow-600">{t('quiz.xpNew', 'XP (Neu)')}</div>
+                <div className="text-sm text-yellow-600 dark:text-yellow-400">{t('quiz.xpNew', 'XP (Neu)')}</div>
               </div>
             </div>
 
@@ -425,21 +425,21 @@ export default function QuizPage() {
             {quiz.type === 'DAILY' && <NotificationPrompt />}
 
             <div className="space-y-4 mb-6">
-              <h3 className="font-semibold text-gray-900">{t('quiz.modal.summaryTitle', 'Fragenübersicht')}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('quiz.modal.summaryTitle', 'Fragenübersicht')}</h3>
               {quiz.questions.map((question, index) => {
                 const result = quizResults.results.find((r: any) => r.questionId === question.id)
                 return (
-                  <div key={question.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-700">{t('quiz.questionLabel', 'Frage')} {index + 1}</span>
+                  <div key={question.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{t('quiz.questionLabel', 'Frage')} {index + 1}</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-medium dark:text-gray-300">
                         {result?.pointsEarned || 0} / {question.points} XP
                       </span>
                       {result?.isCorrect ? (
-                        <CheckIcon className="w-5 h-5 text-green-600" />
+                        <CheckIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center">
-                          <span className="text-red-600 text-xs">✗</span>
+                        <div className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                          <span className="text-red-600 dark:text-red-400 text-xs">✗</span>
                         </div>
                       )}
                     </div>
@@ -484,27 +484,27 @@ export default function QuizPage() {
   const isDaily = quiz.type === 'DAILY'
 
   return (
-    <div className={`min-h-screen ${isDaily ? 'bg-indigo-50' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${isDaily ? 'bg-indigo-50 dark:bg-slate-950' : 'bg-gray-50 dark:bg-gray-950'} transition-colors duration-200`}>
       {/* Header */}
-      <header className={`shadow-sm border-b ${isDaily ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border-indigo-600' : 'bg-white border-gray-200'}`}>
+      <header className={`shadow-sm border-b ${isDaily ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border-indigo-600' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800'}`}>
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={() => router.push('/library')}
-              className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
+              className={`flex items-center space-x-2 ${isDaily ? 'text-indigo-100 hover:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
             >
               <ArrowLeftIcon className="w-5 h-5" />
               <span>{t('nav.back', 'Zurück')}</span>
             </button>
 
             <div className="text-center">
-              <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900'}`}>{getTitle(quiz.title)}</h1>
-              <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500'}`}>
+              <h1 className={`font-semibold ${isDaily ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>{getTitle(quiz.title)}</h1>
+              <p className={`text-sm ${isDaily ? 'text-indigo-200' : 'text-gray-500 dark:text-gray-400'}`}>
                 {getTitle(quiz.lesson?.chapter?.course?.title || { en: 'Daily Challenge', de: t('daily.title', 'Tägliche Herausforderung') })}
               </p>
             </div>
 
-            <div className={`flex items-center space-x-2 text-sm ${isDaily ? 'text-indigo-100' : 'text-gray-600'}`}>
+            <div className={`flex items-center space-x-2 text-sm ${isDaily ? 'text-indigo-100' : 'text-gray-600 dark:text-gray-400'}`}>
               <ClockIcon className="w-4 h-4" />
               <span>{currentQuestionIndex + 1} / {quiz.questions.length}</span>
             </div>
@@ -512,9 +512,9 @@ export default function QuizPage() {
 
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className={`w-full rounded-full h-2 ${isDaily ? 'bg-black/20' : 'bg-gray-200'}`}>
+            <div className={`w-full rounded-full h-2 ${isDaily ? 'bg-black/20' : 'bg-gray-200 dark:bg-gray-800'}`}>
               <div
-                className={`h-2 rounded-full transition-all duration-300 ${isDaily ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-blue-600'}`}
+                className={`h-2 rounded-full transition-all duration-300 ${isDaily ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-blue-600 dark:bg-blue-500'}`}
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -524,13 +524,13 @@ export default function QuizPage() {
 
       {/* Question Content */}
       <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 transition-colors duration-200">
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-gray-500">
+              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                 {t('quiz.questionLabel', 'Frage')} {currentQuestionIndex + 1}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {currentQuestion.points} XP
               </span>
             </div>
@@ -569,7 +569,7 @@ export default function QuizPage() {
             <button
               onClick={previousQuestion}
               disabled={currentQuestionIndex === 0}
-              className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowLeftIcon className="w-4 h-4" />
               <span>{t('nav.back', 'Zurück')}</span>

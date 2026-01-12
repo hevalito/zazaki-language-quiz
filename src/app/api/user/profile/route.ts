@@ -37,7 +37,9 @@ export async function GET() {
                 notifyFeatures: true,
                 notifyWeekly: true,
                 totalXP: true,
-                currentLevel: true
+                totalXP: true,
+                currentLevel: true,
+                theme: true
             }
         })
 
@@ -83,7 +85,7 @@ export async function PUT(request: Request) {
         }
 
         const body = await request.json()
-        const { nickname, firstName, lastName, dailyGoal, preferredScript, notifyDaily, notifyFeatures, notifyWeekly } = body
+        const { nickname, firstName, lastName, dailyGoal, preferredScript, notifyDaily, notifyFeatures, notifyWeekly, theme } = body
 
         // Validate inputs if necessary
 
@@ -98,6 +100,7 @@ export async function PUT(request: Request) {
                 ...(notifyDaily !== undefined && { notifyDaily }),
                 ...(notifyFeatures !== undefined && { notifyFeatures }),
                 ...(notifyWeekly !== undefined && { notifyWeekly }),
+                ...(theme !== undefined && { theme })
             }
         })
 

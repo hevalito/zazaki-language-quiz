@@ -143,21 +143,21 @@ export default function AchievementsAdmin() {
                         </div>
                     </div>
                 )}
-                <div className="bg-white p-4 rounded-md shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
-                    <div className="flex-1 w-full text-black">
+                <div className="bg-white dark:bg-gray-900 p-4 rounded-md shadow mb-6 flex flex-col sm:flex-row gap-4 items-center border border-gray-200 dark:border-gray-800 transition-colors">
+                    <div className="flex-1 w-full text-black dark:text-white">
                         <input
                             type="text"
                             placeholder="Search badges by title or code..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                            className="w-full border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                         />
                     </div>
-                    <div className="w-full sm:w-auto text-black">
+                    <div className="w-full sm:w-auto text-black dark:text-white">
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2"
+                            className="w-full border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                         >
                             <option value="all">All Status</option>
                             <option value="active">Active</option>
@@ -166,8 +166,8 @@ export default function AchievementsAdmin() {
                     </div>
                 </div>
 
-                <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                    <ul role="list" className="divide-y divide-gray-200">
+                <div className="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-200 dark:border-gray-800 transition-colors">
+                    <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
                         {badges.map((badge, index) => (
                             <li key={badge.id}>
                                 <div className="px-4 py-4 flex items-center justify-between sm:px-6">
@@ -176,14 +176,14 @@ export default function AchievementsAdmin() {
                                             <button
                                                 onClick={() => handleMove(index, 'up')}
                                                 disabled={index === 0}
-                                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                                             >
                                                 <ChevronUpIcon className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleMove(index, 'down')}
                                                 disabled={index === badges.length - 1}
-                                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
                                             >
                                                 <ChevronDownIcon className="w-4 h-4" />
                                             </button>
@@ -197,10 +197,10 @@ export default function AchievementsAdmin() {
                                             )}
                                         </span>
                                         <div>
-                                            <h3 className="text-lg font-medium text-blue-600 truncate">{getTitle(badge.title)}</h3>
-                                            <p className="text-sm text-gray-500">Code: {badge.code}</p>
+                                            <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 truncate">{getTitle(badge.title)}</h3>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Code: {badge.code}</p>
                                             <div className="mt-1 flex items-center">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badge.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${badge.isActive ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
                                                     }`}>
                                                     {badge.isActive ? 'Active' : 'Inactive'}
                                                 </span>
@@ -210,13 +210,13 @@ export default function AchievementsAdmin() {
                                     <div className="flex items-center space-x-2">
                                         <Link
                                             href={`/admin/achievements/${badge.id}`}
-                                            className="p-2 text-gray-400 hover:text-gray-500"
+                                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300"
                                         >
                                             <PencilSquareIcon className="h-5 w-5" />
                                         </Link>
                                         <button
                                             onClick={() => handleDelete(badge.id)}
-                                            className="p-2 text-red-400 hover:text-red-500"
+                                            className="p-2 text-red-400 hover:text-red-500 dark:hover:text-red-300"
                                         >
                                             <TrashIcon className="h-5 w-5" />
                                         </button>
@@ -225,7 +225,7 @@ export default function AchievementsAdmin() {
                             </li>
                         ))}
                         {badges.length === 0 && (
-                            <li className="px-4 py-12 text-center text-gray-500">
+                            <li className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                                 No badges found. Create one to get started.
                             </li>
                         )}

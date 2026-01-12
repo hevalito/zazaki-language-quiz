@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Loading() {
     return (
-        <div className="min-h-screen bg-gray-50 pb-8">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-8 transition-colors">
             {/* Header */}
-            <div className="bg-white shadow-sm border-b border-gray-200 safe-area-top">
+            <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 safe-area-top transition-colors">
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <div className="flex items-center space-x-3">
                         <div className="relative w-10 h-10 shrink-0">
@@ -27,7 +27,7 @@ export default function Loading() {
             <div className="container mx-auto px-4 py-6 space-y-6">
 
                 {/* Daily Goal Card (Large) */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-between h-56 relative overflow-hidden">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between h-56 relative overflow-hidden transition-colors">
                     <div className="flex justify-between items-start z-10">
                         <Skeleton className="h-6 w-32" />
                         <Skeleton className="h-6 w-24 rounded-full" />
@@ -43,7 +43,7 @@ export default function Loading() {
                 </div>
 
                 {/* Next Quiz / Challenge */}
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 h-32 flex items-center gap-4">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 h-32 flex items-center gap-4 transition-colors">
                     <Skeleton className="w-16 h-16 rounded-xl shrink-0" />
                     <div className="flex-1 space-y-2">
                         <Skeleton className="h-5 w-3/4" />
@@ -55,7 +55,7 @@ export default function Loading() {
                 {/* Continue Learning */}
                 <div className="space-y-3">
                     <Skeleton className="h-6 w-32" />
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
                         <div className="flex items-center gap-4 mb-4">
                             <Skeleton className="w-12 h-12 rounded-xl" />
                             <div className="space-y-2 flex-1">
@@ -73,7 +73,7 @@ export default function Loading() {
                 {/* Quick Actions Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="bg-white rounded-xl p-4 flex flex-col items-center justify-center h-32 border border-gray-100 shadow-sm space-y-3">
+                        <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-4 flex flex-col items-center justify-center h-32 border border-gray-100 dark:border-gray-800 shadow-sm space-y-3 transition-colors">
                             <Skeleton className="w-12 h-12 rounded-xl" />
                             <div className="space-y-1 w-full flex flex-col items-center">
                                 <Skeleton className="h-4 w-20" />

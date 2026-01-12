@@ -119,12 +119,12 @@ export default function EditQuizPage(props: { params: Promise<{ id: string }> })
     return (
         <div className="max-w-4xl mx-auto pb-12">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Edit Quiz</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Quiz</h1>
             </div>
 
             <QuizForm initialData={quiz} isEditing />
 
-            <div className="border-t border-gray-200 mt-10 pt-10">
+            <div className="border-t border-gray-200 dark:border-gray-800 mt-10 pt-10">
                 <QuestionList
                     quizId={quiz.id}
                     questions={quiz.questions || []}

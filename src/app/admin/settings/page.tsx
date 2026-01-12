@@ -92,9 +92,9 @@ export default function AdminSettingsPage() {
             />
 
             <AdminPageContent>
-                <div className="bg-white shadow rounded-lg overflow-hidden min-h-[500px] flex flex-col">
+                <div className="bg-white dark:bg-gray-900 shadow rounded-lg overflow-hidden min-h-[500px] flex flex-col border border-gray-200 dark:border-gray-800 transition-colors">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-                        <div className="px-6 bg-gray-50 border-b border-gray-200">
+                        <div className="px-6 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
                             <TabsList>
                                 <TabsTrigger value="system">
                                     <ShieldCheckIcon className="w-4 h-4 mr-2" />
@@ -119,7 +119,7 @@ export default function AdminSettingsPage() {
                             {/* System Tab */}
                             <TabsContent value="system" className="mt-0 space-y-8">
                                 <div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Instance Controls</h3>
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Instance Controls</h3>
                                     <div className="space-y-6">
                                         <ToggleSetting
                                             label="Maintenance Mode"
@@ -147,7 +147,7 @@ export default function AdminSettingsPage() {
                             {/* Gamification Tab */}
                             <TabsContent value="gamification" className="mt-0 space-y-8">
                                 <div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Economy & Progression</h3>
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Economy & Progression</h3>
                                     <div className="grid grid-cols-1 gap-6 max-w-xl">
                                         <div>
                                             <Label htmlFor="xp-multiplier">Global XP Multiplier</Label>
@@ -160,9 +160,9 @@ export default function AdminSettingsPage() {
                                                     max="10.0"
                                                     value={settings.global_xp_multiplier}
                                                     onChange={(e) => handleChange('global_xp_multiplier', parseFloat(e.target.value))}
-                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                                 />
-                                                <span className="text-sm text-gray-500">x</span>
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">x</span>
                                             </div>
                                             <p className="mt-1 text-sm text-gray-500">
                                                 Multiplies all XP earned by users. Useful for special events.
@@ -178,9 +178,9 @@ export default function AdminSettingsPage() {
                                                 max="10"
                                                 value={settings.streak_freeze_limit}
                                                 onChange={(e) => handleChange('streak_freeze_limit', parseInt(e.target.value))}
-                                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                             />
-                                            <p className="mt-1 text-sm text-gray-500">
+                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                 Maximum number of streak freezes a user can hold at once.
                                             </p>
                                         </div>
@@ -196,11 +196,11 @@ export default function AdminSettingsPage() {
                                     <div className="space-y-6">
                                         <div>
                                             <Label>Supported Dialects & Categories</Label>
-                                            <p className="text-sm text-gray-500 mb-4">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                                                 Define the dialects or categories available for courses.
                                             </p>
 
-                                            <div className="bg-gray-50 rounded-md p-4 space-y-3">
+                                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-md p-4 space-y-3 border border-gray-100 dark:border-gray-700">
                                                 {(settings.supported_dialects || []).map((dialect: any, index: number) => (
                                                     <div key={index} className="flex gap-3">
                                                         <div className="flex-1">
@@ -264,7 +264,7 @@ export default function AdminSettingsPage() {
 
                             {/* Save Button Footer */}
                             {activeTab !== 'languages' && (
-                                <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+                                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800 flex justify-end">
                                     <button
                                         onClick={handleSave}
                                         disabled={saving}
@@ -294,10 +294,10 @@ function ToggleSetting({ label, description, enabled, onChange, risk }: {
     return (
         <div className="flex items-center justify-between space-x-4">
             <div className="flex flex-col space-y-1">
-                <Label htmlFor={id} className={`text-base font-medium leading-none ${risk === 'high' ? 'text-red-900' : 'text-gray-900'}`}>
-                    {label} {risk === 'high' && <span className="ml-2 inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Caution</span>}
+                <Label htmlFor={id} className={`text-base font-medium leading-none ${risk === 'high' ? 'text-red-900 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'}`}>
+                    {label} {risk === 'high' && <span className="ml-2 inline-flex items-center rounded-md bg-red-50 dark:bg-red-900/30 px-2 py-1 text-xs font-medium text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-600/10 dark:ring-red-400/20">Caution</span>}
                 </Label>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     {description}
                 </p>
             </div>

@@ -91,7 +91,7 @@ export function MultipleChoiceQuestion({
     <div className="space-y-6">
       {/* Question Prompt */}
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
           {getPromptText()}
         </h2>
 
@@ -149,9 +149,9 @@ export function MultipleChoiceQuestion({
 
       {/* Explanation (shown after answer) */}
       {showResult && question.explanation && (
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <h3 className="font-medium text-blue-900 mb-2">Explanation</h3>
-          <p className="text-blue-800 text-sm">
+        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Explanation</h3>
+          <p className="text-blue-800 dark:text-blue-200 text-sm">
             {typeof question.explanation === 'string'
               ? question.explanation
               : (question.explanation as any)?.de || (question.explanation as any)?.en || ''}
@@ -163,11 +163,11 @@ export function MultipleChoiceQuestion({
       {!showResult && question.hints && (
         <div className="mt-4">
           <details className="group">
-            <summary className="cursor-pointer text-sm text-blue-600 hover:text-blue-800">
+            <summary className="cursor-pointer text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
               💡 Show hint
             </summary>
-            <div className="mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-              <p className="text-yellow-800 text-sm">
+            <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <p className="text-yellow-800 dark:text-yellow-200 text-sm">
                 {typeof question.hints === 'string'
                   ? question.hints
                   : (question.hints as any)?.de || (question.hints as any)?.en || ''}

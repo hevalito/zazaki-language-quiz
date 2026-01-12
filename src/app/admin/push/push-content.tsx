@@ -105,14 +105,14 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                 <TabsContent value="send">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Form */}
-                        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+                        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-800 transition-colors">
                             <form onSubmit={handleSend} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Segment</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Segment</label>
                                     <select
                                         value={formData.segment}
                                         onChange={e => setFormData({ ...formData, segment: e.target.value })}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        className="w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                                     >
                                         <option value="ALL">All Subscribers</option>
                                         <option value="DAILY">Daily Reminder Opt-ins</option>
@@ -122,36 +122,36 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                                     <input
                                         type="text"
                                         required
                                         value={formData.title}
                                         onChange={e => setFormData({ ...formData, title: e.target.value })}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        className="w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                         placeholder="e.g., New Challenge Available!"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Body</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Body</label>
                                     <textarea
                                         required
                                         rows={3}
                                         value={formData.body}
                                         onChange={e => setFormData({ ...formData, body: e.target.value })}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        className="w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                         placeholder="e.g., Check out the new Zazaki verbs quiz..."
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Target URL (Optional)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target URL (Optional)</label>
                                     <input
                                         type="text"
                                         value={formData.url}
                                         onChange={e => setFormData({ ...formData, url: e.target.value })}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        className="w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                         placeholder="/quiz/daily"
                                     />
                                 </div>
@@ -177,37 +177,37 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
 
                         {/* Results/Preview */}
                         <div className="space-y-6">
-                            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                                <h3 className="text-sm font-medium text-gray-900 mb-4 flex items-center">
-                                    <BellIcon className="w-5 h-5 mr-2 text-gray-500" />
+                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                                    <BellIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
                                     Preview
                                 </h3>
-                                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                                     <div className="flex items-start space-x-3">
-                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
                                             <img src="/icon-192x192.png" className="w-8 h-8 rounded-full" alt="Icon" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">{formData.title || 'Notification Title'}</p>
-                                            <p className="text-sm text-gray-600">{formData.body || 'Notification body text will appear here...'}</p>
+                                            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{formData.title || 'Notification Title'}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300">{formData.body || 'Notification body text will appear here...'}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             {result && (
-                                <div className={`rounded-lg p-4 border ${result.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                                <div className={`rounded-lg p-4 border ${result.success ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'}`}>
                                     <div className="flex">
                                         {result.success ? (
-                                            <CheckCircleIcon className="h-5 w-5 text-green-400 mr-2" />
+                                            <CheckCircleIcon className="h-5 w-5 text-green-400 dark:text-green-500 mr-2" />
                                         ) : (
-                                            <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-2" />
+                                            <ExclamationTriangleIcon className="h-5 w-5 text-red-400 dark:text-red-500 mr-2" />
                                         )}
                                         <div>
-                                            <h3 className={`text-sm font-medium ${result.success ? 'text-green-800' : 'text-red-800'}`}>
+                                            <h3 className={`text-sm font-medium ${result.success ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
                                                 Broadcast Complete
                                             </h3>
-                                            <div className={`mt-2 text-sm ${result.success ? 'text-green-700' : 'text-red-700'}`}>
+                                            <div className={`mt-2 text-sm ${result.success ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
                                                 <ul className="list-disc pl-5 space-y-1">
                                                     <li>Sent: {result.sent}</li>
                                                     <li>Failed: {result.failed}</li>
@@ -236,32 +236,32 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                         <TableBody>
                             {!history ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8">Loading history...</TableCell>
+                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">Loading history...</TableCell>
                                 </TableRow>
                             ) : history.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8">No history found</TableCell>
+                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">No history found</TableCell>
                                 </TableRow>
                             ) : (
                                 history.map((item) => (
-                                    <TableRow key={item.id}>
-                                        <TableCell>
+                                    <TableRow key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                        <TableCell className="text-gray-900 dark:text-gray-100">
                                             {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString()}
                                         </TableCell>
                                         <TableCell>
-                                            <div className="font-bold">{item.title}</div>
-                                            <div className="text-gray-500 truncate max-w-xs">{item.body}</div>
+                                            <div className="font-bold text-gray-900 dark:text-gray-100">{item.title}</div>
+                                            <div className="text-gray-500 dark:text-gray-400 truncate max-w-xs">{item.body}</div>
                                         </TableCell>
                                         <TableCell>
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
                                                 {item.type}
                                             </span>
                                         </TableCell>
                                         <TableCell>
-                                            <span className="text-green-600 font-medium">{item.sentCount} sent</span>
-                                            {item.failedCount > 0 && <span className="text-red-500 ml-2">({item.failedCount} failed)</span>}
+                                            <span className="text-green-600 dark:text-green-400 font-medium">{item.sentCount} sent</span>
+                                            {item.failedCount > 0 && <span className="text-red-500 dark:text-red-400 ml-2">({item.failedCount} failed)</span>}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-gray-500 dark:text-gray-400">
                                             {item.sentBy?.name || item.sentBy?.email || 'Unknown'}
                                         </TableCell>
                                     </TableRow>

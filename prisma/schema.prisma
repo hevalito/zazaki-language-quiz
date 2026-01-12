@@ -98,6 +98,15 @@ model User {
   sentNotifications NotificationHistory[]
   activities        Activity[]
   feedback          Feedback[]
+
+  // Theme Settings
+  theme Theme @default(SYSTEM)
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
 }
 
 model Feedback {

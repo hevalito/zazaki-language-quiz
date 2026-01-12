@@ -134,15 +134,15 @@ export default function AdminCoursesPage() {
 
             <AdminPageContent>
                 {isCreating && (
-                    <div className="mb-8 bg-white p-6 rounded-lg shadow border border-gray-200">
-                        <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Course</h3>
+                    <div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-800 transition-colors">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Create New Course</h3>
                         <form onSubmit={handleCreate} className="space-y-4">
                             <div className="col-span-2">
                                 {languages.length > 0 && (
                                     <LanguageTabs languages={languages}>
                                         {(lang) => (
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700">
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                                     Title ({lang === 'de' ? 'German' : 'English'})
                                                 </label>
                                                 <input
@@ -153,7 +153,7 @@ export default function AdminCoursesPage() {
                                                         ...newCourse,
                                                         title: { ...newCourse.title, [lang]: e.target.value }
                                                     })}
-                                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                                     placeholder={lang === 'de' ? 'Titel eingeben...' : 'Enter title...'}
                                                 />
                                             </div>
@@ -163,11 +163,11 @@ export default function AdminCoursesPage() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Level</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Level</label>
                                     <select
                                         value={newCourse.level}
                                         onChange={e => setNewCourse({ ...newCourse, level: e.target.value })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                     >
                                         {['A0', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
                                             <option key={level} value={level}>{level}</option>
@@ -175,11 +175,11 @@ export default function AdminCoursesPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Dialect/Category</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Dialect/Category</label>
                                     <select
                                         value={newCourse.dialectCode}
                                         onChange={e => setNewCourse({ ...newCourse, dialectCode: e.target.value })}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                     >
                                         {dialects.length > 0 ? dialects.map(d => (
                                             <option key={d.code} value={d.code}>{d.label}</option>
@@ -196,7 +196,7 @@ export default function AdminCoursesPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsCreating(false)}
-                                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                 >
                                     Cancel
                                 </button>
@@ -211,20 +211,20 @@ export default function AdminCoursesPage() {
                     </div>
                 )}
 
-                <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                    <ul role="list" className="divide-y divide-gray-200">
+                <div className="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-200 dark:border-gray-800 transition-colors">
+                    <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
                         {courses.map((course) => (
                             <li key={course.id}>
-                                <div className="px-4 py-4 flex items-center justify-between sm:px-6 hover:bg-gray-50">
+                                <div className="px-4 py-4 flex items-center justify-between sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                     <Link href={`/admin/courses/${course.id}`} className="flex-1 flex items-center justify-between cursor-pointer">
                                         <div className="flex items-center">
-                                            <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                                            <div className="flex-shrink-0 h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold border border-blue-100 dark:border-blue-900/50">
                                                 {course.level}
                                             </div>
                                             <div className="ml-4">
-                                                <h3 className="text-lg font-medium text-blue-600 truncate">{course.title?.en} / {course.title?.de}</h3>
-                                                <p className="text-sm text-gray-500">
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 mr-2">
+                                                <h3 className="text-lg font-medium text-blue-600 dark:text-blue-400 truncate">{course.title?.en} / {course.title?.de}</h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 mr-2 border border-gray-200 dark:border-gray-700">
                                                         {course.dialectCode || 'standard'}
                                                     </span>
                                                     {course._count?.chapters || 0} Chapters
@@ -232,7 +232,7 @@ export default function AdminCoursesPage() {
                                             </div>
                                         </div>
                                         <div>
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${course.isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${course.isPublished ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300'}`}>
                                                 {course.isPublished ? 'Published' : 'Draft'}
                                             </span>
                                         </div>
@@ -246,7 +246,7 @@ export default function AdminCoursesPage() {
                                         </Link>
                                         <button
                                             onClick={() => handleDelete(course.id)}
-                                            className="p-2 text-gray-400 hover:text-red-500"
+                                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400"
                                         >
                                             <TrashIcon className="h-5 w-5" />
                                         </button>

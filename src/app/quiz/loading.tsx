@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function QuizLoading() {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
             {/* Header Skeleton */}
-            <div className="bg-white border-b border-gray-200">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 transition-colors">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
@@ -33,7 +33,7 @@ export default function QuizLoading() {
 
             {/* Question Card Skeleton */}
             <main className="container mx-auto px-4 py-8 max-w-2xl">
-                <div className="bg-white rounded-lg shadow-sm p-6">
+                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6 transition-colors">
                     {/* Meta Row */}
                     <div className="flex justify-between items-center mb-6">
                         <Skeleton className="h-4 w-20" />

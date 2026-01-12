@@ -24,22 +24,22 @@ export function LearningOnboardingModal({ isOpen, onClose }: LearningOnboardingM
     const steps = [
         {
             icon: AcademicCapIcon,
-            color: 'text-blue-500',
-            bg: 'bg-blue-50',
+            color: 'text-blue-500 dark:text-blue-400',
+            bg: 'bg-blue-50 dark:bg-blue-900/20',
             title: t('onboarding.step1.title', 'Willkommen im Lernraum'),
             desc: t('onboarding.step1.desc', 'Hier festigst du dein Wissen. Wir verfolgen jede Vokabel und helfen dir, sie dauerhaft zu behalten.')
         },
         {
             icon: ArrowPathIcon,
-            color: 'text-orange-500',
-            bg: 'bg-orange-50',
+            color: 'text-orange-500 dark:text-orange-400',
+            bg: 'bg-orange-50 dark:bg-orange-900/20',
             title: t('onboarding.step2.title', 'Intelligente Wiederholung'),
             desc: t('onboarding.step2.desc', 'Wir wiederholen Wörter genau dann, wenn du sie vergessen würdest. Fehler sind hier gut – sie helfen uns, deinen Plan anzupassen.')
         },
         {
             icon: SparklesIcon,
-            color: 'text-yellow-500',
-            bg: 'bg-yellow-50',
+            color: 'text-yellow-500 dark:text-yellow-400',
+            bg: 'bg-yellow-50 dark:bg-yellow-900/20',
             title: t('onboarding.step3.title', 'Dein Wissensschatz'),
             desc: t('onboarding.step3.desc', 'Beobachte, wie dein Wissen wächst. Ziel ist es, 100% zu erreichen. Jede Sitzung verbessert deinen Score.')
         }
@@ -79,7 +79,7 @@ export function LearningOnboardingModal({ isOpen, onClose }: LearningOnboardingM
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all relative">
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 p-6 text-left align-middle shadow-xl transition-all relative">
                                 {/* Skip Button */}
                                 <button
                                     onClick={onClose}
@@ -108,12 +108,12 @@ export function LearningOnboardingModal({ isOpen, onClose }: LearningOnboardingM
 
                                             <Dialog.Title
                                                 as="h3"
-                                                className="text-xl font-bold leading-6 text-gray-900 mb-2"
+                                                className="text-xl font-bold leading-6 text-gray-900 dark:text-gray-100 mb-2"
                                             >
                                                 {steps[step].title}
                                             </Dialog.Title>
                                             <div className="mt-2">
-                                                <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xs mx-auto">
                                                     {steps[step].desc}
                                                 </p>
                                             </div>
@@ -128,7 +128,7 @@ export function LearningOnboardingModal({ isOpen, onClose }: LearningOnboardingM
                                         {steps.map((_, i) => (
                                             <div
                                                 key={i}
-                                                className={`w-2 h-2 rounded-full transition-colors duration-300 ${i === step ? 'bg-primary-600 w-4' : 'bg-gray-200'
+                                                className={`w-2 h-2 rounded-full transition-colors duration-300 ${i === step ? 'bg-primary-600 w-4' : 'bg-gray-200 dark:bg-gray-700'
                                                     }`}
                                             />
                                         ))}

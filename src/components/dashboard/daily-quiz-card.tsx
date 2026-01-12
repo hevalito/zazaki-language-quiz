@@ -61,8 +61,8 @@ export function DailyQuizCard() {
     }
 
     if (loading) return (
-        <div className="card animate-pulse h-32 flex items-center justify-center">
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="card animate-pulse h-32 flex items-center justify-center dark:bg-gray-800 border dark:border-gray-700">
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
         </div>
     )
 
@@ -104,13 +104,13 @@ export function DailyQuizCard() {
 
     // State 2: Waiting (Completed or Not Generated)
     return (
-        <div className="card bg-gray-50 border-gray-200 opacity-90">
+        <div className="card bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 opacity-90">
             <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                     <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-gray-500 font-bold uppercase text-xs tracking-wider truncate">{t('daily.context.title', 'Daily Challenge')}</span>
+                        <span className="text-gray-500 dark:text-gray-400 font-bold uppercase text-xs tracking-wider truncate">{t('daily.context.title', 'Daily Challenge')}</span>
                         {status.completed && (
-                            <span className="flex items-center text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full whitespace-nowrap">
+                            <span className="flex items-center text-xs font-bold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full whitespace-nowrap">
                                 <CheckCircleIcon className="w-3 h-3 mr-1" />
                                 <span className="md:hidden">{t('daily.status.completedShort', 'Fertig')}</span>
                                 <span className="hidden md:inline">{t('daily.status.completed', 'Für heute abgeschlossen')}</span>
@@ -119,7 +119,7 @@ export function DailyQuizCard() {
                     </div>
                     <div className="flex items-center text-gray-400 flex-wrap sm:flex-nowrap">
                         <ClockIcon className="w-5 h-5 mr-2 shrink-0" />
-                        <span className="font-mono text-lg font-medium tabular-nums whitespace-nowrap">{timeLeft || t('daily.status.loading', '...')}</span>
+                        <span className="font-mono text-lg font-medium tabular-nums whitespace-nowrap text-gray-900 dark:text-gray-100">{timeLeft || t('daily.status.loading', '...')}</span>
                         <span className="text-xs ml-2 text-gray-400 truncate">{t('daily.status.next', 'Wartezeit')}</span>
                     </div>
                 </div>
@@ -127,7 +127,7 @@ export function DailyQuizCard() {
                 <div className="text-right shrink-0">
                     <button
                         onClick={(e) => { e.stopPropagation(); router.push('/library?tab=daily') }}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium underline whitespace-nowrap"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium underline whitespace-nowrap"
                     >
                         {t('daily.archive.link', 'Archiv')}
                     </button>

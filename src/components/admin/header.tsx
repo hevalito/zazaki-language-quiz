@@ -8,11 +8,11 @@ interface AdminHeaderProps {
 
 export function AdminHeader({ setSidebarOpen }: AdminHeaderProps) {
     return (
-        <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow-sm border-b border-gray-200">
+        <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 lg:pl-0 transition-colors">
             {/* Mobile Menu Button */}
             <button
                 type="button"
-                className="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 lg:hidden"
+                className="px-4 text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 lg:hidden"
                 onClick={() => setSidebarOpen(true)}
             >
                 <span className="sr-only">Open sidebar</span>
@@ -28,9 +28,9 @@ export function AdminHeader({ setSidebarOpen }: AdminHeaderProps) {
                     {/* Back to App Button */}
                     <a
                         href="/"
-                        className="inline-flex items-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+                        className="inline-flex items-center rounded-md border border-transparent bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
                     >
-                        <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4 text-gray-500" />
+                        <ArrowRightOnRectangleIcon className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
                         Back to App
                     </a>
                 </div>

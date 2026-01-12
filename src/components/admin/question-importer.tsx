@@ -155,31 +155,31 @@ export function QuestionImporter({ onCancel, onSuccess }: QuestionImporterProps)
 
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-                <div className="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
-                    <h2 className="text-lg font-medium text-gray-900">Import Questions (CSV)</h2>
-                    <button onClick={onCancel} className="text-gray-400 hover:text-gray-500">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col transition-colors border border-gray-200 dark:border-gray-800">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 rounded-t-lg">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Import Questions (CSV)</h2>
+                    <button onClick={onCancel} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                         <span className="sr-only">Close</span>
                         <XCircleIcon className="h-6 w-6" />
                     </button>
                 </div>
 
-                <div className="p-6 space-y-6 overflow-y-auto flex-1">
-                    <div className="bg-blue-50 p-4 rounded-md flex justify-between items-start">
+                <div className="p-6 space-y-6 overflow-y-auto flex-1 bg-white dark:bg-gray-900">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md flex justify-between items-start border border-blue-100 dark:border-blue-900/50">
                         <div>
-                            <h3 className="text-sm font-medium text-blue-800">Instructions</h3>
-                            <p className="mt-1 text-sm text-blue-700">
+                            <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300">Instructions</h3>
+                            <p className="mt-1 text-sm text-blue-700 dark:text-blue-200">
                                 Upload a CSV file with headers for questions and answers.
                                 Supports <code>_en</code>, <code>_de</code>, <code>_ku</code> suffixes for multilingual content.
                             </p>
-                            <p className="mt-1 text-sm text-blue-700 font-mono text-xs">
+                            <p className="mt-1 text-sm text-blue-700 dark:text-blue-300 font-mono text-xs">
                                 Required: question_*, correct_*<br />
                                 Optional: wrong1_*, wrong2_*, wrong3_*, points, difficulty
                             </p>
                         </div>
                         <button
                             onClick={downloadTemplate}
-                            className="inline-flex items-center px-3 py-2 border border-blue-300 shadow-sm text-sm leading-4 font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50"
+                            className="inline-flex items-center px-3 py-2 border border-blue-300 dark:border-blue-700 shadow-sm text-sm leading-4 font-medium rounded-md text-blue-700 dark:text-blue-300 bg-white dark:bg-blue-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/80"
                         >
                             <DocumentArrowDownIcon className="h-4 w-4 mr-2" />
                             Download Template
@@ -187,30 +187,30 @@ export function QuestionImporter({ onCancel, onSuccess }: QuestionImporterProps)
                     </div>
 
                     {!file ? (
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-blue-500 transition-colors">
+                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center hover:border-blue-500 dark:hover:border-blue-500 transition-colors">
                             <ArrowUpTrayIcon className="mx-auto h-12 w-12 text-gray-400" />
-                            <div className="mt-4 flex text-sm text-gray-600 justify-center">
-                                <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                            <div className="mt-4 flex text-sm text-gray-600 dark:text-gray-400 justify-center">
+                                <label className="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 focus-within:outline-none px-2 rounded">
                                     <span>Upload a file</span>
                                     <input type="file" className="sr-only" accept=".csv" onChange={handleFileChange} />
                                 </label>
                                 <p className="pl-1">or drag and drop</p>
                             </div>
-                            <p className="text-xs text-gray-500">CSV up to 10MB</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">CSV up to 10MB</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span className="font-medium text-gray-900">{file.name}</span>
-                                <button onClick={() => { setFile(null); setPreview([]); setErrors([]); }} className="text-sm text-red-600 hover:text-red-800">
+                                <span className="font-medium text-gray-900 dark:text-gray-100">{file.name}</span>
+                                <button onClick={() => { setFile(null); setPreview([]); setErrors([]); }} className="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
                                     Change File
                                 </button>
                             </div>
 
                             {errors.length > 0 && (
-                                <div className="bg-red-50 p-4 rounded-md">
-                                    <h4 className="text-sm font-medium text-red-800">Validation Errors</h4>
-                                    <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
+                                <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-md border border-red-100 dark:border-red-900/50">
+                                    <h4 className="text-sm font-medium text-red-800 dark:text-red-300">Validation Errors</h4>
+                                    <ul className="mt-2 text-sm text-red-700 dark:text-red-400 list-disc list-inside">
                                         {errors.map((e, i) => <li key={i}>{e}</li>)}
                                     </ul>
                                 </div>
@@ -218,33 +218,33 @@ export function QuestionImporter({ onCancel, onSuccess }: QuestionImporterProps)
 
                             {preview.length > 0 && (
                                 <div>
-                                    <h4 className="text-sm font-medium text-gray-900 mb-2">Preview ({preview.length} valid questions)</h4>
-                                    <div className="border rounded-md overflow-hidden max-h-60 overflow-y-auto">
-                                        <table className="min-w-full divide-y divide-gray-200">
-                                            <thead className="bg-gray-50">
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Preview ({preview.length} valid questions)</h4>
+                                    <div className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden max-h-60 overflow-y-auto">
+                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                                            <thead className="bg-gray-50 dark:bg-gray-800/50">
                                                 <tr>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Choices</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Question</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Choices</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Points</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="bg-white divide-y divide-gray-200">
+                                            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                                                 {preview.slice(0, 10).map((q, i) => (
                                                     <tr key={i}>
-                                                        <td className="px-6 py-4 text-sm text-gray-900">
+                                                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                                             <div>{q.prompt.en || Object.values(q.prompt)[0]}</div>
-                                                            <div className="text-xs text-gray-500">{Object.keys(q.prompt).join(', ')}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">{Object.keys(q.prompt).join(', ')}</div>
                                                         </td>
-                                                        <td className="px-6 py-4 text-sm text-gray-500">
+                                                        <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                                                             {q.choices.length} choices
-                                                            <div className="text-xs text-green-600">Correct: {q.choices.find((c: any) => c.isCorrect)?.label?.en || 'Yes'}</div>
+                                                            <div className="text-xs text-green-600 dark:text-green-400">Correct: {q.choices.find((c: any) => c.isCorrect)?.label?.en || 'Yes'}</div>
                                                         </td>
-                                                        <td className="px-6 py-4 text-sm text-gray-500">{q.points}</td>
+                                                        <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{q.points}</td>
                                                     </tr>
                                                 ))}
                                                 {preview.length > 10 && (
                                                     <tr>
-                                                        <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">
+                                                        <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                                                             ...and {preview.length - 10} more
                                                         </td>
                                                     </tr>
@@ -258,10 +258,10 @@ export function QuestionImporter({ onCancel, onSuccess }: QuestionImporterProps)
                     )}
                 </div>
 
-                <div className="p-4 border-t bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-lg flex justify-end space-x-3">
                     <button
                         onClick={onCancel}
-                        className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                         Cancel
                     </button>

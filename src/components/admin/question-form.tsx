@@ -190,17 +190,17 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
     }
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 flex items-center justify-center p-4 backdrop-blur-sm">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-800">
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     <div className="flex justify-between items-start">
-                        <h3 className="text-lg font-medium text-gray-900">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                             {initialData ? 'Edit Question' : 'New Question'}
                         </h3>
                         <button
                             type="button"
                             onClick={onCancel}
-                            className="text-gray-400 hover:text-gray-500"
+                            className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
                         >
                             <span className="sr-only">Close</span>
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -213,11 +213,11 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                     <div className="grid grid-cols-2 gap-4">
                         {/* Type */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Type</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Type</label>
                             <select
                                 value={formData.type}
                                 onChange={e => setFormData({ ...formData, type: e.target.value })}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                             >
                                 <option value="MULTIPLE_CHOICE">Multiple Choice</option>
                                 <option value="TRUE_FALSE">True / False</option>
@@ -226,13 +226,13 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
 
                         {/* Points */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Points</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Points</label>
                             <input
                                 type="number"
                                 min="0"
                                 value={formData.points}
                                 onChange={e => setFormData({ ...formData, points: Number(e.target.value) })}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                             />
                         </div>
                     </div>
@@ -248,7 +248,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                                 type="button"
                                                 onClick={() => handleAutoTranslate(lang)}
                                                 disabled={translating}
-                                                className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+                                                className="inline-flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 disabled:opacity-50"
                                             >
                                                 {translating ? (
                                                     <span className="mr-1 animate-spin">⏳</span>
@@ -261,7 +261,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                     )}
                                     {/* Prompt */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                             Question Prompt ({languages.find(l => l.code === lang)?.name || lang})
                                         </label>
                                         <textarea
@@ -272,14 +272,14 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                                 ...formData,
                                                 prompt: { ...formData.prompt, [lang]: e.target.value }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                                             placeholder={lang === 'de' ? 'Frage eingeben...' : `Enter question (${lang})...`}
                                         />
                                     </div>
 
                                     {/* Choices */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Choices ({languages.find(l => l.code === lang)?.name || lang})
                                         </label>
                                         <div className="space-y-3">
@@ -296,7 +296,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                                             }))
                                                             setFormData((prev: any) => ({ ...prev, choices: newChoices }))
                                                         }}
-                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700"
                                                     />
                                                     <input
                                                         type="text"
@@ -306,7 +306,7 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                                                             ...choice.label,
                                                             [lang]: e.target.value
                                                         })}
-                                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
                                                         placeholder={lang === 'de' ? `Option ${index + 1}` : `Option ${index + 1} (${lang})`}
                                                         // Lock labels for T/F
                                                         disabled={formData.type === 'TRUE_FALSE'}
@@ -338,11 +338,11 @@ export function QuestionForm({ quizId, initialData, onSave, onCancel }: Question
                         </LanguageTabs>
                     )}
 
-                    <div className="flex justify-end pt-4 border-t border-gray-200">
+                    <div className="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-800">
                         <button
                             type="button"
                             onClick={onCancel}
-                            className="mr-3 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                            className="mr-3 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
                             Cancel
                         </button>

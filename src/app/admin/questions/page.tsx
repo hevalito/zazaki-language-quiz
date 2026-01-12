@@ -99,9 +99,9 @@ export default function QuestionsAdmin() {
                     <div className="flex space-x-3">
                         <button
                             onClick={() => setShowImport(true)}
-                            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
-                            <ArrowUpTrayIcon className="w-5 h-5 mr-2 text-gray-500" />
+                            <ArrowUpTrayIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
                             Import CSV
                         </button>
                         <button
@@ -118,7 +118,7 @@ export default function QuestionsAdmin() {
             <AdminPageContent>
 
                 {/* Filters & Sort Toolbar */}
-                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
+                <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4 transition-colors">
                     <div className="flex flex-wrap items-center gap-4">
                         <div className="flex items-center space-x-2">
                             <FunnelIcon className="w-5 h-5 text-gray-400" />
@@ -126,12 +126,12 @@ export default function QuestionsAdmin() {
                         </div>
 
                         {/* Filter: Pool Status */}
-                        <div className="flex bg-gray-100 rounded-lg p-1">
+                        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                             <button
                                 onClick={() => setFilterPool(true)}
                                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${filterPool
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                                     }`}
                             >
                                 Pool Only
@@ -139,8 +139,8 @@ export default function QuestionsAdmin() {
                             <button
                                 onClick={() => setFilterPool(false)}
                                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${!filterPool
-                                    ? 'bg-white text-gray-900 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900'
+                                    ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                                     }`}
                             >
                                 All
@@ -151,7 +151,7 @@ export default function QuestionsAdmin() {
                         <select
                             value={filterDifficulty}
                             onChange={(e) => setFilterDifficulty(e.target.value)}
-                            className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="all">Difficulty (All)</option>
                             {[1, 2, 3, 4, 5].map(d => (
@@ -163,7 +163,7 @@ export default function QuestionsAdmin() {
                         <select
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value)}
-                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-40 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="all">Type (All)</option>
                             <option value="MULTIPLE_CHOICE">Multiple Choice</option>
@@ -173,12 +173,12 @@ export default function QuestionsAdmin() {
                         </select>
                     </div>
 
-                    <div className="flex items-center space-x-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 w-full md:w-auto">
-                        <span className="text-sm text-gray-500">Sort by:</span>
+                    <div className="flex items-center space-x-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700 w-full md:w-auto">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Sort by:</span>
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                            className="block w-32 pl-3 pr-10 py-1.5 text-sm border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                         >
                             <option value="createdAt">Date Added</option>
                             <option value="points">Points</option>
@@ -186,7 +186,7 @@ export default function QuestionsAdmin() {
                         </select>
                         <button
                             onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-md hover:bg-gray-100"
+                            className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                             title={sortOrder === 'asc' ? "Ascending" : "Descending"}
                         >
                             {sortOrder === 'asc' ? (

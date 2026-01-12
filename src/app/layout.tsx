@@ -95,8 +95,8 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className="h-full">
-      <body className={`${inter.variable} ${playfair.variable} font-sans h-full bg-gray-50 text-gray-900`}>
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body className={`${inter.variable} ${playfair.variable} font-sans min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
         <Providers session={session}>
           <TranslationProvider dictionary={dictionary} locale="de">
             <UnlockManager />

@@ -40,13 +40,13 @@ export function FilterBar({
     return (
         <div className="flex flex-col sm:flex-row gap-4 mb-6 overflow-x-auto pb-2">
             <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-500 whitespace-nowrap">Kategorie:</span>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Kategorie:</span>
                 <div className="flex gap-2">
                     <button
                         onClick={() => onCourseChange('')}
                         className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === ''
                             ? 'bg-primary-500 text-gray-900 border border-transparent'
-                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                            : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                     >
                         Alle
@@ -55,7 +55,7 @@ export function FilterBar({
                         onClick={() => onCourseChange('daily')}
                         className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === 'daily'
                             ? 'bg-indigo-500 text-white border border-transparent'
-                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                            : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                     >
                         Daily Challenges
@@ -66,7 +66,7 @@ export function FilterBar({
                             onClick={() => onCourseChange(course.id)}
                             className={`px-3 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap ${currentCourseId === course.id
                                 ? 'bg-primary-500 text-gray-900 border border-transparent'
-                                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                                : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                                 }`}
                         >
                             {course.title?.de || course.title?.en}
@@ -76,15 +76,15 @@ export function FilterBar({
             </div>
 
             <div className="flex items-center gap-2 sm:ml-auto">
-                <span className="text-sm font-medium text-gray-500 whitespace-nowrap">Status:</span>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Status:</span>
                 <div className="flex gap-2">
                     {statuses.map((status) => (
                         <button
                             key={status.id}
                             onClick={() => onStatusChange(status.id)}
                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${currentStatus === status.id
-                                ? 'bg-gray-900 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                                 }`}
                         >
                             {status.label}

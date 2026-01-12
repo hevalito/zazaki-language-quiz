@@ -60,10 +60,10 @@ export function NotificationSettingsForm({ initialSettings }: NotificationSettin
     return (
         <div className="grid gap-6">
             {/* Global Master Switch */}
-            <Card>
+            <Card className="dark:bg-gray-900 dark:border-gray-800">
                 <CardHeader>
-                    <CardTitle>Global Automation</CardTitle>
-                    <CardDescription>Master switch for all automated push notifications.</CardDescription>
+                    <CardTitle className="dark:text-gray-100">Global Automation</CardTitle>
+                    <CardDescription className="dark:text-gray-400">Master switch for all automated push notifications.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex items-center space-x-4">
                     <Switch
@@ -71,33 +71,34 @@ export function NotificationSettingsForm({ initialSettings }: NotificationSettin
                         checked={getValue('push_global_enabled', false)}
                         onCheckedChange={(c) => handleToggle('push_global_enabled', c)}
                     />
-                    <Label htmlFor="global-push">Enable Automated Pushes</Label>
+                    <Label htmlFor="global-push" className="dark:text-gray-200">Enable Automated Pushes</Label>
                 </CardContent>
             </Card>
 
             <div className="grid gap-6 md:grid-cols-2">
                 {/* Daily Challenge */}
-                <Card>
+                <Card className="dark:bg-gray-900 dark:border-gray-800">
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle>Daily Challenge</CardTitle>
+                            <CardTitle className="dark:text-gray-100">Daily Challenge</CardTitle>
                             <Switch
                                 checked={getValue('push_daily_challenge_enabled', false)}
                                 onCheckedChange={(c) => handleToggle('push_daily_challenge_enabled', c)}
                                 disabled={!getValue('push_global_enabled', false)}
                             />
                         </div>
-                        <CardDescription>Sent every morning to all subscribed users.</CardDescription>
+                        <CardDescription className="dark:text-gray-400">Sent every morning to all subscribed users.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Message Template (German)</Label>
+                            <Label className="dark:text-gray-200">Message Template (German)</Label>
                             <Textarea
+                                className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                                 value={getValue('push_template_daily_challenge', DEFAULTS.daily_challenge)}
                                 onChange={(e) => handleTextChange('push_template_daily_challenge', e.target.value)}
                                 rows={3}
                             />
-                            <p className="text-xs text-muted-foreground">Available variables: <code>{'{username}'}</code></p>
+                            <p className="text-xs text-muted-foreground dark:text-gray-500">Available variables: <code>{'{username}'}</code></p>
                         </div>
                         <Button
                             onClick={() => saveTemplate('push_template_daily_challenge')}
@@ -111,27 +112,28 @@ export function NotificationSettingsForm({ initialSettings }: NotificationSettin
                 </Card>
 
                 {/* Streak Saver */}
-                <Card>
+                <Card className="dark:bg-gray-900 dark:border-gray-800">
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle>Streak Saver</CardTitle>
+                            <CardTitle className="dark:text-gray-100">Streak Saver</CardTitle>
                             <Switch
                                 checked={getValue('push_streak_saver_enabled', false)}
                                 onCheckedChange={(c) => handleToggle('push_streak_saver_enabled', c)}
                                 disabled={!getValue('push_global_enabled', false)}
                             />
                         </div>
-                        <CardDescription>Sent in the evening to users at risk of breaking streak.</CardDescription>
+                        <CardDescription className="dark:text-gray-400">Sent in the evening to users at risk of breaking streak.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Message Template (German)</Label>
+                            <Label className="dark:text-gray-200">Message Template (German)</Label>
                             <Textarea
+                                className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                                 value={getValue('push_template_streak_saver', DEFAULTS.streak_saver)}
                                 onChange={(e) => handleTextChange('push_template_streak_saver', e.target.value)}
                                 rows={3}
                             />
-                            <p className="text-xs text-muted-foreground">Available variables: <code>{'{streak}'}</code>, <code>{'{username}'}</code></p>
+                            <p className="text-xs text-muted-foreground dark:text-gray-500">Available variables: <code>{'{streak}'}</code>, <code>{'{username}'}</code></p>
                         </div>
                         <Button
                             onClick={() => saveTemplate('push_template_streak_saver')}
@@ -145,27 +147,28 @@ export function NotificationSettingsForm({ initialSettings }: NotificationSettin
                 </Card>
 
                 {/* Inactivity */}
-                <Card>
+                <Card className="dark:bg-gray-900 dark:border-gray-800">
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle>Inactivity Rescue</CardTitle>
+                            <CardTitle className="dark:text-gray-100">Inactivity Rescue</CardTitle>
                             <Switch
                                 checked={getValue('push_inactivity_enabled', false)}
                                 onCheckedChange={(c) => handleToggle('push_inactivity_enabled', c)}
                                 disabled={!getValue('push_global_enabled', false)}
                             />
                         </div>
-                        <CardDescription>Sent after 3 days of inactivity.</CardDescription>
+                        <CardDescription className="dark:text-gray-400">Sent after 3 days of inactivity.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Message Template (German)</Label>
+                            <Label className="dark:text-gray-200">Message Template (German)</Label>
                             <Textarea
+                                className="dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
                                 value={getValue('push_template_inactivity', DEFAULTS.inactivity)}
                                 onChange={(e) => handleTextChange('push_template_inactivity', e.target.value)}
                                 rows={3}
                             />
-                            <p className="text-xs text-muted-foreground">Available variables: <code>{'{username}'}</code></p>
+                            <p className="text-xs text-muted-foreground dark:text-gray-500">Available variables: <code>{'{username}'}</code></p>
                         </div>
                         <Button
                             onClick={() => saveTemplate('push_template_inactivity')}

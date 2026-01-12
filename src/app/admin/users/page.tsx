@@ -136,7 +136,7 @@ export default function AdminUsersPage() {
                         </div>
                         <input
                             type="text"
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md leading-5 bg-white dark:bg-gray-900 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-colors"
                             placeholder="Search users..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -146,7 +146,7 @@ export default function AdminUsersPage() {
                         <select
                             value={roleFilter}
                             onChange={(e) => setRoleFilter(e.target.value as any)}
-                            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+                            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md transition-colors"
                         >
                             <option value="ALL">All Roles</option>
                             <option value="ADMIN">Admins</option>
@@ -156,7 +156,7 @@ export default function AdminUsersPage() {
                 </div>
 
                 {/* Users Table */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -171,10 +171,10 @@ export default function AdminUsersPage() {
                             {isLoading ? (
                                 [...Array(5)].map((_, i) => (
                                     <TableRow key={i} className="animate-pulse">
-                                        <TableCell><div className="h-4 bg-gray-200 rounded w-3/4"></div></TableCell>
-                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
-                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
-                                        <TableCell><div className="h-4 bg-gray-200 rounded w-1/2"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></TableCell>
+                                        <TableCell><div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div></TableCell>
                                         <TableCell></TableCell>
                                     </TableRow>
                                 ))
@@ -186,10 +186,10 @@ export default function AdminUsersPage() {
                                 </TableRow>
                             ) : (
                                 users?.map((user) => (
-                                    <TableRow key={user.id}>
+                                    <TableRow key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                         <TableCell>
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 relative rounded-full overflow-hidden bg-gray-100">
+                                                <div className="h-10 w-10 flex-shrink-0 relative rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
                                                     {user.image ? (
                                                         <Image src={user.image} alt="" fill className="object-cover" />
                                                     ) : (
@@ -199,34 +199,34 @@ export default function AdminUsersPage() {
                                                     )}
                                                 </div>
                                                 <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                         {getUserDisplayName(user)}
                                                         {(user._count?.pushSubscriptions ?? 0) > 0 && (
-                                                            <span className="ml-2 text-primary-600" title="Web Push Enabled">
+                                                            <span className="ml-2 text-primary-600 dark:text-primary-400" title="Web Push Enabled">
                                                                 <BellIcon className="w-4 h-4 inline" />
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <div className="text-sm text-gray-500">{user.email}</div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                                                 </div>
                                             </div>
                                         </TableCell>
                                         <TableCell>
                                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isAdmin
-                                                ? 'bg-purple-100 text-purple-800'
-                                                : 'bg-green-100 text-green-800'
+                                                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300'
+                                                : 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
                                                 }`}
                                             >
                                                 {user.isAdmin ? 'Admin' : 'Student'}
                                             </span>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="text-sm text-gray-900">Level {user.currentLevel || 'A1'}</div>
-                                            <div className="text-sm text-gray-500">{user.totalXP || 0} XP</div>
+                                            <div className="text-sm text-gray-900 dark:text-gray-100">Level {user.currentLevel || 'A1'}</div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">{user.totalXP || 0} XP</div>
                                             {/* @ts-ignore */}
                                             {user.courseFinderData?.result?.dialect && (
                                                 <div className="mt-1">
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
                                                         {/* @ts-ignore */}
                                                         {user.courseFinderData.result.dialect}
                                                     </span>
@@ -234,22 +234,22 @@ export default function AdminUsersPage() {
                                             )}
                                         </TableCell>
                                         <TableCell>
-                                            <div className="text-sm text-gray-900">Joined {new Date(user.createdAt).toLocaleDateString()}</div>
-                                            <div className="text-sm text-gray-500">
+                                            <div className="text-sm text-gray-900 dark:text-gray-100">Joined {new Date(user.createdAt).toLocaleDateString()}</div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
                                                 Last Active: {user.lastActiveDate ? new Date(user.lastActiveDate).toLocaleDateString() : 'Never'}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <button
                                                 onClick={() => setEditingUser(user)}
-                                                className="text-primary-600 hover:text-primary-900 mr-4"
+                                                className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300 mr-4"
                                                 title="Edit User"
                                             >
                                                 <PencilIcon className="h-5 w-5" />
                                             </button>
                                             <button
                                                 onClick={() => confirmDelete(user)}
-                                                className="text-red-600 hover:text-red-900"
+                                                className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                                                 title="Delete User"
                                             >
                                                 <TrashIcon className="h-5 w-5" />
@@ -265,10 +265,10 @@ export default function AdminUsersPage() {
 
             {/* Edit User Modal */}
             {editingUser && (
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-auto shadow-xl">
+                <div className="fixed inset-0 bg-gray-500/75 dark:bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto backdrop-blur-sm">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 max-w-2xl w-full mx-auto shadow-2xl border border-gray-100 dark:border-gray-800">
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-lg font-medium text-gray-900">Edit User: {editingUser.email}</h3>
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Edit User: {editingUser.email}</h3>
                             <button onClick={() => setEditingUser(null)} className="text-gray-400 hover:text-gray-500">
                                 <XMarkIcon className="h-6 w-6" />
                             </button>
@@ -277,53 +277,53 @@ export default function AdminUsersPage() {
                         <form onSubmit={handleEditSave} className="space-y-6">
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">First Name</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">First Name</label>
                                     <input
                                         type="text"
                                         value={editingUser.firstName || ''}
                                         onChange={(e) => setEditingUser({ ...editingUser, firstName: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                        className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last Name</label>
                                     <input
                                         type="text"
                                         value={editingUser.lastName || ''}
                                         onChange={(e) => setEditingUser({ ...editingUser, lastName: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                        className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Display Name</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Display Name</label>
                                     <input
                                         type="text"
                                         value={editingUser.name || ''}
                                         onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                        className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Nickname</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nickname</label>
                                     <input
                                         type="text"
                                         value={editingUser.nickname || ''}
                                         onChange={(e) => setEditingUser({ ...editingUser, nickname: e.target.value })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                        className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Daily Goal (XP)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Daily Goal (XP)</label>
                                     <input
                                         type="number"
                                         value={editingUser.dailyGoal || 100}
                                         onChange={(e) => setEditingUser({ ...editingUser, dailyGoal: parseInt(e.target.value) })}
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                        className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400"
                                     />
                                 </div>
                             </div>
 
-                            <div className="bg-gray-50 p-4 rounded-md">
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-md border border-gray-100 dark:border-gray-700">
                                 <div className="flex items-center">
                                     <input
                                         id="isAdmin"
@@ -332,30 +332,30 @@ export default function AdminUsersPage() {
                                         onChange={(e) => setEditingUser({ ...editingUser, isAdmin: e.target.checked })}
                                         className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                                     />
-                                    <label htmlFor="isAdmin" className="ml-2 block text-sm font-medium text-gray-900">
+                                    <label htmlFor="isAdmin" className="ml-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
                                         Administrator Privileges
                                     </label>
                                 </div>
-                                <p className="mt-1 text-xs text-gray-500 ml-6">Grants full access to this dashboard, course editor, and user management.</p>
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 ml-6">Grants full access to this dashboard, course editor, and user management.</p>
                             </div>
 
                             {/* Read-Only Stats */}
-                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                                <div className="p-3 bg-gray-50 rounded">
-                                    <span className="block text-xs font-bold text-gray-400 uppercase">Total XP</span>
-                                    <span className="font-mono text-lg">{editingUser.totalXP}</span>
+                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded border border-gray-100 dark:border-gray-700">
+                                    <span className="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Total XP</span>
+                                    <span className="font-mono text-lg text-gray-900 dark:text-gray-100">{editingUser.totalXP}</span>
                                 </div>
-                                <div className="p-3 bg-gray-50 rounded">
-                                    <span className="block text-xs font-bold text-gray-400 uppercase">Current Level</span>
-                                    <span className="font-mono text-lg">{editingUser.currentLevel}</span>
+                                <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded border border-gray-100 dark:border-gray-700">
+                                    <span className="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Current Level</span>
+                                    <span className="font-mono text-lg text-gray-900 dark:text-gray-100">{editingUser.currentLevel}</span>
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 justify-end pt-4 border-t border-gray-100">
+                            <div className="flex gap-3 justify-end pt-4 border-t border-gray-100 dark:border-gray-700">
                                 <button
                                     type="button"
                                     onClick={() => setEditingUser(null)}
-                                    className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:text-sm"
+                                    className="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:text-sm"
                                 >
                                     Cancel
                                 </button>
@@ -370,8 +370,8 @@ export default function AdminUsersPage() {
                         </form>
 
                         {/* Danger Zone */}
-                        <div className="mt-8 pt-6 border-t border-gray-200">
-                            <h4 className="text-sm font-medium text-red-600 mb-4">Danger Zone</h4>
+                        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <h4 className="text-sm font-medium text-red-600 dark:text-red-400 mb-4">Danger Zone</h4>
                             <ResetUserBadgesButton userId={editingUser.id} />
                         </div>
                     </div>
@@ -410,7 +410,7 @@ function ResetUserBadgesButton({ userId }: { userId: string }) {
             type="button"
             onClick={handleReset}
             disabled={loading}
-            className="w-full inline-flex justify-center items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="w-full inline-flex justify-center items-center px-4 py-2 border border-red-300 dark:border-red-900/50 shadow-sm text-sm font-medium rounded-md text-red-700 dark:text-red-400 bg-white dark:bg-red-900/10 hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
         >
             {loading ? 'Resetting...' : 'Reset User Achievements'}
         </button>

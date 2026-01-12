@@ -168,17 +168,17 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
     const getTitle = (title: any) => title?.en || title?.de || 'Untitled'
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-900 shadow px-4 py-5 sm:rounded-lg sm:p-6 transition-colors">
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
 
                 {/* Lesson Select */}
                 <div className="sm:col-span-4">
-                    <label className="block text-sm font-medium text-gray-700">Lesson</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Lesson</label>
                     <select
                         required
                         value={formData.lessonId}
                         onChange={e => setFormData({ ...formData, lessonId: e.target.value })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     >
                         <option value="">Select a Lesson</option>
                         {lessons.map(lesson => (
@@ -191,12 +191,12 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
 
                 {/* Order */}
                 <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700">Order</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Order</label>
                     <input
                         type="number"
                         value={formData.order}
                         onChange={e => setFormData({ ...formData, order: Number(e.target.value) })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     />
                 </div>
 
@@ -212,7 +212,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                                 type="button"
                                                 onClick={() => handleAutoTranslate(lang)}
                                                 disabled={translating}
-                                                className="inline-flex items-center text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+                                                className="inline-flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 disabled:opacity-50"
                                             >
                                                 {translating ? (
                                                     <span className="mr-1 animate-spin">⏳</span>
@@ -224,7 +224,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                         </div>
                                     )}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                             Title ({languages.find(l => l.code === lang)?.name || lang})
                                         </label>
                                         <input
@@ -235,11 +235,11 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                                 ...formData,
                                                 title: { ...formData.title, [lang]: e.target.value }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                             Description ({languages.find(l => l.code === lang)?.name || lang})
                                         </label>
                                         <textarea
@@ -249,7 +249,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                                 ...formData,
                                                 description: { ...formData.description, [lang]: e.target.value }
                                             })}
-                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                                         />
                                     </div>
                                 </div>
@@ -267,12 +267,12 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                 type="checkbox"
                                 checked={formData.isPublished}
                                 onChange={e => setFormData({ ...formData, isPublished: e.target.checked })}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
                             />
                         </div>
                         <div className="ml-3 text-sm">
-                            <label htmlFor="isPublished" className="font-medium text-gray-700">Published</label>
-                            <p className="text-gray-500">Visible to users in the app.</p>
+                            <label htmlFor="isPublished" className="font-medium text-gray-700 dark:text-gray-300">Published</label>
+                            <p className="text-gray-500 dark:text-gray-400">Visible to users in the app.</p>
                         </div>
                     </div>
 
@@ -283,12 +283,12 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                 type="checkbox"
                                 checked={formData.randomizeQuestions}
                                 onChange={e => setFormData({ ...formData, randomizeQuestions: e.target.checked })}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
                             />
                         </div>
                         <div className="ml-3 text-sm">
-                            <label htmlFor="randomizeQuestions" className="font-medium text-gray-700">Randomize Questions</label>
-                            <p className="text-gray-500">Shuffle questions every time a user plays this quiz.</p>
+                            <label htmlFor="randomizeQuestions" className="font-medium text-gray-700 dark:text-gray-300">Randomize Questions</label>
+                            <p className="text-gray-500 dark:text-gray-400">Shuffle questions every time a user plays this quiz.</p>
                         </div>
                     </div>
 
@@ -299,12 +299,12 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                                 type="checkbox"
                                 checked={formData.randomizeAnswers}
                                 onChange={e => setFormData({ ...formData, randomizeAnswers: e.target.checked })}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 bg-white dark:bg-gray-800"
                             />
                         </div>
                         <div className="ml-3 text-sm">
-                            <label htmlFor="randomizeAnswers" className="font-medium text-gray-700">Randomize Answers</label>
-                            <p className="text-gray-500">Shuffle answer options for each question (Default: On).</p>
+                            <label htmlFor="randomizeAnswers" className="font-medium text-gray-700 dark:text-gray-300">Randomize Answers</label>
+                            <p className="text-gray-500 dark:text-gray-400">Shuffle answer options for each question (Default: On).</p>
                         </div>
                     </div>
                 </div>
@@ -315,7 +315,7 @@ export function QuizForm({ initialData, isEditing = false }: QuizFormProps) {
                 <button
                     type="button"
                     onClick={() => router.push('/admin/quizzes')}
-                    className="mr-3 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                    className="mr-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                     Cancel
                 </button>

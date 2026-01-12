@@ -29,7 +29,7 @@ const TabsList = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 dark:border-gray-800">
         <div
             ref={ref}
             className={cn("-mb-px flex space-x-8", className)}
@@ -59,7 +59,7 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
                     "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-all",
                     isActive
                         ? "border-primary-500 text-primary-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
+                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700",
                     className
                 )}
                 {...props}

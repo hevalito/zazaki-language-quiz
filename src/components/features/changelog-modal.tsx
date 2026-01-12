@@ -70,7 +70,7 @@ export function ChangelogModal() {
                         initial={{ scale: 0.95, opacity: 0, y: 20 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                        className="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+                        className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
                     >
                         {/* Decorative Header Background */}
                         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-indigo-500 to-purple-600" />
@@ -78,22 +78,22 @@ export function ChangelogModal() {
                         {/* Content Container */}
                         <div className="relative px-6 pt-12 pb-6">
                             {/* Icon Bubble */}
-                            <div className="mx-auto w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center mb-6 transform rotate-3">
-                                <CURRENT_RELEASE.featureIcon className="w-10 h-10 text-indigo-600" />
+                            <div className="mx-auto w-20 h-20 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex items-center justify-center mb-6 transform rotate-3">
+                                <CURRENT_RELEASE.featureIcon className="w-10 h-10 text-indigo-600 dark:text-indigo-400" />
                             </div>
 
                             {/* Text Content */}
                             <div className="text-center space-y-4">
                                 <div className="space-y-1">
-                                    <span className="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+                                    <span className="inline-block px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider">
                                         Neu in v{CURRENT_RELEASE.version}
                                     </span>
-                                    <h2 className="text-2xl font-bold text-gray-900 font-serif">
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-serif">
                                         {CURRENT_RELEASE.title}
                                     </h2>
                                 </div>
 
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                                     {CURRENT_RELEASE.description}
                                 </p>
                             </div>
@@ -110,7 +110,7 @@ export function ChangelogModal() {
 
                                 <button
                                     onClick={handleClose}
-                                    className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors"
+                                    className="w-full py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 font-medium transition-colors"
                                 >
                                     Schließen
                                 </button>

@@ -70,7 +70,7 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">Supported Languages</h3>
+                <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Supported Languages</h3>
                 <button
                     onClick={() => setIsAdding(!isAdding)}
                     className="btn-primary text-sm px-3 py-1.5"
@@ -80,26 +80,26 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
             </div>
 
             {isAdding && (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-end gap-3 animate-fade-in">
+                <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-end gap-3 animate-fade-in">
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Code (ISO 2/3)</label>
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Code (ISO 2/3)</label>
                         <input
                             type="text"
                             placeholder="e.g. zza"
                             value={newLangCode}
                             onChange={e => setNewLangCode(e.target.value.toLowerCase())}
-                            className="block w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                            className="block w-24 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                             maxLength={3}
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+                        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
                         <input
                             type="text"
                             placeholder="e.g. Turkish"
                             value={newLangName}
                             onChange={e => setNewLangName(e.target.value)}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
+                            className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                         />
                     </div>
                     <button
@@ -112,17 +112,17 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
                 </div>
             )}
 
-            <div className="bg-white shadow overflow-hidden sm:rounded-md border border-gray-200">
-                <ul className="divide-y divide-gray-200">
+            <div className="bg-white dark:bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-200 dark:border-gray-700">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                     {languages.map((lang) => (
-                        <li key={lang.code} className="px-4 py-4 sm:px-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                        <li key={lang.code} className="px-4 py-4 sm:px-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                             <div className="flex items-center">
-                                <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-100 font-bold text-gray-600 text-xs uppercase mr-3 border border-gray-300">
+                                <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-800 font-bold text-gray-600 dark:text-gray-300 text-xs uppercase mr-3 border border-gray-300 dark:border-gray-600">
                                     {lang.code}
                                 </span>
                                 <div>
-                                    <p className="text-sm font-medium text-blue-600 truncate">{lang.name}</p>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-sm font-medium text-blue-600 dark:text-blue-400 truncate">{lang.name}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
                                         {lang.code === 'de' ? 'Default Language' : lang.isActive ? 'Active' : 'Inactive'}
                                     </p>
                                 </div>
@@ -132,7 +132,7 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
                                 {lang.code !== 'de' && (
                                     <button
                                         onClick={() => handleToggle(lang.code, lang.isActive)}
-                                        className={`p-1 rounded-full ${lang.isActive ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}
+                                        className={`p-1 rounded-full ${lang.isActive ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30' : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
                                         title={lang.isActive ? 'Deactivate' : 'Activate'}
                                     >
                                         {lang.isActive ? <CheckCircleIcon className="w-5 h-5" /> : <XCircleIcon className="w-5 h-5" />}
@@ -143,7 +143,7 @@ export function LanguageSettings({ languages }: LanguageSettingsProps) {
                                 {lang.code !== 'de' && (
                                     <button
                                         onClick={() => handleDelete(lang.code)}
-                                        className="p-1 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-full"
+                                        className="p-1 text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full"
                                         title="Delete Language"
                                     >
                                         <TrashIcon className="w-5 h-5" />

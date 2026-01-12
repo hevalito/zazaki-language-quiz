@@ -66,35 +66,35 @@ export default function LeaderboardPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center space-x-3">
                         <button
                             onClick={() => router.push('/')}
-                            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                            className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
                             aria-label={t('nav.back', 'Zurück')}
                         >
-                            <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                            <ArrowLeftIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                         </button>
-                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                            <TrophyIcon className="w-6 h-6 text-primary-600" />
+                        <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/20 rounded-lg flex items-center justify-center">
+                            <TrophyIcon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-gray-900">{t('leaderboard.title', 'Bestenliste')}</h1>
-                            <p className="text-sm text-gray-500">{t('leaderboard.subtitle', 'Erklimme die Spitze')}</p>
+                            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('leaderboard.title', 'Bestenliste')}</h1>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{t('leaderboard.subtitle', 'Erklimme die Spitze')}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Tabs */}
                 <div className="container mx-auto px-4">
-                    <div className="flex space-x-1 border-b border-gray-200">
+                    <div className="flex space-x-1 border-b border-gray-200 dark:border-gray-800">
                         <button
                             onClick={() => setTimeFrame('weekly')}
                             className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${timeFrame === 'weekly'
-                                ? 'border-primary-500 text-primary-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                                ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                                 }`}
                         >
                             {t('leaderboard.weekly', 'Diese Woche')}
@@ -102,8 +102,8 @@ export default function LeaderboardPage() {
                         <button
                             onClick={() => setTimeFrame('all_time')}
                             className={`flex-1 py-3 text-sm font-bold border-b-2 transition-colors ${timeFrame === 'all_time'
-                                ? 'border-primary-500 text-primary-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                                ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                                 }`}
                         >
                             {t('leaderboard.allTime', 'All Time')}
@@ -129,7 +129,9 @@ export default function LeaderboardPage() {
                                 key={entry.id}
                                 className={`
                     flex items-center justify-between p-4 rounded-xl border shadow-sm transition-all
-                    ${entry.isCurrentUser ? 'ring-2 ring-primary-500 border-primary-200 bg-primary-50' : 'bg-white border-gray-200'}
+                    ${entry.isCurrentUser
+                                        ? 'ring-2 ring-primary-500 border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20'
+                                        : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800'}
                   `}
                             >
                                 <div className="flex items-center space-x-4">
@@ -138,15 +140,15 @@ export default function LeaderboardPage() {
                                     </div>
 
                                     <div className="flex items-center space-x-3">
-                                        <div className="w-10 h-10 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden flex-shrink-0">
                                             {entry.image ? (
                                                 <img src={entry.image} alt={entry.name} className="w-full h-full object-cover" />
                                             ) : (
-                                                <UserCircleIcon className="w-full h-full text-gray-400 p-1" />
+                                                <UserCircleIcon className="w-full h-full text-gray-400 dark:text-gray-500 p-1" />
                                             )}
                                         </div>
                                         <div>
-                                            <p className={`font-bold ${entry.isCurrentUser ? 'text-primary-900' : 'text-gray-900'}`}>
+                                            <p className={`font-bold ${entry.isCurrentUser ? 'text-primary-900 dark:text-primary-100' : 'text-gray-900 dark:text-gray-100'}`}>
                                                 {entry.name} {entry.isCurrentUser && t('leaderboard.you', '(Du)')}
                                             </p>
                                             {/* <p className="text-xs text-gray-500">Level 5</p> */}
@@ -155,7 +157,7 @@ export default function LeaderboardPage() {
                                 </div>
 
                                 <div className="text-right">
-                                    <p className={`font-bold ${entry.isCurrentUser ? 'text-primary-700' : 'text-gray-700'}`}>
+                                    <p className={`font-bold ${entry.isCurrentUser ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>
                                         {entry.xp} XP
                                     </p>
                                 </div>

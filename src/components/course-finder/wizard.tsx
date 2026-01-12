@@ -163,15 +163,15 @@ export default function CourseFinderWizard() {
         if (emailSent) {
             return (
                 <div className="w-full max-w-3xl mx-auto px-4 py-8">
-                    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative">
-                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 animate-bounce-subtle">
+                    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative transition-colors">
+                        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-6 animate-bounce-subtle">
                             <CheckBadgeIcon className="w-10 h-10" />
                         </div>
-                        <h3 className="text-3xl font-serif font-bold text-gray-900 mb-4">{t('courseFinder.success.title', 'Ergebnis gespeichert!')}</h3>
-                        <p className="text-gray-600 max-w-md mx-auto mb-8 text-lg">
+                        <h3 className="text-3xl font-serif font-bold text-gray-900 dark:text-gray-100 mb-4">{t('courseFinder.success.title', 'Ergebnis gespeichert!')}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8 text-lg">
                             {t('courseFinder.success.message', 'Wir haben dir eine E-Mail mit deinem Ergebnis und einem Link zum Anmelden gesendet.')}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-400 dark:text-gray-500">
                             {t('courseFinder.success.checkMail', 'Bitte überprüfe dein Postfach')} ({email}).
                         </p>
                     </div>
@@ -181,13 +181,13 @@ export default function CourseFinderWizard() {
 
         return (
             <div className="w-full max-w-3xl mx-auto px-4 py-8">
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative">
+                <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 min-h-[500px] flex flex-col items-center justify-center p-8 text-center relative transition-colors">
                     <button onClick={handleBack} className="absolute top-6 left-6 text-gray-400 hover:text-gray-600">
                         <ArrowPathIcon className="w-6 h-6 rotate-180" /> {/* Back Icon */}
                     </button>
 
-                    <h2 className="text-3xl font-serif font-bold text-gray-900 mb-2">{t('courseFinder.email.title', 'Fast geschafft!')}</h2>
-                    <p className="text-gray-600 mb-8 max-w-sm mx-auto">
+                    <h2 className="text-3xl font-serif font-bold text-gray-900 dark:text-gray-100 mb-2">{t('courseFinder.email.title', 'Fast geschafft!')}</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-sm mx-auto">
                         {t('courseFinder.email.subtitle', 'Gib deine E-Mail-Adresse ein, um dein persönliches Kursergebnis zu speichern und direkt loszulegen.')}
                     </p>
 
@@ -198,7 +198,7 @@ export default function CourseFinderWizard() {
                             placeholder="deine@email.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-0 text-lg outline-none transition-all placeholder:text-gray-300"
+                            className="w-full px-6 py-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 focus:border-primary-500 focus:ring-0 text-lg outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                         />
                         <button
                             type="submit"
@@ -222,7 +222,7 @@ export default function CourseFinderWizard() {
 
     return (
         <div className="w-full max-w-3xl mx-auto px-4 py-8">
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 min-h-[500px] flex flex-col relative">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 min-h-[500px] flex flex-col relative transition-colors">
 
                 {/* Progress Bar - Brand Primary */}
                 <div className="absolute top-0 left-0 w-full h-2 bg-primary-50">
@@ -242,7 +242,7 @@ export default function CourseFinderWizard() {
                             // Let's show small chips
                             if (node.type === 'question' && history.length > 2 && idx < history.length - 2) return null // Hide old history
                             return (
-                                <span key={nodeId} className="text-xs font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded-full flex items-center">
+                                <span key={nodeId} className="text-xs font-semibold text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-full flex items-center">
                                     <CheckBadgeIcon className="w-3 h-3 mr-1" />
                                     {idx === 0 ? t('common.start', 'Start') : '...'}
                                 </span>
@@ -301,11 +301,11 @@ export default function CourseFinderWizard() {
                                         </div>
 
                                         <div>
-                                            <h2 className="text-sm font-bold tracking-widest text-primary-600 uppercase mb-2">{t('courseFinder.result.yourResult', 'Dein Ergebnis')}</h2>
-                                            <h3 className="text-4xl font-serif font-bold text-gray-900 mb-4">
+                                            <h2 className="text-sm font-bold tracking-widest text-primary-600 dark:text-primary-400 uppercase mb-2">{t('courseFinder.result.yourResult', 'Dein Ergebnis')}</h2>
+                                            <h3 className="text-4xl font-serif font-bold text-gray-900 dark:text-gray-100 mb-4">
                                                 {t(currentNode.result?.recommendation || '', currentNode.result?.recommendation)}
                                             </h3>
-                                            <p className="text-gray-500 font-sans max-w-md mx-auto leading-relaxed">
+                                            <p className="text-gray-500 dark:text-gray-400 font-sans max-w-md mx-auto leading-relaxed">
                                                 {t('courseFinder.result.explanation', 'Wir haben basierend auf deinen Antworten den perfekten Kurs für dich gefunden.')}
                                                 {currentNode.result?.dialect && ` ${t('courseFinder.result.focus', 'Dein Fokus liegt auf dem')} ${t(currentNode.result.dialect, currentNode.result.dialect)} ${t('courseFinder.result.dialectSuffix', 'Dialekt')}.`}
                                             </p>
@@ -325,20 +325,20 @@ export default function CourseFinderWizard() {
                                 ) : (
                                     <div className="space-y-10">
                                         <div className="space-y-4">
-                                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight">
+                                            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-gray-100 leading-tight">
                                                 {t(currentNode.text, currentNode.text)}
                                             </h2>
 
                                             {/* Description Text */}
                                             {currentNode.description && (
-                                                <p className="text-lg text-gray-600 font-medium bg-gray-50 p-4 rounded-xl border border-gray-100 inline-block">
+                                                <p className="text-lg text-gray-600 dark:text-gray-300 font-medium bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 inline-block">
                                                     {t(currentNode.description, currentNode.description)}
                                                 </p>
                                             )}
 
                                             {/* Dynamic Image for Info/Question Nodes (e.g. Map placeholders) */}
                                             {currentNode.image && (
-                                                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-gray-100 my-6">
+                                                <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 my-6">
                                                     <Image
                                                         src={currentNode.image}
                                                         alt="Region Preview"
@@ -354,11 +354,11 @@ export default function CourseFinderWizard() {
                                                 <button
                                                     key={idx}
                                                     onClick={() => handleOptionClick(option.nextId)}
-                                                    className="group w-full p-5 text-left bg-white border-2 border-gray-100 hover:border-primary-500 hover:bg-primary-50/30 rounded-2xl transition-all font-medium text-lg text-gray-700 hover:text-gray-900 flex justify-between items-center shadow-sm hover:shadow-md"
+                                                    className="group w-full p-5 text-left bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 hover:border-primary-500 hover:bg-primary-50/30 dark:hover:bg-primary-900/10 rounded-2xl transition-all font-medium text-lg text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white flex justify-between items-center shadow-sm hover:shadow-md"
                                                 >
                                                     <span>{t(option.label, option.label)}</span>
-                                                    <div className="w-8 h-8 rounded-full bg-gray-100 group-hover:bg-primary-500 flex items-center justify-center transition-colors">
-                                                        <ArrowRightIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-900" />
+                                                    <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 group-hover:bg-primary-500 flex items-center justify-center transition-colors">
+                                                        <ArrowRightIcon className="w-4 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900" />
                                                     </div>
                                                 </button>
                                             ))}
@@ -371,7 +371,7 @@ export default function CourseFinderWizard() {
                 </div>
 
                 {/* Footer Controls */}
-                <div className="p-6 border-t border-gray-50 flex justify-between items-center bg-gray-50/50">
+                <div className="p-6 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                     {history.length > 0 && !calculating ? (
                         <button
                             onClick={handleBack}

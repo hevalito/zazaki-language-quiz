@@ -111,14 +111,14 @@ export function ProfileScreen() {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-24">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-24 transition-colors">
             {/* Header */}
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+            <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-gray-900">{t('nav.profile', 'Profil')}</h1>
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('nav.profile', 'Profil')}</h1>
                     <button
                         onClick={() => router.push('/settings')}
-                        className="p-2 -mr-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                        className="p-2 -mr-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
                         aria-label={t('settings.title', 'Einstellungen')}
                     >
                         <Cog6ToothIcon className="w-6 h-6" />
@@ -129,9 +129,9 @@ export function ProfileScreen() {
             <main className="container mx-auto px-4 py-6 space-y-6">
 
                 {/* User Identity Card */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex items-center space-x-5">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 flex items-center space-x-5 transition-colors">
                     <div className="relative">
-                        <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center overflow-hidden border-4 border-white shadow-sm ring-1 ring-gray-100">
+                        <div className="w-20 h-20 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center overflow-hidden border-4 border-white dark:border-gray-800 shadow-sm ring-1 ring-gray-100 dark:ring-gray-700">
                             {session?.user?.image ? (
                                 <Image
                                     src={session.user.image}
@@ -141,42 +141,42 @@ export function ProfileScreen() {
                                     className="object-cover w-full h-full"
                                 />
                             ) : (
-                                <UserCircleIcon className="w-12 h-12 text-primary-400" />
+                                <UserCircleIcon className="w-12 h-12 text-primary-400 dark:text-primary-500" />
                             )}
                         </div>
                     </div>
 
                     <div className="flex-1 min-w-0">
                         {loading ? (
-                            <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
+                            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-2"></div>
                         ) : (
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 truncate">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                                     {displayName}
                                 </h2>
                                 {profile?.nickname && profile.nickname !== displayName && (
-                                    <p className="text-sm font-medium text-gray-500">@{profile.nickname}</p>
+                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">@{profile.nickname}</p>
                                 )}
                             </div>
                         )}
-                        <p className="text-sm text-gray-400 truncate">{session?.user?.email}</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500 truncate">{session?.user?.email}</p>
                         {/* Stats Row */}
                         <div className="flex items-center space-x-3 mt-3">
                             {loading ? (
-                                <div className="h-6 w-24 bg-gray-200 rounded animate-pulse"></div>
+                                <div className="h-6 w-24 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
                             ) : (
                                 <>
-                                    <div className="flex items-center text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100" title={t('stats.streak', 'Streak')}>
+                                    <div className="flex items-center text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2.5 py-1 rounded-full border border-orange-100 dark:border-orange-900/30" title={t('stats.streak', 'Streak')}>
                                         <FireIcon className="w-3.5 h-3.5 mr-1" />
                                         <span>{profile?.streak || 0}</span>
                                     </div>
-                                    <div className="flex items-center text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100" title={t('stats.xp', 'XP')}>
+                                    <div className="flex items-center text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-full border border-blue-100 dark:border-blue-900/30" title={t('stats.xp', 'XP')}>
                                         <BoltIcon className="w-3.5 h-3.5 mr-1" />
                                         <span>{profile?.totalXp || 0} XP</span>
                                     </div>
                                     {/* Global Mastery Stat */}
-                                    <div className="flex items-center text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100" title={t('stats.mastery', 'Mastery')}>
-                                        <SparklesIconSolid className="w-3.5 h-3.5 mr-1 text-yellow-500" />
+                                    <div className="flex items-center text-xs font-semibold text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 px-2.5 py-1 rounded-full border border-yellow-100 dark:border-yellow-900/30" title={t('stats.mastery', 'Mastery')}>
+                                        <SparklesIconSolid className="w-3.5 h-3.5 mr-1 text-yellow-500 dark:text-yellow-400" />
                                         <span>{masteryStats?.masteryPercentage || 0}%</span>
                                     </div>
                                 </>
@@ -186,26 +186,26 @@ export function ProfileScreen() {
                 </div>
 
                 {/* Badges / Achievements Collection */}
-                <section className="bg-white rounded-2xl border border-gray-200 p-5">
+                <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 transition-colors">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider flex items-center">
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider flex items-center">
                             <SparklesIcon className="w-4 h-4 mr-2 text-yellow-500" />
                             {t('profile.badges.title', 'Deine Sammlung')}
                         </h3>
-                        <div className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
                             {earnedBadges.length} / {badges.length}
                         </div>
                     </div>
 
                     {loading ? (
                         <div className="flex space-x-2 overflow-hidden">
-                            {[1, 2, 3, 4].map(i => <div key={i} className="w-12 h-12 rounded-full bg-gray-100 animate-pulse" />)}
+                            {[1, 2, 3, 4].map(i => <div key={i} className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 animate-pulse" />)}
                         </div>
                     ) : earnedBadges.length > 0 ? (
                         <div className="flex flex-wrap gap-3">
                             {earnedBadges.slice(0, 10).map((badge) => (
                                 <div key={badge.id} className="relative group cursor-help">
-                                    <div className="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center border border-yellow-100 overflow-hidden shadow-sm transition-transform hover:scale-110">
+                                    <div className="w-12 h-12 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center border border-yellow-100 dark:border-yellow-900/30 overflow-hidden shadow-sm transition-transform hover:scale-110">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         {badge.imageUrl ? (
                                             <Image
@@ -229,24 +229,24 @@ export function ProfileScreen() {
                                 </div>
                             ))}
                             {earnedBadges.length > 10 && (
-                                <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center border border-gray-200 text-xs font-bold text-gray-500 shadow-sm">
+                                <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-500 dark:text-gray-400 shadow-sm">
                                     +{earnedBadges.length - 10}
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div className="text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                        <div className="text-center py-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
+                            <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <LockClosedIcon className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <p className="text-xs text-gray-500 font-medium">{t('profile.badges.empty', 'Noch keine Abzeichen')}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">{t('profile.badges.empty', 'Noch keine Abzeichen')}</p>
                         </div>
                     )}
 
                     {/* Secondary Link */}
                     <Link
                         href="/achievements"
-                        className="mt-5 flex items-center justify-center text-xs font-semibold text-gray-400 hover:text-primary-600 transition-colors py-2 group border-t border-gray-100"
+                        className="mt-5 flex items-center justify-center text-xs font-semibold text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2 group border-t border-gray-100 dark:border-gray-800"
                     >
                         {t('profile.badges.viewAll', 'Alle möglichen Abzeichen ansehen')}
                         <ArrowRightIcon className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-0.5" />
@@ -254,18 +254,18 @@ export function ProfileScreen() {
                 </section>
 
                 {/* Settings Link Block */}
-                <section className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
                     <button
                         onClick={() => router.push('/settings')}
-                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors group"
+                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group"
                     >
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
+                            <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 group-hover:bg-white dark:group-hover:bg-gray-700 group-hover:shadow-sm transition-all">
                                 <Cog6ToothIcon className="w-5 h-5" />
                             </div>
-                            <span className="font-semibold text-gray-700">{t('settings.title', 'Einstellungen')}</span>
+                            <span className="font-semibold text-gray-700 dark:text-gray-200">{t('settings.title', 'Einstellungen')}</span>
                         </div>
-                        <ArrowRightIcon className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                        <ArrowRightIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300" />
                     </button>
                     {/* Add Logout or other profile items here later */}
                 </section>

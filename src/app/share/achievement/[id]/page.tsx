@@ -85,9 +85,9 @@ export default async function SharedAchievementPage({ params }: Props) {
     const avatarSrc = user.avatarUrl || user.image
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col transition-colors">
             {/* Header / Nav */}
-            <header className="bg-white border-b border-gray-200 py-3 px-4 sticky top-0 z-10">
+            <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-3 px-4 sticky top-0 z-10 transition-colors">
                 <div className="container mx-auto flex items-center justify-between max-w-lg">
                     <div className="relative w-32 h-8">
                         <Image
@@ -101,7 +101,7 @@ export default async function SharedAchievementPage({ params }: Props) {
                     <Link
                         href="/"
                         style={{ backgroundColor: 'rgb(254 189 17)' }}
-                        className="text-sm font-bold text-gray-900 px-4 py-2 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
+                        className="text-sm font-bold text-gray-900 dark:text-gray-900 px-4 py-2 rounded-xl shadow-sm hover:opacity-90 transition-opacity"
                     >
                         App Öffnen
                     </Link>
@@ -111,8 +111,8 @@ export default async function SharedAchievementPage({ params }: Props) {
             <main className="flex-grow container mx-auto px-4 py-8 max-w-lg">
 
                 {/* User Profile Section */}
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 mb-6 text-center">
-                    <div className="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center border-4 border-white shadow-md mb-4 overflow-hidden">
+                <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6 text-center">
+                    <div className="w-20 h-20 mx-auto bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-md mb-4 overflow-hidden">
                         {avatarSrc ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
@@ -125,28 +125,28 @@ export default async function SharedAchievementPage({ params }: Props) {
                         )}
                     </div>
 
-                    <h2 className="text-xl font-bold text-gray-900 mb-1">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                         {displayName}
                     </h2>
-                    <p className="text-gray-500 text-sm mb-4">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
                         lernt fleißig Zazakî
                     </p>
 
-                    <div className="flex justify-center gap-4 text-sm text-gray-600 bg-gray-50 py-3 px-4 rounded-xl mx-auto w-fit">
+                    <div className="flex justify-center gap-4 text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 py-3 px-4 rounded-xl mx-auto w-fit">
                         <div className="flex items-center gap-1.5">
                             <SparklesIcon className="w-4 h-4 text-yellow-500" />
-                            <span className="font-bold text-gray-900">{user.totalXP}</span> XP
+                            <span className="font-bold text-gray-900 dark:text-white">{user.totalXP}</span> XP
                         </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
+                        <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
                         <div className="flex items-center gap-1.5">
                             <span className="text-lg">🔥</span>
-                            <span className="font-bold text-gray-900">{user.streak}</span> Tage
+                            <span className="font-bold text-gray-900 dark:text-white">{user.streak}</span> Tage
                         </div>
                     </div>
                 </div>
 
                 {/* Achievement Card */}
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-brand-orange/20 relative mb-12">
+                <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-brand-orange/20 dark:border-brand-orange/10 relative mb-12">
                     <div className="h-32 relative bg-gradient-to-br from-brand-orange to-red-500">
                         <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10"></div>
 
@@ -160,7 +160,7 @@ export default async function SharedAchievementPage({ params }: Props) {
 
                     <div className="px-6 pb-8 relative">
                         {/* Huge floating Icon */}
-                        <div className="w-32 h-32 mx-auto -mt-16 rounded-full border-4 border-white shadow-xl flex items-center justify-center overflow-hidden bg-orange-50 mb-4 transform hover:scale-105 transition-transform duration-300 relative z-10">
+                        <div className="w-32 h-32 mx-auto -mt-16 rounded-full border-4 border-white dark:border-gray-800 shadow-xl flex items-center justify-center overflow-hidden bg-orange-50 dark:bg-gray-800 mb-4 transform hover:scale-105 transition-transform duration-300 relative z-10">
                             {badge.imageUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
@@ -185,14 +185,14 @@ export default async function SharedAchievementPage({ params }: Props) {
                         </div>
 
                         <div className="text-center">
-                            <h1 className="text-2xl font-bold font-serif text-gray-900 mb-2">
+                            <h1 className="text-2xl font-bold font-serif text-gray-900 dark:text-gray-100 mb-2">
                                 {getTitle(badge.title)}
                             </h1>
-                            <p className="text-gray-600 leading-relaxed max-w-sm mx-auto">
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-sm mx-auto">
                                 {getDescription(badge.description)}
                             </p>
 
-                            <div className="mt-6 flex items-center justify-center text-xs text-gray-400">
+                            <div className="mt-6 flex items-center justify-center text-xs text-gray-400 dark:text-gray-500">
                                 <CalendarDaysIcon className="w-4 h-4 mr-1" />
                                 <span>Erhalten am {userBadge.earnedAt.toLocaleDateString('de-DE')}</span>
                             </div>
@@ -233,7 +233,7 @@ export default async function SharedAchievementPage({ params }: Props) {
 
             </main>
 
-            <footer className="py-6 text-center text-gray-400 text-xs">
+            <footer className="py-6 text-center text-gray-400 dark:text-gray-600 text-xs">
                 &copy; 2024 Zazakî Quiz. All rights reserved.
             </footer>
         </div>

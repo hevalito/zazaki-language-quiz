@@ -13,7 +13,7 @@ export default async function EditBadgePage(props: { params: Promise<{ id: strin
 
     return (
         <div className="max-w-3xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Badge</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Edit Badge</h1>
             <BadgeForm initialData={badge} isEditing />
         </div>
     )

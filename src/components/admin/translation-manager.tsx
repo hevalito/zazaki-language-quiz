@@ -156,12 +156,12 @@ export function TranslationManager({ initialTranslations, languages }: Translati
     return (
         <div className="space-y-6">
             {/* Header Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center bg-white p-4 rounded-lg border shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm transition-colors">
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <input
                         type="text"
                         placeholder="Search keys..."
-                        className="border rounded px-3 py-2 w-full sm:w-64"
+                        className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full sm:w-64 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                     />
@@ -169,7 +169,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                     <select
                         value={filterMissingLang}
                         onChange={(e) => setFilterMissingLang(e.target.value)}
-                        className="border rounded px-3 py-2 w-full sm:w-auto"
+                        className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full sm:w-auto bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         title="Show keys missing translation in..."
                     >
                         <option value="">Show All</option>
@@ -185,7 +185,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                     <input
                         type="text"
                         placeholder="New Key Name"
-                        className="border rounded px-3 py-2 flex-grow"
+                        className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 flex-grow bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={newKey}
                         onChange={(e) => setNewKey(e.target.value)}
                     />
@@ -199,13 +199,13 @@ export function TranslationManager({ initialTranslations, languages }: Translati
             </div>
 
             {/* Translations Table */}
-            <div className="overflow-x-auto border rounded-lg shadow bg-white">
-                <table className="min-w-max w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="overflow-x-auto border border-gray-200 dark:border-gray-800 rounded-lg shadow bg-white dark:bg-gray-900">
+                <table className="min-w-max w-full divide-y divide-gray-200 dark:divide-gray-800">
+                    <thead className="bg-gray-50 dark:bg-gray-800/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 shadow-sm">Key</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-gray-800/50 z-10 shadow-sm">Key</th>
                             {languages.map(lang => (
-                                <th key={lang.code} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                                <th key={lang.code} className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider min-w-[200px]">
                                     {lang.name} ({lang.code})
                                     {lang.code !== 'de' && (
                                         <button
@@ -223,13 +223,13 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                                     )}
                                 </th>
                             ))}
-                            <th className="px-6 py-3 text-right sticky right-0 bg-gray-50 z-10 shadow-sm">Actions</th>
+                            <th className="px-6 py-3 text-right sticky right-0 bg-gray-50 dark:bg-gray-800/50 z-10 shadow-sm text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                         {filteredTranslations.map(t => (
-                            <tr key={t.key} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 sticky left-0 bg-white shadow-sm z-10 border-r">
+                            <tr key={t.key} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 dark:text-gray-100 sticky left-0 bg-white dark:bg-gray-900 shadow-sm z-10 border-r border-gray-200 dark:border-gray-800">
                                     {t.key}
                                 </td>
                                 {languages.map(lang => (
@@ -237,7 +237,7 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                                         {editingKey === t.key ? (
                                             <div className="relative">
                                                 <textarea
-                                                    className="w-full border rounded p-1 text-sm h-full min-h-[60px] pr-8"
+                                                    className="w-full border border-gray-300 dark:border-gray-600 rounded p-1 text-sm h-full min-h-[60px] pr-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                     value={editValues[lang.code] || ''}
                                                     onChange={(e) => setEditValues({ ...editValues, [lang.code]: e.target.value })}
                                                     placeholder={`Value for ${lang.code}`}
@@ -259,22 +259,22 @@ export function TranslationManager({ initialTranslations, languages }: Translati
                                                 )}
                                             </div>
                                         ) : (
-                                            <span className="block max-w-sm whitespace-normal" title={(t.values as any)[lang.code]}>
-                                                {(t.values as any)[lang.code] || <span className="text-gray-300 italic">-</span>}
+                                            <span className="block max-w-sm whitespace-normal text-gray-700 dark:text-gray-300 transition-colors" title={(t.values as any)[lang.code]}>
+                                                {(t.values as any)[lang.code] || <span className="text-gray-300 dark:text-gray-600 italic">-</span>}
                                             </span>
                                         )}
                                     </td>
                                 ))}
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white shadow-sm z-10 border-l">
+                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white dark:bg-gray-900 shadow-sm z-10 border-l border-gray-200 dark:border-gray-800">
                                     {editingKey === t.key ? (
                                         <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleSave(t.key)} className="text-green-600 hover:text-green-900">Save</button>
-                                            <button onClick={handleCancel} className="text-gray-600 hover:text-gray-900">Cancel</button>
+                                            <button onClick={() => handleSave(t.key)} className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">Save</button>
+                                            <button onClick={handleCancel} className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">Cancel</button>
                                         </div>
                                     ) : (
                                         <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleEdit(t)} className="text-indigo-600 hover:text-indigo-900">Edit</button>
-                                            <button onClick={() => handleDelete(t.key)} className="text-red-600 hover:text-red-900">Delete</button>
+                                            <button onClick={() => handleEdit(t)} className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</button>
+                                            <button onClick={() => handleDelete(t.key)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
                                         </div>
                                     )}
                                 </td>

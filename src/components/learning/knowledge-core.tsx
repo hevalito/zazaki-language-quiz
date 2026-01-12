@@ -128,7 +128,7 @@ export function KnowledgeCore({
 
                 {/* Center Content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className={`font-bold tabular-nums text-gray-900 ${fontSize} leading-none`}>
+                    <span className={`font-bold tabular-nums text-gray-900 dark:text-gray-100 ${fontSize} leading-none`}>
                         {displayValue.toFixed(1)}%
                     </span>
                 </div>
@@ -137,7 +137,7 @@ export function KnowledgeCore({
             {/* Label Below */}
             {showLabel && (
                 <div className="mt-4 text-center">
-                    <span className="text-sm font-medium text-gray-500 uppercase tracking-wider flex items-center justify-center gap-1">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center justify-center gap-1">
                         <SparklesIcon className="w-4 h-4 text-yellow-500" />
                         {t('mastery.total', 'Total Knowledge')}
                     </span>
