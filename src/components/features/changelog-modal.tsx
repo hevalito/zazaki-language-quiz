@@ -1,26 +1,31 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { XMarkIcon, SparklesIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, MoonIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 // Configuration for the current release
 const CURRENT_RELEASE = {
-    version: "2.3.0",
-    title: "Der Lernraum ist da! 🎓",
-    description: "Übung macht den Meister! Im neuen Lernraum kannst du gezielt deine Fehler aus vergangenen Quizzen wiederholen. Deine persönlichen Schwachstellen werden so zu deinen Stärken.",
-    ctaText: "Jetzt ausprobieren",
-    ctaLink: "/learning",
-    featureIcon: SparklesIcon
+    version: "2.5.2",
+    title: "Dark Mode ist da! 🌙",
+    description: "Endlich ist er hier: Der Dark Mode! Egal ob spät abends oder einfach weil es gut aussieht – Zazakî Quiz passt sich jetzt deinen Vorlieben an. Du kannst das Design in den Einstellungen anpassen.",
+    ctaText: "Einstellungen öffnen",
+    ctaLink: "/settings",
+    featureIcon: MoonIcon
 }
 
 export function ChangelogModal() {
     const [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
+    const { data: session } = useSession()
 
     useEffect(() => {
+        // Only show to logged in users
+        if (!session) return
+
         const lastSeenVersion = localStorage.getItem('zazaki-changelog-version')
 
         // Show if version changed or never seen
@@ -38,7 +43,7 @@ export function ChangelogModal() {
             }, 1000)
             return () => clearTimeout(timer)
         }
-    }, [])
+    }, [session])
 
     const handleClose = () => {
         setIsOpen(false)
