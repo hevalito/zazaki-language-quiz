@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { generateDailyQuiz } from '@/lib/daily-quiz'
 import { startOfDay, subDays } from 'date-fns'
+import webPush from 'web-push'
 
 const prisma = new PrismaClient()
 
@@ -29,6 +30,34 @@ function replaceVariables(template: string, variables: Record<string, any>): str
     return result
 }
 
+let _systemUserId: string | null = null
+async function getSystemUserId() {
+    if (_systemUserId) return _systemUserId
+
+    const email = 'system@zazaki-game.com'
+    const existing = await prisma.user.findUnique({ where: { email } })
+
+    if (existing) {
+        _systemUserId = existing.id
+        return existing.id
+    }
+
+    // Create system user if missing
+    const newUser = await prisma.user.create({
+        data: {
+            email,
+            name: 'System',
+            nickname: 'Zazaki Bot',
+            isAdmin: true,
+            preferredScript: 'LATIN',
+            dailyGoal: 0,
+            totalXP: 0,
+        }
+    })
+    _systemUserId = newUser.id
+    return newUser.id
+}
+
 async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/', type: string) {
     const publicVapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
     const privateVapid = process.env.VAPID_PRIVATE_KEY
@@ -40,12 +69,17 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
         return
     }
 
-    const webPush = await import('web-push')
-    webPush.setVapidDetails(
-        process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
-        publicVapid,
-        privateVapid
-    )
+    // Configure VAPID once
+    try {
+        webPush.setVapidDetails(
+            process.env.VAPID_SUBJECT || 'mailto:admin@zazaki.com',
+            publicVapid,
+            privateVapid
+        )
+    } catch (err) {
+        console.error('Error setting VAPID details:', err)
+        return
+    }
 
     const payload = JSON.stringify({
         title,
@@ -70,9 +104,13 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
                 }
             })
     ))
-    console.log(`Sent ${success} notifications (${failed} failed).`)
+
+    if (success > 0 || failed > 0) {
+        console.log(`Sent ${success} notifications (${failed} failed).`)
+    }
 
     try {
+        const sentByUserId = await getSystemUserId()
         await prisma.notificationHistory.create({
             data: {
                 title,
@@ -81,7 +119,7 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
                 type,
                 sentCount: success,
                 failedCount: failed,
-                sentByUserId: null
+                sentByUserId
             }
         })
     } catch (e) {
