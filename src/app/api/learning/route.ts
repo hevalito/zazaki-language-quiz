@@ -166,10 +166,7 @@ export async function GET(request: Request) {
         const activeItems = await prisma.spacedItem.findMany({
             where: {
                 userId,
-                OR: [
-                    { stage: { lt: 3 } },
-                    { dueDate: { lte: now } }
-                ]
+                dueDate: { lte: now }
             },
             include: {
                 question: {
@@ -242,7 +239,10 @@ export async function GET(request: Request) {
         const allFreshCandidateIds = await prisma.question.findMany({
             where: {
                 quizId: { in: attemptedQuizIds },
-                spacedItems: { none: { userId } }
+                spacedItems: { none: { userId } },
+                // STRICT RULE: Only questions the user has actually answered.
+                // This prevents pulling in unseen questions from "started" but unfinished quizzes.
+                answers: { some: { userId } }
             },
             select: { id: true }
         })
@@ -331,27 +331,50 @@ export async function GET(request: Request) {
             }
         }
 
-        if (combinedQuestions.length < 5) {
-            const moreStable = await prisma.spacedItem.findMany({
+        if (combinedQuestions.length < 20) {
+            // Fallback: Fill the session with "Review Ahead" items (future due date),
+            // BUT enforce a cooldown to solve "repeating same question same day" weirdness.
+            // We randomize heavily to allow "100 sessions" to cycle through the entire backlog.
+
+            const cooldownDate = new Date()
+            cooldownDate.setHours(cooldownDate.getHours() - 12)
+
+            const fallbackCandidateIds = await prisma.spacedItem.findMany({
                 where: {
                     userId,
-                    id: { notIn: [...activeItems, ...stableItems].map(i => i.id) }
+                    // Exclude currently selected SpacedItems
+                    id: { notIn: combinedQuestions.map(q => q._spacedItem?.id).filter(Boolean) as string[] },
+                    // CRITICAL: Don't show items reviewed today/recently to avoid "just did this" feeling.
+                    OR: [
+                        { lastReview: { lt: cooldownDate } },
+                        { lastReview: null }
+                    ]
                 },
-                include: {
-                    question: {
-                        include: {
-                            choices: true,
-                            quiz: {
-                                select: {
-                                    title: true,
-                                    type: true,
-                                    lesson: {
-                                        select: {
-                                            title: true,
-                                            chapter: {
-                                                select: {
-                                                    title: true,
-                                                    course: { select: { title: true } }
+                select: { id: true }
+            })
+
+            const needed = 20 - combinedQuestions.length
+            const shuffledFallbackIds = fisherYatesShuffle(fallbackCandidateIds.map(i => i.id)).slice(0, needed)
+
+            if (shuffledFallbackIds.length > 0) {
+                const moreStable = await prisma.spacedItem.findMany({
+                    where: { id: { in: shuffledFallbackIds } },
+                    include: {
+                        question: {
+                            include: {
+                                choices: true,
+                                quiz: {
+                                    select: {
+                                        title: true,
+                                        type: true,
+                                        lesson: {
+                                            select: {
+                                                title: true,
+                                                chapter: {
+                                                    select: {
+                                                        title: true,
+                                                        course: { select: { title: true } }
+                                                    }
                                                 }
                                             }
                                         }
@@ -360,10 +383,9 @@ export async function GET(request: Request) {
                             }
                         }
                     }
-                },
-                take: 20 - combinedQuestions.length // simplified take, no random sort on fallback stable yet (harder to do with relations)
-            })
-            moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+                })
+                moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+            }
         }
 
         const finalQuestions = fisherYatesShuffle(combinedQuestions)

@@ -84,7 +84,7 @@ export function calculateNextReview(
  */
 export function getDueItems(items: SpacedRepetitionItem[]): SpacedRepetitionItem[] {
   const now = new Date()
-  return items.filter(item => item.dueDate <= now || item.stage < 3)
+  return items.filter(item => item.dueDate <= now)
 }
 
 /**
