@@ -37,7 +37,7 @@ export async function GET() {
                 notifyFeatures: true,
                 notifyWeekly: true,
                 totalXP: true,
-                totalXP: true,
+
                 currentLevel: true,
                 theme: true
             }

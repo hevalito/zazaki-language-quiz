@@ -114,7 +114,7 @@ function FeedbackModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+
                             className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-indigo-500 to-purple-600" />
