@@ -37,7 +37,7 @@ export interface UpdatedSpacedItem {
 // Stage 3: 7 days
 // Stage 4: 21 days
 // Stage 5: 60 days
-const STAGE_INTERVALS = [0, 1, 3, 7, 21, 60]
+export const STAGE_INTERVALS = [0, 1, 3, 7, 21, 60]
 
 /**
  * Calculate the next review parameters based on Stage Logic

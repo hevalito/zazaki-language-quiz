@@ -21,6 +21,7 @@ import { useMastery } from '@/hooks/use-mastery'
 
 type ViewState = 'loading' | 'start' | 'learning' | 'summary'
 import { LearningOnboardingModal } from '@/components/learning/learning-onboarding-modal'
+import { LearningDebugPanel } from '@/components/learning/debug-panel'
 
 export default function LearningRoomPage() {
     const { data: session } = useSession()
@@ -32,6 +33,7 @@ export default function LearningRoomPage() {
 
     // Onboarding State
     const [showOnboarding, setShowOnboarding] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     // ... (questions state etc)
     const [questions, setQuestions] = useState<Question[]>([])
@@ -113,6 +115,7 @@ export default function LearningRoomPage() {
             const res = await fetch('/api/learning') // Default: No action = Check active
             if (res.ok) {
                 const data = await res.json()
+                if (data.isAdmin) setIsAdmin(true)
 
                 // If we get questions back, it means we are RESUMING
                 if (data.questions && data.questions.length > 0) {
@@ -139,6 +142,7 @@ export default function LearningRoomPage() {
             const res = await fetch('/api/learning?action=start')
             if (res.ok) {
                 const data = await res.json()
+                if (data.isAdmin) setIsAdmin(true)
                 if (data.questions && data.questions.length > 0) {
                     setQuestions(data.questions)
                     setActivityId(data.activityId)
@@ -489,6 +493,9 @@ export default function LearningRoomPage() {
                     {t('learning.hint', 'Fragen, die du hier falsch beantwortest, kommen sofort wieder dran.')}
                 </div>
             </main>
+            {isAdmin && currentQuestion && (currentQuestion as any)._debug && (
+                <LearningDebugPanel data={(currentQuestion as any)._debug} />
+            )}
         </div>
     )
 }

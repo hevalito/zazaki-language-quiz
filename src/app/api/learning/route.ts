@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
-import { getDueItems, sortByPriority } from '@/lib/spaced-repetition'
+import { getDueItems, sortByPriority, STAGE_INTERVALS } from '@/lib/spaced-repetition'
 import { Question } from '@prisma/client'
 import { logActivity } from '@/lib/activity'
 
@@ -204,7 +204,12 @@ export async function GET(request: Request) {
             where: {
                 userId,
                 stage: { gte: 3 },
-                dueDate: { gt: now }
+                dueDate: { gt: now },
+                // CRITICAL: Strict Cooldown for "Stable" items to prevent "just mastered" items from reappearing immediately.
+                OR: [
+                    { lastReview: { lt: new Date(Date.now() - 12 * 60 * 60 * 1000) } },
+                    { lastReview: null }
+                ]
             },
             include: {
                 question: {
@@ -242,7 +247,7 @@ export async function GET(request: Request) {
                 spacedItems: { none: { userId } },
                 // STRICT RULE: Only questions the user has actually answered.
                 // This prevents pulling in unseen questions from "started" but unfinished quizzes.
-                answers: { some: { attempt: { userId } } }
+                answers: { some: { attempt: { userId }, result: { not: 'SKIPPED' } } }
             },
             select: { id: true }
         })
@@ -278,21 +283,52 @@ export async function GET(request: Request) {
 
         let combinedQuestions: any[] = []
 
-        const formatItem = (q: any, spacedItem?: any) => ({
-            ...q,
-            choices: fisherYatesShuffle([...q.choices]),
-            _spacedItem: spacedItem ? {
-                id: spacedItem.id,
-                easiness: spacedItem.easiness,
-                interval: spacedItem.interval,
-                repetition: spacedItem.repetition,
-                stage: spacedItem.stage
-            } : undefined
-        })
+        // Helper to calculate next review date
+        const getNextDate = (stage: number, isCorrect: boolean) => {
+            // Logic mirrors spaced-repetition.ts:calculateNextReview
+            let newStage = stage
+            if (isCorrect) newStage = Math.min(5, stage + 1)
+            else newStage = Math.max(0, stage - 2)
 
-        activeItems.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
-        stableItems.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
-        freshQuestions.forEach(q => combinedQuestions.push(formatItem(q)))
+            const interval = STAGE_INTERVALS[newStage]
+            const d = new Date()
+            if (interval > 0) d.setDate(d.getDate() + interval)
+            return d
+        }
+
+        const isAdmin = (session.user as any).isAdmin === true
+
+        const formatItem = (q: any, spacedItem?: any, reason?: string) => {
+            const currentStage = spacedItem?.stage ?? 0
+
+            return {
+                ...q,
+                choices: fisherYatesShuffle([...q.choices]),
+                _spacedItem: spacedItem ? {
+                    id: spacedItem.id,
+                    easiness: spacedItem.easiness,
+                    interval: spacedItem.interval,
+                    repetition: spacedItem.repetition,
+                    stage: spacedItem.stage
+                } : undefined,
+                // ADMIN DEBUG METADATA
+                _debug: isAdmin ? {
+                    reason: reason || 'Unknown',
+                    currentStage,
+                    nextReviewCorrect: getNextDate(currentStage, true).toISOString(),
+                    nextReviewWrong: getNextDate(currentStage, false).toISOString(),
+                } : undefined
+            }
+        }
+
+        activeItems.forEach(item => {
+            const isDue = item.dueDate <= now
+            const isMistake = item.stage === 0
+            const reason = isMistake ? 'Active (Mistake)' : isDue ? 'Active (Due)' : 'Active (Forced)'
+            combinedQuestions.push(formatItem(item.question, item, reason))
+        })
+        stableItems.forEach(item => combinedQuestions.push(formatItem(item.question, item, 'Stable (Review Ahead)')))
+        freshQuestions.forEach(q => combinedQuestions.push(formatItem(q, undefined, 'Fresh')))
 
         // Fallbacks
         if (combinedQuestions.length < 10) {
@@ -327,7 +363,7 @@ export async function GET(request: Request) {
                         }
                     }
                 })
-                moreFresh.forEach(q => combinedQuestions.push(formatItem(q)))
+                moreFresh.forEach(q => combinedQuestions.push(formatItem(q, undefined, 'Fallback (Fresh)')))
             }
         }
 
@@ -384,7 +420,7 @@ export async function GET(request: Request) {
                         }
                     }
                 })
-                moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item)))
+                moreStable.forEach(item => combinedQuestions.push(formatItem(item.question, item, 'Fallback (Stable Review)')))
             }
         }
 
@@ -414,7 +450,8 @@ export async function GET(request: Request) {
         return NextResponse.json({
             questions: finalQuestions,
             count: finalQuestions.length,
-            activityId: activity?.id
+            activityId: activity?.id,
+            isAdmin
         })
 
     } catch (error) {
