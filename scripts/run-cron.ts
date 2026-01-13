@@ -170,7 +170,7 @@ async function runDailyChallenge() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Neues Quiz!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush([sub], title, body, '/daily', 'DAILY_CHALLENGE')
+        await sendPush([sub], title, body, '/', 'DAILY_CHALLENGE')
     }
 }
 
@@ -208,7 +208,7 @@ async function runStreakSaver() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Achtung!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush(user.pushSubscriptions, title, body, '/daily', 'STREAK_SAVER')
+        await sendPush(user.pushSubscriptions, title, body, '/', 'STREAK_SAVER')
     }
 }
 
