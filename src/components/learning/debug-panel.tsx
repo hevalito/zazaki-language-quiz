@@ -35,7 +35,7 @@ export function LearningDebugPanel({ data }: DebugProps) {
     }
 
     return (
-        <div className="fixed bottom-4 left-4 z-50">
+        <div className="fixed bottom-24 md:bottom-4 left-4 z-50">
             <div className="bg-black/80 backdrop-blur-md text-white rounded-lg shadow-2xl border border-white/10 max-w-sm overflow-hidden">
                 <button
                     onClick={() => setIsOpen(!isOpen)}

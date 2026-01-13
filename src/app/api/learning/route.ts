@@ -128,7 +128,8 @@ export async function GET(request: Request) {
             return NextResponse.json({
                 questions: formatted,
                 count: formatted.length,
-                activityId: activeSession.id
+                activityId: activeSession.id,
+                isAdmin: (session.user as any).isAdmin === true
             })
         }
 
