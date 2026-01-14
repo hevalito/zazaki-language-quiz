@@ -248,9 +248,9 @@ export default function SettingsPage() {
                                             </button>
                                         </div>
                                         {/* @ts-ignore */}
-                                        <h4 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100">{formData.courseFinderData.result.dialect}</h4>
+                                        <h4 className="text-lg font-serif font-bold text-gray-900 dark:text-gray-100">{t(formData.courseFinderData.result.dialect)}</h4>
                                         {/* @ts-ignore */}
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('settings.dialect.recommendation', 'Empfohlener Kurs:')} {formData.courseFinderData.result.recommendation}</p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('settings.dialect.recommendation', 'Empfohlener Kurs:')} {t(formData.courseFinderData.result.recommendation)}</p>
                                     </div>
                                 </div>
                             </>

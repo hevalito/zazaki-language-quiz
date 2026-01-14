@@ -14,6 +14,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { AdminPage, AdminPageHeader, AdminPageContent } from '@/components/admin/page-layout'
+import { useTranslation } from '@/hooks/use-translation'
 
 type User = {
     id: string
@@ -36,6 +37,7 @@ type User = {
 }
 
 export default function AdminUsersPage() {
+    const { t } = useTranslation()
     const [search, setSearch] = useState('')
     const [roleFilter, setRoleFilter] = useState<'ALL' | 'ADMIN' | 'STUDENT'>('ALL')
     const [editingUser, setEditingUser] = useState<User | null>(null)
@@ -228,7 +230,7 @@ export default function AdminUsersPage() {
                                                 <div className="mt-1">
                                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
                                                         {/* @ts-ignore */}
-                                                        {user.courseFinderData.result.dialect}
+                                                        {t(user.courseFinderData.result.dialect)}
                                                     </span>
                                                 </div>
                                             )}
