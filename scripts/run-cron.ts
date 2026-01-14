@@ -81,49 +81,105 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
         return
     }
 
-    const payload = JSON.stringify({
+    const sentByUserId = await getSystemUserId()
+
+    // 1. Create Parent History
+    const history = await prisma.notificationHistory.create({
+        data: {
+            title,
+            body,
+            url,
+            type,
+            sentCount: 0,
+            failedCount: 0,
+            sentByUserId
+        }
+    })
+
+    const payloadBase = {
         title,
         body,
         url,
         actions: [{ action: 'open', title: 'Start' }]
-    })
+    }
 
     let success = 0
     let failed = 0
 
-    await Promise.all(subscriptions.map(sub =>
-        webPush.sendNotification({
-            endpoint: sub.endpoint,
-            keys: { p256dh: sub.p256dh, auth: sub.auth }
-        }, payload)
-            .then(() => success++)
-            .catch(async (err: any) => {
-                failed++
-                if (err.statusCode === 410 || err.statusCode === 404) {
-                    await prisma.pushSubscription.delete({ where: { id: sub.id } })
-                }
-            })
-    ))
+    // 2. Send & Log Recipients
+    await Promise.all(subscriptions.map(async (sub) => {
+        let recipientId: string | undefined
+        // In this script, we usually pass `sub` which is the PushSubscription object, possibly with `userId` included if fetched via prisma.
+        // `subscriptions` arg in `run-cron.ts` comes from `user.pushSubscriptions`.
+        // So `sub.userId` should be present.
+
+        if (sub.userId) {
+            try {
+                const recipient = await prisma.notificationRecipient.create({
+                    data: {
+                        notificationHistoryId: history.id,
+                        userId: sub.userId,
+                        status: 'QUEUED'
+                    }
+                })
+                recipientId = recipient.id
+            } catch (e) {
+                console.error('Failed to create recipient record', e)
+            }
+        }
+
+        const payload = JSON.stringify({
+            ...payloadBase,
+            data: {
+                ...payloadBase,
+                notificationId: recipientId
+            }
+        })
+
+        try {
+            await webPush.sendNotification({
+                endpoint: sub.endpoint,
+                keys: { p256dh: sub.p256dh, auth: sub.auth }
+            }, payload)
+
+            success++
+            if (recipientId) {
+                await prisma.notificationRecipient.update({
+                    where: { id: recipientId },
+                    data: { status: 'SENT' }
+                })
+            }
+        } catch (err: any) {
+            failed++
+            if (recipientId) {
+                await prisma.notificationRecipient.update({
+                    where: { id: recipientId },
+                    data: {
+                        status: 'FAILED',
+                        error: err.message || 'Unknown error'
+                    }
+                })
+            }
+            if (err.statusCode === 410 || err.statusCode === 404) {
+                await prisma.pushSubscription.delete({ where: { id: sub.id } })
+            }
+        }
+    }))
 
     if (success > 0 || failed > 0) {
         console.log(`Sent ${success} notifications (${failed} failed).`)
     }
 
     try {
-        const sentByUserId = await getSystemUserId()
-        await prisma.notificationHistory.create({
+        await prisma.notificationHistory.update({
+            where: { id: history.id },
             data: {
-                title,
-                body,
-                url,
-                type,
                 sentCount: success,
-                failedCount: failed,
-                sentByUserId
+                failedCount: failed
             }
         })
     } catch (e) {
-        console.error('Failed to log notification history:', e)
+        console.error('Failed to update history counts:', e)
     }
 }
 

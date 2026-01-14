@@ -96,6 +96,7 @@ model User {
   spacedItems       SpacedItem[]
   pushSubscriptions PushSubscription[]
   sentNotifications NotificationHistory[]
+  notificationRecipients NotificationRecipient[]
   activities        Activity[]
   feedback          Feedback[]
 
@@ -142,6 +143,24 @@ model NotificationHistory {
   createdAt    DateTime @default(now())
 
   sentBy User? @relation(fields: [sentByUserId], references: [id], onDelete: SetNull)
+  recipients NotificationRecipient[]
+}
+
+model NotificationRecipient {
+  id                    String    @id @default(cuid())
+  notificationHistoryId String
+  userId                String
+  status                String    @default("SENT") // SENT, FAILED, OPENED
+  error                 String?
+  openedAt              DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  notificationHistory NotificationHistory @relation(fields: [notificationHistoryId], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([notificationHistoryId])
+  @@index([userId])
 }
 
 model PushSubscription {

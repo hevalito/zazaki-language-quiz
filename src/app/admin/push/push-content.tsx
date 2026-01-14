@@ -226,6 +226,7 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-[50px]"></TableHead>
                                 <TableHead>Date</TableHead>
                                 <TableHead>Message</TableHead>
                                 <TableHead>Segment</TableHead>
@@ -236,35 +237,15 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                         <TableBody>
                             {!history ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">Loading history...</TableCell>
+                                    <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">Loading history...</TableCell>
                                 </TableRow>
                             ) : history.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">No history found</TableCell>
+                                    <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">No history found</TableCell>
                                 </TableRow>
                             ) : (
                                 history.map((item) => (
-                                    <TableRow key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                        <TableCell className="text-gray-900 dark:text-gray-100">
-                                            {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString()}
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="font-bold text-gray-900 dark:text-gray-100">{item.title}</div>
-                                            <div className="text-gray-500 dark:text-gray-400 truncate max-w-xs">{item.body}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                                                {item.type}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell>
-                                            <span className="text-green-600 dark:text-green-400 font-medium">{item.sentCount} sent</span>
-                                            {item.failedCount > 0 && <span className="text-red-500 dark:text-red-400 ml-2">({item.failedCount} failed)</span>}
-                                        </TableCell>
-                                        <TableCell className="text-gray-500 dark:text-gray-400">
-                                            {item.sentBy?.name || item.sentBy?.email || 'Unknown'}
-                                        </TableCell>
-                                    </TableRow>
+                                    <HistoryRow key={item.id} item={item} />
                                 ))
                             )}
                         </TableBody>
@@ -276,5 +257,128 @@ export function PushBroadcastContent({ initialSettings }: PushBroadcastContentPr
                 </TabsContent>
             </Tabs>
         </div>
+    )
+}
+
+function HistoryRow({ item }: { item: any }) {
+    const [expanded, setExpanded] = useState(false)
+    const [recipients, setRecipients] = useState<any[] | null>(null)
+    const [loading, setLoading] = useState(false)
+
+    const toggleExpand = async () => {
+        if (!expanded && !recipients) {
+            setLoading(true)
+            try {
+                const res = await fetch(`/api/admin/push/history/${item.id}`)
+                if (res.ok) {
+                    setRecipients(await res.json())
+                }
+            } catch (e) {
+                console.error(e)
+            } finally {
+                setLoading(false)
+            }
+        }
+        setExpanded(!expanded)
+    }
+
+    return (
+        <>
+            <TableRow className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer" onClick={toggleExpand}>
+                <TableCell>
+                    {expanded ? (
+                        <div className="h-4 w-4 text-gray-500">▼</div>
+                    ) : (
+                        <div className="h-4 w-4 text-gray-500">▶</div>
+                    )}
+                </TableCell>
+                <TableCell className="text-gray-900 dark:text-gray-100">
+                    {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString()}
+                </TableCell>
+                <TableCell>
+                    <div className="font-bold text-gray-900 dark:text-gray-100">{item.title}</div>
+                    <div className="text-gray-500 dark:text-gray-400 truncate max-w-xs">{item.body}</div>
+                </TableCell>
+                <TableCell>
+                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                        {item.type}
+                    </span>
+                </TableCell>
+                <TableCell>
+                    <div className="flex flex-col text-xs">
+                        <span className="text-green-600 dark:text-green-400 font-medium">{item.sentCount} sent</span>
+                        {item.failedCount > 0 && <span className="text-red-500 dark:text-red-400">({item.failedCount} failed)</span>}
+                    </div>
+                </TableCell>
+                <TableCell className="text-gray-500 dark:text-gray-400">
+                    {item.sentBy?.name || item.sentBy?.email || 'System'}
+                </TableCell>
+            </TableRow>
+            {expanded && (
+                <TableRow>
+                    <TableCell colSpan={6} className="bg-gray-50 dark:bg-gray-900/50 p-4">
+                        <div className="pl-12 pr-4 py-2">
+                            <h4 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Recipients Details</h4>
+                            {loading ? (
+                                <div className="py-4 text-sm text-gray-500">Loading details...</div>
+                            ) : recipients && recipients.length > 0 ? (
+                                <div className="border rounded-md overflow-hidden dark:border-gray-700">
+                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                        <thead className="bg-gray-100 dark:bg-gray-800">
+                                            <tr>
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Open Time</th>
+                                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Error</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                            {recipients.map((rec: any) => (
+                                                <tr key={rec.id}>
+                                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                                        {rec.user ? (
+                                                            <div className="flex items-center">
+                                                                {rec.user.avatarUrl && <img src={rec.user.avatarUrl} className="w-6 h-6 rounded-full mr-2" />}
+                                                                <span>{rec.user.nickname || rec.user.name || rec.user.email}</span>
+                                                            </div>
+                                                        ) : 'Unknown User'}
+                                                    </td>
+                                                    <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                        <StatusBadge status={rec.status} />
+                                                    </td>
+                                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                        {rec.openedAt ? new Date(rec.openedAt).toLocaleString() : '-'}
+                                                    </td>
+                                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-red-500">
+                                                        {rec.error || '-'}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="py-2 text-sm text-gray-500">No recipient details found.</div>
+                            )}
+                        </div>
+                    </TableCell>
+                </TableRow>
+            )}
+        </>
+    )
+}
+
+function StatusBadge({ status }: { status: string }) {
+    const colors: Record<string, string> = {
+        'SENT': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+        'OPENED': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+        'FAILED': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+        'QUEUED': 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
+    }
+    const color = colors[status] || colors['QUEUED']
+    return (
+        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color}`}>
+            {status}
+        </span>
     )
 }

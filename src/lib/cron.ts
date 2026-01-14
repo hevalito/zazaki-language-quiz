@@ -36,58 +36,115 @@ export async function sendPushBatch({
         process.env.VAPID_PRIVATE_KEY
     )
 
-    const payload = JSON.stringify({
+    // 1. Create Parent History Record FIRST
+    const history = await prisma.notificationHistory.create({
+        data: {
+            title,
+            body,
+            url,
+            type,
+            sentCount: 0, // Will update later
+            failedCount: 0,
+            sentByUserId: sentByUserId === 'SYSTEM' ? null : sentByUserId
+        }
+    })
+
+    const payloadBase = {
         title,
         body,
         url: url || '/',
         actions: [
             { action: 'open', title: 'Start' }
         ]
-    })
+    }
 
     let successCount = 0
     let failureCount = 0
     let removedCount = 0
 
-    const promises = subscriptions.map((sub) =>
-        webPush.sendNotification({
-            endpoint: sub.endpoint,
-            keys: {
-                p256dh: sub.p256dh,
-                auth: sub.auth
+    // 2. Send and Create Recipient Records
+    const promises = subscriptions.map(async (sub) => {
+        // Create recipient record first to get ID? Or sending first?
+        // Let's create the record to get an ID for tracking, then send.
+        // If send fails, update status.
+
+        let recipientId: string | undefined
+
+        // Try to find user ID from subscription? The subscription object passed in usually has it if we included it.
+        // But `sendPushBatch` signature just says `subscriptions: any[]`.
+        // We need to ensure the caller passes subscriptions with user context if we want to link it.
+        // Assuming `sub.userId` exists or `sub.user.id`.
+        const userId = sub.userId || sub.user?.id
+
+        if (userId) {
+            try {
+                const recipient = await prisma.notificationRecipient.create({
+                    data: {
+                        notificationHistoryId: history.id,
+                        userId: userId,
+                        status: 'QUEUED'
+                    }
+                })
+                recipientId = recipient.id
+            } catch (e) {
+                console.error('Failed to create recipient record', e)
             }
-        }, payload)
-            .then(() => {
-                successCount++
-            })
-            .catch((err) => {
-                failureCount++
-                if (err.statusCode === 410 || err.statusCode === 404) {
-                    removedCount++
-                    // Clean up dead subscription
-                    return prisma.pushSubscription.delete({ where: { id: sub.id } })
+        }
+
+        // Add tracking data
+        const payload = JSON.stringify({
+            ...payloadBase,
+            data: {
+                ...payloadBase,
+                notificationId: recipientId // This is the key for open tracking!
+            }
+        })
+
+        try {
+            await webPush.sendNotification({
+                endpoint: sub.endpoint,
+                keys: {
+                    p256dh: sub.p256dh,
+                    auth: sub.auth
                 }
-                console.error(`Failed to send push to ${sub.id}:`, err)
-            })
-    )
+            }, payload)
+
+            successCount++
+            if (recipientId) {
+                await prisma.notificationRecipient.update({
+                    where: { id: recipientId },
+                    data: { status: 'SENT' }
+                })
+            }
+        } catch (err: any) {
+            failureCount++
+            if (recipientId) {
+                await prisma.notificationRecipient.update({
+                    where: { id: recipientId },
+                    data: {
+                        status: 'FAILED',
+                        error: err.message || 'Unknown error'
+                    }
+                })
+            }
+
+            if (err.statusCode === 410 || err.statusCode === 404) {
+                removedCount++
+                // Clean up dead subscription
+                await prisma.pushSubscription.delete({ where: { id: sub.id } })
+            }
+            console.error(`Failed to send push to ${sub.id}:`, err)
+        }
+    })
 
     await Promise.all(promises)
 
-    // Log to history
-    // Note: sentByUserId needs to be a valid User ID if provided, or null/undefined if system.
-    // Since 'SYSTEM' isn't a valid ID, we'll leave it undefined if it's the default string, 
-    // or we need to ensure the schema supports it. Schema has sentByUserId as String? connected to User.
-    // So if it's system, we must leave it null.
-
-    await prisma.notificationHistory.create({
+    // 3. Update Parent Counts
+    await prisma.notificationHistory.update({
+        where: { id: history.id },
         data: {
-            title,
-            body,
-            url,
-            type,
             sentCount: successCount,
-            failedCount: failureCount,
-            sentByUserId: sentByUserId === 'SYSTEM' ? null : sentByUserId
+            failedCount: failureCount
         }
     })
 
