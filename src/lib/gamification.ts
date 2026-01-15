@@ -96,7 +96,10 @@ export async function checkBadges(userId: string): Promise<BadgeCheckResult> {
                             return true
                         })
 
-                        if (validAttempts.length >= quizTarget) {
+                        // Count unique quizzes only (prevent repeat farming)
+                        const uniqueQuizIds = new Set(validAttempts.map((a: any) => a.quizId))
+
+                        if (uniqueQuizIds.size >= quizTarget) {
                             isEarned = true
                         }
                         break
