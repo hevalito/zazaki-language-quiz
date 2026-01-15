@@ -6,7 +6,7 @@ import { isSameBerlinDay } from '@/lib/date-utils' // reuse existing utility
 export async function GET() {
     try {
         const session = await auth()
-        if (!session?.user?.isAdmin) {
+        if (!(session?.user as any)?.isAdmin) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
