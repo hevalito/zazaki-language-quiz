@@ -58,7 +58,22 @@ async function getSystemUserId() {
     return newUser.id
 }
 
-async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/', type: string) {
+async function createCampaign(title: string, body: string, type: string, url: string = '/') {
+    const sentByUserId = await getSystemUserId()
+    return await prisma.notificationHistory.create({
+        data: {
+            title,
+            body,
+            url,
+            type,
+            sentCount: 0,
+            failedCount: 0,
+            sentByUserId
+        }
+    })
+}
+
+async function sendPush(subscriptions: any[], title: string, body: string, url: string = '/', type: string, existingHistoryId?: string) {
     const publicVapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
     const privateVapid = process.env.VAPID_PRIVATE_KEY
 
@@ -81,20 +96,11 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
         return
     }
 
-    const sentByUserId = await getSystemUserId()
-
-    // 1. Create Parent History
-    const history = await prisma.notificationHistory.create({
-        data: {
-            title,
-            body,
-            url,
-            type,
-            sentCount: 0,
-            failedCount: 0,
-            sentByUserId
-        }
-    })
+    let historyId = existingHistoryId
+    if (!historyId) {
+        const h = await createCampaign(title, body, type, url)
+        historyId = h.id
+    }
 
     const payloadBase = {
         title,
@@ -117,7 +123,7 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
             try {
                 const recipient = await prisma.notificationRecipient.create({
                     data: {
-                        notificationHistoryId: history.id,
+                        notificationHistoryId: historyId!,
                         userId: sub.userId,
                         status: 'QUEUED'
                     }
@@ -172,10 +178,10 @@ async function sendPush(subscriptions: any[], title: string, body: string, url: 
 
     try {
         await prisma.notificationHistory.update({
-            where: { id: history.id },
+            where: { id: historyId },
             data: {
-                sentCount: success,
-                failedCount: failed
+                sentCount: { increment: success },
+                failedCount: { increment: failed }
             }
         })
     } catch (e) {
@@ -215,18 +221,23 @@ async function runDailyChallenge() {
 
     const template = await getNotificationTemplate('daily_challenge', 'Heute wartet eine neue Challenge auf dich! 🚀')
 
-    // Group by user for variables
-    // Simple blast for now to save script complexity/execution time? 
-    // No, variables are requested.
+    // Create ONE Campaign Parent
+    // Use generic Title/Body for the parent record because actual messages might vary per user
+    const campaign = await createCampaign(
+        'Daily Challenge',
+        template, // Log the template as the body
+        'DAILY_CHALLENGE',
+        '/'
+    )
+    console.log(`Created Campaign: ${campaign.id} for ${subs.length} subs`)
+
     for (const sub of subs) {
         const name = sub.user.nickname || sub.user.name || 'Champion'
         const msg = replaceVariables(template, { username: name })
-
-        // Extract Title/Body
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Neues Quiz!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush([sub], title, body, '/', 'DAILY_CHALLENGE')
+        await sendPush([sub], title, body, '/', 'DAILY_CHALLENGE', campaign.id)
     }
 }
 
@@ -258,13 +269,21 @@ async function runStreakSaver() {
 
     const template = await getNotificationTemplate('streak_saver', 'Achtung! Dein {streak}-Tage Streak ist in Gefahr! 😱')
 
+    const campaign = await createCampaign(
+        'Streak Saver',
+        template,
+        'STREAK_SAVER',
+        '/'
+    )
+    console.log(`Created Campaign: ${campaign.id} for ${atRiskUsers.length} users`)
+
     for (const user of atRiskUsers) {
         const name = user.nickname || user.name || 'Champion'
         const msg = replaceVariables(template, { username: name, streak: user.streak })
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Achtung!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush(user.pushSubscriptions, title, body, '/', 'STREAK_SAVER')
+        await sendPush(user.pushSubscriptions, title, body, '/', 'STREAK_SAVER', campaign.id)
     }
 }
 
@@ -298,6 +317,14 @@ async function runInactivityRescue() {
 
     const template = await getNotificationTemplate('inactivity', 'Wir vermissen dich! Komm zurück und lerne weiter. 👋')
 
+    const campaign = await createCampaign(
+        'Inactivity Rescue',
+        template,
+        'INACTIVITY_RESCUE',
+        '/'
+    )
+    console.log(`Created Campaign: ${campaign.id} for ${inactiveUsers.length} users`)
+
     for (const user of inactiveUsers) {
         const name = user.nickname || user.name || 'Champion'
         const days = 3 // approx
@@ -305,7 +332,7 @@ async function runInactivityRescue() {
         const [title, ...bodyParts] = msg.includes('\n') ? msg.split('\n') : ['Wir vermissen dich!', msg]
         const body = bodyParts.join('\n') || msg
 
-        await sendPush(user.pushSubscriptions, title, body, '/', 'INACTIVITY_RESCUE')
+        await sendPush(user.pushSubscriptions, title, body, '/', 'INACTIVITY_RESCUE', campaign.id)
     }
 }
 
