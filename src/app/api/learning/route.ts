@@ -379,6 +379,9 @@ export async function GET(request: Request) {
             const fallbackCandidateIds = await prisma.spacedItem.findMany({
                 where: {
                     userId,
+                    // STRICT: Only allow "Review Ahead" for Mastered/Stable items (Stage 3+).
+                    // Stage 1 & 2 MUST be reviewed on their actual due date to respect the spacing effect.
+                    stage: { gte: 3 },
                     // Exclude currently selected SpacedItems
                     id: { notIn: combinedQuestions.map(q => q._spacedItem?.id).filter(Boolean) as string[] },
                     // CRITICAL: Don't show items reviewed today/recently to avoid "just did this" feeling.
